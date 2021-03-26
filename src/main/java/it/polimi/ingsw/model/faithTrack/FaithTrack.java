@@ -1,0 +1,26 @@
+package it.polimi.ingsw.model.faithTrack;
+
+import java.util.HashMap;
+
+
+public class FaithTrack {
+    private final Cell[] arrayOfCells;
+
+    /**
+     * Constructor of the FaithTrack: it builds a final array of num cells, some of which have victoryPoints
+     * and some of which are cells with effect(popeCell, finalCell...) passed through parameters.
+     * @param num numer of cell
+     * @param cellsWithEffectMap  map containing all the cellWithEffect and their respective index.
+     * @param victoryPointsMap map containing all theindexes of cells which have victoryPoints and the respective number of points.
+     */
+    public FaithTrack(int num, HashMap<Integer, CellWithEffect> cellsWithEffectMap, HashMap<Integer, Integer> victoryPointsMap) {
+        arrayOfCells = new Cell[num];
+        for (int i = 0; i < num; i++) {
+            arrayOfCells[i].setIndex(i);
+        }
+
+        cellsWithEffectMap.forEach((k,v)->arrayOfCells[k]=v);
+        victoryPointsMap.forEach((k,v)->arrayOfCells[k].setVictoryPoints(v));
+    }
+}
+
