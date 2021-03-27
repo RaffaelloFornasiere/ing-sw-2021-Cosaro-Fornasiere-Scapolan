@@ -7,19 +7,19 @@ import java.util.List;
 public class FaithTrackData {
     private int position;
     private FaithTrack physicalFaithTrack;
-    private List<PopeFavorCard> popeFavorCards;
+    private List<PopeFavorCard> acquiredPopeFavorCards;
 
     /**
      * Constructor inizializes one instance of the class: initial position equal to zero,
      * takes as input one instance of Faithtrack given by the Controller,
-     * has initial list of popeFaorCard empty.
+     * has initial list of popeFavorCard empty.
      * @param physicalFaithTrack is given by the controller
      */
 
     public FaithTrackData(FaithTrack physicalFaithTrack){
         position=0;
         this.physicalFaithTrack=physicalFaithTrack;
-        popeFavorCards=new LinkedList<>();
+        acquiredPopeFavorCards=new LinkedList<>();
     }
 
     /**
@@ -46,7 +46,7 @@ public class FaithTrackData {
      * @param card is a popeFavorCard to add
      */
     public void addPopeFavorCard( PopeFavorCard card){
-        popeFavorCards.add(card);
+        acquiredPopeFavorCards.add(card);
     }
     /**
      * Counts the total of points obtained from FavorPopeCards
@@ -54,7 +54,7 @@ public class FaithTrackData {
      */
     public int getFavorPopeCardPoints(){
         int count= 0;
-        Iterator iterator= popeFavorCards.iterator();
+        Iterator iterator= acquiredPopeFavorCards.iterator();
         while (iterator.hasNext()) {
             count+= ((PopeFavorCard)iterator.next()).getVictoryPoints();
         }
