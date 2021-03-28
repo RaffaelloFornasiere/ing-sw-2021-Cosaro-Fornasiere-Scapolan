@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.faithTrack;
+package it.polimi.ingsw.model.FaithTrack;
 
 import java.util.HashMap;
 
