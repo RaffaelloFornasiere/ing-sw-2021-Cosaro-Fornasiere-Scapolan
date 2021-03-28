@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 
 public class FaithTrack {
-    private final Cell[] arrayOfCells;
+    private static FaithTrack instance = null;
+    private static Cell[] arrayOfCells;
 
     /**
      * Constructor of the FaithTrack: it builds a final array of num cells, some of which have victoryPoints
@@ -21,6 +22,11 @@ public class FaithTrack {
 
         cellsWithEffectMap.forEach((k,v)->arrayOfCells[k]=v);
         victoryPointsMap.forEach((k,v)->arrayOfCells[k].setVictoryPoints(v));
+    }
+
+    public static FaithTrack initFaithTrack(int num, HashMap<Integer, CellWithEffect> cellsWithEffectMap, HashMap<Integer, Integer> victoryPointsMap) {
+        if (instance == null) instance = new FaithTrack( num, cellsWithEffectMap, victoryPointsMap);
+        return instance;
     }
 }
 

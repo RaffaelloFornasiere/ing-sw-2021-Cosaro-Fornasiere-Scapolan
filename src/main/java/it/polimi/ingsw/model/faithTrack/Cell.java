@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.faithTrack;
 
-public class Cell {
+public class Cell{
     private int index;
     private int victoryPoints;
 
@@ -41,4 +41,5 @@ public class Cell {
      * must be overrided, activate the effect according to the type of cell.
      */
     public void activateEffect(){}
+
 }

@@ -42,12 +42,21 @@ public class FaithTrackData {
     }
 
     /**
+     *
+     * @return
+     */
+    public FaithTrack getPhysicalFaithTrack() {
+        return physicalFaithTrack;
+    }
+
+    /**
      * Adds one popeFavorCard to the list of popeFavorCards
      * @param card is a popeFavorCard to add
      */
     public void addPopeFavorCard( PopeFavorCard card){
         acquiredPopeFavorCards.add(card);
     }
+
     /**
      * Counts the total of points obtained from FavorPopeCards
      * @return the total number of points obtained from FavorPopeCards
