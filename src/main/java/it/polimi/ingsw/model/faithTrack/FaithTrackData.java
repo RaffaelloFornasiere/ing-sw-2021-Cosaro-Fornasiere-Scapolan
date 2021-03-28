@@ -42,8 +42,8 @@ public class FaithTrackData {
     }
 
     /**
-     *
-     * @return
+     *Getter of thephysicalTrack
+     * @return PhysicalTrack
      */
     public FaithTrack getPhysicalFaithTrack() {
         return physicalFaithTrack;
