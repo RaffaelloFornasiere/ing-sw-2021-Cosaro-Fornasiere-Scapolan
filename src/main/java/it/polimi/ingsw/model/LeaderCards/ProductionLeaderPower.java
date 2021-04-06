@@ -9,6 +9,11 @@ public class ProductionLeaderPower extends LeaderPower{
         this.effectPower = effectPower;
     }
 
+    public ProductionLeaderPower(ProductionPower effectPower){
+        super();
+        this.effectPower = effectPower;
+    }
+
     public ProductionPower getEffectPower() {
         return effectPower;
     }

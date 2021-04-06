@@ -13,6 +13,11 @@ public class ExtraResourceLeaderPower extends LeaderPower{
         this.resourceType = resourceType;
     }
 
+    public ExtraResourceLeaderPower(Resource resourceType){
+        super();
+        this.resourceType = resourceType;
+    }
+
     public Resource getResourceType() {
         return resourceType;
     }

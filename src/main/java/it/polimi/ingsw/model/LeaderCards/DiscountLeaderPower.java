@@ -13,6 +13,11 @@ public class DiscountLeaderPower extends LeaderPower{
         this.discount = discount;
     }
 
+    public DiscountLeaderPower(HashMap<Resource, Integer> discount){
+        super();
+        this.discount = discount;
+    }
+
     public HashMap<Resource, Integer> getDiscount() {
         return discount;
     }

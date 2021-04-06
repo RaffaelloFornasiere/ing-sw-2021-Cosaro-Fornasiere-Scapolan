@@ -15,6 +15,11 @@ public class DepositLeaderPower extends LeaderPower{
         this.currentResources = currentResources;
     }
 
+    public DepositLeaderPower(HashMap<Resource, Integer> maxResources, HashMap<Resource, Integer> currentResources) {
+        super();
+        this.maxResources = maxResources;
+        this.currentResources = currentResources;
+    }
 
     public HashMap<Resource, Integer> getMaxResources() {
         return maxResources;
