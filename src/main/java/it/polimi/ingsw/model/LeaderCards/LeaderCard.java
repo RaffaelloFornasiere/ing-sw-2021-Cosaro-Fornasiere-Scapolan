@@ -2,9 +2,14 @@ package it.polimi.ingsw.model.LeaderCards;
 
 public class LeaderCard {
 
-    int victoryPoints;
+    private int victoryPoints;
+    private LeaderPower power;
 
     public int getVictoryPoints() {
         return victoryPoints;
+    }
+
+    public LeaderPower getPower() {
+        return power;
     }
 }
