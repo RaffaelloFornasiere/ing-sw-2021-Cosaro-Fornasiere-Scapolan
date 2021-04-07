@@ -27,5 +27,9 @@ public class FaithTrack {
     public int size(){
        return arrayOfCells.size();
     }
+
+    public Cell getCellOfIndex(int i){
+        return arrayOfCells.get(i);
+    }
 }
 
