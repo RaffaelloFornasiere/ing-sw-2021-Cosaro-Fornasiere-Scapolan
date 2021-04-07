@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import it.polimi.ingsw.exceptions.OutOfBoundException;
+
+import java.util.ArrayList;
 
 public class FaithTrackData {
     private int position;
     private FaithTrack physicalFaithTrack;
-    private List<PopeFavorCard> acquiredPopeFavorCards;
+    private ArrayList<PopeFavorCard> acquiredPopeFavorCards;
 
     /**
      * Constructor inizializes one instance of the class: initial position equal to zero,
@@ -19,7 +19,7 @@ public class FaithTrackData {
     public FaithTrackData(FaithTrack physicalFaithTrack){
         position=0;
         this.physicalFaithTrack=physicalFaithTrack;
-        acquiredPopeFavorCards=new LinkedList<>();
+        acquiredPopeFavorCards=new ArrayList<>();
     }
 
     /**
@@ -36,9 +36,9 @@ public class FaithTrackData {
      * Setter of position in the faithtrack
      * @param position in the faithtrack
      */
-
-    public void setPosition(int position) {
-        this.position = position;
+    public void setPosition(int position) throws OutOfBoundException{
+        if(position <= physicalFaithTrack.size()) this.position = position;
+        else throw new OutOfBoundException();
     }
 
     /**
@@ -63,9 +63,8 @@ public class FaithTrackData {
      */
     public int getFavorPopeCardPoints(){
         int count= 0;
-        Iterator iterator= acquiredPopeFavorCards.iterator();
-        while (iterator.hasNext()) {
-            count+= ((PopeFavorCard)iterator.next()).getVictoryPoints();
+        for ( PopeFavorCard card : acquiredPopeFavorCards) {
+            count+= card.getVictoryPoints();
         }
         return  count;
     }

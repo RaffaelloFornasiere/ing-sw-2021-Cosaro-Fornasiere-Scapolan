@@ -4,6 +4,17 @@ public class Cell{
     private int index;
     private int victoryPoints;
 
+
+    /**
+     * @Constructor
+     * @param index
+     * @param vpoints
+     */
+    public Cell(int index, int vpoints){
+        this.index= index;
+        this.victoryPoints= vpoints;
+    }
+
     /**
      * Getter of index of the Cell
      * @return index of the Cell
@@ -12,13 +23,7 @@ public class Cell{
         return index;
     }
 
-    /**
-     * Setter of one cell's index
-     * @param index of the cell
-     */
-    public void setIndex(int index) {
-        this.index = index;
-    }
+
 
     /**
      *Getter of victoryPoints of one Cell
@@ -28,13 +33,7 @@ public class Cell{
         return victoryPoints;
     }
 
-    /**
-     * Setter of victoryPoints on one cell
-     * @param victoryPoints for one cell
-     */
-    public void setVictoryPoints(int victoryPoints) {
-        this.victoryPoints = victoryPoints;
-    }
+
 
 
     /**

@@ -3,6 +3,10 @@ package it.polimi.ingsw.model.FaithTrack;
 public class PopeFavorCard {
     private int victoryPoints;
 
+    public PopeFavorCard( int value){
+       victoryPoints=value;
+    }
+
     /**
      * Getter of victoryPoints
      * @return victoryPoints
@@ -11,11 +15,4 @@ public class PopeFavorCard {
         return victoryPoints;
     }
 
-    /**
-     * Setter of VictoryPoints of the card
-     * @param victoryPoints of the card
-     */
-    public void setVictoryPoints(int victoryPoints) {
-        this.victoryPoints = victoryPoints;
-    }
 }

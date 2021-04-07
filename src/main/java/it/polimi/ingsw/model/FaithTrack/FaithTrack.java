@@ -1,32 +1,31 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 
 public class FaithTrack {
     private static FaithTrack instance = null;
-    private static Cell[] arrayOfCells;
+    private static ArrayList<Cell> arrayOfCells;
 
     /**
-     * Constructor of the FaithTrack: it builds a final array of num cells, some of which have victoryPoints
-     * and some of which are cells with effect(popeCell, finalCell...) passed through parameters.
-     * @param num numer of cell
-     * @param cellsWithEffectMap  map containing all the cellWithEffect and their respective index.
-     * @param victoryPointsMap map containing all theindexes of cells which have victoryPoints and the respective number of points.
+     * @Constructor
      */
-    public FaithTrack(int num, HashMap<Integer, CellWithEffect> cellsWithEffectMap, HashMap<Integer, Integer> victoryPointsMap) {
-        arrayOfCells = new Cell[num];
-        for (int i = 0; i < num; i++) {
-            arrayOfCells[i].setIndex(i);
-        }
-
-        cellsWithEffectMap.forEach((k,v)->arrayOfCells[k]=v);
-        victoryPointsMap.forEach((k,v)->arrayOfCells[k].setVictoryPoints(v));
+    public FaithTrack(ArrayList<Cell> array) {
+        arrayOfCells = array;
     }
 
-    public static FaithTrack initFaithTrack(int num, HashMap<Integer, CellWithEffect> cellsWithEffectMap, HashMap<Integer, Integer> victoryPointsMap) {
-        if (instance == null) instance = new FaithTrack( num, cellsWithEffectMap, victoryPointsMap);
+    /**
+     * inizializzo il sigleton
+     * @param array
+     * @return
+     */
+    public static FaithTrack initFaithTrack(ArrayList<Cell> array) {
+        if (instance == null) instance = new FaithTrack( array);
         return instance;
+    }
+
+    public int size(){
+       return arrayOfCells.size();
     }
 }
 
