@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class FaithTrackData {
     private int position;
-    private FaithTrack physicalFaithTrack;
+    private final FaithTrack physicalFaithTrack;
     private ArrayList<PopeFavorCard> acquiredPopeFavorCards;
 
     /**
@@ -68,4 +68,14 @@ public class FaithTrackData {
         }
         return  count;
     }
+
+    /**
+     * increment the position
+     * @param n number os steps to increment
+     */
+    public void incrementPosition(int n) throws OutOfBoundException {
+        if(position+n<= physicalFaithTrack.size()) position +=n;
+        else throw new OutOfBoundException();
+    }
+
 }
