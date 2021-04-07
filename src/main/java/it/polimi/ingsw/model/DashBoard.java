@@ -10,6 +10,11 @@ public class DashBoard {
     private HashMap<Resource, Integer> strongBox;
     private Stack<Integer>[] cardSlots;
     private  ArrayList<Depot> warehouse;
-    //private ProductionPower personalPower;
+   // private ProductionPower personalPower;
     private FaithTrack faithTrack;
+
+    public DashBoard(){
+
+    }
+
 }

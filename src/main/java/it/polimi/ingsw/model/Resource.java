@@ -12,5 +12,4 @@ public enum Resource{
     public int getResourceCode() {
         return resourceCode;
     }
-
 }

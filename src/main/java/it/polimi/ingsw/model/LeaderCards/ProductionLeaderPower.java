@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import it.polimi.ingsw.model.ProductionPower;
+
 public class ProductionLeaderPower extends LeaderPower{
 
     private ProductionPower effectPower;
@@ -18,7 +20,5 @@ public class ProductionLeaderPower extends LeaderPower{
         return effectPower;
     }
 
-    //STUB class
-    private class ProductionPower {
-    }
+
 }
