@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class DevCardGrid {
     public DevDeck decks[][];
 
-    DevCardGrid(ArrayList<DevCard> cards)
+    public DevCardGrid(ArrayList<DevCard> cards)
     {
         int levels = cards.stream().mapToInt(DevCard::getLevel).max().getAsInt();
         decks = new DevDeck[levels][CardColor.values().length];

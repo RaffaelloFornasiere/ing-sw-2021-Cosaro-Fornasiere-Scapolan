@@ -5,6 +5,21 @@ import  it.polimi.ingsw.model.*;
 public class DevCard
 {
     private HashMap<Resource, Integer> cost;
+    private int level;
+    private CardColor color;
+    private int victoryPoints;
+    private ProductionPower productionPower;
+
+
+    public DevCard(HashMap<Resource, Integer> cost, int level, CardColor color, int victoryPoints, ProductionPower productionPower)
+    {
+        this.cost = cost;
+        this.level = level;
+        this.color = color;
+        this.victoryPoints = victoryPoints;
+        this.productionPower = productionPower;
+    }
+
 
     public HashMap<Resource, Integer> getCost() {
         return cost;
@@ -25,22 +40,6 @@ public class DevCard
     public ProductionPower getProductionPower() {
         return productionPower;
     }
-
-    private int level;
-    private CardColor color;
-    private int victoryPoints;
-    private ProductionPower productionPower;
-
-
-    public DevCard(HashMap<Resource, Integer> cost, int level, CardColor color, int victoryPoints, ProductionPower productionPower)
-    {
-        this.cost = cost;
-        this.level = level;
-        this.color = color;
-        this.victoryPoints = victoryPoints;
-        this.productionPower = productionPower;
-    }
-
 
 
 }

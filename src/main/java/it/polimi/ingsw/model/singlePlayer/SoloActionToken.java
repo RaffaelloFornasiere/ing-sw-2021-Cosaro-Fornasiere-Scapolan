@@ -1,4 +1,4 @@
 package it.polimi.ingsw.model.singlePlayer;
 
-public class SoloActionToken {
+public abstract class SoloActionToken {
 }
