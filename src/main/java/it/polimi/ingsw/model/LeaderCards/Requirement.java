@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.LeaderCards;
 
-public class Requirement {
+public abstract class Requirement {
 
     protected Requirement decoratedRequirement;
 

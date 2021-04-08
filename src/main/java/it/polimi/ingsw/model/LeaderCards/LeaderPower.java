@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.LeaderCards;
 
-public class LeaderPower {
+public abstract class LeaderPower {
 
     protected LeaderPower decoratedLeaderPower;
 
