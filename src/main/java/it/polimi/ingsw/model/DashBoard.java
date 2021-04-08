@@ -10,6 +10,8 @@ import java.util.Stack;
 import java.util.stream.IntStream;
 
 public class DashBoard {
+
+
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<Stack<DevCard>> cardSlots;
     private  ArrayList<Depot> warehouse;
@@ -47,7 +49,45 @@ public class DashBoard {
 
     }
 
+    /**
+     * Getter of DashBoard
+     * @return Dashboard
+     */
+    public HashMap<Resource, Integer> getStrongBox() {
+        return strongBox;
+    }
 
+    /**
+     * Fetter  of  CardSlots
+     * @return
+     */
+    public ArrayList<Stack<DevCard>> getCardSlots() {
+        return cardSlots;
+    }
+
+    /**
+     * Getter of WareHouse
+     * @return
+     */
+    public ArrayList<Depot> getWarehouse() {
+        return warehouse;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ProductionPower getPersonalPower() {
+        return personalPower;
+    }
+
+    /**
+     * Getter of FaithTrack
+     * @return
+     */
+    public FaithTrack getFaithTrack() {
+        return faithTrack;
+    }
 
     /**
      * modifier of the dushboard, it adds resources
@@ -57,6 +97,10 @@ public class DashBoard {
     public void addResourcesToStrongBox( Resource resource, int quantity){
         strongBox.put( resource, strongBox.get(resource) + quantity);
     }
+
+
+
+
     /**
      * modifier of the dushboard, it subtracts resources
      * @param resource
@@ -69,6 +113,13 @@ public class DashBoard {
         }
     }
 
+
+    /**
+     * This method adds one card to one of the slots.
+     * @param slotIndex  is the slot in which the card is added
+     * @param card the card to add
+     * @throws IndexSlotException if the slot I pass as parameter doesn't exist
+     */
     public void addCard(int slotIndex, DevCard card)throws IndexSlotException//, LevelCardException
     {
         if( slotIndex>cardSlots.size()-1) throw new IndexSlotException();
