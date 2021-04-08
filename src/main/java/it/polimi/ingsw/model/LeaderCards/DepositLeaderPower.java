@@ -20,7 +20,11 @@ public class DepositLeaderPower extends LeaderPower{
     public DepositLeaderPower(LeaderPower decoratedLeaderPower, HashMap<Resource, Integer> maxResources) {
         this.decoratedLeaderPower = decoratedLeaderPower;
         this.maxResources = maxResources;
-        this.currentResources = currentResources;
+
+        this.currentResources = new HashMap<>();
+        for (Resource r: maxResources.keySet()) {
+            this.currentResources.put(r, 0);
+        }
     }
     /**
      * Constructor for the class used when it is not going to decorate another LeaderPower
@@ -29,7 +33,11 @@ public class DepositLeaderPower extends LeaderPower{
     public DepositLeaderPower(HashMap<Resource, Integer> maxResources) {
         super();
         this.maxResources = maxResources;
-        this.currentResources = currentResources;
+
+        this.currentResources = new HashMap<>();
+        for (Resource r: maxResources.keySet()) {
+            this.currentResources.put(r, 0);
+        }
     }
 
     /**
