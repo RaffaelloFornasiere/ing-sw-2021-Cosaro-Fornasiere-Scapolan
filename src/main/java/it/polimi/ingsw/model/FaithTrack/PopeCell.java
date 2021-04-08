@@ -11,8 +11,8 @@ public class PopeCell extends CellWithEffect {
      * @param vPoints
      * @Constructor
      */
-    public PopeCell(int index, int vPoints, PopeFavorCard card,  ArrayList<Cell> vaticanReportSection) {
-        super(index, vPoints);
+    public PopeCell(int index, int vPoints, PopeFavorCard card,  ArrayList<Cell> vaticanReportSection, EffectOfCell effect) {
+        super(index, vPoints, effect);
         this.card= card;
         this.vaticanReportSection=vaticanReportSection;
     }
