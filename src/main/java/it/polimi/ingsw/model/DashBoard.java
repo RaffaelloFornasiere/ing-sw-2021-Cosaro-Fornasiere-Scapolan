@@ -20,6 +20,8 @@ public class DashBoard {
      * @Constructor
      * @param numberOfSlots  is the number of slots we whant our dashboard to have
      * @param eachDepotCapacity is how many resources one depot can possibly have at most
+     * @param consumed is the resources consumed by the personal production power
+     * @param produced is the resources produced by the personal production power
      * @param faithTrack  is the common faith track
      */
 
