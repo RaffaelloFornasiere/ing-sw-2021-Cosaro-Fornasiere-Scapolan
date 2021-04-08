@@ -7,9 +7,15 @@ public enum Marbel{
     YELLOW("Yellow"),
     GRAY("Gray"),
     VIOLET("Violet");
-    private String color;
+    final private String color;
     Marbel(String color)
     {
         this.color = color;
+    }
+
+    @Override
+    public String toString()
+    {
+        return color;
     }
 }

@@ -9,8 +9,9 @@ public class Market {
 
     /**
      * Constructor
-     * @param rows number of rows in market's grid
-     * @param colums number of columns in market's grid
+     *
+     * @param rows    number of rows in market's grid
+     * @param colums  number of columns in market's grid
      * @param marbels hashmap with the available marbels
      */
     public Market(int rows, int colums, HashMap<Marbel, Integer> marbels) {
@@ -18,18 +19,22 @@ public class Market {
                 != rows * colums + 1) ;
         grid = new Marbel[rows][colums];
         //throw some exception
-        //  ArrayList<Marble> marbleArrayList = marbles.entrySet().stream().map
+
+        //converts the hash to a list with all marbels
         ArrayList<Marbel> marbelArrayList = new ArrayList<>();
         marbels.entrySet().forEach(entry ->
-            IntStream.range(0, entry.getValue())
-                    .forEach(n -> marbelArrayList.add(entry.getKey()))
+                IntStream.range(0, entry.getValue())
+                        .forEach(n -> marbelArrayList.add(entry.getKey()))
         );
+        //shuffle the marbels to make the market random
         Collections.shuffle(marbelArrayList);
 
+        //assign the marbels to the market's grid
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < colums; j++)
                 grid[i][j] = marbelArrayList.get(i * colums + j);
 
+        // assign the left marbel
         marbelLeft = marbelArrayList.get(marbelArrayList.size() - 1);
     }
 
@@ -53,22 +58,21 @@ public class Market {
     /**
      * Updates the market adding the left marbel on the row or column specified
      * and take apart the first marbel that becomes the new left marbel
+     *
      * @param direction direction (row or column) to update
-     * @param index specifies the row/column to update
+     * @param index     specifies the row/column to update
      */
-    public void Update(Direction direction, int index)
-    {
+    public void Update(Direction direction, int index) {
         Marbel aux;
         if (direction == Direction.ROW) {
             aux = grid[index][0];
-            System.arraycopy(grid[index], 1, grid[index], 0, grid[index].length-1);
-            grid[index][grid[index].length-1] = marbelLeft;
-        }
-        else{
+            System.arraycopy(grid[index], 1, grid[index], 0, grid[index].length - 1);
+            grid[index][grid[index].length - 1] = marbelLeft;
+        } else {
             aux = grid[0][index];
-            for (int i = 0; i < grid[index].length-1; i++)
-                grid[i][index] = grid[i+1][index];
-            grid[grid.length-1][index] = marbelLeft;
+            for (int i = 0; i < grid[index].length - 1; i++)
+                grid[i][index] = grid[i + 1][index];
+            grid[grid.length - 1][index] = marbelLeft;
         }
         marbelLeft = aux;
 
