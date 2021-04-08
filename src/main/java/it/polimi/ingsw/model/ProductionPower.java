@@ -12,11 +12,15 @@ public class ProductionPower {
     }
 
 
+    public HashMap<Resource, Integer> produce(HashMap<Resource, Integer> input)
+    {
+
+        return null;
+    }
+
     public HashMap<Resource, Integer> getConsumedResources() {
         return consumedResources;
     }
-
-
     public HashMap<Resource, Integer> getProducedResources() {
         return producedResources;
     }
