@@ -7,6 +7,7 @@ public enum Resource{
     SHIELD(4);
     private final int resourceCode;
 
+
     Resource(int resourceCode) {this.resourceCode=resourceCode;}
 
     public int getResourceCode() {
