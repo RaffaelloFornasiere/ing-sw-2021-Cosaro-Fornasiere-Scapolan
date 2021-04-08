@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import it.polimi.ingsw.model.CardColor;
+
 /**
 * Class specifying the amount of development card of a certain color to activate a leader card
 */
@@ -45,9 +47,5 @@ public class LevellessCardRequirement extends Requirement{
      */
     public int getQuantity() {
         return quantity;
-    }
-
-    //STUB class
-    private class CardColor {
     }
 }
