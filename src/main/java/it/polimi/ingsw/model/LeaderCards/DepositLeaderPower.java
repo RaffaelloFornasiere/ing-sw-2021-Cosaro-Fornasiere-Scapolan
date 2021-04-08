@@ -9,13 +9,13 @@ public class DepositLeaderPower extends LeaderPower{
     private HashMap<Resource, Integer> maxResources;
     private HashMap<Resource, Integer> currentResources;
 
-    public DepositLeaderPower(LeaderPower decoratedLeaderPower, HashMap<Resource, Integer> maxResources, HashMap<Resource, Integer> currentResources) {
+    public DepositLeaderPower(LeaderPower decoratedLeaderPower, HashMap<Resource, Integer> maxResources) {
         this.decoratedLeaderPower = decoratedLeaderPower;
         this.maxResources = maxResources;
         this.currentResources = currentResources;
     }
 
-    public DepositLeaderPower(HashMap<Resource, Integer> maxResources, HashMap<Resource, Integer> currentResources) {
+    public DepositLeaderPower(HashMap<Resource, Integer> maxResources) {
         super();
         this.maxResources = maxResources;
         this.currentResources = currentResources;
