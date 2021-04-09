@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-public class PopeFavorCard {
-    private int victoryPoints;
+public final class PopeFavorCard {
+    private final int victoryPoints;
 
     public PopeFavorCard( int value){
        victoryPoints=value;

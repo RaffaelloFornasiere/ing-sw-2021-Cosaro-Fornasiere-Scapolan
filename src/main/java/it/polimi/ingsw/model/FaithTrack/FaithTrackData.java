@@ -24,7 +24,6 @@ public class FaithTrackData {
 
     /**
      * Getter  of position in  the faithtrack
-     *
      * @return position in the faithtrack
      */
 

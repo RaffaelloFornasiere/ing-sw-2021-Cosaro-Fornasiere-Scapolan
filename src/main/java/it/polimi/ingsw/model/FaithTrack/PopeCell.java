@@ -1,10 +1,12 @@
 package it.polimi.ingsw.model.FaithTrack;
 
+import it.polimi.ingsw.controller.EffectOfCell;
+
 import java.util.ArrayList;
 
 public class PopeCell extends CellWithEffect {
-    private ArrayList<Cell> vaticanReportSection;
-    private PopeFavorCard card;
+    private final ArrayList<Cell> vaticanReportSection;
+    private final PopeFavorCard card;
 
     /**
      * @param index
