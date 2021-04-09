@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 
-public enum Marbel{
+public enum Marble{
     WHITE("White"),
     RED("Red"),
     YELLOW("Yellow"),
@@ -9,7 +9,7 @@ public enum Marbel{
     PURPLE("PURPLE"),
     BLUE("Blue");
     final private String color;
-    Marbel(String color)
+    Marble(String color)
     {
         this.color = color;
     }

@@ -19,15 +19,15 @@ public class MatchState {
         ArrayList<DevCard> cards = new ArrayList<>(1);
         devCardGrid = new DevCardGrid(cards);
 
-        HashMap<Marbel, Integer> marbels = new HashMap<Marbel, Integer>() {{
-                    put(Marbel.WHITE, 4);
-                    put(Marbel.BLUE, 2);
-                    put(Marbel.GRAY, 2);
-                    put(Marbel.YELLOW, 2);
-                    put(Marbel.PURPLE, 2);
-                    put(Marbel.RED, 1);
+        HashMap<Marble, Integer> marbles = new HashMap<Marble, Integer>() {{
+                    put(Marble.WHITE, 4);
+                    put(Marble.BLUE, 2);
+                    put(Marble.GRAY, 2);
+                    put(Marble.YELLOW, 2);
+                    put(Marble.PURPLE, 2);
+                    put(Marble.RED, 1);
         }};
-        market = new Market(3,4, marbels);
+        market = new Market(3,4, marbles);
 
     }
 }
