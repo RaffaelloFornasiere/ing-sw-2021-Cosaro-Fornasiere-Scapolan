@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.FaithTrack;
 
+import it.polimi.ingsw.controller.EffectOfCell;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.IntStream;
