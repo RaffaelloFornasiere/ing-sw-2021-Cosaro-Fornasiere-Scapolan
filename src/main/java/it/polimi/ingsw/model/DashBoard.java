@@ -29,22 +29,27 @@ public class DashBoard {
 
     public DashBoard( int numberOfSlots, ArrayList<Integer> eachDepotCapacity, HashMap<Resource, Integer> consumed,HashMap<Resource, Integer>produced, FaithTrack faithTrack){
     strongBox = new HashMap<>();
-
+    //initializes the strongbox: each resource's counter is equal to zero
     for(Resource resource: Resource.values()){
         strongBox.put(resource, 0);
     }
 
+    //initializes each slot to an empty stack
     cardSlots= new ArrayList<>();
         IntStream.range(0,numberOfSlots-1).forEach(n ->{
             cardSlots.add(new Stack<>());
         });
 
+    //initializes each slot, using the constructor on depot.
     warehouse=new ArrayList<>();
-    for(Integer maxQauntity: eachDepotCapacity){
-        warehouse.add(new Depot(maxQauntity));
+    for(Integer maxQuantity: eachDepotCapacity){
+        warehouse.add(new Depot(maxQuantity));
         }
 
+    //initializes each personal power
     personalPower= new ProductionPower(consumed, produced);
+
+    //initializes the faithtrack
     this.faithTrack= faithTrack;
 
     }
@@ -74,7 +79,7 @@ public class DashBoard {
     }
 
     /**
-     *
+     *Getter of Production Power
      * @return
      */
     public ProductionPower getPersonalPower() {

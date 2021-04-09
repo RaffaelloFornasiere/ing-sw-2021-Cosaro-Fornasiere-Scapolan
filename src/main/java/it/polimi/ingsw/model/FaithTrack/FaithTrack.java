@@ -6,8 +6,8 @@ import java.util.stream.IntStream;
 
 
 public class FaithTrack {
-    private static FaithTrack instance = null;
-    private static ArrayList<Cell> arrayOfCells;
+    private  static FaithTrack instance = null;
+    private  static ArrayList<Cell> arrayOfCells;
 
 
 public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints){

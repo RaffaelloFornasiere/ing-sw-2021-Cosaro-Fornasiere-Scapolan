@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.FaithTrack;
 
 public class CellWithEffect extends Cell {
-    EffectOfCell effect;
+    final EffectOfCell effect;
     /**
      * @Constructor
      */

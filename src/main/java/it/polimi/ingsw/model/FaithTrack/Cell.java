@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.FaithTrack;
 
 public class Cell{
-    private int index;
-    private int victoryPoints;
+    private final int index;
+    private final int victoryPoints;
 
 
     /**
