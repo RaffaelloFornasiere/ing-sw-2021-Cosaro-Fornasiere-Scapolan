@@ -81,15 +81,17 @@ public class Depot{
     }
 
     /**
-     * Swith the content of two deposits.
-     * @param depot
+     * Swithes the content of two deposits.
+     * @param depot is the deposit
      */
     public void switchDepot( Depot depot)throws DepotLimitException{
         if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) throw new DepotLimitException();
+        Resource tempResourceType = this.resourceType;
         this.resourceType=depot.getResourceType();
-        depot.setResourceType(this.resourceType);
+        depot.setResourceType(tempResourceType);
+        int tempCurrentQuantity=this.currentQuantity;
         this.currentQuantity=depot.getCurrentQuantity();
-        depot.setCurrentQuantity(this.currentQuantity);
+        depot.setCurrentQuantity(tempCurrentQuantity);
     }
 
 }
