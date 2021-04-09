@@ -8,27 +8,13 @@ public class ProductionPower {
     private HashMap<Resource, Integer> consumedResources;
     private HashMap<Resource, Integer> producedResources;
 
+    private int requiredResourceOfChoice;
+    private int producedResourceOfChoice;
+    private int faithPointsProduced;
+
     public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources) {
         this.consumedResources = consumedResources;
         this.producedResources = producedResources;
-    }
-
-    /**
-     * takes some resources as input, test if there are enough of them
-     * and in case produce other resoruces. the re
-     *
-     * @param resources takes as input some resources that
-     * @return produced resources
-     */
-    public HashMap<Resource, Integer> produce(HashMap<Resource, Integer> resources) {
-        if (canProduce(resources)) {
-            consumedResources.forEach((key, value) -> resources.put(key,
-                    resources.get(key) - value));
-            return producedResources;
-        }
-
-        // throw some exception;
-        return null;
     }
 
     /**
