@@ -12,7 +12,7 @@ public class LevellessCardRequirement extends Requirement{
 
     /**
      * Constructor for the class
-     * @param type the tcolor of the cards needed
+     * @param type the color of the cards needed
      * @param quantity the amount of cards of specified color and level needed
      */
     public LevellessCardRequirement(CardColor type, int quantity){

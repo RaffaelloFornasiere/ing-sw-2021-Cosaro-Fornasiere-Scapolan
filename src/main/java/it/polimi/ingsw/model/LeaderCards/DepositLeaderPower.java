@@ -19,8 +19,7 @@ public class DepositLeaderPower extends LeaderPower{
      * @param maxResources the amount of extra resources that can be stored
      */
     public DepositLeaderPower(HashMap<Resource, Integer> maxResources) {
-        super();
-        this.maxResources = maxResources;
+        this.maxResources = (HashMap<Resource, Integer>)maxResources.clone();
 
         this.currentResources = new HashMap<>();
         for (Resource r: maxResources.keySet()) {
@@ -33,7 +32,7 @@ public class DepositLeaderPower extends LeaderPower{
      * @return the extra space for each resource
      */
     public HashMap<Resource, Integer> getMaxResources() {
-        return maxResources;
+        return (HashMap<Resource, Integer>)maxResources.clone();
     }
 
     /**
@@ -41,7 +40,7 @@ public class DepositLeaderPower extends LeaderPower{
      * @return resources currently stored
      */
     public HashMap<Resource, Integer> getCurrentResources() {
-        return currentResources;
+        return (HashMap<Resource, Integer>)currentResources.clone();
     }
 
     /**

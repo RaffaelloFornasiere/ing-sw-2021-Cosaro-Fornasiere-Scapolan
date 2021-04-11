@@ -19,8 +19,8 @@ public class LeaderCard {
      */
     public LeaderCard(int victoryPoints, ArrayList<Requirement> activationRequirement, ArrayList<LeaderPower> power){
         this.victoryPoints = victoryPoints;
-        this.activationRequirement = activationRequirement;
-        this.power = power;
+        this.activationRequirement = (ArrayList<Requirement>)activationRequirement.clone();
+        this.power = (ArrayList<LeaderPower>)power.clone();
     }
 
     /**
@@ -36,7 +36,7 @@ public class LeaderCard {
      * @return the requirements
      */
     public ArrayList<Requirement> getActivationRequirement() {
-        return activationRequirement;
+        return (ArrayList<Requirement>)activationRequirement.clone();
     }
 
     /**
@@ -44,6 +44,6 @@ public class LeaderCard {
      * @return the value of victory points
      */
     public ArrayList<LeaderPower> getPower() {
-        return power;
+        return (ArrayList<LeaderPower>)power.clone();
     }
 }

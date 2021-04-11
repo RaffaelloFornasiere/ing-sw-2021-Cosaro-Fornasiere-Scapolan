@@ -16,8 +16,7 @@ public class DiscountLeaderPower extends LeaderPower{
      * @param discount the discount for each resource type that is applied when buying a development card
      */
     public DiscountLeaderPower(HashMap<Resource, Integer> discount){
-        super();
-        this.discount = discount;
+        this.discount = (HashMap<Resource, Integer>)discount.clone();
     }
 
     /**
@@ -25,6 +24,6 @@ public class DiscountLeaderPower extends LeaderPower{
      * @return the discount for each resource type
      */
     public HashMap<Resource, Integer> getDiscount() {
-        return discount;
+        return (HashMap<Resource, Integer>)discount.clone();
     }
 }

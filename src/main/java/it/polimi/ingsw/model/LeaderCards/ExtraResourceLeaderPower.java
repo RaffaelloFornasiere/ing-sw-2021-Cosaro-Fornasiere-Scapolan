@@ -16,7 +16,6 @@ public class ExtraResourceLeaderPower extends LeaderPower{
      * @param resourceType the type of the resource given instead of nothing when getting a withe marble from the market
      */
     public ExtraResourceLeaderPower(Resource resourceType){
-        super();
         this.resourceType = resourceType;
     }
 

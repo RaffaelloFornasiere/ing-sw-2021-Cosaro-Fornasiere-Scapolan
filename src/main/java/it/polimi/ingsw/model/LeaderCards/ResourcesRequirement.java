@@ -16,7 +16,7 @@ public class ResourcesRequirement extends Requirement{
      * @param resources the quantity of resources of each type needed to activate the leader cards
      */
     public ResourcesRequirement(HashMap<Resource, Integer> resources){
-        this.resources = resources;
+        this.resources = (HashMap<Resource, Integer>)resources.clone();
     }
 
     /**
@@ -24,6 +24,6 @@ public class ResourcesRequirement extends Requirement{
      * @return the quantity required for each resource type
      */
     public HashMap<Resource, Integer> getResources() {
-        return resources;
+        return (HashMap<Resource, Integer>)resources.clone();
     }
 }
