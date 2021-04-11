@@ -49,6 +49,14 @@ public class FaithTrackData {
     }
 
     /**
+     * Getter of acquiredFavorPopeCard
+     * @return the array of favorpopecard
+     */
+    public ArrayList<PopeFavorCard> getAcquiredPopeFavorCards() {
+        return acquiredPopeFavorCards;
+    }
+
+    /**
      * Adds one popeFavorCard to the list of popeFavorCards
      * @param card is a popeFavorCard to add
      */

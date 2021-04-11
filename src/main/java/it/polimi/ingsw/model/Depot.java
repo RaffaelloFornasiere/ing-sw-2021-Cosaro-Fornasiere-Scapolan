@@ -10,6 +10,8 @@ public class Depot{
 
     public Depot(int maxQuantity){
      this.maxQuantity= maxQuantity;
+     currentQuantity=0;
+     resourceType=null;
     }
 
     /**
@@ -61,7 +63,7 @@ public class Depot{
      * @throws DepotLimitException when the maximum number of resources is exceeded
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
-    public void addResouces(int quantity, Resource type) throws DepotLimitException, DepotResourceException {
+    public void addResources(int quantity, Resource type) throws DepotLimitException, DepotResourceException {
      if (!(type==resourceType)) throw new DepotResourceException();
      if((quantity+ currentQuantity)>maxQuantity) throw new DepotLimitException();
      currentQuantity+=quantity;

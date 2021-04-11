@@ -12,10 +12,15 @@ public class FaithTrack {
     private  static ArrayList<Cell> arrayOfCells;
 
 
-public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints){
-    IntStream.range(0,num-1).forEach(n ->{
-        arrayOfCells.add(new Cell(n,victoryPoints.get(n)));
-    });
+public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IndexOutOfBoundsException{
+    arrayOfCells= new ArrayList<>(num);
+   if(num== victoryPoints.size()) {
+       IntStream.range(0, num - 1).forEach(n -> {
+           arrayOfCells.add(n, new Cell(n, victoryPoints.get(n)));
+       });
+   }
+   else {throw new IndexOutOfBoundsException();}
+
 
     effects.entrySet().stream().forEach(e->{
         Integer i= e.getKey();
@@ -31,7 +36,11 @@ public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Int
      * @return
      */
     public static FaithTrack initFaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) {
-        if (instance == null) instance = new FaithTrack( num, effects, victoryPoints);
+       // try {
+            if (instance == null) instance = new FaithTrack(num, effects, victoryPoints);
+
+       // }
+      //  catch(IndexOutOfBoundsException e){}
         return instance;
     }
 
