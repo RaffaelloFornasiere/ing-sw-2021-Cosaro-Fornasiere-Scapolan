@@ -1,12 +1,14 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import java.util.ArrayList;
+
 /**
  * Class that represents a leader card
  */
 public class LeaderCard {
 
     private int victoryPoints;
-    private Requirement activationRequirement;
+    private ArrayList<Requirement> activationRequirement;
     private LeaderPower power;
 
     /**
@@ -15,7 +17,7 @@ public class LeaderCard {
      * @param activationRequirement requirement that must be fulfilled to activate the card
      * @param power effects of the card
      */
-    public LeaderCard(int victoryPoints, Requirement activationRequirement, LeaderPower power){
+    public LeaderCard(int victoryPoints, ArrayList<Requirement> activationRequirement, LeaderPower power){
         this.victoryPoints = victoryPoints;
         this.activationRequirement = activationRequirement;
         this.power = power;
@@ -33,7 +35,7 @@ public class LeaderCard {
      * getter for the requirements
      * @return the requirements
      */
-    public Requirement getActivationRequirement() {
+    public ArrayList<Requirement> getActivationRequirement() {
         return activationRequirement;
     }
 
