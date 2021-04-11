@@ -15,21 +15,7 @@ public class DepositLeaderPower extends LeaderPower{
     private HashMap<Resource, Integer> currentResources;
 
     /**
-     * Constructor for the class used when it is going to decorate another LeaderPower
-     * @param decoratedLeaderPower the LeaderPower that is going to be decorated
-     * @param maxResources the amount of extra resources that can be stored
-     */
-    public DepositLeaderPower(LeaderPower decoratedLeaderPower, HashMap<Resource, Integer> maxResources) {
-        this.decoratedLeaderPower = decoratedLeaderPower;
-        this.maxResources = maxResources;
-
-        this.currentResources = new HashMap<>();
-        for (Resource r: maxResources.keySet()) {
-            this.currentResources.put(r, 0);
-        }
-    }
-    /**
-     * Constructor for the class used when it is not going to decorate another LeaderPower
+     * Constructor for the class
      * @param maxResources the amount of extra resources that can be stored
      */
     public DepositLeaderPower(HashMap<Resource, Integer> maxResources) {

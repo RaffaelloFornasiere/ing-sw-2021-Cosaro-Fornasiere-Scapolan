@@ -9,7 +9,7 @@ public class LeaderCard {
 
     private int victoryPoints;
     private ArrayList<Requirement> activationRequirement;
-    private LeaderPower power;
+    private ArrayList<LeaderPower> power;
 
     /**
      * Constructor for the class
@@ -17,7 +17,7 @@ public class LeaderCard {
      * @param activationRequirement requirement that must be fulfilled to activate the card
      * @param power effects of the card
      */
-    public LeaderCard(int victoryPoints, ArrayList<Requirement> activationRequirement, LeaderPower power){
+    public LeaderCard(int victoryPoints, ArrayList<Requirement> activationRequirement, ArrayList<LeaderPower> power){
         this.victoryPoints = victoryPoints;
         this.activationRequirement = activationRequirement;
         this.power = power;
@@ -43,7 +43,7 @@ public class LeaderCard {
      * getter for the victory points
      * @return the value of victory points
      */
-    public LeaderPower getPower() {
+    public ArrayList<LeaderPower> getPower() {
         return power;
     }
 }

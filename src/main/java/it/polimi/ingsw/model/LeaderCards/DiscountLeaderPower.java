@@ -12,17 +12,7 @@ public class DiscountLeaderPower extends LeaderPower{
     private HashMap<Resource, Integer> discount;
 
     /**
-     * Constructor for the class used when it is going to decorate another LeaderPower
-     * @param decoratedLeaderPower the LeaderPower that is going to be decorated
-     * @param discount the discount for each resource type that is applied when buying a development card
-     */
-    public DiscountLeaderPower(LeaderPower decoratedLeaderPower, HashMap<Resource, Integer> discount){
-        this.decoratedLeaderPower = decoratedLeaderPower;
-        this.discount = discount;
-    }
-
-    /**
-     * Constructor for the class used when it is going to decorate another LeaderPower
+     * Constructor for the class
      * @param discount the discount for each resource type that is applied when buying a development card
      */
     public DiscountLeaderPower(HashMap<Resource, Integer> discount){

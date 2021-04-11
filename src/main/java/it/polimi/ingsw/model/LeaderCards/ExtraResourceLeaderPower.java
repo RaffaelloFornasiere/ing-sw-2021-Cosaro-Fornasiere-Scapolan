@@ -12,17 +12,7 @@ public class ExtraResourceLeaderPower extends LeaderPower{
     private Resource resourceType;
 
     /**
-     * Constructor for the class used when it is going to decorate another LeaderPower
-     * @param decoratedLeaderPower the LeaderPower that is going to be decorated
-     * @param resourceType the type of the resource given instead of nothing when getting a withe marble from the market
-     */
-    public ExtraResourceLeaderPower(LeaderPower decoratedLeaderPower, Resource resourceType){
-        this.decoratedLeaderPower = decoratedLeaderPower;
-        this.resourceType = resourceType;
-    }
-
-    /**
-     * Constructor for the class used when it is going to decorate another LeaderPower
+     * Constructor for the class
      * @param resourceType the type of the resource given instead of nothing when getting a withe marble from the market
      */
     public ExtraResourceLeaderPower(Resource resourceType){
