@@ -12,6 +12,52 @@ import static org.junit.Assert.*;
 public class DepositLeaderPowerTest {
 
     @Test
+    public void testMaxResourcesImmutabilityFromConstructor(){
+        HashMap<Resource, Integer> maxResources = new HashMap<>();
+        maxResources.put(Resource.SERVANT, 3);
+        maxResources.put(Resource.COIN, 7);
+
+        DepositLeaderPower dlp = new DepositLeaderPower(maxResources);
+
+        maxResources.put(Resource.COIN, 5);
+
+        HashMap<Resource, Integer> expectedResources = new HashMap<>();
+        expectedResources.put(Resource.SERVANT, 3);
+        expectedResources.put(Resource.COIN, 7);
+        assertEquals(expectedResources, dlp.getMaxResources());
+    }
+
+    @Test
+    public void testGetMaxResources(){
+        HashMap<Resource, Integer> maxResources = new HashMap<>();
+        maxResources.put(Resource.SERVANT, 3);
+        maxResources.put(Resource.COIN, 7);
+
+        DepositLeaderPower dlp = new DepositLeaderPower(maxResources);
+
+        HashMap<Resource, Integer> expectedResources = new HashMap<>();
+        expectedResources.put(Resource.SERVANT, 3);
+        expectedResources.put(Resource.COIN, 7);
+        assertEquals(expectedResources, dlp.getMaxResources());
+    }
+
+    @Test
+    public void testGetMaxResourcesImmutability(){
+        HashMap<Resource, Integer> maxResources = new HashMap<>();
+        maxResources.put(Resource.SERVANT, 3);
+        maxResources.put(Resource.COIN, 7);
+
+        DepositLeaderPower dlp = new DepositLeaderPower(maxResources);
+
+        dlp.getMaxResources().put(Resource.COIN, 5);
+
+        HashMap<Resource, Integer> expectedResources = new HashMap<>();
+        expectedResources.put(Resource.SERVANT, 3);
+        expectedResources.put(Resource.COIN, 7);
+        assertEquals(expectedResources, dlp.getMaxResources());
+    }
+
+    @Test
     public void testAddResourcesSuccessful() {
         HashMap<Resource, Integer> maxResources = new HashMap<>();
         maxResources.put(Resource.SERVANT, 3);
