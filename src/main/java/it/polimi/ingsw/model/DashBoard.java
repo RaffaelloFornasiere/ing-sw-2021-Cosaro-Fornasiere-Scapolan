@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.EmptyStrongboxException;
 import it.polimi.ingsw.exceptions.IndexSlotException;
+import it.polimi.ingsw.exceptions.LevelCardException;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
@@ -12,6 +13,7 @@ import java.util.Stack;
 import java.util.stream.IntStream;
 
 public class DashBoard {
+
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<Stack<DevCard>> cardSlots;
     private  ArrayList<Depot> warehouse;
@@ -68,15 +70,35 @@ public class DashBoard {
         strongBox.put(resource, strongBox.get(resource) - quantity);
     }
 
-    public void addCard(int slotIndex, DevCard card)throws IndexSlotException//, LevelCardException
-    {
+    public void addCard(int slotIndex, DevCard card)throws IndexSlotException, LevelCardException {
+        //if the parameter is an index which doesn't exist, gives exception.
         if( slotIndex<0 || slotIndex>=cardSlots.size()) throw new IndexSlotException();
+        //if the stack I want to add the card to is not empty, I must check that the level of cards respect the rules.
+        if(!(cardSlots.get(slotIndex).isEmpty())) {
+            DevCard temp = cardSlots.get(slotIndex).peek();
 
-        DevCard temp= cardSlots.get(slotIndex).peek();
+            if (temp.getLevel() != card.getLevel() -1) throw new LevelCardException();
 
-        //if(temp.getLevel()!=card.getLevel()+1) throw new LevelCardException();
+            cardSlots.get(slotIndex).push(card);
+        }
+        //instead, if it's empty, the card I add must be level 1, otherwise gives exception
+        else  if(card.getLevel()!= 1) throw new LevelCardException();
+        else cardSlots.get(slotIndex).push(card);
+    }
 
-        //cardSlots.get(slotIndex).push(card);
+    /**
+     * Getter of StrongBox
+     * @return
+     */
+    public HashMap<Resource, Integer> getStrongBox() {
+        return strongBox;
+    }
 
+    /**
+     * getter of cardSlots
+     * @return
+     */
+    public ArrayList<Stack<DevCard>> getCardSlots() {
+        return cardSlots;
     }
 }

@@ -11,7 +11,13 @@ public class Depot{
     public Depot(int maxQuantity){
      this.maxQuantity= maxQuantity;
      currentQuantity=0;
-     resourceType=null;
+     this.resourceType=null;
+    }
+
+    public Depot(int maxQuantity, Resource resourceType){
+        this.maxQuantity= maxQuantity;
+        currentQuantity=0;
+        this.resourceType=resourceType;
     }
 
     /**
