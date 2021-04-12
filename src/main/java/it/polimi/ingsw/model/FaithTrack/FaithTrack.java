@@ -8,11 +8,17 @@ import java.util.stream.IntStream;
 
 
 public class FaithTrack {
-    private  static FaithTrack instance = null;
-    private  static ArrayList<Cell> arrayOfCells;
+    private static FaithTrack instance = null;
+    private static ArrayList<Cell> arrayOfCells;
 
-
-public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IndexOutOfBoundsException{
+    /**
+     * constructor
+     * @param num length of faithtrack is equal to the number of cells
+     * @param effects effects to initialize special cells
+     * @param victoryPoints array of points to initialize each cell
+     * @throws IndexOutOfBoundsException if the number of cells is different from the length of the array of vpoints for the cells
+     */
+    public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IndexOutOfBoundsException{
     arrayOfCells= new ArrayList<>(num);
    if(num== victoryPoints.size()) {
        IntStream.range(0, num - 1).forEach(n -> {
@@ -28,28 +34,25 @@ public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Int
         arrayOfCells.set(i, new CellWithEffect(i, victoryPoints.get(i), effect));
     });
     }
+
+
     /**
-     *
-     * @param num
-     * @param effects
-     * @param victoryPoints
-     * @return
+     * @param num length of faithtrack is equal to the number of cells
+     * @param effects effects to initialize special cells
+     * @param victoryPoints array of points to initialize each cell
+     * @return the instance of faithtrack
      */
     public static FaithTrack initFaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) {
-       // try {
             if (instance == null) instance = new FaithTrack(num, effects, victoryPoints);
-
-       // }
-      //  catch(IndexOutOfBoundsException e){}
         return instance;
     }
 
+    /**
+     * the length of the faithtrack
+     * @return the length of faithtrack
+     */
     public int size(){
        return arrayOfCells.size();
-    }
-
-    public Cell getCellOfIndex(int i){
-        return arrayOfCells.get(i);
     }
 }
 

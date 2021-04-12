@@ -4,8 +4,12 @@ import it.polimi.ingsw.controller.EffectOfCell;
 
 public class CellWithEffect extends Cell {
     final EffectOfCell effect;
+
     /**
-     * @Constructor
+     * constructor
+     * @param index index of cell
+     * @param vPoints victorypoints of cell
+     * @param effect effect  of cell
      */
     public  CellWithEffect(int index, int vPoints, EffectOfCell effect){
         super(index, vPoints);

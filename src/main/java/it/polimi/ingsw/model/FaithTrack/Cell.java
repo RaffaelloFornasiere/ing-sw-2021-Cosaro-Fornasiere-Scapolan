@@ -7,8 +7,8 @@ public class Cell{
 
     /**
      * @Constructor
-     * @param index
-     * @param vpoints
+     * @param index index of cell
+     * @param vpoints victorypoints of cell
      */
     public Cell(int index, int vpoints){
         this.index= index;
@@ -34,10 +34,8 @@ public class Cell{
     }
 
 
-
-
     /**
-     * must be overrided, activate the effect according to the type of cell.
+     * must be overrided, activates the effect according to the type of cell.
      */
     public void activateEffect(){}
 

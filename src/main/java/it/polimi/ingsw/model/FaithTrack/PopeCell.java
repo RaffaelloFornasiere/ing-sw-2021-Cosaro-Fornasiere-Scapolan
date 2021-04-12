@@ -9,9 +9,12 @@ public class PopeCell extends CellWithEffect {
     private final PopeFavorCard card;
 
     /**
-     * @param index
-     * @param vPoints
-     * @Constructor
+     * constructor
+     * @param index index of cell
+     * @param vPoints victory points of cell
+     * @param card favorpopecard associted to this pope cell
+     * @param vaticanReportSection the array of other cells which constitutes thevatican report section
+     * @param effect effect of the cell.
      */
     public PopeCell(int index, int vPoints, PopeFavorCard card,  ArrayList<Cell> vaticanReportSection, EffectOfCell effect) {
         super(index, vPoints, effect);
@@ -20,11 +23,21 @@ public class PopeCell extends CellWithEffect {
     }
 
 
+
+    /**
+     * Getter of the vatican report section cells
+     * @return array of cells belonging to the vatican report section
+     */
     public ArrayList<Cell> getVaticanReportSection() {
         return vaticanReportSection;
     }
 
 
+
+    /**
+     * getter of the favor pope card
+     * @return the favor pope card
+     */
     public PopeFavorCard getCard() {
         return card;
     }

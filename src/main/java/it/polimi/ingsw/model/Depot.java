@@ -8,16 +8,16 @@ public class Depot{
     private int maxQuantity;
     private int currentQuantity;
 
+    /**
+     * constructor, takes as input the max quantity of resources for the depot.
+     * initializes to zero the current quantity
+     * initializes to ROCK the type of resource, which can be later on modified.
+     * @param maxQuantity
+     */
     public Depot(int maxQuantity){
      this.maxQuantity= maxQuantity;
      currentQuantity=0;
-     this.resourceType=null;
-    }
-
-    public Depot(int maxQuantity, Resource resourceType){
-        this.maxQuantity= maxQuantity;
-        currentQuantity=0;
-        this.resourceType=resourceType;
+     this.resourceType=Resource.ROCK;
     }
 
     /**
