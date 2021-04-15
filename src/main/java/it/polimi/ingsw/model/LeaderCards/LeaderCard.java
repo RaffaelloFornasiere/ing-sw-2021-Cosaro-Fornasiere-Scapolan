@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Class that represents a leader card
  */
-public class LeaderCard {
+public class LeaderCard implements Serializable {
 
     private int victoryPoints;
     private ArrayList<Requirement> activationRequirement;
