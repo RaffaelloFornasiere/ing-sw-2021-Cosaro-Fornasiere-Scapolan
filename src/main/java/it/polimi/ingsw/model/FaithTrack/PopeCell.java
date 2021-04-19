@@ -29,7 +29,7 @@ public class PopeCell extends CellWithEffect {
      * @return array of cells belonging to the vatican report section
      */
     public ArrayList<Cell> getVaticanReportSection() {
-        return vaticanReportSection;
+        return  (ArrayList<Cell>)vaticanReportSection.clone();
     }
 
 
@@ -39,7 +39,8 @@ public class PopeCell extends CellWithEffect {
      * @return the favor pope card
      */
     public PopeFavorCard getCard() {
-        return card;
+        return new PopeFavorCard( card.getVictoryPoints()
+        );
     }
 
     @Override
