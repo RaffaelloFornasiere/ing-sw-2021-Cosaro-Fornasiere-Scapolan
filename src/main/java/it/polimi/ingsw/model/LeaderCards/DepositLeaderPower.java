@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.LeaderCards;
 
-import it.polimi.ingsw.exceptions.DepotLimitException;
-import it.polimi.ingsw.exceptions.EmptyStrongboxException;
+import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.HashMap;
@@ -46,12 +45,12 @@ public class DepositLeaderPower extends LeaderPower{
     /**
      * Method that ads the resources passed to the deposit granted by this power
      * @param resourcesAdded the resources to be added
-     * @throws DepotLimitException when there's not enough space for the resources to be added
+     * @throws ResourcesLimitsException when there's not enough space for the resources to be added
      */
-    public void addResources(HashMap<Resource, Integer> resourcesAdded) throws DepotLimitException {
+    public void addResources(HashMap<Resource, Integer> resourcesAdded) throws ResourcesLimitsException {
         for(Resource r: resourcesAdded.keySet()){
             if(!maxResources.containsKey(r) || resourcesAdded.get(r)+currentResources.get(r)>maxResources.get(r))
-                throw new DepotLimitException();
+                throw new ResourcesLimitsException();
 
             currentResources.compute(r, (key,val) -> val + resourcesAdded.get(r));
         }
@@ -60,12 +59,12 @@ public class DepositLeaderPower extends LeaderPower{
     /**
      * Method that removes the resources passed to the deposit granted by this power
      * @param resourcesRemoved the resources to be removed
-     * @throws EmptyStrongboxException when there are not enough resources in the deposit to be removed
+     * @throws ResourcesLimitsException when there are not enough resources in the deposit to be removed
      */
-    public void removeResources(HashMap<Resource, Integer> resourcesRemoved) throws EmptyStrongboxException {
+    public void removeResources(HashMap<Resource, Integer> resourcesRemoved) throws ResourcesLimitsException {
         for(Resource r: resourcesRemoved.keySet()){
             if(!currentResources.containsKey(r) || resourcesRemoved.get(r)>currentResources.get(r))
-                throw new EmptyStrongboxException();
+                throw new ResourcesLimitsException();
 
             currentResources.compute(r, (key,val) -> val - resourcesRemoved.get(r));
         }

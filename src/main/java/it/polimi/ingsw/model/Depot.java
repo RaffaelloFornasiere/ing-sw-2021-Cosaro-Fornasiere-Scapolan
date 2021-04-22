@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.DepotLimitException;
+import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.exceptions.DepotResourceException;
 
 public class Depot{
@@ -66,12 +66,12 @@ public class Depot{
      *
      * @param quantity  to add
      * @param type of resource to add
-     * @throws DepotLimitException when the maximum number of resources is exceeded
+     * @throws ResourcesLimitsException when the maximum number of resources is exceeded
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
-    public void addResources(int quantity, Resource type) throws DepotLimitException, DepotResourceException {
+    public void addResources(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
      if (!(type==resourceType)) throw new DepotResourceException();
-     if((quantity+ currentQuantity)>maxQuantity) throw new DepotLimitException();
+     if((quantity+ currentQuantity)>maxQuantity) throw new ResourcesLimitsException();
      currentQuantity+=quantity;
     }
 
@@ -79,12 +79,12 @@ public class Depot{
      *
      * @param quantity  to subtract
      * @param type of resource to subtract
-     * @throws DepotLimitException when the minimum number of resources is exceeded
+     * @throws ResourcesLimitsException when the minimum number of resources is exceeded
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
-    public void subResouces(int quantity, Resource type) throws DepotLimitException, DepotResourceException {
+    public void subResouces(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
         if (!(type==resourceType)) throw new DepotResourceException();
-        if((currentQuantity-quantity)<0) throw new DepotLimitException();
+        if((currentQuantity-quantity)<0) throw new ResourcesLimitsException();
         currentQuantity-=quantity;
     }
 
@@ -92,8 +92,8 @@ public class Depot{
      * Swithes the content of two deposits.
      * @param depot is the deposit
      */
-    public void switchDepot( Depot depot)throws DepotLimitException{
-        if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) throw new DepotLimitException();
+    public void switchDepot( Depot depot)throws ResourcesLimitsException {
+        if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) throw new ResourcesLimitsException();
         Resource tempResourceType = this.resourceType;
         this.resourceType=depot.getResourceType();
         depot.setResourceType(tempResourceType);

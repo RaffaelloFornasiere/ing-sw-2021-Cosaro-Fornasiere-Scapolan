@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.LeaderCards;
 
-import it.polimi.ingsw.exceptions.DepotLimitException;
-import it.polimi.ingsw.exceptions.EmptyStrongboxException;
+import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.Resource;
 import org.junit.Test;
 
@@ -69,7 +68,7 @@ public class DepositLeaderPowerTest {
         addedResources.put(Resource.COIN, 4);
         try {
             dlp.addResources(addedResources);
-        } catch (DepotLimitException e) {
+        } catch (ResourcesLimitsException e) {
             fail();
         }
         HashMap<Resource, Integer> expectedResources = new HashMap<>();
@@ -91,7 +90,7 @@ public class DepositLeaderPowerTest {
         try {
             dlp.addResources(addedResources);
             fail();
-        } catch (DepotLimitException e) {
+        } catch (ResourcesLimitsException e) {
             //nothing
         }
     }
@@ -109,7 +108,7 @@ public class DepositLeaderPowerTest {
         try {
             dlp.addResources(addedResources);
             fail();
-        } catch (DepotLimitException e) {
+        } catch (ResourcesLimitsException e) {
             //nothing
         }
     }
@@ -126,7 +125,7 @@ public class DepositLeaderPowerTest {
         addedResources.put(Resource.ROCK, 4);
         try {
             dlp.addResources(addedResources);
-        } catch (DepotLimitException e) {
+        } catch (ResourcesLimitsException e) {
             fail();
         }
 
@@ -134,7 +133,7 @@ public class DepositLeaderPowerTest {
         removedResources.put(Resource.ROCK, 2);
         try {
             dlp.removeResources(removedResources);
-        } catch (EmptyStrongboxException e) {
+        } catch (ResourcesLimitsException e) {
             fail();
         }
     }
@@ -151,7 +150,7 @@ public class DepositLeaderPowerTest {
         addedResources.put(Resource.ROCK, 4);
         try {
             dlp.addResources(addedResources);
-        } catch (DepotLimitException e) {
+        } catch (ResourcesLimitsException e) {
             fail();
         }
 
@@ -160,7 +159,7 @@ public class DepositLeaderPowerTest {
         try {
             dlp.removeResources(removedResources);
             fail();
-        } catch (EmptyStrongboxException e) {
+        } catch (ResourcesLimitsException e) {
             //nothing
         }
     }
@@ -177,7 +176,7 @@ public class DepositLeaderPowerTest {
         addedResources.put(Resource.ROCK, 2);
         try {
             dlp.addResources(addedResources);
-        } catch (DepotLimitException e) {
+        } catch (ResourcesLimitsException e) {
             fail();
         }
 
@@ -186,7 +185,7 @@ public class DepositLeaderPowerTest {
         try {
             dlp.removeResources(removedResources);
             fail();
-        } catch (EmptyStrongboxException e) {
+        } catch (ResourcesLimitsException e) {
             //nothing
         }
     }

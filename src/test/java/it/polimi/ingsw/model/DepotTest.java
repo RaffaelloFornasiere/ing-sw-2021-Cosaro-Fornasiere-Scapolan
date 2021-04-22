@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.DepotLimitException;
+import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.exceptions.DepotResourceException;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -16,7 +16,7 @@ public class DepotTest extends TestCase {
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
         try{testDepot.addResources(1, Resource.COIN); }
-        catch ( DepotLimitException e){fail();}
+        catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){fail();}
         assertEquals(3, testDepot.getCurrentQuantity());
     }
@@ -30,7 +30,7 @@ public class DepotTest extends TestCase {
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
         try{testDepot.addResources(3, Resource.COIN); fail(); }
-        catch ( DepotLimitException e){}
+        catch ( ResourcesLimitsException e){}
         catch ( DepotResourceException e){fail();}
 
     }
@@ -43,7 +43,7 @@ public class DepotTest extends TestCase {
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
         try{testDepot.addResources(1, Resource.ROCK); fail(); }
-        catch ( DepotLimitException e){fail();}
+        catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){}
 
     }
@@ -56,7 +56,7 @@ public class DepotTest extends TestCase {
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
         try{testDepot.subResouces(1, Resource.COIN); }
-        catch ( DepotLimitException e){fail();}
+        catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){fail();}
         assertEquals(1, testDepot.getCurrentQuantity());
     }
@@ -69,7 +69,7 @@ public class DepotTest extends TestCase {
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
         try{testDepot.subResouces(3, Resource.COIN); fail(); }
-        catch ( DepotLimitException e){}
+        catch ( ResourcesLimitsException e){}
         catch ( DepotResourceException e){fail();}
 
     }
@@ -82,7 +82,7 @@ public class DepotTest extends TestCase {
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
         try{testDepot.subResouces(1, Resource.ROCK); fail(); }
-        catch ( DepotLimitException e){fail();}
+        catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){}
 
     }
@@ -102,7 +102,7 @@ public class DepotTest extends TestCase {
             assertEquals(3, testDepot1.getCurrentQuantity());
             assertEquals(2, testDepot2.getCurrentQuantity());
         }
-        catch ( DepotLimitException e){fail();}
+        catch ( ResourcesLimitsException e){fail();}
      }
     /***
      * this method deals with the case in which the second depot has more resources than the first depot can possibly hold.
@@ -119,7 +119,7 @@ public class DepotTest extends TestCase {
             testDepot1.switchDepot(testDepot2);
             fail();
         }
-        catch ( DepotLimitException e){}
+        catch ( ResourcesLimitsException e){}
     }
     /***
      * this method deals with the case in which the first depot has more resources than the second depot can possibly hold.
@@ -136,7 +136,7 @@ public class DepotTest extends TestCase {
             testDepot1.switchDepot(testDepot2);
             fail();
         }
-        catch ( DepotLimitException e){}
+        catch ( ResourcesLimitsException e){}
     }
 
 }
