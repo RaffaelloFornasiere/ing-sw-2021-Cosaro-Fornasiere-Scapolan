@@ -1,0 +1,121 @@
+title Masters of Renaissance (buy a resource)
+
+actor User
+participant View
+participantgroup #lightgreen 
+participant Network Handler
+end
+participantgroup #lightblue
+participant Virtual View
+end
+participantgroup #pink
+participant Controller
+end 
+
+participantgroup #lightgray
+participant Model
+end
+
+User ->> View: selects the Market
+activate View
+View <-View: access local data and\nupdate view
+User <--View: view updated
+deactivate View
+
+
+
+// ***************Buy Action **************************************
+User ->>View: Selects row or column
+View -> Network Handler: update(MarketBuyEvent)
+Network Handler -#ff00ff>Virtual View: send(MarketBuyEvent)
+Virtual View ->Controller: update(MarketBuyEvent)
+activate Controller
+Controller -> Model: buyMarbels(dir, index)
+activate Model
+Controller <--Model: reosurces
+deactivate Model
+
+alt if there are red marbles
+loop for all red marbles
+Controller -> Controller: increase player position
+Controller ->Model : cell.activateEffect()
+end 
+Controller->Model: setPosition(newPosition)
+end
+Controller ->Model: getLeaderCards()
+Controller <--Model: leaderCards
+// ****************************************************************
+
+
+
+// *********Leader cards with ExtraResourceLeaderPower*************
+alt Leader cards with ExtraResourceLeaderPower
+Virtual View <- Controller: requestLeaderCardActivation(cardIndex)
+Network Handler <#ff00ff-Virtual View: send(LeaderCardActivationEvent(cardIndex, bool))
+
+View <- Network Handler: requestLeaderCardActivation(cardIndex)
+User <- View: view updated
+User ->> View:  yes/no
+View ->Network Handler: update(LeaderCardActivationEvent(cardIndex, bool))
+Network Handler -#ff00ff> Virtual View : send(LeaderCardActivationEvent(cardIndex, bool))
+Virtual View ->Controller:update(LeaderCardActivationEvent(cardIndex, bool))
+  alt if LeaderCardActivationEvent.bool == true
+  Controller -> Controller: change white marble into resource
+  end 
+end
+// ****************************************************************
+
+Controller -> Other VirtualViews : UpdateView(new market state)
+
+
+// ****************** resource discard ****************************
+Controller ->Controller: Check if all resources can be placed
+loop  not all resources can be placed
+Virtual View <- Controller: requestResourceDiscard(vector<Resource>)
+Network Handler <#ff00ff-Virtual View: send(requestResourceDiscard(vector<Resource>))
+View <-Network Handler: requestResourceDiscard(vector<Resource>)
+User <- View :view updated 
+User -> View: resources selected
+View ->Network Handler: ResourceDiscardEvent(vector<Resource>)
+Network Handler -#ff00ff> Virtual View: send(ResourceDiscardEvent(vector<Resource>))
+Virtual View ->Controller: ResourceDiscardEvent(vector<Resource>)
+loop for all players
+Controller -> Controller: increase player position
+Controller ->Model : cell.activateEffect()
+end
+end
+// ****************************************************************
+
+
+Virtual View <-Controller: UpdateView(new market state) \n and ask for resource placement
+deactivate Controller
+Network Handler <#ff00ff-Virtual View: UpdateView()
+View <-Network Handler: UpdateView(new market state) \n and ask for resource placement
+User <-View: view updated
+
+
+// ****************** resource replacement ************************
+loop new warehouse state is not valid
+User -> View: Selects how to put new resources
+View ->Virtual View: update(WarehouseStateChanged)
+Virtual View ->Controller: update(WarehouseStateChanged)
+
+Controller ->Controller: cheks state validity
+  alt warehouse state is valid 
+  Virtual View <-Controller: ErrorEvent: warehouse state not valid
+  Network Handler <#ff00ff-Virtual View: send(Error)
+  View <-Network Handler: ErrorEvent: warehouse state not valid
+  User <- View: Error
+  end
+end
+// ****************************************************************
+
+
+
+
+Controller ->Model: Update Warehouse state
+Controller <- Model: Update(newWarehouseState)
+Virtual View <-Controller: UpdateView()
+Network Handler <#ff00ff-Virtual View: send(UpdateView)
+View <-Network Handler: UpdateView()
+User <-View: view updated
