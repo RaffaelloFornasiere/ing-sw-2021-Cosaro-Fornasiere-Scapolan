@@ -18,8 +18,10 @@ public class DevDeck {
         level = cards.get(0).getLevel();
         color = cards.get(0).getColor();
         cards.forEach(x -> {
-            if (x.getColor() != color || x.getLevel() != level)
-                throw new IllegalStateException();
+            if (x.getColor() != color)
+                throw new IllegalArgumentException("Card color does not match deck color");
+            if (x.getLevel() != level)
+                throw new IllegalArgumentException("Card level does not match deck level");
         });
         this.cards = cards;
     }
@@ -30,8 +32,11 @@ public class DevDeck {
      * @param card card to be added
      */
     public void push(DevCard card) {
-        if (card.getLevel() != level || card.getColor() != color) ;
-        //throw something
+        if (card.getColor() != color)
+            throw new IllegalArgumentException("Card color does not match deck color");
+        if (card.getLevel() != level)
+            throw new IllegalArgumentException("Card level does not match deck level");
+
         cards.add(card);
     }
 
