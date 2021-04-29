@@ -59,9 +59,9 @@ public class MarketTest {
         var row = market.getMarbles(direction, index);
         var row2 = new HashMap<Marble, Integer>();
         var grid = market.getMarketStatus();
-        int len = (direction == Direction.ROW) ? grid[index].length : grid.length;
-        int i = (direction == Direction.ROW) ? index : 0, j = (direction == Direction.ROW) ? 0 : index,
-                di = (direction == Direction.ROW) ? 0 : 1, dj = (direction == Direction.ROW) ? 1 : 0;
+        int len = grid[index].length ;
+        int i = index , j =  0,
+                di =  0 , dj = 1;
         for (; i < len && j < len; i += di, j += dj)
             row2.put(grid[i][j], row2.containsKey(grid[i][j]) ? row2.get(grid[i][j]) + 1 : 1);
         assertEquals(row, row2);
@@ -71,14 +71,15 @@ public class MarketTest {
         direction = Direction.COLUMN;
         row2.clear();
         row = market.getMarbles(direction, index);
-        len = (direction == Direction.ROW) ? grid[index].length : grid.length;
-        i = index;
-        j = (direction == Direction.ROW) ? 0 : index;
-        di = (direction == Direction.ROW) ? 0 : 1;
-        dj = (direction == Direction.ROW) ? 1 : 0;
+        len = grid.length;
+        i = 0;
+        j = index;
+        di = 1;
+        dj = 0;
 
         for (; i < len && j < len; i += di, j += dj)
             row2.put(grid[i][j], row2.containsKey(grid[i][j]) ? row2.get(grid[i][j]) + 1 : 1);
+
         assertEquals(row, row2);
 
     }
@@ -110,6 +111,5 @@ public class MarketTest {
         list.forEach(i -> row2.put(i, row2.containsKey(i)?(row2.get(i)+1):1));
 
         assertEquals(row, row2);
-
     }
 }
