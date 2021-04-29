@@ -19,14 +19,14 @@ public class FaithTrack {
      * @param victoryPoints array of points to initialize each cell
      * @throws IndexOutOfBoundsException if the number of cells is different from the length of the array of vpoints for the cells
      */
-    public FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IndexOutOfBoundsException {
+    private FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException{
         arrayOfCells = new ArrayList<>(num);
         if (num == victoryPoints.size()) {
-            IntStream.range(0, num - 1).forEach(n -> {
+            IntStream.range(0, num).forEach(n -> {
                 arrayOfCells.add(n, new Cell(n, victoryPoints.get(n)));
             });
         } else {
-            throw new IndexOutOfBoundsException();
+            throw new IllegalArgumentException("length of faithTrack doesn't coincide with victoryPoint array length");
         }
 
 
@@ -58,13 +58,7 @@ public class FaithTrack {
         return arrayOfCells.size();
     }
 
-    /**
-     * Getter   of FaithTrack
-     * @return instance of FaithTrack
-     */
-    public static FaithTrack getFaithTrack() {
-        return instance;
-    }
+
 
     /**
      * Getter of array Of Cells of FaithTrack

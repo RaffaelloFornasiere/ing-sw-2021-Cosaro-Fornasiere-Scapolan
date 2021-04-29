@@ -18,8 +18,19 @@ public class FaithTrackTest extends TestCase {
             a.add(2);
             a.add(3);
             a.add(4);
+            assertEquals( 4,a.size());
+            ArrayList<Integer> b= new ArrayList<>(5);
+            b.addAll(a);
+            b.add(5);
+            assertEquals( 5,b.size());
             ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
-        } catch (IndexOutOfBoundsException e) {}
+            ft = FaithTrack.initFaithTrack(5, new HashMap<Integer, EffectOfCell>(), b);
+            assertEquals( 4,ft.size());
+            assertEquals( 1,ft.getArrayOfCells().get(0).getVictoryPoints());
+            assertEquals( 2,ft.getArrayOfCells().get(1).getVictoryPoints());
+            assertEquals( 3,ft.getArrayOfCells().get(2).getVictoryPoints());
+            assertEquals( 4,ft.getArrayOfCells().get(3).getVictoryPoints());
+        } catch (IllegalArgumentException e) {fail();}
     }
 
     /**
@@ -35,6 +46,6 @@ public class FaithTrackTest extends TestCase {
          a.add(3);
          ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
          fail();
-        } catch(IndexOutOfBoundsException e){}
+        } catch(IllegalArgumentException e){}
     }
 }
