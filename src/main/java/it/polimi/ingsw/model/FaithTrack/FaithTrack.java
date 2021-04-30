@@ -44,7 +44,7 @@ public class FaithTrack {
      * @param victoryPoints array of points to initialize each cell
      * @return the instance of faithtrack
      */
-    public static FaithTrack initFaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) {
+    public static FaithTrack initFaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException {
         if (instance == null) instance = new FaithTrack(num, effects, victoryPoints);
         return instance;
     }

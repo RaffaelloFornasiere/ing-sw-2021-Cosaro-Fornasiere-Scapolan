@@ -37,6 +37,7 @@ public class FaithTrackTest extends TestCase {
      * This method tests the correctness of initializing the singleton FaithTrack, in case a wrong parameter is given
      * ( the length of the array of points for the cells must be equal to the length of the faith track)
      */
+
     public void testInitFaithTrackUnsuccessful() {
         try {
          FaithTrack ft;
@@ -44,7 +45,9 @@ public class FaithTrackTest extends TestCase {
          a.add(1);
          a.add(2);
          a.add(3);
-         ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+         a.add(4);
+         assertEquals(4,a.size());
+         ft = FaithTrack.initFaithTrack(5, new HashMap<Integer, EffectOfCell>(), a);
          fail();
         } catch(IllegalArgumentException e){}
     }
