@@ -23,8 +23,7 @@ public class FaithTrackTest extends TestCase {
             b.addAll(a);
             b.add(5);
             assertEquals( 5,b.size());
-            ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
-            ft = FaithTrack.initFaithTrack(5, new HashMap<Integer, EffectOfCell>(), b);
+            ft = new FaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
             assertEquals( 4,ft.size());
             assertEquals( 1,ft.getArrayOfCells().get(0).getVictoryPoints());
             assertEquals( 2,ft.getArrayOfCells().get(1).getVictoryPoints());
@@ -47,7 +46,7 @@ public class FaithTrackTest extends TestCase {
          a.add(3);
          a.add(4);
          assertEquals(4,a.size());
-         ft = FaithTrack.initFaithTrack(5, new HashMap<Integer, EffectOfCell>(), a);
+         ft = new FaithTrack(5, new HashMap<Integer, EffectOfCell>(), a);
          fail();
         } catch(IllegalArgumentException e){}
     }

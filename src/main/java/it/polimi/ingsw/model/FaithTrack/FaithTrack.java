@@ -19,7 +19,7 @@ public class FaithTrack {
      * @param victoryPoints array of points to initialize each cell
      * @throws IndexOutOfBoundsException if the number of cells is different from the length of the array of vpoints for the cells
      */
-    private FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException{
+    protected FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException{
         arrayOfCells = new ArrayList<>(num);
         if (num == victoryPoints.size()) {
             IntStream.range(0, num).forEach(n -> {
