@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.LeaderCards;
 
 import it.polimi.ingsw.model.Resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,6 +11,13 @@ import java.util.HashMap;
 public class ExtraResourceLeaderPower extends LeaderPower{
 
     private Resource resourceType;
+
+    static{
+        incompatiblePowers = new ArrayList<>();
+        incompatiblePowers.add(DiscountLeaderPower.class);
+        incompatiblePowers.add(ExtraResourceLeaderPower.class);
+        incompatiblePowers.add(ProductionLeaderPower.class);
+    }
 
     /**
      * Constructor for the class
