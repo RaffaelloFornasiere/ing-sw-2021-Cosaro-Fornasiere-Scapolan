@@ -6,12 +6,19 @@ import java.util.ArrayList;
 
 public class Player {
     private String name;
-    ArrayList<LeaderCard> leaderCards;
+    ArrayList<LeaderCardOwnership> leaderCards;
     DashBoard dashBoard;
+
+    private class LeaderCardOwnership {
+        protected LeaderCard leaderCard;
+        protected boolean active;
+        protected boolean selected;
+    }
 
     Player(String name)
     {
         this.name = name;
+        this.leaderCards = new ArrayList<>();
     }
 
     public String getName() {
@@ -19,11 +26,21 @@ public class Player {
     }
 
     public ArrayList<LeaderCard> getLeaderCards() {
-        return leaderCards;
+        ArrayList<LeaderCard> lcs = new ArrayList<>();
+        for(LeaderCardOwnership lco: leaderCards)
+            lcs.add(lco.leaderCard);
+        return lcs;
     }
 
     public void setLeaderCards(ArrayList<LeaderCard> leaderCards) {
-        this.leaderCards = leaderCards;
+        LeaderCardOwnership lco;
+        for(LeaderCard lc: leaderCards){
+            lco = new LeaderCardOwnership();
+            lco.leaderCard=lc;
+            lco.active=false;
+            lco.selected=false;
+            this.leaderCards.add(lco);
+        }
     }
 
 }
