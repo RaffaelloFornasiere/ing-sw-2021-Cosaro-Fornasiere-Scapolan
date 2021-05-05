@@ -38,7 +38,7 @@ public class MarketTest {
         Market shuffled = new Market(4,3, marbles);
 
         shuffled.shuffleMarket();
-        assertFalse(shuffled.getMarketStatus().equals(unShuffled.getMarketStatus()));
+        assertNotEquals(shuffled.getMarketStatus(), unShuffled.getMarketStatus());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class MarketTest {
         list.remove(0);
         list.add(market.getMarbleLeft());
 
-        market.Update(direction, index);
+        market.update(direction, index);
         var row = market.getMarbles(direction, index);
 
         HashMap<Marble, Integer> row2 = new HashMap<>();
