@@ -12,10 +12,10 @@ public class ExtraResourceLeaderPower extends LeaderPower{
 
     private Resource resourceType;
 
-    static{
+    public ExtraResourceLeaderPower(){
+        super();
         incompatiblePowers = new ArrayList<>();
         incompatiblePowers.add(DiscountLeaderPower.class);
-        incompatiblePowers.add(ExtraResourceLeaderPower.class);
         incompatiblePowers.add(ProductionLeaderPower.class);
     }
 

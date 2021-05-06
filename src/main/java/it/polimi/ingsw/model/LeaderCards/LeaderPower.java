@@ -8,9 +8,9 @@ import java.util.ArrayList;
  */
 public abstract class LeaderPower implements Serializable {
 
-    protected static transient ArrayList<java.lang.Class<? extends LeaderPower>> incompatiblePowers;
+    protected transient ArrayList<java.lang.Class<? extends LeaderPower>> incompatiblePowers;
 
-    public static java.lang.Class<? extends LeaderPower> getIncompatiblePowers() {
-        return (java.lang.Class<? extends LeaderPower>) incompatiblePowers.clone();
+    public ArrayList<java.lang.Class<? extends LeaderPower>> getIncompatiblePowers() {
+        return (ArrayList<java.lang.Class<? extends LeaderPower>>) incompatiblePowers.clone();
     }
 }

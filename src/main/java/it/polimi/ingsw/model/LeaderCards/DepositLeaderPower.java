@@ -14,7 +14,8 @@ public class DepositLeaderPower extends LeaderPower{
     private HashMap<Resource, Integer> maxResources;
     private HashMap<Resource, Integer> currentResources;
 
-    static{
+    public DepositLeaderPower(){
+        super();
         incompatiblePowers = new ArrayList<>();
     }
 

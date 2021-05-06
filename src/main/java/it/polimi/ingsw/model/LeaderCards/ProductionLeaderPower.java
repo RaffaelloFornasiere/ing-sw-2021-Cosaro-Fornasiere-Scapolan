@@ -11,7 +11,8 @@ public class ProductionLeaderPower extends LeaderPower{
 
     private ProductionPower effectPower;
 
-    static{
+    public ProductionLeaderPower(){
+        super();
         incompatiblePowers = new ArrayList<>();
         incompatiblePowers.add(DiscountLeaderPower.class);
         incompatiblePowers.add(ExtraResourceLeaderPower.class);

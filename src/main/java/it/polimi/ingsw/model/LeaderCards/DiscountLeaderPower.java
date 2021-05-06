@@ -12,7 +12,8 @@ public class DiscountLeaderPower extends LeaderPower{
 
     private HashMap<Resource, Integer> discount;
 
-    static{
+    public DiscountLeaderPower(){
+        super();
         incompatiblePowers = new ArrayList<>();
         incompatiblePowers.add(ProductionLeaderPower.class);
         incompatiblePowers.add(ExtraResourceLeaderPower.class);
