@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import javax.swing.text.Keymap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +10,8 @@ public class ProductionPower {
     private int requiredResourceOfChoice;
     private int producedResourceOfChoice;
     private int faithPointsProduced;
+
+    public ProductionPower(){}
 
     public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources) {
         this.consumedResources = consumedResources;

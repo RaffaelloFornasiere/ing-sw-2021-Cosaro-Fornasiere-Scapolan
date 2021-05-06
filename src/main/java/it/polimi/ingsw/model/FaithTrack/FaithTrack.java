@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-import it.polimi.ingsw.controller.EffectOfCell;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.IntStream;
@@ -9,7 +7,7 @@ import java.util.stream.IntStream;
 
 public class FaithTrack {
     private static FaithTrack instance = null;
-    private static ArrayList<Cell> arrayOfCells;
+    private static ArrayList<AbstractCell> arrayOfCells;
 
     /**
      * constructor
@@ -19,7 +17,7 @@ public class FaithTrack {
      * @param victoryPoints array of points to initialize each cell
      * @throws IndexOutOfBoundsException if the number of cells is different from the length of the array of vpoints for the cells
      */
-    protected FaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException{
+    protected FaithTrack(int num, HashMap<Integer, CellWithEffect> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException{
         arrayOfCells = new ArrayList<>(num);
         if (num == victoryPoints.size()) {
             IntStream.range(0, num).forEach(n -> {
@@ -32,9 +30,10 @@ public class FaithTrack {
 
         effects.entrySet().stream().forEach(e -> {
             Integer i = e.getKey();
-            EffectOfCell effect = e.getValue();
-            arrayOfCells.set(i, new CellWithEffect(i, victoryPoints.get(i), effect));
+            CellWithEffect cell = e.getValue();
+            arrayOfCells.set(i,cell);
         });
+
     }
 
 
@@ -44,7 +43,7 @@ public class FaithTrack {
      * @param victoryPoints array of points to initialize each cell
      * @return the instance of faithtrack
      */
-    public static FaithTrack initFaithTrack(int num, HashMap<Integer, EffectOfCell> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException {
+    public static FaithTrack initFaithTrack(int num, HashMap<Integer, CellWithEffect> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException {
         if (instance == null) instance = new FaithTrack(num, effects, victoryPoints);
         return instance;
     }
@@ -67,6 +66,4 @@ public class FaithTrack {
     public static ArrayList<Cell> getArrayOfCells() {
         return (ArrayList<Cell>)arrayOfCells.clone();
     }
-
-
 }

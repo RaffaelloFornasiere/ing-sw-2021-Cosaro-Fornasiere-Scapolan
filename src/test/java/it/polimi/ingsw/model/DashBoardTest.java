@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.EffectOfCell;
+
 import it.polimi.ingsw.exceptions.EmptyStrongboxException;
 import it.polimi.ingsw.exceptions.IndexSlotException;
 import it.polimi.ingsw.exceptions.LevelCardException;
 import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.FaithTrack.CellWithEffect;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import junit.framework.TestCase;
 
@@ -29,7 +30,7 @@ public class DashBoardTest extends TestCase {
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, CellWithEffect>(), a);
         //creates production power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
         //create dashboard
@@ -63,7 +64,7 @@ public class DashBoardTest extends TestCase {
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, CellWithEffect>(), a);
 
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
 
@@ -90,7 +91,7 @@ public class DashBoardTest extends TestCase {
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, CellWithEffect>(), a);
         //creates production power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
         //creates dashboard
@@ -119,7 +120,7 @@ public class DashBoardTest extends TestCase {
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, CellWithEffect>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
         //creates dashboard
@@ -159,7 +160,7 @@ public class DashBoardTest extends TestCase {
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, CellWithEffect>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
         //creates dashboard
@@ -191,7 +192,7 @@ public class DashBoardTest extends TestCase {
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, CellWithEffect>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
         //creates dashboard
@@ -231,7 +232,7 @@ public class DashBoardTest extends TestCase {
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+        ft = FaithTrack.initFaithTrack(4, new HashMap<Integer,CellWithEffect>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
         //creates dashboard

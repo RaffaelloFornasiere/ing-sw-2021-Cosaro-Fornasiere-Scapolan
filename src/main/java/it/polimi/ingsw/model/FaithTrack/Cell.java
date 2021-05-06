@@ -1,18 +1,20 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-public class Cell{
+import it.polimi.ingsw.model.MatchState;
+
+public class Cell extends AbstractCell{
     private final int index;
     private final int victoryPoints;
 
 
-    /**
-     * @Constructor
-     * @param index index of cell
-     * @param vpoints victorypoints of cell
-     */
-    public Cell(int index, int vpoints){
-        this.index= index;
-        this.victoryPoints= vpoints;
+    public Cell(int index, int victoryPoints){
+        this.index=index;
+        this.victoryPoints=victoryPoints;
+    }
+
+    @Override
+    public void activateEffect(MatchState matchState) {
+
     }
 
     /**
@@ -33,10 +35,9 @@ public class Cell{
         return victoryPoints;
     }
 
-
     /**
      * must be overrided, activates the effect according to the type of cell.
      */
-    public void activateEffect(){}
+    public void activateEffect(){};
 
 }

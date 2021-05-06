@@ -1,38 +1,41 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-import it.polimi.ingsw.controller.EffectOfCell;
-
-import java.util.ArrayList;
+import it.polimi.ingsw.controller.EffectOfPopeCell;
+import it.polimi.ingsw.model.MatchState;
 
 public class PopeCell extends CellWithEffect {
-    private final ArrayList<Cell> vaticanReportSection;
+    private final int vaticanReportSection;
     private final PopeFavorCard card;
 
     /**
      * constructor
-     * @param index index of cell
-     * @param vPoints victory points of cell
      * @param card favorpopecard associted to this pope cell
      * @param vaticanReportSection the array of other cells which constitutes thevatican report section
-     * @param effect effect of the cell.
      */
-    public PopeCell(int index, int vPoints, PopeFavorCard card,  ArrayList<Cell> vaticanReportSection, EffectOfCell effect) {
-        super(index, vPoints, effect);
+    public PopeCell(AbstractCell cell, PopeFavorCard card, int vaticanReportSection) {
+        this.cell= cell;
         this.card= card;
         this.vaticanReportSection=vaticanReportSection;
+        this.effect= new EffectOfPopeCell();
     }
 
+    public PopeCell( int index, int victoryPoints, PopeFavorCard card,  int vaticanReportSection) {
+        this.cell= new Cell(index, victoryPoints);
+        this.card= card;
+        this.vaticanReportSection=vaticanReportSection;
+        this.effect= new EffectOfPopeCell();
+    }
 
 
     /**
-     * Getter of the vatican report section cells
+     * Getter of the length of the vaticanReportSection. For instance, if it is 4,
+     * it means that from the popeCell (included), back to four cell before, it is
+     * all VaticanReportSection.
      * @return array of cells belonging to the vatican report section
      */
-    public ArrayList<Cell> getVaticanReportSection() {
-        return  (ArrayList<Cell>)vaticanReportSection.clone();
+    public int getVaticanReportSection() {
+        return  vaticanReportSection;
     }
-
-
 
     /**
      * getter of the favor pope card
@@ -44,7 +47,7 @@ public class PopeCell extends CellWithEffect {
     }
 
     @Override
-    public void activateEffect() {
-        super.activateEffect();
+    public void activateEffect(MatchState matchState) {
+        super.activateEffect(matchState);
     }
 }

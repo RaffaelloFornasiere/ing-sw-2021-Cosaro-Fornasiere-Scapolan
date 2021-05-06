@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-import it.polimi.ingsw.controller.EffectOfCell;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class FaithTrackTest extends TestCase {
             b.addAll(a);
             b.add(5);
             assertEquals( 5,b.size());
-            ft = new FaithTrack(4, new HashMap<Integer, EffectOfCell>(), a);
+            ft = new FaithTrack(4, new HashMap<Integer,CellWithEffect>(), a);
             assertEquals( 4,ft.size());
             assertEquals( 1,ft.getArrayOfCells().get(0).getVictoryPoints());
             assertEquals( 2,ft.getArrayOfCells().get(1).getVictoryPoints());
@@ -39,15 +38,15 @@ public class FaithTrackTest extends TestCase {
 
     public void testInitFaithTrackUnsuccessful() {
         try {
-         FaithTrack ft;
-         ArrayList<Integer> a = new ArrayList<Integer>(4);
-         a.add(1);
-         a.add(2);
-         a.add(3);
-         a.add(4);
-         assertEquals(4,a.size());
-         ft = new FaithTrack(5, new HashMap<Integer, EffectOfCell>(), a);
-         fail();
+            FaithTrack ft;
+            ArrayList<Integer> a = new ArrayList<Integer>(4);
+            a.add(1);
+            a.add(2);
+            a.add(3);
+            a.add(4);
+            assertEquals(4,a.size());
+            ft = new FaithTrack(5, new HashMap<Integer, CellWithEffect>(), a);
+            fail();
         } catch(IllegalArgumentException e){}
     }
 }

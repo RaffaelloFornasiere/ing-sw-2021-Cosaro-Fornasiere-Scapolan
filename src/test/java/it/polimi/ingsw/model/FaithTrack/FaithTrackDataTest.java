@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-import it.polimi.ingsw.controller.EffectOfCell;
 import it.polimi.ingsw.exceptions.OutOfBoundException;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -15,7 +14,7 @@ public class FaithTrackDataTest extends TestCase {
 
     @Test
     public void testAddPopeFavorCard() {
-        HashMap<Integer, EffectOfCell> effects = new HashMap<>();
+        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);
@@ -33,7 +32,7 @@ public class FaithTrackDataTest extends TestCase {
      */
     @Test
     public void testGetFavorPopeCardPoints() {
-        HashMap<Integer, EffectOfCell> effects = new HashMap<>();
+        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);
@@ -55,7 +54,7 @@ public class FaithTrackDataTest extends TestCase {
      */
     @Test
     public void testIncrementPositionSuccessful() {
-        HashMap<Integer, EffectOfCell> effects = new HashMap<>();
+        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);
@@ -75,7 +74,7 @@ public class FaithTrackDataTest extends TestCase {
      */
     @Test
     public void testIncrementPositionUnsuccessful() {
-        HashMap<Integer, EffectOfCell> effects = new HashMap<>();
+        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);

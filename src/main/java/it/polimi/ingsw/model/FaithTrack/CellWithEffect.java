@@ -1,36 +1,38 @@
 package it.polimi.ingsw.model.FaithTrack;
 
 import it.polimi.ingsw.controller.EffectOfCell;
+import it.polimi.ingsw.model.MatchState;
 
-public class CellWithEffect extends Cell {
-    final EffectOfCell effect;
-
-
-
-    /**
-     * constructor
-     * @param index index of cell
-     * @param vPoints victorypoints of cell
-     * @param effect effect  of cell
-     */
-    public  CellWithEffect(int index, int vPoints, EffectOfCell effect){
-        super(index, vPoints);
-        this.effect=effect;
-    }
+public abstract class CellWithEffect extends AbstractCell {
+    protected AbstractCell cell;
+    private boolean effectDone= false;
+    protected EffectOfCell effect;
 
     /**
      * Getter
      * @return effect of cell
      */
-    public EffectOfCell getEffect() {
+    public EffectOfCell getEffectOfCell() {
         return effect;
     }
 
-    public void registerEffect(){
+    public int getIndex(){
+        return cell.getIndex();
+    }
+
+    public int getVictoryPoints(){
+        return  cell.getVictoryPoints();
+    }
+
+
+    @Override
+    public void activateEffect( MatchState matchState){
+        if (!effectDone && effect!= null) {
+            effect.activate(this, matchState);
+            cell.activateEffect(matchState);
+            effectDone=true;
+        }
 
     }
 
-    public void unregisterEffect(){
-
-    }
 }

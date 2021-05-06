@@ -15,15 +15,17 @@ public class DevDeck {
      * @param cards cards to construct the deck
      */
     DevDeck(ArrayList<DevCard> cards) {
-        level = cards.get(0).getLevel();
-        color = cards.get(0).getColor();
-        cards.forEach(x -> {
-            if (x.getColor() != color)
-                throw new IllegalArgumentException("Card color does not match deck color");
-            if (x.getLevel() != level)
-                throw new IllegalArgumentException("Card level does not match deck level");
-        });
-        this.cards = cards;
+        if (cards.size() != 0) {
+            level = cards.get(0).getLevel();
+            color = cards.get(0).getColor();
+            cards.forEach(x -> {
+                if (x.getColor() != color)
+                    throw new IllegalArgumentException("Card color does not match deck color");
+                if (x.getLevel() != level)
+                    throw new IllegalArgumentException("Card level does not match deck level");
+            });
+            this.cards = cards;
+        }
     }
 
     /**
