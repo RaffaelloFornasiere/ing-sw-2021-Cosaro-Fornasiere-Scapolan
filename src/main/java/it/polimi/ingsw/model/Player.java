@@ -71,12 +71,17 @@ public class Player {
         throw new NotPresentException("The selected leader card is not owned by this player");
     }
 
+    /**
+     * gets all the resources stored in the dashboard, as well as in a leader power as an hashmap
+     * if a resource is not present, the map will have an entry for it anyway, with value 0
+     * @return all the resources in the warehouse and in the strongbox
+     */
     public HashMap<Resource, Integer> getAllPayerResources(){
         HashMap<Resource, Integer> resources = dashBoard.getAllDashboardResources();
 
         ArrayList<LeaderCard> leaderCards = getActiveLeaderCards();
         for(LeaderCard lc: leaderCards) {
-            ArrayList<LeaderPower> leaderPowers = lc.getSelectedLeaderPowers();
+            ArrayList<LeaderPower> leaderPowers = lc.getLeaderPowers();
             for(LeaderPower lp : leaderPowers)
                 if(lp instanceof DepositLeaderPower) {
                     HashMap<Resource, Integer> lpResources = ((DepositLeaderPower)lp).getCurrentResources();
