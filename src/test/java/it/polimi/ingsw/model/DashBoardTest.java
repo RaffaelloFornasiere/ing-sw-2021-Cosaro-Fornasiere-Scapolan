@@ -1,16 +1,16 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.exceptions.EmptyStrongboxException;
-import it.polimi.ingsw.exceptions.IndexSlotException;
-import it.polimi.ingsw.exceptions.LevelCardException;
+import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.CellWithEffect;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 public class DashBoardTest extends TestCase {
 
@@ -245,5 +245,76 @@ public class DashBoardTest extends TestCase {
         try{  d.addCard(1, card);fail();}
         catch( IndexSlotException e){fail();}
         catch( LevelCardException e){}
+    }
+
+    public void testGetDepotResources(){
+        ArrayList<Integer> eachDepotCapacity = new ArrayList<>();
+        eachDepotCapacity.add(1);
+        eachDepotCapacity.add(2);
+        eachDepotCapacity.add(3);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+
+        try {
+            dashBoard.getWarehouse().get(0).addResources(1, Resource.COIN);
+        } catch (Exception e) {
+            fail();
+        }
+
+        try {
+            dashBoard.getWarehouse().get(1).addResources(1, Resource.SERVANT);
+        } catch (Exception e) {
+            fail();
+        }
+
+        try {
+            dashBoard.getWarehouse().get(2).addResources(3, Resource.SHIELD);
+        } catch (Exception e) {
+            fail();
+        }
+
+        HashMap<Resource, Integer> expected = new HashMap<>();
+        expected.put(Resource.COIN, 1);
+        expected.put(Resource.SERVANT, 1);
+        expected.put(Resource.SHIELD, 3);
+
+        for(Resource r: Resource.values())
+            if(!expected.containsKey(r))
+                expected.put(r,0);
+
+        assertEquals(expected, dashBoard.getWarehouseResources());
+    }
+
+    public void testGetAllDashboardResources() {
+        ArrayList<Integer> eachDepotCapacity = new ArrayList<>();
+        eachDepotCapacity.add(1);
+        eachDepotCapacity.add(2);
+        eachDepotCapacity.add(3);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+
+        try {
+            dashBoard.getWarehouse().get(1).addResources(1, Resource.SERVANT);
+        } catch (Exception e) {
+            fail();
+        }
+
+        try {
+            dashBoard.getWarehouse().get(2).addResources(3, Resource.SHIELD);
+        } catch (Exception e) {
+            fail();
+        }
+
+        dashBoard.addResourcesToStrongBox(Resource.SERVANT, 4);
+        dashBoard.addResourcesToStrongBox(Resource.COIN, 1);
+
+        HashMap<Resource, Integer> expected = new HashMap<>();
+        expected.put(Resource.SERVANT, 5);
+        expected.put(Resource.SHIELD, 3);
+        expected.put(Resource.COIN, 1);
+
+        for(Resource r: Resource.values())
+            if(!expected.containsKey(r))
+                expected.put(r,0);
+
+        assertEquals(expected, dashBoard.getAllDashboardResources());
     }
 }
