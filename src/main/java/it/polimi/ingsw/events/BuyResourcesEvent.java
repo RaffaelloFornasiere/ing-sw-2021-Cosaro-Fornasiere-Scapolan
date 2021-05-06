@@ -11,12 +11,11 @@ public class BuyResourcesEvent extends Event {
 
     private Direction direction;
     private int index;
+    private boolean UseLeaderPowers;
 
-    public Direction getDirection() {
-        return direction;
-    }
 
-    public int getIndex() {
-        return index;
-    }
+    public Direction getDirection() {return direction;}
+    public int getIndex() {return index;}
+
+
 }

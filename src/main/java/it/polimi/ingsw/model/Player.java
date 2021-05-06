@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public class Player {
     private String name;
+    private int playerId;
     ArrayList<LeaderCardOwnership> leaderCards;
     DashBoard dashBoard;
 
@@ -83,5 +84,11 @@ public class Player {
         }
         return resources;
     }
+
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
 
 }
