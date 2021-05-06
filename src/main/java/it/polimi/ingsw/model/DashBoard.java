@@ -161,4 +161,8 @@ public class DashBoard {
 
         return resources;
     }
+
+    public FaithTrackData getFaithTrackData(){
+        return faithTrack;
+    }
 }
