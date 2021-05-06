@@ -2,9 +2,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
+import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
     private String name;
@@ -25,6 +28,8 @@ public class Player {
     public String getName() {
         return name;
     }
+
+    public DashBoard getDashBoard(){return dashBoard;}
 
     public ArrayList<LeaderCard> getLeaderCards() {
         ArrayList<LeaderCard> lcs = new ArrayList<>();
@@ -61,6 +66,22 @@ public class Player {
         }
 
         throw new NotPresentException("The selected leader card is not owned by this player");
+    }
+
+    public HashMap<Resource, Integer> getAllPayerResources(){
+        HashMap<Resource, Integer> resources = dashBoard.getAllDashboardResources();
+
+        ArrayList<LeaderCard> leaderCards = getActiveLeaderCards();
+        for(LeaderCard lc: leaderCards) {
+            ArrayList<LeaderPower> leaderPowers = lc.getSelectedLeaderPowers();
+            for(LeaderPower lp : leaderPowers)
+                if(lp instanceof DepositLeaderPower) {
+                    HashMap<Resource, Integer> lpResources = ((DepositLeaderPower)lp).getCurrentResources();
+                    for(Resource r: lpResources.keySet())
+                        resources.put(r, lpResources.get(r) + resources.getOrDefault(r, 0));
+                }
+        }
+        return resources;
     }
 
 }
