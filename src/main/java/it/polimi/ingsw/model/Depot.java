@@ -29,14 +29,6 @@ public class Depot{
     }
 
     /**
-     * Setter
-     * @param resourceType the type of resource that is in this depot
-     */
-    public void setResourceType(Resource resourceType) {
-        this.resourceType = resourceType;
-    }
-
-    /**
      * Getter
      * @return the max quantity this depot can hold
      */
@@ -54,15 +46,6 @@ public class Depot{
     }
 
     /**
-     * Setter of quantity.
-     * @param quantity
-     */
-
-    public void setCurrentQuantity( int quantity) {
-         currentQuantity= quantity;
-    }
-
-    /**
      *
      * @param quantity  to add
      * @param type of resource to add
@@ -70,9 +53,10 @@ public class Depot{
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
     public void addResources(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
-     if (!(type==resourceType)) throw new DepotResourceException();
-     if((quantity+ currentQuantity)>maxQuantity) throw new ResourcesLimitsException();
-     currentQuantity+=quantity;
+        if(currentQuantity==0) resourceType = type;
+        if (!(type==resourceType)) throw new DepotResourceException();
+        if((quantity+ currentQuantity)>maxQuantity) throw new ResourcesLimitsException();
+        currentQuantity+=quantity;
     }
 
     /**
@@ -82,7 +66,7 @@ public class Depot{
      * @throws ResourcesLimitsException when the minimum number of resources is exceeded
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
-    public void subResouces(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
+    public void subResources(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
         if (!(type==resourceType)) throw new DepotResourceException();
         if((currentQuantity-quantity)<0) throw new ResourcesLimitsException();
         currentQuantity-=quantity;
@@ -96,10 +80,10 @@ public class Depot{
         if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) throw new ResourcesLimitsException();
         Resource tempResourceType = this.resourceType;
         this.resourceType=depot.getResourceType();
-        depot.setResourceType(tempResourceType);
+        depot.resourceType=tempResourceType;
         int tempCurrentQuantity=this.currentQuantity;
         this.currentQuantity=depot.getCurrentQuantity();
-        depot.setCurrentQuantity(tempCurrentQuantity);
+        depot.currentQuantity=tempCurrentQuantity;
     }
 
 }
