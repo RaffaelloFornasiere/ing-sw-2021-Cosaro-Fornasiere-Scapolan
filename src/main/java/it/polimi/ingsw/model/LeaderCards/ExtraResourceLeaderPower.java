@@ -14,7 +14,6 @@ public class ExtraResourceLeaderPower extends LeaderPower{
 
     public ExtraResourceLeaderPower(){
         super();
-        incompatiblePowers = new ArrayList<>();
         incompatiblePowers.add(DiscountLeaderPower.class);
         incompatiblePowers.add(ProductionLeaderPower.class);
     }
@@ -24,6 +23,7 @@ public class ExtraResourceLeaderPower extends LeaderPower{
      * @param resourceType the type of the resource given instead of nothing when getting a withe marble from the market
      */
     public ExtraResourceLeaderPower(Resource resourceType){
+        this();
         this.resourceType = resourceType;
     }
 

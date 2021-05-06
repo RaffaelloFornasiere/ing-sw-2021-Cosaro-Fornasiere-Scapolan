@@ -14,9 +14,9 @@ public class DepositLeaderPower extends LeaderPower{
     private HashMap<Resource, Integer> maxResources;
     private HashMap<Resource, Integer> currentResources;
 
+
     public DepositLeaderPower(){
         super();
-        incompatiblePowers = new ArrayList<>();
     }
 
     /**
@@ -24,6 +24,7 @@ public class DepositLeaderPower extends LeaderPower{
      * @param maxResources the amount of extra resources that can be stored
      */
     public DepositLeaderPower(HashMap<Resource, Integer> maxResources) {
+        this();
         this.maxResources = (HashMap<Resource, Integer>)maxResources.clone();
 
         this.currentResources = new HashMap<>();
