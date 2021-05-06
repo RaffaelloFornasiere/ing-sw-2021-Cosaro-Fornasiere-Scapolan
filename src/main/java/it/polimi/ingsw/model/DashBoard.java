@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.EmptyStrongboxException;
-import it.polimi.ingsw.exceptions.IndexSlotException;
-import it.polimi.ingsw.exceptions.LevelCardException;
+import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
@@ -36,9 +34,7 @@ public class DashBoard {
     }
     //initializes a number of slots for the devcard. The number of slots is passed as parameter numberOfSlots
     cardSlots= new ArrayList<>();
-        IntStream.range(0,numberOfSlots-1).forEach(n ->{
-            cardSlots.add(new Stack<>());
-        });
+        IntStream.range(0,numberOfSlots-1).forEach(n -> cardSlots.add(new Stack<>()));
 
     //initializes the depots to their max capacity
     warehouse=new ArrayList<>();
@@ -72,6 +68,44 @@ public class DashBoard {
     }
 
     /**
+     * modifier of the dashboard, it adds resources
+     * @param resource type of resource
+     * @param quantity quantity to add
+     */
+
+    public void addResourcesToWarehouse( Resource resource, int quantity) throws IllegalArgumentException,
+            ResourcesLimitsException {
+        var depot = warehouse
+                .stream()
+                .filter(x -> x.getResourceType().equals(resource))
+                .findFirst().orElse(null);
+        if(depot == null)
+            throw new IllegalArgumentException("Incompatible resource type");
+        try{depot.subResouces(quantity, resource);}
+        catch (DepotResourceException e){}
+    }
+    /**
+     * modifier of the dashboard, it subtracts resources
+     * @param resource type of resource
+     * @param quantity quantity to subtract
+     */
+    public void subResourcesToWarehouse( Resource resource, int quantity) throws
+            ResourcesLimitsException {
+        var depot = warehouse
+                .stream()
+                .filter(x -> x.getResourceType().equals(resource))
+                .findFirst().orElse(null);
+        if(depot == null)
+            throw new IllegalArgumentException("Incompatible resource type");
+        try{depot.subResouces(quantity, resource);}
+            catch (DepotResourceException e){}
+    }
+
+
+
+
+
+    /**
      * modifier of the dashboard, it adds devCards to the cardSlots in the Dashboard, according to the level constraints
      * @param slotIndex is the index of the slot to which I want to add the card. Indexes go from 0 to cardSlots.size()-1
      * @param card is the card I want to add
@@ -96,6 +130,7 @@ public class DashBoard {
      * Getter of StrongBox
      * @return a copy of the strongbox
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getStrongBox() {
         return (HashMap<Resource, Integer>) strongBox.clone();
     }
@@ -104,6 +139,7 @@ public class DashBoard {
      * getter of cardSlots
      * @return a copy of the card slots
      */
+    @SuppressWarnings("unchecked")
     public ArrayList<Stack<DevCard>> getCardSlots() {
         return (ArrayList<Stack<DevCard>>)cardSlots.clone();
     }

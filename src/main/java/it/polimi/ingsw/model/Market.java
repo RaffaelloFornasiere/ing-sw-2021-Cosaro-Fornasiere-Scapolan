@@ -9,6 +9,8 @@ public class Market {
 
     private Marble marbleLeft;
     private Marble[][] grid;
+
+
     private int rows;
     private int cols;
 
@@ -20,34 +22,33 @@ public class Market {
      * @param marbles hashmap with the available marbles
      */
     public Market(int rows, int colums, HashMap<Marble, Integer> marbles) {
-        if (marbles.entrySet().stream().mapToInt(Map.Entry::getValue).reduce(0, Integer::sum)
-                != rows * colums + 1)
+        this(rows, colums, new ArrayList<>() {{
+            marbles.forEach((key, value) ->
+                    IntStream.range(0, value)
+                            .forEach(n -> add(key))
+            );
+        }});
+    }
+
+    public Market(int rows, int colums, ArrayList<Marble> marbles) {
+        if (marbles.size() != rows * colums + 1)
             throw new IllegalArgumentException("number of marbles is not compatible with grid size");
         this.rows = rows;
         this.cols = colums;
         grid = new Marble[rows][colums];
-
-
-        //converts the hash to a list with all marbles
-        ArrayList<Marble> marbleArrayList = new ArrayList<>();
-        marbles.entrySet().forEach(entry ->
-                IntStream.range(0, entry.getValue())
-                        .forEach(n -> marbleArrayList.add(entry.getKey()))
-        );
-
         //assign the marbles to the market's grid
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < colums; j++)
-                grid[i][j] = marbleArrayList.get(i * colums + j);
+                grid[i][j] = marbles.get(i * colums + j);
 
         // assign the left marble
-        marbleLeft = marbleArrayList.get(marbleArrayList.size() - 1);
+        marbleLeft = marbles.get(marbles.size() - 1);
     }
 
-    public void shuffleMarket()
-    {
+    public void shuffleMarket() {
         ArrayList<Marble> marbleArrayList = new ArrayList<>();
-        Arrays.stream(grid).forEach(x -> Arrays.stream(x).forEach(y -> marbleArrayList.add(y)));
+        for (Marble[] x : grid) marbleArrayList.addAll(Arrays.asList(x));
+
         marbleArrayList.add(marbleLeft);
         Collections.shuffle(marbleArrayList);
         //assign the marbles to the market's grid
@@ -75,6 +76,17 @@ public class Market {
         return res;
     }
 
+    public ArrayList<Marble> getMarblesAsList(Direction direction, int index) {
+        ArrayList<Marble> res = new ArrayList<>();
+        if (direction == Direction.ROW)
+            Collections.addAll(res, grid[index]);
+        else
+            for (Marble[] marbles : grid)
+                res.add(marbles[index]);
+        return res;
+    }
+
+
     /**
      * Updates the market adding the left marble on the row or column specified
      * and take apart the first marble that becomes the new left marble
@@ -82,7 +94,7 @@ public class Market {
      * @param direction direction (row or column) to update
      * @param index     specifies the row/column to update
      */
-    public void Update(Direction direction, int index) {
+    public void update(Direction direction, int index) {
         Marble aux;
         if (direction == Direction.ROW) {
             aux = grid[index][0];
@@ -97,13 +109,20 @@ public class Market {
         marbleLeft = aux;
     }
 
-    public Marble[][] getMarketStatus()
-    {
+    public Marble[][] getMarketStatus() {
         return grid.clone();
     }
 
     public Marble getMarbleLeft() {
         return marbleLeft;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
     }
 
 }
