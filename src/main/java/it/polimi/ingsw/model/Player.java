@@ -20,9 +20,11 @@ public class Player {
         protected boolean active;
     }
 
-    Player(String name)
-    {
+    Player(String name, DashBoard dashBoard) {
         this.name = name;
+
+        this.dashBoard= dashBoard;
+
         this.leaderCards = new ArrayList<>();
     }
 
