@@ -16,7 +16,7 @@ public class DashBoard {
 
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<Stack<DevCard>> cardSlots;
-    private  ArrayList<Depot> warehouse;
+    private ArrayList<Depot> warehouse;
     private ProductionPower personalPower;
     private FaithTrackData faithTrack;
 
@@ -106,5 +106,23 @@ public class DashBoard {
      */
     public ArrayList<Stack<DevCard>> getCardSlots() {
         return (ArrayList<Stack<DevCard>>)cardSlots.clone();
+    }
+
+    public HashMap<Resource, Integer> getDepotResources(){
+        HashMap<Resource, Integer> resources = new HashMap<>();
+
+        for(Depot d: warehouse)
+            resources.put(d.getResourceType(), d.getCurrentQuantity());
+
+        return resources;
+    }
+
+    public HashMap<Resource, Integer> getAllDashboardResources(){
+        HashMap<Resource, Integer> resources = getDepotResources();
+
+        for(Resource r: strongBox.keySet())
+            resources.put(r, strongBox.get(r) + resources.getOrDefault(r, 0));
+
+        return resources;
     }
 }

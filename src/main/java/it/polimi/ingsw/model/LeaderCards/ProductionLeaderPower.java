@@ -2,12 +2,21 @@ package it.polimi.ingsw.model.LeaderCards;
 
 import it.polimi.ingsw.model.ProductionPower;
 
+import java.util.ArrayList;
+
 /**
  * Class containing the data needed to use the ability of a leader card that give an additional production power
  */
 public class ProductionLeaderPower extends LeaderPower{
 
     private ProductionPower effectPower;
+
+    public ProductionLeaderPower(){
+        super();
+        incompatiblePowers = new ArrayList<>();
+        incompatiblePowers.add(DiscountLeaderPower.class);
+        incompatiblePowers.add(ExtraResourceLeaderPower.class);
+    }
 
     /**
      * Constructor for the class

@@ -1,6 +1,12 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.CardColor;
+import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.Player;
+
+import java.util.ArrayList;
+import java.util.Stack;
 
 /**
 * Class specifying the amount of development card of a certain color needed to activate a leader card
@@ -34,5 +40,30 @@ public class LevellessCardRequirement extends Requirement{
      */
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean isEquivalent(Requirement other) {
+        if(!this.getClass().isInstance(other)) return false;
+        return this.type==((LevellessCardRequirement)other).type;
+    }
+
+    @Override
+    public Requirement merge(Requirement other) throws IllegalOperation {
+        if(!this.isEquivalent(other)) throw new IllegalOperation("The requirements to merge must be equivalent");
+        return new LevellessCardRequirement(this.type, this.quantity+((LevellessCardRequirement)other).quantity);
+    }
+
+    @Override
+    public boolean checkRequirement(Player p) {
+        int count = 0;
+
+        ArrayList<Stack<DevCard>> playerDevCards = p.getDashBoard().getCardSlots();
+
+        for(Stack<DevCard> devCardSlot: playerDevCards)
+            for(DevCard dc: devCardSlot)
+                if(dc.getColor() == type) count++;
+
+        return count>=quantity;
     }
 }

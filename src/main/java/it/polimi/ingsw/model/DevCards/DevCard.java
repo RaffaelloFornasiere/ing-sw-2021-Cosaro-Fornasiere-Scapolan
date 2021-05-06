@@ -13,6 +13,7 @@ public class DevCard
 
     public DevCard(HashMap<Resource, Integer> cost, int level, CardColor color, int victoryPoints, ProductionPower productionPower)
     {
+        if(level <= 0) throw new IllegalArgumentException("The card level cannot be negative");
         this.cost = cost;
         this.level = level;
         this.color = color;
