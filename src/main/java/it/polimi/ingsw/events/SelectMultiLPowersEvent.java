@@ -5,8 +5,8 @@ import it.polimi.ingsw.model.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SelectMultipleLeaderPowersEvent extends Event{
-    SelectMultipleLeaderPowersEvent() {
+public class SelectMultiLPowersEvent extends Event{
+    SelectMultiLPowersEvent() {
         super("SelectMultipleLeaderPowers");
     }
 

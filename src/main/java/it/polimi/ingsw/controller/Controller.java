@@ -2,7 +2,9 @@ package it.polimi.ingsw.controller;
 
 
 import it.polimi.ingsw.events.BuyResourcesEvent;
+import it.polimi.ingsw.events.SelectMultiLPowersEvent;
 import it.polimi.ingsw.exceptions.InvalidPlayerIdException;
+import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.LeaderCards.ExtraResourceLeaderPower;
@@ -18,7 +20,7 @@ public class Controller {
     MarketManager marketManager;
     LeaderCardManager leaderCardManager;
     MatchState matchState;
-    Depot depot;
+    DashBoard dashBoard;
 
 
     Controller(PropertyChangeSubject subject) {
@@ -37,9 +39,9 @@ public class Controller {
 
     public void BuyResourcesEventHandler(PropertyChangeEvent evt) throws InvalidPlayerIdException {
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
-        var resources = marketManager.buy(
+        var marbles = new ArrayList<>(marketManager.buy(
                 event.getDirection(),
-                event.getIndex()).stream().map(Resource::toResource).collect(Collectors.toList());
+                event.getIndex()));
         var players = matchState.getPlayers();
         var player = players.stream().filter(x -> event.getPlayerId() == x.getPlayerId()).findFirst().orElse(null);
 
@@ -54,27 +56,48 @@ public class Controller {
         if(powers.size() > 1)
         {
             //ask user for power selction
+            return;
         }
         else if (powers.size() > 0 )
         {
             var power = powers.get(0);
-            resources.stream().filter(Resource.ANY::equals).forEach(x -> x = power.getResourceType());
         }
-
-        if (resources.contains(Resource.FAITH_POINT)) {
-            //add faithtrack points
-
-            resources.stream().filter(Predicate.not(Resource.FAITH_POINT::equals)).forEach(resources::remove);
-        }
-
-
-        //depot.addResources(resources);
-
+        var resources = marbles.stream().map(marble -> {
+            switch (marble) {
+                case BLUE:
+                    return Resource.SHIELD;
+                case GRAY:
+                    return Resource.ROCK;
+                case YELLOW:
+                    return Resource.COIN;
+                case PURPLE:
+                    return Resource.SERVANT;
+                default:
+                    return null;
+            }
+        }).collect(Collectors.toCollection(ArrayList::new));
+        ManageBuoughtResources(resources);
     }
 
     public void SelectMultipleLeaderPowersHandler(PropertyChangeEvent evt)
     {
+        SelectMultiLPowersEvent event = (SelectMultiLPowersEvent) evt.getNewValue();
+        //event.getResources().stream().filter(Marble.RED::equals).forEach(redMarble ->
+        {
+            //add
+        }//);
+        //ManageBuoughtResources(event.getResources());
+    }
 
+    private void ManageBuoughtResources(ArrayList<Resource> resources)
+    {
+        resources.forEach(x -> {
+            try {
+                dashBoard.addResourcesToWarehouse(x, 1);
+            } catch (ResourcesLimitsException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 
