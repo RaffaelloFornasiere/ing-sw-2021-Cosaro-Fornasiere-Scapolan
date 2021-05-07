@@ -17,7 +17,7 @@ public class FaithTrack {
      * @param victoryPoints array of points to initialize each cell
      * @throws IndexOutOfBoundsException if the number of cells is different from the length of the array of vpoints for the cells
      */
-    protected FaithTrack(int num, HashMap<Integer, CellWithEffect> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException{
+    protected FaithTrack(int num, ArrayList<CellWithEffect> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException{
         arrayOfCells = new ArrayList<>(num);
         if (num == victoryPoints.size()) {
             IntStream.range(0, num).forEach(n -> {
@@ -28,10 +28,9 @@ public class FaithTrack {
         }
 
 
-        effects.entrySet().stream().forEach(e -> {
-            Integer i = e.getKey();
-            CellWithEffect cell = e.getValue();
-            arrayOfCells.set(i,cell);
+        effects.stream().forEach(e -> {
+            if(e.getIndex()>arrayOfCells.size()) throw new IllegalArgumentException("cell index is out of array length");
+                arrayOfCells.set(e.getIndex(), e);
         });
 
         arrayOfCells.set(arrayOfCells.size()-1, new LastCell(arrayOfCells.get(arrayOfCells.size()-1)));
@@ -45,7 +44,7 @@ public class FaithTrack {
      * @param victoryPoints array of points to initialize each cell
      * @return the instance of faithtrack
      */
-    public static FaithTrack initFaithTrack(int num, HashMap<Integer, CellWithEffect> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException {
+    public static FaithTrack initFaithTrack(int num, ArrayList<CellWithEffect> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException {
         if (instance == null) instance = new FaithTrack(num, effects, victoryPoints);
         return instance;
     }

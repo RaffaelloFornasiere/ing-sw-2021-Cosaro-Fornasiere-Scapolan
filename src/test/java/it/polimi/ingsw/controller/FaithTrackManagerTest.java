@@ -28,8 +28,8 @@ public class FaithTrackManagerTest extends TestCase {
                 a.add(3);
                 a.add(4);
                 //create Hashmap of CellWithEffect : put a PopeCell in third cell(position 2) index and victory Points coincides.
-                HashMap<Integer, CellWithEffect> effects= new HashMap<>();
-                effects.put(2,new PopeCell(2,3, new PopeFavorCard(3),2));
+                ArrayList<CellWithEffect> effects= new ArrayList<>();
+                effects.add(new PopeCell(2,3, new PopeFavorCard(3),2));
                 ft = FaithTrack.initFaithTrack(4, effects, a);
                 //creates production power
                 ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<Resource, Integer>());
