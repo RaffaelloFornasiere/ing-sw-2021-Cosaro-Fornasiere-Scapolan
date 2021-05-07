@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SelectMultiLPowersEvent extends Event{
+public class SelectMultiLPowersEvent extends MatchEvent{
     SelectMultiLPowersEvent() {}
 
     public ArrayList<Resource> getResources() {

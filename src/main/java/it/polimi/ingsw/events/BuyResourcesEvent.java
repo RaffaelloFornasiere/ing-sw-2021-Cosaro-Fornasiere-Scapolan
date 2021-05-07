@@ -7,7 +7,7 @@ import java.lang.reflect.*;
 
 import java.util.Set;
 
-public class BuyResourcesEvent extends Event {
+public class BuyResourcesEvent extends MatchEvent {
     BuyResourcesEvent(Direction direction, int index) {
         this.direction = direction;
         this.index = index;
