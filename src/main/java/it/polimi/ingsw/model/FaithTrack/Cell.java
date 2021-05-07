@@ -2,7 +2,9 @@ package it.polimi.ingsw.model.FaithTrack;
 
 import it.polimi.ingsw.model.MatchState;
 
-public class Cell extends AbstractCell{
+import java.io.Serializable;
+
+public class Cell extends AbstractCell implements Serializable {
     private final int index;
     private final int victoryPoints;
 

@@ -12,7 +12,14 @@ import java.util.stream.IntStream;
 
 public class FaithTrackManager {
 
-    public static void incrementFaithTrackPosition(Player p, int n, MatchState matchState) {
+    private MatchState matchState;
+
+    public FaithTrackManager(MatchState matchState){
+        this.matchState = matchState;
+    }
+
+
+    public void incrementFaithTrackPosition(Player p, int n) {
         FaithTrackData ft= p.getDashBoard().getFaithTrackData();
         int beforePosition= ft.getPosition();
         try {
@@ -20,7 +27,7 @@ public class FaithTrackManager {
         } catch (OutOfBoundException e) {  }
         int afterPosition=ft.getPosition();
         IntStream.range(beforePosition, afterPosition+1).forEach(i -> {
-            FaithTrack.getArrayOfCells().get(i).activateEffect(matchState);
+            FaithTrack.getArrayOfCells().get(i).activateEffect(this.matchState);
         });
     }
 }

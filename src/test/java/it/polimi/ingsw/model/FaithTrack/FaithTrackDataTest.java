@@ -14,7 +14,7 @@ public class FaithTrackDataTest extends TestCase {
 
     @Test
     public void testAddPopeFavorCard() {
-        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
+        ArrayList<CellWithEffect> effects = new ArrayList<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);
@@ -32,7 +32,7 @@ public class FaithTrackDataTest extends TestCase {
      */
     @Test
     public void testGetFavorPopeCardPoints() {
-        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
+        ArrayList<CellWithEffect> effects = new ArrayList<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);
@@ -54,7 +54,7 @@ public class FaithTrackDataTest extends TestCase {
      */
     @Test
     public void testIncrementPositionSuccessful() {
-        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
+        ArrayList<CellWithEffect>effects = new ArrayList<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);
@@ -74,7 +74,7 @@ public class FaithTrackDataTest extends TestCase {
      */
     @Test
     public void testIncrementPositionUnsuccessful() {
-        HashMap<Integer, CellWithEffect> effects = new HashMap<>();
+        ArrayList<CellWithEffect> effects = new ArrayList<>();
         ArrayList<Integer> points = new ArrayList<>(3);
         points.add(0, 1);
         points.add(1, 2);

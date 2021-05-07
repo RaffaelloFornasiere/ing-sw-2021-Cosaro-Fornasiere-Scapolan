@@ -16,7 +16,7 @@ public class PopeCellTest extends TestCase {
         assertEquals(4, effectCell.getVictoryPoints());
         assertEquals(4, effectCell.getCard().getVictoryPoints());
         assertEquals(5, effectCell.getVaticanReportSection());
-
+        assertEquals("it.polimi.ingsw.model.FaithTrack.PopeCell",  effectCell.getClass().getName());
     }
 
     public void testGetCard() {
