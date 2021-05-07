@@ -1,12 +1,12 @@
 package it.polimi.ingsw.events;
 
 public abstract class Event {
-    int playerId;
+    String playerId;
 
     public Event() {
     }
 
-    public int getPlayerId() {
+    public String getPlayerId() {
         return playerId;
     }
 

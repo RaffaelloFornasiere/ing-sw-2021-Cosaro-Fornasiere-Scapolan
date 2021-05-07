@@ -3,8 +3,8 @@ package it.polimi.ingsw.utilities;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 
 public class MessageWrapper {
-    public static final String MESSAGE_START = "<-- BEGIN MESSAGE -->";
-    public static final String MESSAGE_END = "<-- END MESSAGE -->";
+    public static final String MESSAGE_START = "#-- BEGIN MESSAGE --#";
+    public static final String MESSAGE_END = "#-- END MESSAGE --#";
 
     public static String getScannerPattern(){
         return '(' + MESSAGE_START + "(.)*" + MESSAGE_END + ")?";

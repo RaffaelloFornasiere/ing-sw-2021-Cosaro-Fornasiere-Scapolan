@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player {
-    private String name;
-    private int playerId;
+    private String playerId;
     ArrayList<LeaderCardOwnership> leaderCards;
     DashBoard dashBoard;
 
@@ -21,15 +20,11 @@ public class Player {
     }
 
     public Player(String name, DashBoard dashBoard) {
-        this.name = name;
+        this.playerId = name;
 
         this.dashBoard= dashBoard;
 
         this.leaderCards = new ArrayList<>();
-    }
-
-    public String getName() {
-        return name;
     }
 
     public DashBoard getDashBoard(){return dashBoard;}
@@ -93,7 +88,7 @@ public class Player {
     }
 
 
-    public int getPlayerId() {
+    public String getPlayerId() {
         return playerId;
     }
 

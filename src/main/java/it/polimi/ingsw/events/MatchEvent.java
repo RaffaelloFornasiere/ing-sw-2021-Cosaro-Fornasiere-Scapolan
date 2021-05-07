@@ -1,4 +1,4 @@
 package it.polimi.ingsw.events;
 
-public class MatchEvent extends Event{
+public abstract class MatchEvent extends Event{
 }
