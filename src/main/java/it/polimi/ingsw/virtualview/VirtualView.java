@@ -12,7 +12,7 @@ public class VirtualView implements PropertyChangeSubject {
     public VirtualView(){}
 
     public void sendEvent(Event event){
-        support.firePropertyChange(event.getEventType(), null, event);
+        support.firePropertyChange(event.getEventName(), null, event);
     }
 
 

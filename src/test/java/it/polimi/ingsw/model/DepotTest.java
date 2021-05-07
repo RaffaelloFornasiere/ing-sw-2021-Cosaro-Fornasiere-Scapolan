@@ -55,7 +55,7 @@ public class DepotTest extends TestCase {
         Depot testDepot= new Depot(4);
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
-        try{testDepot.subResouces(1, Resource.COIN); }
+        try{testDepot.subResources(1, Resource.COIN); }
         catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){fail();}
         assertEquals(1, testDepot.getCurrentQuantity());
@@ -68,7 +68,7 @@ public class DepotTest extends TestCase {
         Depot testDepot= new Depot(4);
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
-        try{testDepot.subResouces(3, Resource.COIN); fail(); }
+        try{testDepot.subResources(3, Resource.COIN); fail(); }
         catch ( ResourcesLimitsException e){}
         catch ( DepotResourceException e){fail();}
 
@@ -81,7 +81,7 @@ public class DepotTest extends TestCase {
         Depot testDepot= new Depot(4);
         testDepot.setResourceType(Resource.COIN);
         testDepot.setCurrentQuantity(2);
-        try{testDepot.subResouces(1, Resource.ROCK); fail(); }
+        try{testDepot.subResources(1, Resource.ROCK); fail(); }
         catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){}
 

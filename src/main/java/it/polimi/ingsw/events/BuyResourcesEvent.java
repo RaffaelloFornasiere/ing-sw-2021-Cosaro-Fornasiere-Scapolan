@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Direction;
 
 public class BuyResourcesEvent extends Event {
     BuyResourcesEvent(Direction direction, int index) {
-        super("BuyResourceEvent");
         this.direction = direction;
         this.index = index;
     }
@@ -12,10 +11,13 @@ public class BuyResourcesEvent extends Event {
     private Direction direction;
     private int index;
     private boolean UseLeaderPowers;
-
+    private String eventName;
 
     public Direction getDirection() {return direction;}
     public int getIndex() {return index;}
 
-
+    @Override
+    public String getEventName() {
+        return this.getClass().getName();
+    }
 }

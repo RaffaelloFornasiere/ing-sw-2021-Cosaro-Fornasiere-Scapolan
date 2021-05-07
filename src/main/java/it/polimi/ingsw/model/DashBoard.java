@@ -81,7 +81,7 @@ public class DashBoard {
                 .findFirst().orElse(null);
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResouces(quantity, resource);}
+        try{depot.subResources(quantity, resource);}
         catch (DepotResourceException e){}
     }
     /**
@@ -97,7 +97,7 @@ public class DashBoard {
                 .findFirst().orElse(null);
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResouces(quantity, resource);}
+        try{depot.subResources(quantity, resource);}
             catch (DepotResourceException e){}
     }
 

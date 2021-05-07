@@ -82,7 +82,7 @@ public class Depot{
      * @throws ResourcesLimitsException when the minimum number of resources is exceeded
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
-    public void subResouces(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
+    public void subResources(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
         if (!(type==resourceType)) throw new DepotResourceException();
         if((currentQuantity-quantity)<0) throw new ResourcesLimitsException();
         currentQuantity-=quantity;

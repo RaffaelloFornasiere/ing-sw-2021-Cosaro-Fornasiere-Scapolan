@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SelectMultiLPowersEvent extends Event{
-    SelectMultiLPowersEvent() {
-        super("SelectMultipleLeaderPowers");
-    }
+    SelectMultiLPowersEvent() {}
 
     public ArrayList<Resource> getResources() {
         return resources;
