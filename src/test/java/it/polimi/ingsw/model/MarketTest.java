@@ -1,32 +1,37 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.events.Event;
+//import javassist.ClassPath;
 import org.junit.Test;
+import org.reflections.Reflections;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
 public class MarketTest {
 
     @Test
-    public void marketConstructorTest()
-    {
-        HashMap<Marble, Integer> marbles = new HashMap<>(){{
+    public void marketConstructorTest() {
+        HashMap<Marble, Integer> marbles = new HashMap<>() {{
             put(Marble.GRAY, 2);
             put(Marble.YELLOW, 2);
         }};
         try {
-            Market market = new Market (2,3, marbles);
+            Market market = new Market(2, 3, marbles);
             fail();
+        } catch (IllegalArgumentException ignored) {
+
         }
-        catch (IllegalArgumentException e){}
     }
 
     @Test
     public void shuffleMarketTest() {
-        HashMap<Marble, Integer> marbles = new HashMap<>(){{
+        HashMap<Marble, Integer> marbles = new HashMap<>() {{
             put(Marble.GRAY, 2);
             put(Marble.YELLOW, 2);
             put(Marble.PURPLE, 2);
@@ -34,8 +39,8 @@ public class MarketTest {
             put(Marble.WHITE, 4);
             put(Marble.RED, 1);
         }};
-        Market unShuffled = new Market(4,3, marbles);
-        Market shuffled = new Market(4,3, marbles);
+        Market unShuffled = new Market(4, 3, marbles);
+        Market shuffled = new Market(4, 3, marbles);
 
         shuffled.shuffleMarket();
         assertNotEquals(shuffled.getMarketStatus(), unShuffled.getMarketStatus());
@@ -43,7 +48,7 @@ public class MarketTest {
 
     @Test
     public void getMarblesTest() {
-        HashMap<Marble, Integer> marbles = new HashMap<>(){{
+        HashMap<Marble, Integer> marbles = new HashMap<>() {{
             put(Marble.GRAY, 2);
             put(Marble.YELLOW, 2);
             put(Marble.PURPLE, 2);
@@ -51,7 +56,7 @@ public class MarketTest {
             put(Marble.WHITE, 4);
             put(Marble.RED, 1);
         }};
-        Market market = new Market(4,3, marbles);
+        Market market = new Market(4, 3, marbles);
         market.shuffleMarket();
 
         int index = 2;
@@ -59,9 +64,9 @@ public class MarketTest {
         var row = market.getMarbles(direction, index);
         var row2 = new HashMap<Marble, Integer>();
         var grid = market.getMarketStatus();
-        int len = grid[index].length ;
-        int i = index , j =  0,
-                di =  0 , dj = 1;
+        int len = grid[index].length;
+        int i = index, j = 0,
+                di = 0, dj = 1;
         for (; i < len && j < len; i += di, j += dj)
             row2.put(grid[i][j], row2.containsKey(grid[i][j]) ? row2.get(grid[i][j]) + 1 : 1);
         assertEquals(row, row2);
@@ -86,7 +91,7 @@ public class MarketTest {
 
     @Test
     public void updateTest() {
-        HashMap<Marble, Integer> marbles = new HashMap<>(){{
+        HashMap<Marble, Integer> marbles = new HashMap<>() {{
             put(Marble.GRAY, 2);
             put(Marble.YELLOW, 2);
             put(Marble.PURPLE, 2);
@@ -94,7 +99,7 @@ public class MarketTest {
             put(Marble.WHITE, 4);
             put(Marble.RED, 1);
         }};
-        Market market = new Market(4,3, marbles);
+        Market market = new Market(4, 3, marbles);
         market.shuffleMarket();
 
         int index = 2;
@@ -108,8 +113,12 @@ public class MarketTest {
         var row = market.getMarbles(direction, index);
 
         HashMap<Marble, Integer> row2 = new HashMap<>();
-        list.forEach(i -> row2.put(i, row2.containsKey(i)?(row2.get(i)+1):1));
+        list.forEach(i -> row2.put(i, row2.containsKey(i) ? (row2.get(i) + 1) : 1));
 
         assertEquals(row, row2);
     }
+
+
+
+
 }

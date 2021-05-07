@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 
 import it.polimi.ingsw.events.BuyResourcesEvent;
+import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.SelectMultiLPowersEvent;
 import it.polimi.ingsw.exceptions.InvalidPlayerIdException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
@@ -9,12 +10,17 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.LeaderCards.ExtraResourceLeaderPower;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 
+import org.reflections.Reflections;
+
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.lang.reflect.*;
+import java.util.zip.ZipEntry;
+
 
 public class Controller {
     MarketManager marketManager;
@@ -24,10 +30,32 @@ public class Controller {
     DashBoard dashBoard;
 
 
+
+
     Controller(PropertyChangeSubject subject) {
-        subject.addPropertyChangeListener(BuyResourcesEvent.class.getName(), this::BuyResourcesEventHandler);
+        /*subject.addPropertyChangeListener(BuyResourcesEvent.class.getName(), this::BuyResourcesEventHandler);
         subject.addPropertyChangeListener(SelectMultiLPowersEvent.class.getName(),
-                this::SelectMultipleLeaderPowersHandler);
+                this::SelectMultipleLeaderPowersHandler);*/
+
+        Reflections reflections = new Reflections("it.polimi.ingsw.events");
+        Set<Class<? extends Event>> events = reflections.getSubTypesOf(Event.class);
+
+        for (Class<? extends Event> event : events) {
+            try {
+                Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
+                        PropertyChangeEvent.class);
+                subject.addPropertyChangeListener(event.getSimpleName(), x -> {
+                    try {
+                        method.invoke(this, x);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (NoSuchMethodException  e) {
+                e.printStackTrace();
+            }
+        }
+
 
         // take from config
         matchState = new MatchState();
@@ -36,7 +64,7 @@ public class Controller {
 
     }
 
-    public void BuyResourcesEventHandler(PropertyChangeEvent evt) {
+    public void BuyResourcesEventHandler(PropertyChangeEvent evt) throws InvalidPlayerIdException{
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
         var marbles = new ArrayList<>(marketManager.buy(
                 event.getDirection(),
@@ -44,8 +72,8 @@ public class Controller {
         var players = matchState.getPlayers();
         var player = players.stream().filter(x -> event.getPlayerId() == x.getPlayerId()).findFirst().orElse(null);
 
-//        if (player == null)
-//            throw new InvalidPlayerIdException();
+        if (player == null)
+            throw new InvalidPlayerIdException();
 
         var powers = leaderCardManager.getSelectedPowers(player, ExtraResourceLeaderPower.class)
                 .stream()
@@ -92,6 +120,7 @@ public class Controller {
 
 //        if (player == null)
 //            throw new InvalidPlayerIdException();
+
         faithTrackManager.incrementFaithTrackPosition(player, 1);
         ManageBoughtResources(event.getResources());
     }
@@ -105,7 +134,7 @@ public class Controller {
         for (Resource x : resources) {
             try {
                 dashBoard.addResourcesToWarehouse(x, 1);
-            } catch (ResourcesLimitsException | IllegalArgumentException e) {
+            } catch (ResourcesLimitsException | IllegalArgumentException ignore) {
 
             }
         }
