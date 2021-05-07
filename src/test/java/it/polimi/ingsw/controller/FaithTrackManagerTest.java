@@ -58,7 +58,7 @@ public class FaithTrackManagerTest extends TestCase {
                 //create MatchState
                 MatchState matchState= new MatchState(players, aDevCard);
                 //player1 has incremented its position of one step, now ITS POSITION SHOULD BE 1.
-                FaithTrackManager.incrementFaithTrackPosition(player1, 1, matchState);
+                new FaithTrackManager(matchState).incrementFaithTrackPosition(player1, 1);
                 assertEquals(1, (int) player1.getDashBoard().getFaithTrackData().getPosition());
         }
 
