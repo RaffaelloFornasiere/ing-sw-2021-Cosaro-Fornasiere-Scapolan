@@ -34,6 +34,8 @@ public class FaithTrack {
             arrayOfCells.set(i,cell);
         });
 
+        arrayOfCells.set(arrayOfCells.size()-1, new LastCell(arrayOfCells.get(arrayOfCells.size()-1)));
+
     }
 
 
@@ -63,7 +65,7 @@ public class FaithTrack {
      * Getter of array Of Cells of FaithTrack
      * @return
      */
-    public static ArrayList<Cell> getArrayOfCells() {
-        return (ArrayList<Cell>)arrayOfCells.clone();
+    public static ArrayList<AbstractCell> getArrayOfCells() {
+        return (ArrayList<AbstractCell>)arrayOfCells.clone();
     }
 }
