@@ -38,41 +38,4 @@ public class GsonInheritanceAdapter<T> implements JsonSerializer<T>, JsonDeseria
         retValue.add(INSTANCE, elem);
         return retValue;
     }
-
-    public static void main(String[] args) {
-        int vp = 3;
-
-        HashMap<Resource, Integer> resourcesRequirement = new HashMap<>();
-        resourcesRequirement.put(Resource.SHIELD, 5);
-        ResourcesRequirement r = new ResourcesRequirement(resourcesRequirement);
-        ArrayList<Requirement> requirement = new ArrayList<>();
-        requirement.add(r);
-
-        HashMap<Resource, Integer> maxResources= new HashMap<>();
-        maxResources.put(Resource.COIN, 2);
-        DepositLeaderPower p = new DepositLeaderPower(maxResources);
-        ArrayList<LeaderPower> power = new ArrayList<>();
-        power.add(p);
-
-        LeaderCard lc = new LeaderCard(vp, requirement, power);
-
-        System.out.println(((DepositLeaderPower)lc.getLeaderPowers().get(0)).getMaxResources());
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
-        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
-        Gson gson = builder.create();
-        String JSONLeaderCard = gson.toJson(lc);
-        System.out.println(JSONLeaderCard);
-        System.out.println(gson.toJson(power));
-        System.out.println(gson.toJson(lc.getLeaderPowers()));
-        System.out.println(gson.toJson(requirement));
-        System.out.println(gson.toJson(lc.getActivationRequirement()));
-        System.out.println(gson.toJson(lc));
-
-        LeaderCard lc2 = gson.fromJson(JSONLeaderCard, LeaderCard.class);
-
-        System.out.println(((DepositLeaderPower)lc2.getLeaderPowers().get(0)).getMaxResources());
-
-    }
 }
