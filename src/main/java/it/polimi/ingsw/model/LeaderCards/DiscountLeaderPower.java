@@ -14,7 +14,6 @@ public class DiscountLeaderPower extends LeaderPower{
 
     public DiscountLeaderPower(){
         super();
-        incompatiblePowers = new ArrayList<>();
         incompatiblePowers.add(ProductionLeaderPower.class);
         incompatiblePowers.add(ExtraResourceLeaderPower.class);
     }
@@ -24,6 +23,7 @@ public class DiscountLeaderPower extends LeaderPower{
      * @param discount the discount for each resource type that is applied when buying a development card
      */
     public DiscountLeaderPower(HashMap<Resource, Integer> discount){
+        this();
         this.discount = (HashMap<Resource, Integer>)discount.clone();
     }
 

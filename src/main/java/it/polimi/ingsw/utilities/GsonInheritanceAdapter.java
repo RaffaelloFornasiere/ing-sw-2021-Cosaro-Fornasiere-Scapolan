@@ -56,7 +56,7 @@ public class GsonInheritanceAdapter<T> implements JsonSerializer<T>, JsonDeseria
 
         LeaderCard lc = new LeaderCard(vp, requirement, power);
 
-        System.out.println(((DepositLeaderPower)lc.getPower().get(0)).getMaxResources());
+        System.out.println(((DepositLeaderPower)lc.getLeaderPowers().get(0)).getMaxResources());
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
@@ -65,14 +65,14 @@ public class GsonInheritanceAdapter<T> implements JsonSerializer<T>, JsonDeseria
         String JSONLeaderCard = gson.toJson(lc);
         System.out.println(JSONLeaderCard);
         System.out.println(gson.toJson(power));
-        System.out.println(gson.toJson(lc.getPower()));
+        System.out.println(gson.toJson(lc.getLeaderPowers()));
         System.out.println(gson.toJson(requirement));
         System.out.println(gson.toJson(lc.getActivationRequirement()));
         System.out.println(gson.toJson(lc));
 
         LeaderCard lc2 = gson.fromJson(JSONLeaderCard, LeaderCard.class);
 
-        System.out.println(((DepositLeaderPower)lc2.getPower().get(0)).getMaxResources());
+        System.out.println(((DepositLeaderPower)lc2.getLeaderPowers().get(0)).getMaxResources());
 
     }
 }

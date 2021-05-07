@@ -28,8 +28,8 @@ public class FaithTrackManagerTest extends TestCase {
                 a.add(3);
                 a.add(4);
                 //create Hashmap of CellWithEffect : put a PopeCell in third cell(position 2) index and victory Points coincides.
-                HashMap<Integer, CellWithEffect> effects= new HashMap<>();
-                effects.put(2,new PopeCell(2,3, new PopeFavorCard(3),4));
+                ArrayList<CellWithEffect> effects= new ArrayList<>();
+                effects.add(new PopeCell(2,3, new PopeFavorCard(3),2));
                 ft = FaithTrack.initFaithTrack(4, effects, a);
                 //creates production power
                 ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<Resource, Integer>());
@@ -60,6 +60,18 @@ public class FaithTrackManagerTest extends TestCase {
                 //player1 has incremented its position of one step, now ITS POSITION SHOULD BE 1.
                 new FaithTrackManager(matchState).incrementFaithTrackPosition(player1, 1);
                 assertEquals(1, (int) player1.getDashBoard().getFaithTrackData().getPosition());
+                //increment another 2 steps, now its position should be 3. The popeCell at position 2 should be past,
+                // so the VaticanReportSection should have happened.
+                //since other players are still at position 0, no one is in the vaticanReportSection, so no one gets
+                //a favor Card except for the plyer 1.
+                new FaithTrackManager(matchState).incrementFaithTrackPosition(player1, 2);
+                assertEquals(3, (int) player1.getDashBoard().getFaithTrackData().getPosition());
+                assertEquals(0, (int) player2.getDashBoard().getFaithTrackData().getPosition());
+                assertEquals(0, (int) player3.getDashBoard().getFaithTrackData().getPosition());
+                assertEquals(1, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
+                assertEquals(3, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().get(0).getVictoryPoints());
+                assertEquals(0, player2.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
+                assertEquals(0, player3.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
         }
 
 

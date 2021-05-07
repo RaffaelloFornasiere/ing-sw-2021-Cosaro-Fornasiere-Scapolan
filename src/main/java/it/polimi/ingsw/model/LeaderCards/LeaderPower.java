@@ -13,4 +13,8 @@ public abstract class LeaderPower implements Serializable {
     public ArrayList<java.lang.Class<? extends LeaderPower>> getIncompatiblePowers() {
         return (ArrayList<java.lang.Class<? extends LeaderPower>>) incompatiblePowers.clone();
     }
+
+    public LeaderPower() {
+        incompatiblePowers = new ArrayList<>();
+    }
 }

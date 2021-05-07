@@ -38,8 +38,8 @@ public class DashBoard {
 
     //initializes the depots to their max capacity
     warehouse=new ArrayList<>();
-    for(Integer maxQauntity: eachDepotCapacity){
-        warehouse.add(new Depot(maxQauntity));
+    for(Integer maxQuantity: eachDepotCapacity){
+        warehouse.add(new Depot(maxQuantity));
         }
     //initializes personalpower
     this.personalPower= personalPower;
@@ -102,9 +102,6 @@ public class DashBoard {
     }
 
 
-
-
-
     /**
      * modifier of the dashboard, it adds devCards to the cardSlots in the Dashboard, according to the level constraints
      * @param slotIndex is the index of the slot to which I want to add the card. Indexes go from 0 to cardSlots.size()-1
@@ -144,17 +141,39 @@ public class DashBoard {
         return (ArrayList<Stack<DevCard>>)cardSlots.clone();
     }
 
-    public HashMap<Resource, Integer> getDepotResources(){
+    /**
+     * Getter for the warehouse
+     * @return the warehouse as an array of Depot
+     */
+    public ArrayList<Depot> getWarehouse() {
+        return (ArrayList<Depot>) warehouse.clone();
+    }
+
+    /**
+     * gets all the resources stored in the warehouse as an hashmap
+     * if a resource is not present, the map will have an entry for it anyway, with value 0
+     * @return all the resources in the warehouse
+     */
+    public HashMap<Resource, Integer> getWarehouseResources(){
         HashMap<Resource, Integer> resources = new HashMap<>();
 
         for(Depot d: warehouse)
             resources.put(d.getResourceType(), d.getCurrentQuantity());
 
+        for(Resource r: Resource.values())
+            if(!resources.containsKey(r))
+                resources.put(r, 0);
+
         return resources;
     }
 
+    /**
+     * gets all the resources stored in the warehouse and the strongbox as an hashmap
+     * if a resource is not present, the map will have an entry for it anyway, with value 0
+     * @return all the resources in the warehouse and in the strongbox
+     */
     public HashMap<Resource, Integer> getAllDashboardResources(){
-        HashMap<Resource, Integer> resources = getDepotResources();
+        HashMap<Resource, Integer> resources = getWarehouseResources();
 
         for(Resource r: strongBox.keySet())
             resources.put(r, strongBox.get(r) + resources.getOrDefault(r, 0));
@@ -162,6 +181,10 @@ public class DashBoard {
         return resources;
     }
 
+    /**
+     * Getter for the faith track
+     * @return the faith track
+     */
     public FaithTrackData getFaithTrackData(){
         return faithTrack;
     }

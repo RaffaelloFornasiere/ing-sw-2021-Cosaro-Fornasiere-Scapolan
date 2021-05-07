@@ -60,7 +60,7 @@ public class LeaderCard implements Serializable {
      * getter for the powers
      * @return the powers of this card
      */
-    public ArrayList<LeaderPower> getPower() {
+    public ArrayList<LeaderPower> getLeaderPowers() {
         ArrayList<LeaderPower> ret = new ArrayList<>();
         for(LeaderPowerOwnership lpo: powers)
             ret.add(lpo.power);

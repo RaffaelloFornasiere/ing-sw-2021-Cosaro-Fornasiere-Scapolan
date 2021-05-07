@@ -14,7 +14,6 @@ public class ProductionLeaderPower extends LeaderPower{
 
     public ProductionLeaderPower(){
         super();
-        incompatiblePowers = new ArrayList<>();
         incompatiblePowers.add(DiscountLeaderPower.class);
         incompatiblePowers.add(ExtraResourceLeaderPower.class);
     }
@@ -24,6 +23,7 @@ public class ProductionLeaderPower extends LeaderPower{
      * @param effectPower the production power given by the card
      */
     public ProductionLeaderPower(ProductionPower effectPower){
+        this();
         this.effectPower = effectPower;
     }
 
