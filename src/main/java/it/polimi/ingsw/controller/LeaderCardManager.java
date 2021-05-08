@@ -4,20 +4,12 @@ import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
-import it.polimi.ingsw.model.MatchState;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class LeaderCardManager {
 
-    private MatchState matchState;
-
-    public LeaderCardManager(MatchState matchState){
-        this.matchState = matchState;
-    }
 
     /**
      * Returns the selected powers of a player of a certain type
