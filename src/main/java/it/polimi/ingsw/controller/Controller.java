@@ -1,15 +1,13 @@
 package it.polimi.ingsw.controller;
 
 
-import it.polimi.ingsw.events.BuyResourcesEvent;
-import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.events.SelectMultiLPowersEvent;
-import it.polimi.ingsw.exceptions.InvalidPlayerIdException;
-import it.polimi.ingsw.exceptions.ResourcesLimitsException;
+import it.polimi.ingsw.events.*;
+import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.LeaderCards.ExtraResourceLeaderPower;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 
+import it.polimi.ingsw.virtualview.ClientHandlerSender;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
@@ -18,8 +16,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.lang.reflect.*;
-import java.util.zip.ZipEntry;
 
 
 public class Controller {
@@ -28,6 +24,7 @@ public class Controller {
     FaithTrackManager faithTrackManager;
     MatchState matchState;
     DashBoard dashBoard;
+    ClientHandlerSender clientHandlerSender;
 
 
 
@@ -69,60 +66,62 @@ public class Controller {
         var marbles = new ArrayList<>(marketManager.buy(
                 event.getDirection(),
                 event.getIndex()));
-        var players = matchState.getPlayers();
-        var player = players.stream().filter(x -> event.getPlayerId() == x.getPlayerId()).findFirst().orElse(null);
-
-        if (player == null)
-            throw new InvalidPlayerIdException();
-
-        var powers = leaderCardManager.getSelectedPowers(player, ExtraResourceLeaderPower.class)
-                .stream()
-                .map(x -> (ExtraResourceLeaderPower)x)
-                .collect(Collectors.toList());
-        var resources = new ArrayList<Resource>();
-        if(powers.size() > 1)
-        {
-            //ask user for power selction
-            return;
-        }
-        else if (powers.size() > 0 )
-        {
-            marbles.add(Marble.RED);
-            var i = new Object(){public int i = 0;};
-            marbles.removeIf(x -> {
-                i.i++;
-                return Marble.RED.equals(x);
-            });
-            faithTrackManager.incrementFaithTrackPosition(player, i.i);
-        }
-        marbles.stream().map(marble -> {
-            switch (marble) {
-                case BLUE:
-                    return Resource.SHIELD;
-                case GRAY:
-                    return Resource.ROCK;
-                case YELLOW:
-                    return Resource.COIN;
-                case PURPLE:
-                    return Resource.SERVANT;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + marble);
+        try {
+            Player player = matchState.getPlayerFromID(event.getPlayerId());
+            var powers = leaderCardManager.getSelectedPowers(player, ExtraResourceLeaderPower.class)
+                    .stream()
+                    .map(x -> (ExtraResourceLeaderPower)x)
+                    .collect(Collectors.toList());
+            var resources = new ArrayList<Resource>();
+            if(powers.size() > 1)
+            {
+                //ask user for power selction
+                return;
             }
-        }).forEach(resources::add);
-        ManageBoughtResources(resources);
+            else if (powers.size() > 0 )
+            {
+                marbles.add(Marble.RED);
+                var i = new Object(){public int i = 0;};
+                marbles.removeIf(x -> {
+                    i.i++;
+                    return Marble.RED.equals(x);
+                });
+                faithTrackManager.incrementFaithTrackPosition(player, i.i);
+            }
+            marbles.stream().map(marble -> {
+                switch (marble) {
+                    case BLUE:
+                        return Resource.SHIELD;
+                    case GRAY:
+                        return Resource.ROCK;
+                    case YELLOW:
+                        return Resource.COIN;
+                    case PURPLE:
+                        return Resource.SERVANT;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + marble);
+                }
+            }).forEach(resources::add);
+            ManageBoughtResources(resources);
+        } catch (NotPresentException e) {
+            System.out.println("The event" + event + "got sent to the wrong match");
+            e.printStackTrace();
+        }
+
+
     }
 
     public void SelectMultipleLeaderPowersHandler(PropertyChangeEvent evt)
     {
         SelectMultiLPowersEvent event = (SelectMultiLPowersEvent) evt.getNewValue();
-        var players = matchState.getPlayers();
-        var player = players.stream().filter(x -> event.getPlayerId() == x.getPlayerId()).findFirst().orElse(null);
-
-//        if (player == null)
-//            throw new InvalidPlayerIdException();
-
-        faithTrackManager.incrementFaithTrackPosition(player, 1);
-        ManageBoughtResources(event.getResources());
+        try {
+            Player player = matchState.getPlayerFromID(event.getPlayerId());
+            faithTrackManager.incrementFaithTrackPosition(player, 1);
+            ManageBoughtResources(event.getResources());
+        } catch (NotPresentException e) {
+            System.out.println("The event" + event + "got sent to the wrong match");
+            e.printStackTrace();
+        }
     }
 
 
@@ -137,6 +136,67 @@ public class Controller {
             } catch (ResourcesLimitsException | IllegalArgumentException ignore) {
 
             }
+        }
+    }
+
+    public void ToggleLeaderPowerSelectEventHandler(PropertyChangeEvent evt){
+        LeaderPowerSelectStateEvent event = (LeaderPowerSelectStateEvent) evt.getNewValue();
+        try {
+            Player player = matchState.getPlayerFromID(event.getPlayerId());
+            if(event.getLeaderCardIndex()>=player.getLeaderCards().size()) {
+                clientHandlerSender.sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card index to big", event));
+                return;
+            }
+            if(event.getLeaderPowerIndex()>=player.getLeaderCards().get(event.getLeaderCardIndex()).getLeaderPowers().size()) {
+                clientHandlerSender.sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader power index to big", event));
+                return;
+            }
+            try {
+                if (event.isStateSelected())
+                    leaderCardManager.selectLeaderPower(player, player.getLeaderCards().get(event.getLeaderCardIndex()),
+                            player.getLeaderCards().get(event.getLeaderCardIndex()).getLeaderPowers().get(event.getLeaderPowerIndex()));
+                else
+                    leaderCardManager.deselectLeaderPower(player, player.getLeaderCards().get(event.getLeaderCardIndex()),
+                            player.getLeaderCards().get(event.getLeaderCardIndex()).getLeaderPowers().get(event.getLeaderPowerIndex()));
+            } catch (NotPresentException notPresentException) {
+                //impossible
+                System.out.println(notPresentException.getMessage());
+            } catch (IllegalOperation illegalOperation) {
+                clientHandlerSender.sendEvent(event);
+            } catch (LeaderCardNotActiveException e) {
+                clientHandlerSender.sendEvent(new LeaderCardNotActiveError(event.getPlayerId(), event.getLeaderCardIndex()));
+            } catch (IncompatiblePowersException e) {
+                clientHandlerSender.sendEvent(new IncompatiblePowersError(event.getPlayerId(), event.getLeaderCardIndex(), event.getLeaderPowerIndex()));
+            }
+        } catch (NotPresentException e) {
+            //impossible
+            System.out.println("The event" + event + "got sent to the wrong match");
+            e.printStackTrace();
+        }
+    }
+
+    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){
+        ActivateLeaderCardEvent event = (ActivateLeaderCardEvent) evt.getNewValue();
+        try {
+            Player player = matchState.getPlayerFromID(event.getPlayerId());
+            if(event.getLeaderCardIndex()>=player.getLeaderCards().size()) {
+                clientHandlerSender.sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card index to big", event));
+                return;
+            }
+            try{
+                leaderCardManager.activateLeaderCard(player, player.getLeaderCards().get(event.getLeaderCardIndex()));
+            } catch (IllegalOperation illegalOperation) {
+                clientHandlerSender.sendEvent(event);
+            } catch (RequirementsNotMetException requirementsNotMetException) {
+                clientHandlerSender.sendEvent(new RequirementsNotMetError(event.getPlayerId(), event.getLeaderCardIndex()));
+            } catch (NotPresentException notPresentException) {
+                //impossible
+                System.out.println(notPresentException.getMessage());
+            }
+        } catch (NotPresentException e) {
+            //impossible
+            System.out.println("The event" + event + "got sent to the wrong match");
+            e.printStackTrace();
         }
     }
 
