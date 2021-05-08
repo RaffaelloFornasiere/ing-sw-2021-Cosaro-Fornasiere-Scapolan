@@ -27,8 +27,24 @@ public class Player {
         this.leaderCards = new ArrayList<>();
     }
 
+    /**
+     * getter for the id of the player
+     * @return the id of the player
+     */
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    /**
+     * getter for the dashboard of the player
+     * @return the dashboard of the player
+     */
     public DashBoard getDashBoard(){return dashBoard;}
 
+    /**
+     * getter for all leader cards
+     * @return all leader cards
+     */
     public ArrayList<LeaderCard> getLeaderCards() {
         ArrayList<LeaderCard> lcs = new ArrayList<>();
         for(LeaderCardOwnership lco: leaderCards)
@@ -36,6 +52,10 @@ public class Player {
         return lcs;
     }
 
+    /**
+     * getter for active leader cards
+     * @return active leader cards
+     */
     public ArrayList<LeaderCard> getActiveLeaderCards(){
         ArrayList<LeaderCard> lcs = new ArrayList<>();
         for(LeaderCardOwnership lco: leaderCards)
@@ -44,6 +64,10 @@ public class Player {
         return lcs;
     }
 
+    /**
+     * method to give the player some leader cards
+     * @param leaderCards the leader cards to give the player
+     */
     public void setLeaderCards(ArrayList<LeaderCard> leaderCards) {
         LeaderCardOwnership lco;
         for(LeaderCard lc: leaderCards){
@@ -54,9 +78,15 @@ public class Player {
         }
     }
 
-    public void activateLeaderCard(LeaderCard lc) throws NotPresentException, IllegalOperation {
+    /**
+     * Methods that activates a leader card
+     * @param leaderCard the leader card to activate
+     * @throws NotPresentException if the leader card does not belong to this player
+     * @throws IllegalOperation if the leader card is already active
+     */
+    public void activateLeaderCard(LeaderCard leaderCard) throws NotPresentException, IllegalOperation {
         for (LeaderCardOwnership lco : leaderCards) {
-            if (lc == lco.leaderCard) {
+            if (leaderCard == lco.leaderCard) {
                 if (lco.active) throw new IllegalOperation("Leader card already Active");
                 lco.active = true;
                 return;
@@ -85,11 +115,6 @@ public class Player {
                 }
         }
         return resources;
-    }
-
-
-    public String getPlayerId() {
-        return playerId;
     }
 
 
