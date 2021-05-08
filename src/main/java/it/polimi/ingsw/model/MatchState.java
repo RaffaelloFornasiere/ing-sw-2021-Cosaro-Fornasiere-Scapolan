@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.DevCards.DevCardGrid;
 
@@ -37,5 +38,13 @@ public class MatchState {
 
     public  ArrayList<Player> getPlayers(){
         return  (ArrayList<Player>) players.clone();
+    }
+
+    public Player getPlayerFromID(String playerID) throws NotPresentException {
+        for (Player p: players)
+            if(p.getPlayerId()==playerID)
+                return p;
+
+        throw new NotPresentException("The player with id "+playerID+" is not in this match");
     }
 }
