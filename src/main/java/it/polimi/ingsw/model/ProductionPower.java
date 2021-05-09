@@ -13,9 +13,13 @@ public class ProductionPower {
 
     public ProductionPower(){}
 
-    public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources) {
+    public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources,
+                           int requiredResourceOfChoice, int producedResourceOfChoice, int faithPointsProduced) {
         this.consumedResources = consumedResources;
         this.producedResources = producedResources;
+        this.requiredResourceOfChoice = requiredResourceOfChoice;
+        this.producedResourceOfChoice = producedResourceOfChoice;
+        this.faithPointsProduced = faithPointsProduced;
     }
 
     /**

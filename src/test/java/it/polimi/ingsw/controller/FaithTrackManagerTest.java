@@ -32,7 +32,7 @@ public class FaithTrackManagerTest extends TestCase {
                 effects.add(new PopeCell(2,3, new PopeFavorCard(3),2));
                 ft = FaithTrack.initFaithTrack(4, effects, a);
                 //creates production power
-                ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<Resource, Integer>());
+                ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<Resource, Integer>(), 0, 0, 0);
                 //create dashboard
                 DashBoard d1 = new DashBoard(dcapacity.size(), dcapacity, p, ft);
                 DashBoard d2 = new DashBoard(dcapacity.size(), dcapacity, p, ft);
