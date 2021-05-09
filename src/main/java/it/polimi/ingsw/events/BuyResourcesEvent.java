@@ -8,7 +8,14 @@ import java.lang.reflect.*;
 import java.util.Set;
 
 public class BuyResourcesEvent extends MatchEvent {
-    BuyResourcesEvent(Direction direction, int index) {
+    /**
+     *
+     * @param playerID the player that generated(directly or indirectly) this event
+     * @param direction
+     * @param index
+     */
+    BuyResourcesEvent(String playerID, Direction direction, int index) {
+        super(playerID);
         this.direction = direction;
         this.index = index;
     }

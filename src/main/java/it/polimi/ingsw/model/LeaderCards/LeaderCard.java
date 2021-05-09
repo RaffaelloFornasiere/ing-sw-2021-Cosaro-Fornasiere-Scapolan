@@ -57,7 +57,7 @@ public class LeaderCard implements Serializable {
     }
 
     /**
-     * getter for the powers
+     * getter for all the powers
      * @return the powers of this card
      */
     public ArrayList<LeaderPower> getLeaderPowers() {
@@ -67,6 +67,10 @@ public class LeaderCard implements Serializable {
         return ret;
     }
 
+    /**
+     * getter for all the selected powers
+     * @return the powers of this card
+     */
     public ArrayList<LeaderPower> getSelectedLeaderPowers(){
         ArrayList<LeaderPower> ret = new ArrayList<>();
         for(LeaderPowerOwnership lpo: powers)
@@ -75,9 +79,15 @@ public class LeaderCard implements Serializable {
         return ret;
     }
 
-    public void selectLeaderPower(LeaderPower lp) throws NotPresentException, IllegalOperation {
+    /**
+     * Methods that selects a leader power
+     * @param leaderPower the leader power to select
+     * @throws NotPresentException if the leader power passed does not belong to the card
+     * @throws IllegalOperation if the leader power was already selected
+     */
+    public void selectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
         for (LeaderPowerOwnership lpo : powers) {
-            if (lp == lpo.power) {
+            if (leaderPower == lpo.power) {
                 if (lpo.selected) throw new IllegalOperation("Leader power already selected");
                 lpo.selected = true;
                 return;
@@ -87,9 +97,15 @@ public class LeaderCard implements Serializable {
         throw new NotPresentException("The selected leader power does not belong to this card");
     }
 
-    public void deselectLeaderPower(LeaderPower lp) throws NotPresentException, IllegalOperation {
+    /**
+     * Methods that deselects a leader power
+     * @param leaderPower the leader power to deselect
+     * @throws NotPresentException if the leader power passed does not belong to the card
+     * @throws IllegalOperation if the leader power was not selected
+     */
+    public void deselectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
         for (LeaderPowerOwnership lpo : powers) {
-            if (lp == lpo.power) {
+            if (leaderPower == lpo.power) {
                 if (!lpo.selected) throw new IllegalOperation("Leader power already not selected");
                 lpo.selected = false;
                 return;
