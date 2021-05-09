@@ -1,6 +1,8 @@
 package it.polimi.ingsw.virtualview;
 
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.events.NewPlayerEvent;
+import it.polimi.ingsw.events.NewPlayerEventWithNetworkData;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -30,17 +32,22 @@ public class RequestsElaborator {
         new Thread(()->clientHandlerReceiver.waitForEvent());
 
         while(true) {
-            Event event = null;
-            boolean done = false;
-            while (!done) {
-                try {
-                    event = requestsQueue.take();
+            try {
+                boolean done = false;
+                while (!done) {
+                    Event event = requestsQueue.take();
                     done = true;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    if(event.getClass() == NewPlayerEvent.class)
+                        event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
+                    eventHandlerRegistry.sendEvent(event);
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            eventHandlerRegistry.sendEvent(event);
         }
+    }
+
+    public ClientHandlerSender getClientHandlerSender() {
+        return clientHandlerSender;
     }
 }
