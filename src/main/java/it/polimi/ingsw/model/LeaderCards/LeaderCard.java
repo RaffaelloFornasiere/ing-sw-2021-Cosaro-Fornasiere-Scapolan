@@ -1,11 +1,17 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.CardColor;
+import it.polimi.ingsw.model.ProductionPower;
+import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class that represents a leader card
@@ -114,4 +120,64 @@ public class LeaderCard implements Serializable {
 
         throw new NotPresentException("The selected leader power does not belong to this card");
     }
+
+    /*public static void main(String[] args) {
+        //index and victory points
+        int lcIndex = 64;
+        int vp = 4;
+
+        //requirements
+        //Requirement r1 = new LevellessCardRequirement(CardColor.VIOLET, 2);
+        //Requirement r2 = new LevellessCardRequirement(CardColor.GREEN, 1);
+        //HashMap<Resource, Integer> rr = new HashMap<>();
+        //rr.put(Resource.SHIELD, 5);
+        //Requirement r3 = new ResourcesRequirement(rr);
+        Requirement r4 = new LevelCardRequirement(CardColor.GREEN, 2, 1);
+
+        ArrayList<Requirement> r = new ArrayList<>();
+        //r.add(r1);
+        //r.add(r2);
+        //r.add(r3);
+        r.add(r4);
+
+        //power
+        //HashMap<Resource, Integer> discount = new HashMap<>();
+        //discount.put(Resource.COIN, 1);
+        //LeaderPower lp1 = new DiscountLeaderPower(discount);
+        //HashMap<Resource, Integer> storage = new HashMap<>();
+        //storage.put(Resource.COIN, 2);
+        //LeaderPower lp2 = new DepositLeaderPower(storage);
+        //LeaderPower lp3 = new ExtraResourceLeaderPower(Resource.COIN);
+        HashMap<Resource, Integer> productionRequirement = new HashMap<>();
+        productionRequirement.put(Resource.COIN, 1);
+        LeaderPower lp4 = new ProductionLeaderPower(new ProductionPower(productionRequirement, new HashMap<>(), 0, 1, 1));
+
+        ArrayList<LeaderPower> lp = new ArrayList<>();
+        //lp.add(lp1);
+        //lp.add(lp2);
+        //lp.add(lp3);
+        lp.add(lp4);
+
+        //creation and save
+        LeaderCard lc = new LeaderCard(vp, r, lp);
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        Gson gson = builder.create();
+
+        String JSONLeaderCard = gson.toJson(lc);
+
+        System.out.println(JSONLeaderCard);
+
+        File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\LeaderCard" + lcIndex + ".json");
+        try {
+            FileWriter w = new FileWriter(file);
+            w.write(JSONLeaderCard);
+            w.flush();
+            w.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 }
