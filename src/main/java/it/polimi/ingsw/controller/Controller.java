@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.events.BuyResourcesEvent;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.events.MatchEvent;
 import it.polimi.ingsw.events.SelectMultiLPowersEvent;
 import it.polimi.ingsw.exceptions.InvalidPlayerIdException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
@@ -38,9 +39,9 @@ public class Controller {
                 this::SelectMultipleLeaderPowersHandler);*/
 
         Reflections reflections = new Reflections("it.polimi.ingsw.events");
-        Set<Class<? extends Event>> events = reflections.getSubTypesOf(Event.class);
+        Set<Class<? extends MatchEvent>> events = reflections.getSubTypesOf(MatchEvent.class);
 
-        for (Class<? extends Event> event : events) {
+        for (var event : events) {
             try {
                 Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
                         PropertyChangeEvent.class);
