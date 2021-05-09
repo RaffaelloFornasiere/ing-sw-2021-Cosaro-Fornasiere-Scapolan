@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model.DevCards;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
+
+import com.google.gson.Gson;
 import  it.polimi.ingsw.model.*;
 
 public class DevCard
@@ -42,5 +47,44 @@ public class DevCard
         return productionPower;
     }
 
+    /*public static void main(String[] args) {
+        int index = 1;
+        CardColor color = CardColor.GREEN;
+        int level = 1;
 
+        HashMap<Resource, Integer> cost = new HashMap<>();
+        cost.put(Resource.SHIELD, 2);
+
+        HashMap<Resource, Integer> req = new HashMap<>();
+        cost.put(Resource.COIN, 1);
+
+        HashMap<Resource, Integer> prod = new HashMap<>();
+        //prod.put(Resource.SERVANT, 1);
+
+        int fp = 1;
+
+        int vp = 1;
+
+
+
+        ProductionPower pp = new ProductionPower(req, prod, 0, 0, fp);
+
+        DevCard c = new DevCard(cost, level, color, vp, pp);
+
+        Gson gson = new Gson();
+
+        String JSONDevCard = gson.toJson(c, DevCard.class);
+
+        System.out.println(JSONDevCard);
+
+        File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\DevCard" + index + ".json");
+        try {
+            FileWriter w = new FileWriter(file);
+            w.write(JSONDevCard);
+            w.flush();
+            w.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 }
