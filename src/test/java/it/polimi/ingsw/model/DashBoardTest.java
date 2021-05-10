@@ -32,7 +32,7 @@ public class DashBoardTest extends TestCase {
         a.add(4);
         ft = FaithTrack.initFaithTrack(4, new ArrayList<CellWithEffect>(), a);
         //creates production power
-        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //create dashboard
         DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
@@ -66,7 +66,7 @@ public class DashBoardTest extends TestCase {
         a.add(4);
         ft = FaithTrack.initFaithTrack(4, new ArrayList<CellWithEffect>(), a);
 
-        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(),0 ,0 ,0);
 
         DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
@@ -93,7 +93,7 @@ public class DashBoardTest extends TestCase {
         a.add(4);
         ft = FaithTrack.initFaithTrack(4, new ArrayList<CellWithEffect>(), a);
         //creates production power
-        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0,0);
         //creates dashboard
         DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
@@ -122,13 +122,13 @@ public class DashBoardTest extends TestCase {
         a.add(4);
         ft = FaithTrack.initFaithTrack(4, new ArrayList<CellWithEffect>(), a);
         //creates production Power
-        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
         DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
-        DevCard card = new DevCard(resources,1, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>()));
+        DevCard card = new DevCard(resources,1, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0));
         //initially stack at index 1 is empty
         try{  d.addCard(1, card);}
         catch( IndexSlotException e){fail();}
@@ -136,7 +136,7 @@ public class DashBoardTest extends TestCase {
         assertEquals(card, d.getCardSlots().get(1).peek());
 
         //creates new card of level 2 and add to the slot of index 2  It should not give exceptions
-        DevCard card2 = new DevCard(resources,2, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>()));
+        DevCard card2 = new DevCard(resources,2, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0));
         try{  d.addCard(1, card2);}
         catch( IndexSlotException e){fail();}
         catch( LevelCardException e){fail();}
@@ -162,13 +162,13 @@ public class DashBoardTest extends TestCase {
         a.add(4);
         ft = FaithTrack.initFaithTrack(4, new ArrayList<CellWithEffect>(), a);
         //creates production Power
-        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
         DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
-        DevCard card = new DevCard(resources,1, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>()));
+        DevCard card = new DevCard(resources,1, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0));
         //I try to add the card to a not acceptable index
         try{  d.addCard(4, card);fail();}
         catch( IndexSlotException e){}
@@ -194,13 +194,13 @@ public class DashBoardTest extends TestCase {
         a.add(4);
         ft = FaithTrack.initFaithTrack(4, new ArrayList<CellWithEffect>(), a);
         //creates production Power
-        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
         DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
-        DevCard card = new DevCard(resources,1, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>()));
+        DevCard card = new DevCard(resources,1, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0));
         //I add a card level 1 to slot index 1. should not give exception
         try{  d.addCard(1, card);}
         catch( IndexSlotException e){fail();}
@@ -208,7 +208,7 @@ public class DashBoardTest extends TestCase {
         assertEquals(card, d.getCardSlots().get(1).peek());
 
         //creates new card of level 3 and add to the slot of index 2  It should give exception, because  card level conditions are not respected
-        DevCard card2 = new DevCard(resources,3, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>()));
+        DevCard card2 = new DevCard(resources,3, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0));
         try{  d.addCard(1, card2);fail();}
         catch( IndexSlotException e){fail();}
         catch( LevelCardException e){}
@@ -234,13 +234,13 @@ public class DashBoardTest extends TestCase {
         a.add(4);
         ft = FaithTrack.initFaithTrack(4, new ArrayList<CellWithEffect>(), a);
         //creates production Power
-        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>());
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
         DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
-        DevCard card = new DevCard(resources,2, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>()));
+        DevCard card = new DevCard(resources,2, CardColor.GREEN, 4, new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0));
         // adds a card level 2 to slot index 1, which is empty. It should give exception.
         try{  d.addCard(1, card);fail();}
         catch( IndexSlotException e){fail();}

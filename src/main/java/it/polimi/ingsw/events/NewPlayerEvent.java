@@ -1,31 +1,32 @@
 package it.polimi.ingsw.events;
 
 public class NewPlayerEvent extends Event{
-    private boolean isLobbyLeader;
+    private String lobbyLeaderID;
 
     /**
-     * constructor for the class
+     * constructor for the class. Used when this event will signal the creation of a new lobby
      * @param PlayerID the player that generated(directly or indirectly) this event
      */
     public NewPlayerEvent(String PlayerID){
         super(PlayerID);
-        this.isLobbyLeader = false;
+        lobbyLeaderID = PlayerID;
     }
 
     /**
      * constructor for the class
      * @param PlayerID the player that generated(directly or indirectly) this event
-     * @param isLobbyLeader whether this player is the leader of the lobby they're in
+     * @param lobbyLeaderID the ID of the leader of the lobby to join
      */
-    public NewPlayerEvent(String PlayerID, boolean isLobbyLeader){
+    public NewPlayerEvent(String PlayerID, String lobbyLeaderID){
         this(PlayerID);
-        this.isLobbyLeader = isLobbyLeader;
+        this.lobbyLeaderID = lobbyLeaderID;
     }
 
     /**
-     * @return whether this player is the leader of the lobby he's in
+     * getter for the ID of the leader of the lobby to join
+     * @return the ID of the leader of the lobby to join
      */
-    public boolean IsLobbyLeader(){
-        return isLobbyLeader;
+    public String getLobbyLeaderID(){
+        return lobbyLeaderID;
     }
 }

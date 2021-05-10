@@ -1,0 +1,1 @@
+{"victoryPoints":3,"activationRequirements":[{"CLASSNAME":"it.polimi.ingsw.model.LeaderCards.ResourcesRequirement","INSTANCE":{"resources":{"ROCK":5}}}],"powers":[{"power":{"CLASSNAME":"it.polimi.ingsw.model.LeaderCards.DepositLeaderPower","INSTANCE":{"maxResources":{"SERVANT":2},"currentResources":{"SERVANT":0}}},"selected":false}]}
