@@ -29,17 +29,13 @@ public class NetworkHandlerSender {
         };
     }
 
-    public synchronized void sendObject(Object o)
+    public synchronized void sendObject(Object o) throws IOException
     {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
         Gson gson = builder.create();
         String data = gson.toJson(o);
-        try {
-            sendData(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendData(data);
     }
 }

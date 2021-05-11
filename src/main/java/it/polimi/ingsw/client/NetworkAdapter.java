@@ -1,7 +1,9 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.events.*;
+import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.Direction;
+import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import org.reflections.Reflections;
 
@@ -11,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,34 +26,11 @@ public class NetworkAdapter {
     NetworkHandlerSender sender;
     Socket server;
     String playerID;
+    UI view;
 
-    public NetworkAdapter(PropertyChangeSubject subject, InetAddress address)
+    public NetworkAdapter(PropertyChangeSubject subject, InetAddress address) throws IOException
     {
-        try
-        {
-            server = new Socket(address, SERVER_PORT);
-        }catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        NetworkHandlerSender sender = new NetworkHandlerSender(server);
-        NetworkHandlerReceiver receiver = new NetworkHandlerReceiver(server, this);
-        Timer timer = new Timer();
-        TimerTask heartbeat;
-        heartbeat = new TimerTask(){
-            @Override
-            public void run(){
-                try {
-                    sender.sendData("heartbeat");
-                }catch (IOException e)
-                {
-                    // view alert of client disconnection
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(heartbeat, 0, 1000);
-
-
+        connectToServer(address);
 
         // method-event binding
         Reflections reflections = new Reflections("it.polimi.ingsw.events");
@@ -73,25 +53,73 @@ public class NetworkAdapter {
         }
     }
 
+    public boolean connectToServer(InetAddress address) throws IOException
+    {
+        server = new Socket(address, SERVER_PORT);
+        NetworkHandlerSender sender = new NetworkHandlerSender(server);
+        NetworkHandlerReceiver receiver = new NetworkHandlerReceiver(server, this);
+        Timer timer = new Timer();
+        TimerTask heartbeat;
+        heartbeat = new TimerTask(){
+            @Override
+            public void run(){
+                try {
+                    sender.sendData("heartbeat");
+                }catch (IOException e)
+                {
+                    view.printError("connection with server error, please check connection");
+                    timer.cancel();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
+        return true;
+    }
 
-    public void accessMatch(String username, String lobbyLeaderID)
+
+    public void enterMatch(String username, String lobbyLeaderID)
     {
         this.playerID = username;
         NewPlayerEvent event = new NewPlayerEvent(username, lobbyLeaderID);
-        sender.sendObject(event);
+        send(event);
     }
 
     public void createMatch(String username)
     {
         NewPlayerEvent event = new NewPlayerEvent(username);
-        sender.sendObject(event);
+        send(event);
     }
-
 
     public void buyResources(Direction direction, int index)
     {
         BuyResourcesEvent event = new BuyResourcesEvent(playerID, direction, index);
-        sender.sendObject(event);
+        send(event);
+    }
+
+    public void buyDevCards(int row, int column)
+    {
+        BuyDevCardsEvent event = new BuyDevCardsEvent(playerID, row, column);
+        send(event);
+    }
+
+    public void activateProduction(ArrayList<DevCard> devCards)
+    {
+        ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards);
+        send(event);
+    }
+
+
+
+
+
+    private void send(Object o)
+    {
+        try {
+            sender.sendObject(o);
+        }catch (IOException e)
+        {
+            view.printError("connection with server error, please check connection");
+        }
     }
 
 
