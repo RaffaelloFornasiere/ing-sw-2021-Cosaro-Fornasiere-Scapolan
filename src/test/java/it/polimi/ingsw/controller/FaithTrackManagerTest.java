@@ -69,7 +69,7 @@ public class FaithTrackManagerTest extends TestCase {
                 assertEquals(0, (int) player2.getDashBoard().getFaithTrackData().getPosition());
                 assertEquals(0, (int) player3.getDashBoard().getFaithTrackData().getPosition());
                 assertEquals(1, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
-                assertEquals(3, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().get(0).getVictoryPoints());
+                assertEquals(3, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().get(2).getVictoryPoints());
                 assertEquals(0, player2.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
                 assertEquals(0, player3.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
         }

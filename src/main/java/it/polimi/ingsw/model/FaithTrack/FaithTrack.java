@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.FaithTrack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.stream.IntStream;
 
 
@@ -38,6 +37,8 @@ public class FaithTrack {
     }
 
 
+
+
     /**
      * @param num           length of faithtrack is equal to the number of cells
      * @param effects       effects to initialize special cells
@@ -67,4 +68,6 @@ public class FaithTrack {
     public static ArrayList<AbstractCell> getArrayOfCells() {
         return (ArrayList<AbstractCell>)arrayOfCells.clone();
     }
+
+
 }

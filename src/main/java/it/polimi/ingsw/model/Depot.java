@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.exceptions.DepotResourceException;
+import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 
 public class Depot{
     private Resource resourceType;

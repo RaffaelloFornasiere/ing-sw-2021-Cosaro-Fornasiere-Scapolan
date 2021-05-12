@@ -4,11 +4,7 @@ import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Market;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class MarketManager {
     Market market;

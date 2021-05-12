@@ -1,17 +1,14 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.events.Event;
-//import javassist.ClassPath;
 import org.junit.Test;
-import org.reflections.Reflections;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Set;
 
 import static org.junit.Assert.*;
+
+//import javassist.ClassPath;
 
 public class MarketTest {
 

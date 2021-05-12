@@ -6,7 +6,6 @@ import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.LeaderCards.ExtraResourceLeaderPower;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
-
 import it.polimi.ingsw.virtualview.ClientHandlerSender;
 import org.reflections.Reflections;
 

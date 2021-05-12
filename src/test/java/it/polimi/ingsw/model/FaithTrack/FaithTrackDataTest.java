@@ -5,7 +5,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FaithTrackDataTest extends TestCase {
     /**
@@ -23,7 +22,7 @@ public class FaithTrackDataTest extends TestCase {
         FaithTrack faithTrack = FaithTrack.initFaithTrack(3, effects, points);
         FaithTrackData ftd = new FaithTrackData(faithTrack);
         PopeFavorCard card = new PopeFavorCard(3);
-        ftd.addPopeFavorCard(card);
+        ftd.addPopeFavorCard(0, card);
         assertEquals(3, ftd.getAcquiredPopeFavorCards().get(0).getVictoryPoints());
         assertEquals(0, ftd.getPosition());
     }
@@ -43,9 +42,9 @@ public class FaithTrackDataTest extends TestCase {
         PopeFavorCard card1 = new PopeFavorCard(3);
         PopeFavorCard card2 = new PopeFavorCard(1);
         PopeFavorCard card3 = new PopeFavorCard(2);
-        ftd.addPopeFavorCard(card1);
-        ftd.addPopeFavorCard(card2);
-        ftd.addPopeFavorCard(card3);
+        ftd.addPopeFavorCard(1,card1);
+        ftd.addPopeFavorCard(2, card2);
+        ftd.addPopeFavorCard(3,card3);
 
         assertEquals(6, ftd.getFavorPopeCardPoints());
     }

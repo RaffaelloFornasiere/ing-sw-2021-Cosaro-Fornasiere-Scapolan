@@ -1,15 +1,12 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.events.BadRequestEvent;
-import it.polimi.ingsw.events.BuyResourcesEvent;
 import it.polimi.ingsw.events.NewPlayerEvent;
 import it.polimi.ingsw.events.NewPlayerEventWithNetworkData;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.Lobby;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
-import it.polimi.ingsw.virtualview.ClientHandlerSender;
 import it.polimi.ingsw.virtualview.RequestsElaborator;
-import org.checkerframework.checker.units.qual.A;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;

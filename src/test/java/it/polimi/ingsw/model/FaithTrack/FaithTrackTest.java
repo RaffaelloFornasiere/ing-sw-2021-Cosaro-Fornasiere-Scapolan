@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.FaithTrack;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FaithTrackTest extends TestCase {
     /**

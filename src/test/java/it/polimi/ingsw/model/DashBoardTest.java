@@ -1,16 +1,16 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.EmptyStrongboxException;
+import it.polimi.ingsw.exceptions.IndexSlotException;
+import it.polimi.ingsw.exceptions.LevelCardException;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.CellWithEffect;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Set;
 
 public class DashBoardTest extends TestCase {
 

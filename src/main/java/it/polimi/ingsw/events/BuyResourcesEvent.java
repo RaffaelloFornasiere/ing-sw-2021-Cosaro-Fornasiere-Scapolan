@@ -1,11 +1,6 @@
 package it.polimi.ingsw.events;
 
 import it.polimi.ingsw.model.Direction;
-import org.reflections.Reflections;
-
-import java.lang.reflect.*;
-
-import java.util.Set;
 
 public class BuyResourcesEvent extends MatchEvent {
     /**

@@ -9,8 +9,8 @@ public class PopeCell extends CellWithEffect {
 
     /**
      * constructor
-     * @param card favorpopecard associted to this pope cell
-     * @param vaticanReportSection the array of other cells which constitutes thevatican report section
+     * @param card favorpPopeCard associated to this pope cell
+     * @param vaticanReportSection the array of other cells which constitutes the vatican report section
      */
     public PopeCell(AbstractCell cell, PopeFavorCard card, int vaticanReportSection) {
         this.cell= cell;
