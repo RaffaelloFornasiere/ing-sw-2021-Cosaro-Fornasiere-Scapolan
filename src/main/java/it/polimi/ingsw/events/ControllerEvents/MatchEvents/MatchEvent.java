@@ -1,5 +1,6 @@
-package it.polimi.ingsw.events.ControllerEvents;
+package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
+import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
 import it.polimi.ingsw.events.Event;
 
 public abstract class MatchEvent extends ControllerEvent {

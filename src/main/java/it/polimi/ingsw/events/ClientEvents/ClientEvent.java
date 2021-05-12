@@ -2,7 +2,7 @@ package it.polimi.ingsw.events.ClientEvents;
 
 import it.polimi.ingsw.events.Event;
 
-public class ClientEvent extends Event {
+public abstract class ClientEvent extends Event {
     /**
      * constructor of the class
      *

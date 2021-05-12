@@ -1,6 +1,5 @@
 package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
 import it.polimi.ingsw.model.Direction;
 
 public class BuyResourcesEvent extends MatchEvent {

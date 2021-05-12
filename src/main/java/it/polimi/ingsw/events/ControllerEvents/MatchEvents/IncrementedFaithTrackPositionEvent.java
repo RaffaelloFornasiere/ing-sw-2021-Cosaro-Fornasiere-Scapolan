@@ -1,7 +1,5 @@
 package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
-
 public class IncrementedFaithTrackPositionEvent extends MatchEvent {
     private int newPosition;
 

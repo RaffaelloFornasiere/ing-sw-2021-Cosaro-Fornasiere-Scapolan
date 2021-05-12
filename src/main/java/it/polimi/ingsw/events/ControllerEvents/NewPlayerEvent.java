@@ -1,6 +1,8 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ControllerEvents;
 
-public class NewPlayerEvent extends Event{
+import it.polimi.ingsw.events.Event;
+
+public class NewPlayerEvent extends ControllerEvent {
     private String lobbyLeaderID;
 
     /**

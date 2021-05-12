@@ -1,14 +1,14 @@
-package it.polimi.ingsw.events.ServerEvents;
+package it.polimi.ingsw.events.ControllerEvents;
 
 import it.polimi.ingsw.events.Event;
 
-public class ServerEvent extends Event {
+public class StartMatchEvent extends ControllerEvent {
     /**
      * constructor of the class
      *
      * @param playerId the player that generated(directly or indirectly) this event
      */
-    public ServerEvent(String playerId) {
+    public StartMatchEvent(String playerId) {
         super(playerId);
     }
 }

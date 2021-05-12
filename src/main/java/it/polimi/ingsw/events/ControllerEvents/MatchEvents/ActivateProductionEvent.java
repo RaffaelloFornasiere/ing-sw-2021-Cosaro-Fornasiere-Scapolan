@@ -1,7 +1,5 @@
 package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
-
 import java.util.ArrayList;
 
 public class ActivateProductionEvent extends MatchEvent {

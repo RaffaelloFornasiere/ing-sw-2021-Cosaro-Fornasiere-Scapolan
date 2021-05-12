@@ -1,10 +1,10 @@
-package it.polimi.ingsw.events.ServerEvents;
+package it.polimi.ingsw.events.ClientEvents;
 
 import it.polimi.ingsw.events.Event;
 
 import java.util.ArrayList;
 
-public class LobbyStateEvent extends Event {
+public class LobbyStateEvent extends ClientEvent {
     private String leaderID;
     private ArrayList<String> otherPLayersID;
 
