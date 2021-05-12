@@ -1,4 +1,4 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ServerEvents;
 
 import it.polimi.ingsw.virtualview.RequestsElaborator;
 

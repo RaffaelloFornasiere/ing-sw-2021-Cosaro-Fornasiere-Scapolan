@@ -1,6 +1,8 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-public class ActivateLeaderCardEvent extends MatchEvent{
+import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
+
+public class ActivateLeaderCardEvent extends MatchEvent {
     private int leaderCardIndex;
 
     /**
@@ -15,6 +17,10 @@ public class ActivateLeaderCardEvent extends MatchEvent{
             throw new IllegalArgumentException("Index must be positive");
         this.leaderCardIndex = leaderCardIndex;
     }
+
+
+
+
 
     /**
      * getter for the index of the leader card to activate

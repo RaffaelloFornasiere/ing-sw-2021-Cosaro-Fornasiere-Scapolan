@@ -1,7 +1,9 @@
 package it.polimi.ingsw.controller;
 
 
-import it.polimi.ingsw.events.*;
+import it.polimi.ingsw.events.ControllerEvents.*;
+import it.polimi.ingsw.events.BadRequestEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.LeaderCards.ExtraResourceLeaderPower;
@@ -61,7 +63,7 @@ public class Controller {
 
     }
 
-    public void BuyResourcesEventHandler(PropertyChangeEvent evt) throws InvalidPlayerIdException{
+    public void BuyResourcesEventHandler(PropertyChangeEvent evt){
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
         var marbles = new ArrayList<>(marketManager.buy(
                 event.getDirection(),
@@ -88,19 +90,12 @@ public class Controller {
                 });
                 faithTrackManager.incrementFaithTrackPosition(player, i.i);
             }
-            marbles.stream().map(marble -> {
-                switch (marble) {
-                    case BLUE:
-                        return Resource.SHIELD;
-                    case GRAY:
-                        return Resource.ROCK;
-                    case YELLOW:
-                        return Resource.COIN;
-                    case PURPLE:
-                        return Resource.SERVANT;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + marble);
-                }
+            marbles.stream().map(marble -> switch (marble) {
+                case BLUE -> Resource.SHIELD;
+                case GRAY -> Resource.ROCK;
+                case YELLOW -> Resource.COIN;
+                case PURPLE -> Resource.SERVANT;
+                default -> throw new IllegalStateException("Unexpected value: " + marble);
             }).forEach(resources::add);
             ManageBoughtResources(resources);
         } catch (NotPresentException e) {

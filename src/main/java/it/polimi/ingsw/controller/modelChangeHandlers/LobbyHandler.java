@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
-import it.polimi.ingsw.controller.PreGameController;
-import it.polimi.ingsw.events.LobbyStateEvent;
+import it.polimi.ingsw.events.ServerEvents.LobbyStateEvent;
 import it.polimi.ingsw.model.Lobby;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.virtualview.RequestsElaborator;

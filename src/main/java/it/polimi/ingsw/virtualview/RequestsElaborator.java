@@ -1,8 +1,8 @@
 package it.polimi.ingsw.virtualview;
 
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.events.NewPlayerEvent;
-import it.polimi.ingsw.events.NewPlayerEventWithNetworkData;
+import it.polimi.ingsw.events.ServerEvents.NewPlayerEvent;
+import it.polimi.ingsw.events.ServerEvents.NewPlayerEventWithNetworkData;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -28,6 +28,7 @@ public class RequestsElaborator {
         }
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public void elaborateRequests(){
         new Thread(()->clientHandlerReceiver.waitForEvent());
 

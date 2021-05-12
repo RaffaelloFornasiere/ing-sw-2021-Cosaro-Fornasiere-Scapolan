@@ -1,6 +1,8 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-public class LeaderPowerSelectStateEvent extends MatchEvent{
+import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
+
+public class LeaderPowerSelectStateEvent extends MatchEvent {
 
     private int leaderCardIndex;
     private int leaderPowerIndex;

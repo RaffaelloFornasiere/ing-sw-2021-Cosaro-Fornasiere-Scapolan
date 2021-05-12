@@ -1,7 +1,7 @@
 package it.polimi.ingsw.virtualview;
 
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.events.MatchEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 
 import java.beans.PropertyChangeListener;

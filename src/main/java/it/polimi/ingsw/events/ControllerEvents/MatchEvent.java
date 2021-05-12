@@ -1,6 +1,8 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ControllerEvents;
 
-public abstract class MatchEvent extends Event{
+import it.polimi.ingsw.events.Event;
+
+public abstract class MatchEvent extends ControllerEvent {
     /**
      * constructor for the class
      * @param playerID the player that generated(directly or indirectly) this event

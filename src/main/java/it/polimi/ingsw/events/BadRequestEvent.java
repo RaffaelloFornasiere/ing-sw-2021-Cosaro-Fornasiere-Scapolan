@@ -1,6 +1,8 @@
 package it.polimi.ingsw.events;
 
-public class BadRequestEvent extends Event{
+import it.polimi.ingsw.events.Event;
+
+public class BadRequestEvent extends Event {
     private String description;
     private Event cause;
 

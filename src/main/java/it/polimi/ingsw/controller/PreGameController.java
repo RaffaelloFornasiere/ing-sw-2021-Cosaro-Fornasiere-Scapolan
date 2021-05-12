@@ -2,8 +2,8 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.modelChangeHandlers.LobbyHandler;
 import it.polimi.ingsw.events.BadRequestEvent;
-import it.polimi.ingsw.events.NewPlayerEvent;
-import it.polimi.ingsw.events.NewPlayerEventWithNetworkData;
+import it.polimi.ingsw.events.ServerEvents.NewPlayerEvent;
+import it.polimi.ingsw.events.ServerEvents.NewPlayerEventWithNetworkData;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.Lobby;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;

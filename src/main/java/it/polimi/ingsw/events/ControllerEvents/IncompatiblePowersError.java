@@ -1,6 +1,9 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ControllerEvents;
 
-public class IncompatiblePowersError extends Event {
+import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
+import it.polimi.ingsw.events.Event;
+
+public class IncompatiblePowersError extends ControllerEvent {
     private int leaderCardIndex;
     private int leaderPowerIndex;
 

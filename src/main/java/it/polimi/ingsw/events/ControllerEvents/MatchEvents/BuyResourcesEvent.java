@@ -1,18 +1,14 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
+import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
 import it.polimi.ingsw.model.Direction;
-import org.reflections.Reflections;
-
-import java.lang.reflect.*;
-
-import java.util.Set;
 
 public class BuyResourcesEvent extends MatchEvent {
     /**
      *
      * @param playerID the player that generated(directly or indirectly) this event
-     * @param direction
-     * @param index
+     * @param direction row or column
+     * @param index index of row or column
      */
     public BuyResourcesEvent(String playerID, Direction direction, int index) {
         super(playerID);
