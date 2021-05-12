@@ -14,7 +14,7 @@ public class BuyResourcesEvent extends MatchEvent {
      * @param direction
      * @param index
      */
-    BuyResourcesEvent(String playerID, Direction direction, int index) {
+    public BuyResourcesEvent(String playerID, Direction direction, int index) {
         super(playerID);
         this.direction = direction;
         this.index = index;

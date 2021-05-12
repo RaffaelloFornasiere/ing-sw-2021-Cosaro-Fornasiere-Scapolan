@@ -35,9 +35,9 @@ public class Controller {
                 this::SelectMultipleLeaderPowersHandler);*/
 
         Reflections reflections = new Reflections("it.polimi.ingsw.events");
-        Set<Class<? extends Event>> events = reflections.getSubTypesOf(Event.class);
+        Set<Class<? extends MatchEvent>> events = reflections.getSubTypesOf(MatchEvent.class);
 
-        for (Class<? extends Event> event : events) {
+        for (var event : events) {
             try {
                 Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
                         PropertyChangeEvent.class);
