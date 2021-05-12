@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
+import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
 
-public class Lobby {
+public class Lobby extends Observable {
     private String leaderID;
     private ArrayList<String> otherPLayersID;
 
@@ -20,6 +21,7 @@ public class Lobby {
     public Lobby(String leaderID){
         this.leaderID = leaderID;
         otherPLayersID = new ArrayList<>();
+        notifyObservers();
     }
 
     /**
@@ -54,5 +56,6 @@ public class Lobby {
     public void addPlayerID(String playerID) throws IllegalOperation {
         if(isFull()) throw new IllegalOperation("The lobby is full");
         this.otherPLayersID.add(playerID);
+        notifyObservers();
     }
 }
