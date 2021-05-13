@@ -1,11 +1,10 @@
 package it.polimi.ingsw.model.DevCards;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
 
-import com.google.gson.Gson;
-import  it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.CardColor;
+import it.polimi.ingsw.model.ProductionPower;
+import it.polimi.ingsw.model.Resource;
+
+import java.util.HashMap;
 
 public class DevCard
 {

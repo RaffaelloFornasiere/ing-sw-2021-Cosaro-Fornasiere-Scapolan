@@ -4,11 +4,11 @@ public class PopeFavorCard {
     private final int victoryPoints;
 
     /**
-     * construcor
-     * @param value of victorypoints
+     * constructor
+     * @param value of victoryPoints
      */
-    public PopeFavorCard( int value){
-       victoryPoints=value;
+  public PopeFavorCard(int value){
+      this.victoryPoints= value;
     }
 
     /**

@@ -1,17 +1,10 @@
 package it.polimi.ingsw.model.LeaderCards;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.model.ProductionPower;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Class that represents a leader card

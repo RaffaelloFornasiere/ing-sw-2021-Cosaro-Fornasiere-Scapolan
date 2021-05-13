@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.LeaderCards;
 
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.IllegalOperation;
+import it.polimi.ingsw.exceptions.IndexSlotException;
+import it.polimi.ingsw.exceptions.LevelCardException;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.DashBoard;
 import it.polimi.ingsw.model.DevCards.DevCard;

@@ -100,6 +100,7 @@ public class NetworkAdapter {
     }
 
     public void activateProduction(ArrayList<Integer> devCards) {
+    {
         ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards);
         send(event);
     }

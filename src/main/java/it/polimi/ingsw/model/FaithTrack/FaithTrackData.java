@@ -2,12 +2,12 @@ package it.polimi.ingsw.model.FaithTrack;
 
 import it.polimi.ingsw.exceptions.OutOfBoundException;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FaithTrackData {
     private int position;
     private final FaithTrack physicalFaithTrack;
-    private ArrayList<PopeFavorCard> acquiredPopeFavorCards;
+    private HashMap<Integer, PopeFavorCard> acquiredPopeFavorCards;
 
     /**
      * Constructor inizializes one instance of the class: initial position equal to zero,
@@ -18,7 +18,7 @@ public class FaithTrackData {
     public FaithTrackData(FaithTrack physicalFaithTrack){
         position=0;
         this.physicalFaithTrack=physicalFaithTrack;
-        acquiredPopeFavorCards=new ArrayList<>();
+        acquiredPopeFavorCards=new HashMap<>();
     }
 
 
@@ -58,7 +58,7 @@ public class FaithTrackData {
      * Getter of acquiredFavorPopeCard
      * @return the array of favorpopecard
      */
-    public ArrayList<PopeFavorCard> getAcquiredPopeFavorCards() {
+    public HashMap<Integer,PopeFavorCard> getAcquiredPopeFavorCards() {
         return acquiredPopeFavorCards;
     }
 
@@ -68,8 +68,8 @@ public class FaithTrackData {
      * Adds one popeFavorCard to the list of popeFavorCards
      * @param card is a popeFavorCard to add
      */
-    public void addPopeFavorCard( PopeFavorCard card){
-        acquiredPopeFavorCards.add(card);
+    public void addPopeFavorCard(int n,  PopeFavorCard card){
+        acquiredPopeFavorCards.put(n, card);
     }
 
 
@@ -79,11 +79,10 @@ public class FaithTrackData {
      * @return the total number of points obtained from FavorPopeCards
      */
     public int getFavorPopeCardPoints(){
-        int count= 0;
-        for ( PopeFavorCard card : acquiredPopeFavorCards) {
-            count+= card.getVictoryPoints();
-        }
-        return  count;
+       return  acquiredPopeFavorCards.values()
+                .stream().map(value->value.getVictoryPoints())
+                .mapToInt(Integer::valueOf)
+                .sum();
     }
 
 

@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.LeaderCards;
 
 import it.polimi.ingsw.model.Resource;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

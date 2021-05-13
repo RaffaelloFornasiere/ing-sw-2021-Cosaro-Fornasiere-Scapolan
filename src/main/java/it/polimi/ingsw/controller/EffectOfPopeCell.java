@@ -18,6 +18,6 @@ public class EffectOfPopeCell extends EffectOfCell {
         ArrayList<Player> p=  matchState.getPlayers();
         p.parallelStream()
                 .filter(f->(f.getDashBoard().getFaithTrackData().getPosition()>=first))
-                .forEach((g)-> g.getDashBoard().getFaithTrackData().addPopeFavorCard(popeCell.getCard()));
+                .forEach((g)-> g.getDashBoard().getFaithTrackData().addPopeFavorCard(popeCell.getIndex(), popeCell.getCard()));
     }
 }

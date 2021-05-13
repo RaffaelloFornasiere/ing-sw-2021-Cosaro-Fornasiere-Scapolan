@@ -2,9 +2,6 @@ package it.polimi.ingsw.model.LeaderCards;
 
 import it.polimi.ingsw.model.Resource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  * Class containing the data needed to use the ability of a leader card that give a resource of a certain type for each white marble got from the market
  */
