@@ -1,7 +1,9 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.events.*;
-import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
+import it.polimi.ingsw.events.ControllerEvents.*;
+import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.ui.UI;
@@ -10,13 +12,11 @@ import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class NetworkAdapter {
 
@@ -28,13 +28,14 @@ public class NetworkAdapter {
     String playerID;
     UI view;
 
-    public NetworkAdapter(PropertyChangeSubject subject, InetAddress address) throws IOException
-    {
+    public NetworkAdapter(PropertyChangeSubject subject, InetAddress address) throws IOException {
         connectToServer(address);
 
         // method-event binding
         Reflections reflections = new Reflections("it.polimi.ingsw.events");
-        Set<Class<? extends Event>> events = reflections.getSubTypesOf(Event.class);
+
+        Set<Class<? extends Event>> events = new HashSet<>(reflections.getSubTypesOf(ClientEvent.class));
+        events.addAll(reflections.getSubTypesOf(ControllerEvent.class));
 
         for (var event : events) {
             try {
@@ -47,26 +48,26 @@ public class NetworkAdapter {
                         e.printStackTrace();
                     }
                 });
-            } catch (NoSuchMethodException  e) {
+            } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
+
         }
     }
 
-    public boolean connectToServer(InetAddress address) throws IOException
-    {
+    public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
+        server.setSoTimeout(3000);
         NetworkHandlerSender sender = new NetworkHandlerSender(server);
         NetworkHandlerReceiver receiver = new NetworkHandlerReceiver(server, this);
         Timer timer = new Timer();
         TimerTask heartbeat;
-        heartbeat = new TimerTask(){
+        heartbeat = new TimerTask() {
             @Override
-            public void run(){
+            public void run() {
                 try {
                     sender.sendData("heartbeat");
-                }catch (IOException e)
-                {
+                } catch (IOException e) {
                     view.printError("connection with server error, please check connection");
                     timer.cancel();
                 }
@@ -77,47 +78,41 @@ public class NetworkAdapter {
     }
 
 
-    public void enterMatch(String username, String lobbyLeaderID)
-    {
+    public void enterMatch(String username, String lobbyLeaderID) {
         this.playerID = username;
         NewPlayerEvent event = new NewPlayerEvent(username, lobbyLeaderID);
         send(event);
     }
 
-    public void createMatch(String username)
-    {
+    public void createMatch(String username) {
         NewPlayerEvent event = new NewPlayerEvent(username);
         send(event);
     }
 
-    public void buyResources(Direction direction, int index)
-    {
+    public void buyResources(Direction direction, int index) {
         BuyResourcesEvent event = new BuyResourcesEvent(playerID, direction, index);
         send(event);
     }
 
-    public void buyDevCards(int row, int column)
-    {
+    public void buyDevCards(int row, int column) {
         BuyDevCardsEvent event = new BuyDevCardsEvent(playerID, row, column);
         send(event);
     }
 
-    public void activateProduction(ArrayList<DevCard> devCards)
-    {
+    public void activateProduction(ArrayList<Integer> devCards) {
         ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards);
         send(event);
     }
 
+    public void activateLeaderCard(int index) {
+        ActivateLeaderCardEvent event = new ActivateLeaderCardEvent(playerID, index);
+        send(event);
+    }
 
-
-
-
-    private void send(Object o)
-    {
+    private void send(Object o) {
         try {
             sender.sendObject(o);
-        }catch (IOException e)
-        {
+        } catch (IOException e) {
             view.printError("connection with server error, please check connection");
         }
     }
@@ -138,8 +133,21 @@ public class NetworkAdapter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
 
-
-
+    public void ControllerEventHandler(PropertyChangeEvent evt){}
+    public void MatchEventsHandler(PropertyChangeEvent evt){}
+    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){}
+    public void ActivateProductionEventHandler(PropertyChangeEvent evt){}
+    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt){}
+    public void BuyDevCardsEventHandler(PropertyChangeEvent evt){}
+    public void BuyResourcesEventHandler(PropertyChangeEvent evt){}
+    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt){}
+    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){}
+    public void MatchEventHandler(PropertyChangeEvent evt){}
+    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt){}
+    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt){}
+    public void NewPlayerEventHandler(PropertyChangeEvent evt){}
+    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt){}
+    public void StartMatchEventHandler(PropertyChangeEvent evt){}
 
 
 }
