@@ -1,13 +1,11 @@
-package it.polimi.ingsw.events;
-
-import it.polimi.ingsw.model.Direction;
+package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
 public class BuyDevCardsEvent extends MatchEvent {
     /**
      *
      * @param playerID the player that generated(directly or indirectly) this event
-     * @param row
-     * @param column
+     * @param row row of grid
+     * @param column column of grid
      */
     public BuyDevCardsEvent(String playerID, int row, int column) {
         super(playerID);

@@ -1,8 +1,10 @@
 package it.polimi.ingsw.virtualview;
 
+import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.events.NewPlayerEvent;
-import it.polimi.ingsw.events.NewPlayerEventWithNetworkData;
+import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
+import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -15,19 +17,22 @@ public class RequestsElaborator {
     private ClientHandlerSender clientHandlerSender;
     private ClientHandlerReceiver clientHandlerReceiver;
     private BlockingQueue<Event> requestsQueue;
-    private VirtualView eventHandlerRegistry;
+    private VirtualView mainEventHandlerRegistry;
+    private VirtualView matchEventHandlerRegistry;
+    private String ownerUserID;
 
-    public RequestsElaborator(Socket socket, VirtualView eventHandlerRegistry) {
+    public RequestsElaborator(Socket socket, VirtualView mainEventHandlerRegistry) {
         try {
             this.requestsQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
             this.clientHandlerSender = new ClientHandlerSender(socket.getOutputStream());
             this.clientHandlerReceiver = new ClientHandlerReceiver(socket.getInputStream(), requestsQueue);
-            this.eventHandlerRegistry = eventHandlerRegistry;
+            this.mainEventHandlerRegistry = mainEventHandlerRegistry;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public void elaborateRequests(){
         new Thread(()->clientHandlerReceiver.waitForEvent());
 
@@ -37,9 +42,21 @@ public class RequestsElaborator {
                 while (!done) {
                     Event event = requestsQueue.take();
                     done = true;
+
                     if(event.getClass() == NewPlayerEvent.class)
                         event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
-                    eventHandlerRegistry.sendEvent(event);
+                    else if(!ownerUserID.equals(event.getPlayerId()))
+                        mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
+                                "The userID given is wrong", event));
+
+                    if(MatchEvent.class.isAssignableFrom(event.getClass()))
+                        if(matchEventHandlerRegistry == null)
+                            mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
+                                    "The match has not started yet", event));
+                        else
+                            matchEventHandlerRegistry.sendEvent(event);
+                    else
+                        mainEventHandlerRegistry.sendEvent(event);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -49,5 +66,13 @@ public class RequestsElaborator {
 
     public ClientHandlerSender getClientHandlerSender() {
         return clientHandlerSender;
+    }
+
+    public void setMatchEventHandlerRegistry(VirtualView matchEventHandlerRegistry) {
+        this.matchEventHandlerRegistry = matchEventHandlerRegistry;
+    }
+
+    public void setOwnerUserID(String ownerUserID) {
+        this.ownerUserID = ownerUserID;
     }
 }

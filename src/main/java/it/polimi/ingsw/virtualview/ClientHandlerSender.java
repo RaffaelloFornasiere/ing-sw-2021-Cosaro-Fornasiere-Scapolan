@@ -18,6 +18,7 @@ public class ClientHandlerSender {
         printWriter = new PrintWriter(outputStream);
     }
 
+    //TODO use a better read/write mechanism
     public void sendEvent(Event event){
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Event>());

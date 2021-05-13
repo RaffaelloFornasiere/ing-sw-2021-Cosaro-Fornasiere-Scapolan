@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.events.*;
+import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.ui.UI;
@@ -8,7 +9,6 @@ import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

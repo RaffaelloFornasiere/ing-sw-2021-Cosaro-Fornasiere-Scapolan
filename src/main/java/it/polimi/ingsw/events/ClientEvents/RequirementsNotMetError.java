@@ -1,6 +1,9 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ClientEvents;
 
-public class RequirementsNotMetError extends Event{
+import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
+import it.polimi.ingsw.events.Event;
+
+public class RequirementsNotMetError extends ControllerEvent {
 
     int leaderCardIndex;
 

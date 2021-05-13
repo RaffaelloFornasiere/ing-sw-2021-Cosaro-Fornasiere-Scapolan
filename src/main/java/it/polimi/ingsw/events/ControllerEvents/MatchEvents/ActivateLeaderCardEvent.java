@@ -1,26 +1,30 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-public class AddedNewPopeFavorCardEvent  extends MatchEvent{
-    private int popeFavourCardIndex;
+public class ActivateLeaderCardEvent extends MatchEvent {
+    private int leaderCardIndex;
 
     /**
      * Constructor for the class
      * @param playerID the player that generated(directly or indirectly) this event
-     * @param popeFavorCardIndex the index of the popeFavorCard added.
+     * @param leaderCardIndex the index of the leader card to activate
      * @throws IllegalArgumentException if the index is negative
      */
-    public AddedNewPopeFavorCardEvent(String playerID, int popeFavorCardIndex) throws IllegalArgumentException{
+    public ActivateLeaderCardEvent(String playerID, int leaderCardIndex) throws IllegalArgumentException{
         super(playerID);
-        if(popeFavourCardIndex<0)
+        if(leaderCardIndex<0)
             throw new IllegalArgumentException("Index must be positive");
-        this.popeFavourCardIndex= popeFavorCardIndex;
+        this.leaderCardIndex = leaderCardIndex;
     }
+
+
+
+
 
     /**
      * getter for the index of the leader card to activate
      * @return the index of the leader card to activate
      */
     public int getLeaderCardIndex() {
-        return popeFavourCardIndex;
+        return leaderCardIndex;
     }
 }

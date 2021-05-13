@@ -8,14 +8,14 @@ import java.net.Socket;
 
 public class MainServer{
     public static final int SERVER_PORT = 50885;
-    private VirtualView eventHandlerRegistry;
+    private VirtualView mainEventHandlerRegistry;
 
     public MainServer(){
-        eventHandlerRegistry = new VirtualView();
+        mainEventHandlerRegistry = new VirtualView();
     }
 
-    public VirtualView getEventHandlerRegistry() {
-        return eventHandlerRegistry;
+    public VirtualView getMainEventHandlerRegistry() {
+        return mainEventHandlerRegistry;
     }
 
     private void startServer() throws IOException{
@@ -23,14 +23,14 @@ public class MainServer{
         //serverSocket.setSoTimeout(10*1000);
         while(true){
             Socket socket = serverSocket.accept();
-            RequestsElaborator requestsElaborator = new RequestsElaborator(socket, eventHandlerRegistry);
+            RequestsElaborator requestsElaborator = new RequestsElaborator(socket, mainEventHandlerRegistry);
             new Thread(requestsElaborator::elaborateRequests);
         }
     }
 
     public static void main(String[] args) {
         MainServer ms = new MainServer();
-        PreGameController preGameController = new PreGameController(ms.getEventHandlerRegistry());
+        PreGameController preGameController = new PreGameController(ms.getMainEventHandlerRegistry());
         try {
             ms.startServer();
         } catch (IOException e) {

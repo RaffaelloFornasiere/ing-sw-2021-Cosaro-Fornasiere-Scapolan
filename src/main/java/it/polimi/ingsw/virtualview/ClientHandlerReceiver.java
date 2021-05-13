@@ -21,6 +21,7 @@ public class ClientHandlerReceiver {
         this.requestsQueue = requestsQueue;
     }
 
+    //TODO use a better read/write mechanism and check validity of arrivals and empty the buffer from junk
     public void waitForEvent(){
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Event>());
