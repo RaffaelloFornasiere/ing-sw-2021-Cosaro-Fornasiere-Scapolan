@@ -14,6 +14,11 @@ public class MatchState {
     private  DevCardGrid devCardGrid;
     private  Market market;
 
+    public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards){
+        devCardGrid = new DevCardGrid(cards);
+        this.players= (ArrayList<Player>) players.clone();
+    }
+
     public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards, int marketRow, int marketColumns, HashMap<Marble, Integer> marbles) {
         devCardGrid = new DevCardGrid(cards);
 

@@ -1,8 +1,10 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.events.*;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
-import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
@@ -12,7 +14,8 @@ import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Timer;
@@ -102,7 +105,7 @@ public class NetworkAdapter {
         send(event);
     }
 
-    public void activateProduction(ArrayList<DevCard> devCards)
+    public void activateProduction(ArrayList<Integer> devCards)
     {
         ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards);
         send(event);

@@ -2,18 +2,15 @@ package it.polimi.ingsw.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import it.polimi.ingsw.events.BuyResourcesEvent;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class NetworkHandlerReceiver implements Runnable, PropertyChangeSubject {
