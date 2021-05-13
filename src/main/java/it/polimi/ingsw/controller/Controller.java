@@ -1,8 +1,10 @@
 package it.polimi.ingsw.controller;
 
 
-import it.polimi.ingsw.events.ControllerEvents.*;
-import it.polimi.ingsw.events.BadRequestEvent;
+import it.polimi.ingsw.events.ClientEvents.IncompatiblePowersError;
+import it.polimi.ingsw.events.ClientEvents.LeaderCardNotActiveError;
+import it.polimi.ingsw.events.ClientEvents.RequirementsNotMetError;
+import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.*;
@@ -16,6 +18,7 @@ import java.beans.PropertyChangeEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,13 +28,12 @@ public class Controller {
     LeaderCardManager leaderCardManager;
     FaithTrackManager faithTrackManager;
     MatchState matchState;
-    DashBoard dashBoard;
-    ClientHandlerSender clientHandlerSender;
+    HashMap<String, ClientHandlerSender> clientHandlerSenders;
 
 
 
 
-    Controller(PropertyChangeSubject subject) {
+    public Controller(PropertyChangeSubject subject, MatchState matchState, HashMap<String, ClientHandlerSender> clientHandlerSenders) {
         /*subject.addPropertyChangeListener(BuyResourcesEvent.class.getName(), this::BuyResourcesEventHandler);
         subject.addPropertyChangeListener(SelectMultiLPowersEvent.class.getName(),
                 this::SelectMultipleLeaderPowersHandler);*/
@@ -55,10 +57,12 @@ public class Controller {
             }
         }
 
+        this.matchState = matchState;
+        this.clientHandlerSenders = (HashMap<String, ClientHandlerSender>)clientHandlerSenders.clone();
 
-        // take from config
-        matchState = new MatchState();
         faithTrackManager = new FaithTrackManager(matchState);
+        leaderCardManager = new LeaderCardManager();
+        marketManager = new MarketManager(matchState.getMarket());
 
 
     }
@@ -77,7 +81,7 @@ public class Controller {
             var resources = new ArrayList<Resource>();
             if(powers.size() > 1)
             {
-                //ask user for power selction
+                //ask user for power selection
                 return;
             }
             else if (powers.size() > 0 )
@@ -124,14 +128,6 @@ public class Controller {
     {
         //boolean failed = false;
         //var warehouse = dashBoard.getDepotResources();
-
-        for (Resource x : resources) {
-            try {
-                dashBoard.addResourcesToWarehouse(x, 1);
-            } catch (ResourcesLimitsException | IllegalArgumentException ignore) {
-
-            }
-        }
     }
 
     public void ToggleLeaderPowerSelectEventHandler(PropertyChangeEvent evt){
@@ -139,11 +135,11 @@ public class Controller {
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
             if(event.getLeaderCardIndex()>=player.getLeaderCards().size()) {
-                clientHandlerSender.sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card index to big", event));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card index to big", event));
                 return;
             }
             if(event.getLeaderPowerIndex()>=player.getLeaderCards().get(event.getLeaderCardIndex()).getLeaderPowers().size()) {
-                clientHandlerSender.sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader power index to big", event));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader power index to big", event));
                 return;
             }
             try {
@@ -157,11 +153,11 @@ public class Controller {
                 //impossible
                 System.out.println(notPresentException.getMessage());
             } catch (IllegalOperation illegalOperation) {
-                clientHandlerSender.sendEvent(event);
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(event);
             } catch (LeaderCardNotActiveException e) {
-                clientHandlerSender.sendEvent(new LeaderCardNotActiveError(event.getPlayerId(), event.getLeaderCardIndex()));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new LeaderCardNotActiveError(event.getPlayerId(), event.getLeaderCardIndex()));
             } catch (IncompatiblePowersException e) {
-                clientHandlerSender.sendEvent(new IncompatiblePowersError(event.getPlayerId(), event.getLeaderCardIndex(), event.getLeaderPowerIndex()));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new IncompatiblePowersError(event.getPlayerId(), event.getLeaderCardIndex(), event.getLeaderPowerIndex()));
             }
         } catch (NotPresentException e) {
             //impossible
@@ -175,15 +171,15 @@ public class Controller {
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
             if(event.getLeaderCardIndex()>=player.getLeaderCards().size()) {
-                clientHandlerSender.sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card index to big", event));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card index to big", event));
                 return;
             }
             try{
                 leaderCardManager.activateLeaderCard(player, player.getLeaderCards().get(event.getLeaderCardIndex()));
             } catch (IllegalOperation illegalOperation) {
-                clientHandlerSender.sendEvent(event);
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(event);
             } catch (RequirementsNotMetException requirementsNotMetException) {
-                clientHandlerSender.sendEvent(new RequirementsNotMetError(event.getPlayerId(), event.getLeaderCardIndex()));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new RequirementsNotMetError(event.getPlayerId(), event.getLeaderCardIndex()));
             } catch (NotPresentException notPresentException) {
                 //impossible
                 System.out.println(notPresentException.getMessage());

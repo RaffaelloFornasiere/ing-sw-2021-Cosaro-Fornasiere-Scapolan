@@ -1,7 +1,7 @@
 package it.polimi.ingsw.virtualview;
 
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 
 import java.beans.PropertyChangeListener;
@@ -10,15 +10,15 @@ import java.util.HashMap;
 
 public class VirtualView implements PropertyChangeSubject {
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
-    private HashMap<String,String> playerToMatch;
 
     public VirtualView(){}
 
     public void sendEvent(Event event){
-        if(!MatchEvent.class.isAssignableFrom(event.getClass()))
+        if (MatchEvent.class.isAssignableFrom(event.getClass())) {
             support.firePropertyChange(event.getEventName(), null, event);
-        else
-            support.firePropertyChange(playerToMatch.get(event.getPlayerId()) + "#" + event.getEventName(), null, event);
+        } else {
+            support.firePropertyChange(event.getEventName(), null, event);
+        }
     }
 
 

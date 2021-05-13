@@ -18,11 +18,11 @@ public class Market {
      * Constructor
      *
      * @param rows    number of rows in market's grid
-     * @param colums  number of columns in market's grid
+     * @param columns  number of columns in market's grid
      * @param marbles hashmap with the available marbles
      */
-    public Market(int rows, int colums, HashMap<Marble, Integer> marbles) {
-        this(rows, colums, new ArrayList<>() {{
+    public Market(int rows, int columns, HashMap<Marble, Integer> marbles) {
+        this(rows, columns, new ArrayList<Marble>() {{
             marbles.forEach((key, value) ->
                     IntStream.range(0, value)
                             .forEach(n -> add(key))
@@ -30,16 +30,16 @@ public class Market {
         }});
     }
 
-    public Market(int rows, int colums, ArrayList<Marble> marbles) {
-        if (marbles.size() != rows * colums + 1)
+    public Market(int rows, int columns, ArrayList<Marble> marbles) {
+        if (marbles.size() != rows * columns + 1)
             throw new IllegalArgumentException("number of marbles is not compatible with grid size");
         this.rows = rows;
-        this.cols = colums;
-        grid = new Marble[rows][colums];
+        this.cols = columns;
+        grid = new Marble[rows][columns];
         //assign the marbles to the market's grid
         for (int i = 0; i < rows; i++)
-            for (int j = 0; j < colums; j++)
-                grid[i][j] = marbles.get(i * colums + j);
+            for (int j = 0; j < columns; j++)
+                grid[i][j] = marbles.get(i * columns + j);
 
         // assign the left marble
         marbleLeft = marbles.get(marbles.size() - 1);

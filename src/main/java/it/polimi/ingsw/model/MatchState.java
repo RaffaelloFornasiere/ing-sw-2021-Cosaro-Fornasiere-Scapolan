@@ -14,27 +14,16 @@ public class MatchState {
     private  DevCardGrid devCardGrid;
     private  Market market;
 
-    //constructor from JSON?
-    public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards) {
-        //get data from JSON
+    public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards, int marketRow, int marketColumns, HashMap<Marble, Integer> marbles) {
         devCardGrid = new DevCardGrid(cards);
 
-        HashMap<Marble, Integer> marbles = new HashMap<Marble, Integer>() {{
-            put(Marble.WHITE, 4);
-            put(Marble.BLUE, 2);
-            put(Marble.GRAY, 2);
-            put(Marble.YELLOW, 2);
-            put(Marble.PURPLE, 2);
-            put(Marble.RED, 1);
-        }};
-        market = new Market(3,4, marbles);
-        this.players= players;
+        market = new Market(marketRow,marketColumns, marbles);
+        market.shuffleMarket();
+        this.players= (ArrayList<Player>) players.clone();
         lastRound=false;
         currentPlayerIndex=0;
 
     }
-
-    public MatchState(){};
 
     public  ArrayList<Player> getPlayers(){
         return  (ArrayList<Player>) players.clone();
@@ -46,5 +35,9 @@ public class MatchState {
                 return p;
 
         throw new NotPresentException("The player with id "+playerID+" is not in this match");
+    }
+
+    public Market getMarket() {
+        return market;
     }
 }
