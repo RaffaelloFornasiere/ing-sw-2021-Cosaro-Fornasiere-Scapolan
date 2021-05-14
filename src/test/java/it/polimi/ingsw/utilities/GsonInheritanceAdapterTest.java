@@ -55,8 +55,9 @@ public class GsonInheritanceAdapterTest {
                 "\"INSTANCE\":{\"maxResources\":{\"COIN\":2},\"currentResources\":{\"COIN\":0}}},\"selected\":false}]}";
 
         assertEquals(expected, JSONLeaderCard);
-
         LeaderCard lc2 = gson.fromJson(JSONLeaderCard, LeaderCard.class);
+
+
     }
 
     @Test

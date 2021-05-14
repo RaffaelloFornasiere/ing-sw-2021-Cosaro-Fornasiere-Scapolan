@@ -12,6 +12,7 @@ import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.io.Serial;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +29,7 @@ public class NetworkAdapter {
     String playerID;
     UI view;
 
-    public NetworkAdapter(PropertyChangeSubject subject, InetAddress address) throws IOException {
+    public NetworkAdapter(InetAddress address) throws IOException {
         connectToServer(address);
 
         // method-event binding
@@ -37,11 +38,12 @@ public class NetworkAdapter {
         Set<Class<? extends Event>> events = new HashSet<>(reflections.getSubTypesOf(ClientEvent.class));
         events.addAll(reflections.getSubTypesOf(ControllerEvent.class));
 
+
         for (var event : events) {
             try {
                 Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
                         PropertyChangeEvent.class);
-                subject.addPropertyChangeListener(event.getSimpleName(), x -> {
+                receiver.addPropertyChangeListener(event.getSimpleName(), x -> {
                     try {
                         method.invoke(this, x);
                     } catch (IllegalAccessException | InvocationTargetException e) {
@@ -55,11 +57,13 @@ public class NetworkAdapter {
         }
     }
 
+    @SuppressWarnings("unused")
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
         server.setSoTimeout(3000);
-        NetworkHandlerSender sender = new NetworkHandlerSender(server);
-        NetworkHandlerReceiver receiver = new NetworkHandlerReceiver(server, this);
+        sender = new NetworkHandlerSender(server);
+        receiver = new NetworkHandlerReceiver(server);
+        new Thread(receiver::receive).start();
         Timer timer = new Timer();
         TimerTask heartbeat;
         heartbeat = new TimerTask() {
@@ -67,14 +71,36 @@ public class NetworkAdapter {
             public void run() {
                 try {
                     sender.sendData("heartbeat");
+                    //System.out.println("heartbeat");
                 } catch (IOException e) {
                     view.printError("connection with server error, please check connection");
                     timer.cancel();
                 }
             }
         };
-        timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
+        //timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
         return true;
+    }
+
+    public static void main(String[] args) {
+        try {
+            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("192.168.0.172"));
+            nt.createMatch("raffaello");
+            nt.createMatch("raffaello");
+
+            System.out.println("aaa");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void send(Event e) {
+        try {
+            sender.sendObject(e);
+        } catch (IOException err) {
+            view.printError("connection with server error, please check connection");
+        }
     }
 
 
@@ -100,7 +126,6 @@ public class NetworkAdapter {
     }
 
     public void activateProduction(ArrayList<Integer> devCards) {
-    {
         ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards);
         send(event);
     }
@@ -110,13 +135,7 @@ public class NetworkAdapter {
         send(event);
     }
 
-    private void send(Object o) {
-        try {
-            sender.sendObject(o);
-        } catch (IOException e) {
-            view.printError("connection with server error, please check connection");
-        }
-    }
+
 
 
     /*
@@ -133,22 +152,70 @@ public class NetworkAdapter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
-
-    public void ControllerEventHandler(PropertyChangeEvent evt){}
-    public void MatchEventsHandler(PropertyChangeEvent evt){}
-    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){}
-    public void ActivateProductionEventHandler(PropertyChangeEvent evt){}
-    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt){}
-    public void BuyDevCardsEventHandler(PropertyChangeEvent evt){}
-    public void BuyResourcesEventHandler(PropertyChangeEvent evt){}
-    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt){}
-    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){}
-    public void MatchEventHandler(PropertyChangeEvent evt){}
-    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt){}
-    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt){}
-    public void NewPlayerEventHandler(PropertyChangeEvent evt){}
-    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt){}
-    public void StartMatchEventHandler(PropertyChangeEvent evt){}
-
-
+    public void BadRequestEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void ClientEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void InitialChoicesEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void LobbyStateEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void ControllerEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void MatchEventsHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void ActivateProductionEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void BuyDevCardsEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void BuyResourcesEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void MatchEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void NewPlayerEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
+    public void StartMatchEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
 }

@@ -14,23 +14,26 @@ import java.io.PrintWriter;
 public class ClientHandlerSender {
     PrintWriter printWriter;
 
-    public ClientHandlerSender(OutputStream outputStream){
+    public ClientHandlerSender(OutputStream outputStream) {
         printWriter = new PrintWriter(outputStream);
     }
 
     //TODO use a better read/write mechanism
-    public void sendEvent(Event event){
+    public void sendEvent(Event event) {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Event>());
+        builder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
         Gson gson = builder.create();
 
         String eventJSON = gson.toJson(event, Event.class);
 
-        try {
-            printWriter.print(MessageWrapper.wrap(eventJSON));
-        } catch (IllegalOperation illegalOperation) {
+        //try {
+        printWriter.println(eventJSON);
+        printWriter.flush();
+        //printWriter.
+
+        /*} catch (IllegalOperation illegalOperation) {
             System.out.println("The event to send contains the messages delimiters(\"" + MessageWrapper.MESSAGE_START +
                     "\" or \"" + MessageWrapper.MESSAGE_END + "\") somewhere");
-        }
+        }*/
     }
 }

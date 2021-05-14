@@ -15,43 +15,11 @@ public class NetworkAdapterTest extends TestCase {
 
     public void testConstructor()
     {
-        PropertyChangeSubject subject = new PropertyChangeSubject() {
-            private PropertyChangeSupport support = new PropertyChangeSupport(this);
-            public void sendEvent(Event event){
-                if (MatchEvent.class.isAssignableFrom(event.getClass())) {
-                    support.firePropertyChange(event.getEventName(), null, event);
-                } else {
-                    support.firePropertyChange(event.getEventName(), null, event);
-                }
-            }
-            @Override
-            public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-                if (propertyName == null || propertyName.equals("")) {
-                    addPropertyChangeListener(listener);
-                    return;
-                }
-                support.addPropertyChangeListener(propertyName, listener);
-            }
-            @Override
-            public void addPropertyChangeListener(PropertyChangeListener listener) {
-                support.addPropertyChangeListener(listener);
-            }
-            @Override
-            public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-                if (propertyName == null || "".equals(propertyName)) {
-                    removePropertyChangeListener(listener);
-                    return;
-                }
-                support.removePropertyChangeListener(propertyName, listener);
-            }
-            @Override
-            public void removePropertyChangeListener(PropertyChangeListener listener) {
-                support.removePropertyChangeListener(listener);
-            }
-        };
-
         try {
-            NetworkAdapter nt = new NetworkAdapter(subject, InetAddress.getByName("192.168.0.172"));
+            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("192.168.0.172"));
+            nt.createMatch("raffaello");
+            nt.createMatch("raffaello");
+
         } catch (IOException e) {
             e.printStackTrace();
             fail();

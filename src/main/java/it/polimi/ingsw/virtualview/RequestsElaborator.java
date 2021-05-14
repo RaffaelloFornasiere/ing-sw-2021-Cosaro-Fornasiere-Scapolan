@@ -34,7 +34,7 @@ public class RequestsElaborator {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void elaborateRequests(){
-        new Thread(()->clientHandlerReceiver.waitForEvent());
+        new Thread(()->clientHandlerReceiver.waitForEvent()).start();
 
         while(true) {
             try {
@@ -49,14 +49,16 @@ public class RequestsElaborator {
                         mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
                                 "The userID given is wrong", event));
 
-                    if(MatchEvent.class.isAssignableFrom(event.getClass()))
-                        if(matchEventHandlerRegistry == null)
+                    if(MatchEvent.class.isAssignableFrom(event.getClass())) {
+                        if (matchEventHandlerRegistry == null)
                             mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
                                     "The match has not started yet", event));
                         else
                             matchEventHandlerRegistry.sendEvent(event);
-                    else
+                    }
+                    else{
                         mainEventHandlerRegistry.sendEvent(event);
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
