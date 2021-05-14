@@ -170,6 +170,9 @@ public class NetworkAdapter {
     public void LobbyStateEventHandler(PropertyChangeEvent evt){
         System.out.println(evt.getClass().getSimpleName());
     }
+    public void MarketStateEventHandler(PropertyChangeEvent evt){
+        System.out.println(evt.getClass().getSimpleName());
+    }
     public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt){
         System.out.println(evt.getClass().getSimpleName());
     }
