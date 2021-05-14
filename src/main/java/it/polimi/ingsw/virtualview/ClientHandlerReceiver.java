@@ -41,7 +41,7 @@ public class ClientHandlerReceiver {
                  illegalOperation.printStackTrace();
              }
             */
-
+            System.out.println("Received: "+ eventJSON);
             Event event = gson.fromJson(eventJSON, Event.class);
 
             boolean done = false;
