@@ -2,20 +2,10 @@ package it.polimi.ingsw.utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.controller.EffectOfCell;
-import it.polimi.ingsw.model.FaithTrack.AbstractCell;
-import it.polimi.ingsw.model.FaithTrack.PopeCell;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.*;
 import it.polimi.ingsw.model.Resource;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -90,60 +80,5 @@ public class GsonInheritanceAdapterTest {
 
         assertEquals(JSONLeaderCard, gson.toJson(lc2));
     }
-    @Test
-    public void testBuildArrayFromJson() {
-        PopeCell cellEffect1= new PopeCell(8,2, new PopeFavorCard(2),4);
-        PopeCell cellEffect2= new PopeCell(16,9, new PopeFavorCard(3),5);
-        PopeCell cellEffect3= new PopeCell(24,20, new PopeFavorCard(4),6);
-        ArrayList<AbstractCell> a= new ArrayList();
-        a.add(cellEffect1);
-        a.add(cellEffect2);
-        a.add(cellEffect3);
-        GsonBuilder gsonBuilder= new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
-        gsonBuilder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
-        Gson gson= gsonBuilder.create();
-        assertEquals("{\"CLASSNAME\":\"it.polimi.ingsw.model.FaithTrack.PopeCell\",\"INSTANCE\":" +
-                "{\"vaticanReportSection\":4,\"card\":{\"victoryPoints\":2},\"cell\":{\"CLASSNAME\":\"" +
-                "it.polimi.ingsw.model.FaithTrack.Cell\",\"INSTANCE\":{\"index\":8,\"victoryPoints\":2}}," +
-                "\"effectDone\":false,\"effect\":{\"CLASSNAME\":\"it.polimi.ingsw.controller.EffectOfPopeCell\"," +
-                "\"INSTANCE\":{}}}}", gson.toJson(cellEffect1, AbstractCell.class));
 
-        String fileName = "src/main/resources/CellsWithEffectArray.json";
-        Path path = Paths.get(fileName);
-        try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-
-            StringBuilder string = new StringBuilder("[");
-            string.append(gson.toJson(cellEffect1, AbstractCell.class))
-                    .append(",")
-                    .append(gson.toJson(cellEffect2, AbstractCell.class))
-                    .append(",")
-                    .append(gson.toJson(cellEffect3, AbstractCell.class))
-                    .append("]");
-            writer.write(string.toString());
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<AbstractCell> array=new ArrayList<>();
-        try {
-            array= new GsonInheritanceAdapter<>().buildArrayFromJson("src/main/resources/CellsWithEffectArray.json");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Gson gson3= gsonBuilder.create();
-
-        assertEquals("{\"CLASSNAME\":\"it.polimi.ingsw.model.FaithTrack.PopeCell\",\"INSTANCE\":" +
-                "{\"vaticanReportSection\":4,\"card\":{\"victoryPoints\":2},\"cell\":{\"CLASSNAME\":\"" +
-                "it.polimi.ingsw.model.FaithTrack.Cell\",\"INSTANCE\":{\"index\":8,\"victoryPoints\":2}}," +
-                "\"effectDone\":false,\"effect\":{\"CLASSNAME\":\"it.polimi.ingsw.controller.EffectOfPopeCell\"," +
-                "\"INSTANCE\":{}}}}", gson3.toJson(cellEffect1, AbstractCell.class));
-        assertEquals("it.polimi.ingsw.model.FaithTrack.PopeCell",array.get(0).getClass().getName());
-        assertEquals(8, array.get(0).getIndex());
-        assertEquals(2, array.get(0).getVictoryPoints());
-
-    }
 }
