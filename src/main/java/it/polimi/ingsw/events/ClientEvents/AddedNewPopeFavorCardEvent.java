@@ -1,6 +1,6 @@
-package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
+package it.polimi.ingsw.events.ClientEvents;
 
-public class AddedNewPopeFavorCardEvent  extends MatchEvent {
+public class AddedNewPopeFavorCardEvent extends ClientEvent{
     private int popeFavourCardIndex;
 
     /**

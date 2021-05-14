@@ -1,9 +1,8 @@
 package it.polimi.ingsw.events.ClientEvents;
 
 import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
-import it.polimi.ingsw.events.Event;
 
-public class LeaderCardNotActiveError extends ControllerEvent {
+public class LeaderCardNotActiveError extends ClientEvent{
     private int leaderCardIndex;
 
     /**
