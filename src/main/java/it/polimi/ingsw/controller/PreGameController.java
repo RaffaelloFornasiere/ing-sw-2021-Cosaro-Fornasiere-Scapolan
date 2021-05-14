@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.modelChangeHandlers.LobbyHandler;
@@ -13,6 +14,7 @@ import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.AbstractCell;
+import it.polimi.ingsw.model.FaithTrack.CellWithEffect;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
@@ -25,6 +27,7 @@ import it.polimi.ingsw.virtualview.VirtualView;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -128,14 +131,14 @@ public class PreGameController {
             involvedPlayersNetworkData.put(playerID, networkData.get(playerID));
 
         //Initialize faith track
-        ArrayList<AbstractCell> cellsWithEffectArray = new ArrayList<>();
+        ArrayList<CellWithEffect> cellsWithEffectArray = new ArrayList<>();
         try {
             String cellsEffectJSON = Files.readString(Paths.get("src\\main\\resources\\CellsWithEffectArray.json"));
             cellsEffectJSON = cellsEffectJSON.substring(1,cellsEffectJSON.length()-1);
             String[] cells = cellsEffectJSON.split("(,)(?=\\{)");
 
             for (String s : cells) {
-                AbstractCell cell = gson.fromJson(s, AbstractCell.class);
+                CellWithEffect cell = (CellWithEffect)gson.fromJson(s, AbstractCell.class);
                 cellsWithEffectArray.add(cell);
             }
         } catch (IOException e) {
@@ -144,11 +147,13 @@ public class PreGameController {
 
         ArrayList<Integer> victoryPoints = new ArrayList<>();
         try {
-            String victoryPointsJSON = Files.readString(Paths.get("src\\main\\resources\\******.json"));
+            String victoryPointsJSON = Files.readString(Paths.get("src\\main\\resources\\VictoryPoints.json"));
+            Type integerList = new TypeToken<ArrayList<Integer>>(){}.getType();
+            victoryPoints= gson.fromJson(victoryPointsJSON, integerList);
         } catch (IOException e) {
-        e.printStackTrace(); //use default configuration
+            e.printStackTrace(); //use default configuration
         }
-        FaithTrack faithTrack = null;//FaithTrack.initFaithTrack(victoryPoints.size(), cellsWithEffectArray, victoryPoints);
+        FaithTrack faithTrack = FaithTrack.initFaithTrack(victoryPoints.size(), cellsWithEffectArray, victoryPoints);
 
         //Initialize market
         HashMap<Marble, Integer> marbles = new HashMap<>() {{
