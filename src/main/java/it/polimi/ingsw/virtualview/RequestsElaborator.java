@@ -42,7 +42,7 @@ public class RequestsElaborator {
                 while (!done) {
                     Event event = requestsQueue.take();
                     done = true;
-
+                    System.out.println("Elaborating: " + event.getEventName());
                     if(event.getClass() == NewPlayerEvent.class)
                         event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
                     else if(!ownerUserID.equals(event.getPlayerId()))

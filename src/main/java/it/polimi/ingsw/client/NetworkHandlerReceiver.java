@@ -39,7 +39,7 @@ public class NetworkHandlerReceiver implements PropertyChangeSubject {
         while (true) {
             String json;
             if (scanner.hasNext()) {
-                json = scanner.next();
+                json = scanner.nextLine();
                 System.out.println(json);
                 GsonBuilder jsonBuilder = new GsonBuilder();
                 jsonBuilder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());

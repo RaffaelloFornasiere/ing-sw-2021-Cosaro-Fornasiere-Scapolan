@@ -44,18 +44,22 @@ public class PreGameController {
 
     public void NewPlayerEventHandler(PropertyChangeEvent evt){
         NewPlayerEventWithNetworkData event = (NewPlayerEventWithNetworkData) evt.getNewValue();
+        System.out.println("Handling NewPlayerEvent");
 
         if(networkData.containsKey(event.getPlayerId())){
             event.getRequestsElaborator().getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
                     "Username already taken", new NewPlayerEvent(event.getPlayerId(), event.getLobbyLeaderID())));
             return;
         }
+        System.out.println("The username si free");
 
         if(event.getPlayerId().equals(event.getLobbyLeaderID())){
-            Lobby lobby = new Lobby(event.getPlayerId());
+            System.out.println("Creating new Lobby");
+            Lobby lobby = new Lobby();
             lobby.addObserver(new LobbyHandler(this.networkData));
-            fillingLobbies.add(lobby);
             networkData.put(event.getPlayerId(), event.getRequestsElaborator());
+            lobby.setLeaderID(event.getPlayerId());
+            fillingLobbies.add(lobby);
             event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
             return;
         }

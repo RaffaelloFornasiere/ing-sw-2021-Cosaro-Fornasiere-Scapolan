@@ -84,9 +84,9 @@ public class NetworkAdapter {
 
     public static void main(String[] args) {
         try {
-            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("192.168.0.172"));
+            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("25.115.44.10"));
             nt.createMatch("raffaello");
-            nt.createMatch("raffaello");
+            //nt.createMatch("raffaello");
 
             System.out.println("aaa");
 

@@ -3,6 +3,7 @@ package it.polimi.ingsw.virtualview;
 import it.polimi.ingsw.controller.PreGameController;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -22,9 +23,10 @@ public class MainServer{
     private void startServer() throws IOException{
         ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
         //serverSocket.setSoTimeout(10*1000);
+        System.out.println("Beginning to accept clients on " + InetAddress.getLocalHost());
         while(true){
             Socket socket = serverSocket.accept();
-            System.out.println("new request");
+            System.out.println("new client");
             RequestsElaborator requestsElaborator = new RequestsElaborator(socket, mainEventHandlerRegistry);
 
             new Thread(requestsElaborator::elaborateRequests).start();

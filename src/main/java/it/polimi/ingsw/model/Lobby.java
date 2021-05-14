@@ -16,12 +16,9 @@ public class Lobby extends Observable {
 
     /**
      * constructor for the class
-     * @param leaderID the ID of the player that will be the leader of this lobby
      */
-    public Lobby(String leaderID){
-        this.leaderID = leaderID;
+    public Lobby(){
         otherPLayersID = new ArrayList<>();
-        notifyObservers();
     }
 
     /**
@@ -30,6 +27,15 @@ public class Lobby extends Observable {
      */
     public String getLeaderID() {
         return leaderID;
+    }
+
+    /**
+     * sets the leader of the lobby
+     * @param leaderID the ID of the leader
+     */
+    public void setLeaderID(String leaderID) {
+        this.leaderID = leaderID;
+        notifyObservers();
     }
 
     /**

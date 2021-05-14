@@ -14,11 +14,7 @@ public class VirtualView implements PropertyChangeSubject {
     public VirtualView(){}
 
     public void sendEvent(Event event){
-        if (MatchEvent.class.isAssignableFrom(event.getClass())) {
-            support.firePropertyChange(event.getEventName(), null, event);
-        } else {
-            support.firePropertyChange(event.getEventName(), null, event);
-        }
+        support.firePropertyChange(event.getEventName(), null, event);
     }
 
 
