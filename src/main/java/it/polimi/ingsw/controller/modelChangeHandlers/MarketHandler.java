@@ -7,20 +7,16 @@ import it.polimi.ingsw.virtualview.RequestsElaborator;
 
 import java.util.HashMap;
 
-public class MarketHandler implements Observer {
+public class MarketHandler extends MatchObserver {
 
-    private HashMap<String, RequestsElaborator> networkData;
 
-    public MarketHandler(HashMap<String, RequestsElaborator> networkData){
-        this.networkData = (HashMap<String, RequestsElaborator>) networkData.clone();
+    public MarketHandler(HashMap<String, RequestsElaborator> networkData) {
+        super(networkData);
     }
 
     @Override
     public void update(Object o) {
         Market market = (Market) o;
-
-        for(String playerID: networkData.keySet())
-            networkData.get(playerID).getClientHandlerSender().sendEvent(
-                    new MarketStateEvent(playerID, market.getMarbleLeft(), market.getMarketStatus(), market.getRows(), market.getCols()));
+        sendToAll(new MarketStateEvent(null, market.getMarbleLeft(), market.getMarketStatus(), market.getRows(), market.getCols()));
     }
 }

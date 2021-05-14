@@ -15,7 +15,7 @@ public class LobbyStateEvent extends ClientEvent {
      * @param otherPLayersID the IDs of all the other player in the lobby
      */
     public LobbyStateEvent(String leaderID, ArrayList<String> otherPLayersID) {
-        super("");
+        super(null);
         this.leaderID = leaderID;
         this.otherPLayersID = otherPLayersID;
     }
