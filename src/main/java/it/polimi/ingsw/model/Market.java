@@ -1,12 +1,14 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utilities.Observable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
-public class Market {
+public class Market extends Observable {
 
     private Marble marbleLeft;
     private Marble[][] grid;
@@ -59,6 +61,8 @@ public class Market {
 
         // assign the left marble
         marbleLeft = marbleArrayList.get(marbleArrayList.size() - 1);
+
+        notifyObservers();
     }
 
     /**
@@ -108,6 +112,8 @@ public class Market {
             grid[grid.length - 1][index] = marbleLeft;
         }
         marbleLeft = aux;
+
+        notifyObservers();
     }
 
     public Marble[][] getMarketStatus() {

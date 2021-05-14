@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.modelChangeHandlers.LobbyHandler;
+import it.polimi.ingsw.controller.modelChangeHandlers.MarketHandler;
 import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
 import it.polimi.ingsw.events.ClientEvents.InitialChoicesEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
@@ -121,6 +122,11 @@ public class PreGameController {
         playerOrder.addAll(lobby.getOtherPLayersID());
         Collections.shuffle(playerOrder);
 
+        //Get the involved players networkData
+        HashMap<String, RequestsElaborator> involvedPlayersNetworkData = new HashMap<>();
+        for(String playerID: networkData.keySet())
+            involvedPlayersNetworkData.put(playerID, networkData.get(playerID));
+
         //Initialize faith track
         ArrayList<AbstractCell> cellsWithEffectArray = new ArrayList<>();
         try {
@@ -180,6 +186,7 @@ public class PreGameController {
 
         //Initialize match state
         MatchState matchState= new MatchState(players, devCards, 4, 3, marbles); //missing configuration options for market
+        matchState.getMarket().addObserver(new MarketHandler(involvedPlayersNetworkData));
 
         //Initialize the controller
         VirtualView matchEventHandlerRegistry = new VirtualView();
