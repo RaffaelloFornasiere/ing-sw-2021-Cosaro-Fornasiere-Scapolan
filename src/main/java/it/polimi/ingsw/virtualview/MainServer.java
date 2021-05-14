@@ -18,13 +18,16 @@ public class MainServer{
         return mainEventHandlerRegistry;
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     private void startServer() throws IOException{
         ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
         //serverSocket.setSoTimeout(10*1000);
         while(true){
             Socket socket = serverSocket.accept();
+            System.out.println("new request");
             RequestsElaborator requestsElaborator = new RequestsElaborator(socket, mainEventHandlerRegistry);
-            new Thread(requestsElaborator::elaborateRequests);
+
+            new Thread(requestsElaborator::elaborateRequests).start();
         }
     }
 

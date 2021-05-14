@@ -2,6 +2,9 @@ package it.polimi.ingsw.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import it.polimi.ingsw.events.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
@@ -12,46 +15,38 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Scanner;
 
-public class NetworkHandlerReceiver implements Runnable, PropertyChangeSubject {
+public class NetworkHandlerReceiver implements PropertyChangeSubject {
     BufferedReader input;
-    NetworkAdapter networkAdapter;
     PropertyChangeSupport support = new PropertyChangeSupport(this);
-    public NetworkHandlerReceiver(Socket server, NetworkAdapter adapter)
-    {
+    Scanner scanner;
+
+    public NetworkHandlerReceiver(Socket server) {
         if (server == null)
             throw new NullPointerException();
         try {
-            input = new BufferedReader(new InputStreamReader(server.getInputStream()));
+            //input = new BufferedReader(new InputStreamReader(server.getInputStream()));
+            scanner = new Scanner(server.getInputStream());
         } catch (IOException e) {
+            e.printStackTrace();
         }
-        networkAdapter = adapter;
     }
 
 
-    @Override
     @SuppressWarnings("InfiniteLoopStatement")
-    public void run() {
-        while(true)
-        {
-            try {
-                StringBuilder builder = new StringBuilder();
-                while(input.ready())
-                {
-                    builder.append(input.read());
-                }
-                if(builder.isEmpty())
-                {
-                    GsonBuilder jsonBuilder = new GsonBuilder();
-                    jsonBuilder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
-                    Gson gson = jsonBuilder.create();
-                    Event event = gson.fromJson(builder.toString(), Event.class);
-                    support.firePropertyChange(event.getEventName(), null, event);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void receive() {
+        while (true) {
+            String json;
+            if (scanner.hasNext()) {
+                json = scanner.next();
+                System.out.println(json);
+                GsonBuilder jsonBuilder = new GsonBuilder();
+                jsonBuilder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
+                Gson gson = jsonBuilder.create();
+                Event event = gson.fromJson(json, Event.class);
+                support.firePropertyChange(event.getEventName(), null, event);
             }
-
         }
     }
 

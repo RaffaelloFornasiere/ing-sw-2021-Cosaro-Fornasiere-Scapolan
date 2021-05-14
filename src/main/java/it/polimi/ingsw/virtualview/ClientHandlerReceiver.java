@@ -22,18 +22,25 @@ public class ClientHandlerReceiver {
     }
 
     //TODO use a better read/write mechanism and check validity of arrivals and empty the buffer from junk
+    @SuppressWarnings("InfiniteLoopStatement")
     public void waitForEvent(){
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Event>());
+        builder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
         Gson gson = builder.create();
 
+
         while(true) {
-            String eventJSON = scanner.next(MessageWrapper.getScannerPattern()); //maybe needs a timeOut to check if messages sent are good
-            try {
-                eventJSON = MessageWrapper.unwrap(eventJSON);
-            } catch (IllegalOperation illegalOperation) {
-                illegalOperation.printStackTrace();
-            }
+            String eventJSON = scanner.next();
+            /*
+            String eventJSON = scanner.next(MessageWrapper.getScannerPattern());
+             maybe needs a timeOut to check if messages sent are good
+             System.out.println(eventJSON);
+             try {
+                 eventJSON = MessageWrapper.unwrap(eventJSON);
+             } catch (IllegalOperation illegalOperation) {
+                 illegalOperation.printStackTrace();
+             }
+            */
 
             Event event = gson.fromJson(eventJSON, Event.class);
 
