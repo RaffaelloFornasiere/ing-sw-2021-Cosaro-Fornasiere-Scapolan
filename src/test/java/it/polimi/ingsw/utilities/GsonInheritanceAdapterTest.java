@@ -109,7 +109,7 @@ public class GsonInheritanceAdapterTest {
                 "\"effectDone\":false,\"effect\":{\"CLASSNAME\":\"it.polimi.ingsw.controller.EffectOfPopeCell\"," +
                 "\"INSTANCE\":{}}}}", gson.toJson(cellEffect1, AbstractCell.class));
 
-        String fileName = "src/main/resources/FaithTrack.json";
+        String fileName = "src/main/resources/CellsWithEffectArray.json";
         Path path = Paths.get(fileName);
         try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 
@@ -130,7 +130,7 @@ public class GsonInheritanceAdapterTest {
 
         ArrayList<AbstractCell> array=new ArrayList<>();
         try {
-            array= new GsonInheritanceAdapter<>().buildArrayFromJson("src/main/resources/FaithTrack.json");
+            array= new GsonInheritanceAdapter<>().buildArrayFromJson("src/main/resources/CellsWithEffectArray.json");
         } catch (IOException e) {
             e.printStackTrace();
         }
