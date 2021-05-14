@@ -51,6 +51,7 @@ public class NetworkAdapter {
                     }
                 });
             } catch (NoSuchMethodException e) {
+                System.err.println("Missing handler for " + event.getSimpleName());
                 e.printStackTrace();
             }
 
@@ -84,7 +85,7 @@ public class NetworkAdapter {
 
     public static void main(String[] args) {
         try {
-            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("25.115.44.10"));
+            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("127.0.0.1"));
             nt.createMatch("raffaello");
             //nt.createMatch("raffaello");
 
@@ -153,69 +154,73 @@ public class NetworkAdapter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
     public void BadRequestEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void ClientEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void InitialChoicesEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void LobbyStateEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void ControllerEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void MatchEventsHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void ActivateProductionEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void BuyDevCardsEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void BuyResourcesEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void MatchEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void NewPlayerEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void StartMatchEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void MarketStateEventHandler(PropertyChangeEvent evt){
+        System.out.println("Received" + evt.getClass().getSimpleName());
     }
 }
