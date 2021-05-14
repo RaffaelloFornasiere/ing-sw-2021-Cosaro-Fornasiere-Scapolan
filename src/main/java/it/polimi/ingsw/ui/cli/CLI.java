@@ -2,7 +2,6 @@ package it.polimi.ingsw.ui.cli;
 
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 
 import java.io.PrintWriter;
@@ -98,13 +97,6 @@ public class CLI {
      */
     void displayChoicePersonalLeaderCard(List<LeaderCard> availableCards){};
 
-    /**
-     * Method that allows the display of the form for choosing the first player of the match
-     *
-     * @param allPlayers list of players to choose from
-     */
-    void displayAskFirstPlayer(List<Player> allPlayers){};
-
 
     /**
      * Method that notifies the automatic assignment of the resources
@@ -131,6 +123,8 @@ public class CLI {
      * Method that allows the display of the form for the choice of LeaderCard to use currently
      */
     void displayLeaderCardSelection(){};
+
+    ///torna indietro
 //----------------------------------------------------------------------------------------------------
 
     /**
@@ -164,7 +158,6 @@ public class CLI {
 
     /**
      * Method that allows the display of the slots in dashboard.
-
      */
     void displayDevCardSlotsUpdated(){};
 //--------------------------------------------------------------------------------------------------------
