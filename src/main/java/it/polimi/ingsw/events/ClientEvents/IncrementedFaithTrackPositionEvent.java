@@ -1,6 +1,6 @@
-package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
+package it.polimi.ingsw.events.ClientEvents;
 
-public class IncrementedFaithTrackPositionEvent extends MatchEvent {
+public class IncrementedFaithTrackPositionEvent extends ClientEvent {
     private int newPosition;
 
     /**
@@ -9,7 +9,7 @@ public class IncrementedFaithTrackPositionEvent extends MatchEvent {
      * @param position the updated new position
      * @throws IllegalArgumentException if the index is negative
      */
-    public IncrementedFaithTrackPositionEvent (String playerID, int position) throws IllegalArgumentException{
+    public IncrementedFaithTrackPositionEvent(String playerID, int position) throws IllegalArgumentException{
         super(playerID);
         if(position<0)
             throw new IllegalArgumentException("position must be positive");
