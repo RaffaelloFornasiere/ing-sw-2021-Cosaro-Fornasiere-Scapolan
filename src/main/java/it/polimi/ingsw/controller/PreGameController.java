@@ -11,6 +11,7 @@ import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.FaithTrack.AbstractCell;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
@@ -110,6 +111,8 @@ public class PreGameController {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
+        builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
         Gson gson = builder.create();
 
         //Decide player Order
@@ -119,7 +122,27 @@ public class PreGameController {
         Collections.shuffle(playerOrder);
 
         //Initialize faith track
-        FaithTrack faithTrack = null;//missing the faith track json
+        ArrayList<AbstractCell> cellsWithEffectArray = new ArrayList<>();
+        try {
+            String cellsEffectJSON = Files.readString(Paths.get("src\\main\\resources\\CellsWithEffectArray.json"));
+            cellsEffectJSON = cellsEffectJSON.substring(1,cellsEffectJSON.length()-1);
+            String[] cells = cellsEffectJSON.split("(,)(?=\\{)");
+
+            for (String s : cells) {
+                AbstractCell cell = gson.fromJson(s, AbstractCell.class);
+                cellsWithEffectArray.add(cell);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Integer> victoryPoints = new ArrayList<>();
+        try {
+            String victoryPointsJSON = Files.readString(Paths.get("src\\main\\resources\\******.json"));
+        } catch (IOException e) {
+        e.printStackTrace(); //use default configuration
+        }
+        FaithTrack faithTrack = null;//FaithTrack.initFaithTrack(victoryPoints.size(), cellsWithEffectArray, victoryPoints);
 
         //Initialize market
         HashMap<Marble, Integer> marbles = new HashMap<>() {{
