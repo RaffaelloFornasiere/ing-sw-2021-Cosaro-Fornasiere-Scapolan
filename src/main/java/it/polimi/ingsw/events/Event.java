@@ -1,7 +1,7 @@
 package it.polimi.ingsw.events;
 
 public abstract class Event {
-    String playerId;
+    protected String playerId;
 
     /**
      * constructor of the class
