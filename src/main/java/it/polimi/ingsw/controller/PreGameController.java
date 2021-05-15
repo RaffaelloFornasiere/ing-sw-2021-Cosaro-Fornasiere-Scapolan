@@ -3,10 +3,7 @@ package it.polimi.ingsw.controller;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.controller.modelChangeHandlers.DevCardGridHandler;
-import it.polimi.ingsw.controller.modelChangeHandlers.FaithTrackDataHandler;
-import it.polimi.ingsw.controller.modelChangeHandlers.LobbyHandler;
-import it.polimi.ingsw.controller.modelChangeHandlers.MarketHandler;
+import it.polimi.ingsw.controller.modelChangeHandlers.*;
 import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
 import it.polimi.ingsw.events.ClientEvents.InitialChoicesEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
@@ -185,14 +182,18 @@ public class PreGameController {
         //initialize the dashboards and each player
         ArrayList<DashBoard> dashBoards = new ArrayList<>();
         ArrayList<Player> players= new ArrayList<>();
-        for (int i = 0; i < playerOrder.size(); i++) {
+        for (String s : playerOrder) {
             ArrayList<Integer> depotCapacities = new ArrayList<>();
             depotCapacities.add(1);
             depotCapacities.add(2);
             depotCapacities.add(3);
             ProductionPower personalPower = new ProductionPower(new HashMap<>(), new HashMap<>(), 2, 1, 0);
-            dashBoards.add(new DashBoard(3, depotCapacities, personalPower, faithTrack)); //3, depotCap and personalPower: configuration options
-            players.add(new Player(playerOrder.get(i), dashBoards.get(i)));
+            DashBoard dashBoard = new DashBoard(3, depotCapacities, personalPower, faithTrack); //3, depotCap and personalPower: configuration options
+            Player player = new Player(s, dashBoard);
+            dashBoard.addObserver(new DashBoardHandler(involvedPlayersNetworkData, player));
+            player.addObserver(new PlayerHandler(involvedPlayersNetworkData));
+            dashBoards.add(dashBoard);
+            players.add(player);
         }
 
         //Initialize match state
@@ -203,6 +204,7 @@ public class PreGameController {
             FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedPlayersNetworkData, matchState);
             p.getDashBoard().getFaithTrackData().addObserver(faithTrackDataHandler);
         });
+        matchState.addObserver(new MatchStateHandler(involvedPlayersNetworkData));
 
         //Initialize the controller
         VirtualView matchEventHandlerRegistry = new VirtualView();

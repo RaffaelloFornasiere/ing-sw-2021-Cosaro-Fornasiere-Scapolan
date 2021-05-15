@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model.LeaderCards;
+;
+import it.polimi.ingsw.utilities.Observable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Class containing the data needed to use the ability of a leader card
  */
-public abstract class LeaderPower implements Serializable {
+public abstract class LeaderPower extends Observable {
 
     protected transient ArrayList<java.lang.Class<? extends LeaderPower>> incompatiblePowers;
 

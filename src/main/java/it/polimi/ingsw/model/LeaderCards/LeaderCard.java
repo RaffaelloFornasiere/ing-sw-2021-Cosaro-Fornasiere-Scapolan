@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
+import it.polimi.ingsw.utilities.Observable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Scanner;
 /**
  * Class that represents a leader card
  */
-public class LeaderCard implements Serializable {
+public class LeaderCard extends Observable{
 
     private String cardID;
     private int victoryPoints;
@@ -102,6 +103,7 @@ public class LeaderCard implements Serializable {
             if (leaderPower == lpo.power) {
                 if (lpo.selected) throw new IllegalOperation("Leader power already selected");
                 lpo.selected = true;
+                notifyObservers();
                 return;
             }
         }
@@ -120,6 +122,7 @@ public class LeaderCard implements Serializable {
             if (leaderPower == lpo.power) {
                 if (!lpo.selected) throw new IllegalOperation("Leader power already not selected");
                 lpo.selected = false;
+                notifyObservers();
                 return;
             }
         }

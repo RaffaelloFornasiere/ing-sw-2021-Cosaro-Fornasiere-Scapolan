@@ -4,13 +4,14 @@ import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
+import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
-public class DashBoard {
+public class DashBoard extends Observable {
 
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<Stack<DevCard>> cardSlots;
@@ -55,6 +56,7 @@ public class DashBoard {
      */
     public void addResourcesToStrongBox( Resource resource, int quantity){
         strongBox.put( resource, strongBox.get(resource) + quantity);
+        notifyObservers();
     }
     /**
      * modifier of the dashboard, it subtracts resources
@@ -65,6 +67,7 @@ public class DashBoard {
         if(strongBox.get(resource)- quantity<0) throw new EmptyStrongboxException();
 
         strongBox.put(resource, strongBox.get(resource) - quantity);
+        notifyObservers();
     }
 
     /**
@@ -81,7 +84,8 @@ public class DashBoard {
                 .findFirst().orElse(null);
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResources(quantity, resource);}
+        try{depot.subResources(quantity, resource);
+            notifyObservers();}
         catch (DepotResourceException e){}
     }
     /**
@@ -97,7 +101,8 @@ public class DashBoard {
                 .findFirst().orElse(null);
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResources(quantity, resource);}
+        try{depot.subResources(quantity, resource);
+            notifyObservers();}
             catch (DepotResourceException e){}
     }
 
@@ -117,10 +122,14 @@ public class DashBoard {
             if (temp.getLevel() != card.getLevel() -1) throw new LevelCardException();
 
             cardSlots.get(slotIndex).push(card);
+            notifyObservers();
         }
         //instead, if it's empty, the card I add must be level 1, otherwise gives exception
         else  if(card.getLevel()!= 1) throw new LevelCardException();
-        else cardSlots.get(slotIndex).push(card);
+        else {
+            cardSlots.get(slotIndex).push(card);
+            notifyObservers();
+        }
     }
 
     /**

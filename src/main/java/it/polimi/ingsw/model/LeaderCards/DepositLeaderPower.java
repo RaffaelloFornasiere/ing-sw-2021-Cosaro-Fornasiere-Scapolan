@@ -60,6 +60,7 @@ public class DepositLeaderPower extends LeaderPower{
 
             currentResources.compute(r, (key,val) -> val + resourcesAdded.get(r));
         }
+        notifyObservers();
     }
 
     /**
@@ -74,5 +75,6 @@ public class DepositLeaderPower extends LeaderPower{
 
             currentResources.compute(r, (key,val) -> val - resourcesRemoved.get(r));
         }
+        notifyObservers();
     }
 }

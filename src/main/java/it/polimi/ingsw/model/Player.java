@@ -5,11 +5,12 @@ import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Player {
+public class Player extends Observable {
     private String playerId;
     ArrayList<LeaderCardOwnership> leaderCards;
     DashBoard dashBoard;
@@ -76,6 +77,7 @@ public class Player {
             lco.active=false;
             this.leaderCards.add(lco);
         }
+        notifyObservers();
     }
 
     /**
@@ -89,6 +91,7 @@ public class Player {
             if (leaderCard == lco.leaderCard) {
                 if (lco.active) throw new IllegalOperation("Leader card already Active");
                 lco.active = true;
+                notifyObservers();
                 return;
             }
         }

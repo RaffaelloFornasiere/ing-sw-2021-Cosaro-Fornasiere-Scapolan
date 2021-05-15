@@ -3,11 +3,12 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.DevCards.DevCardGrid;
+import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MatchState {
+public class MatchState extends Observable {
     private  int currentPlayerIndex;
     private  boolean lastRound;
     private  ArrayList<Player> players;
@@ -28,6 +29,14 @@ public class MatchState {
         lastRound=false;
         currentPlayerIndex=0;
 
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public boolean isLastRound() {
+        return lastRound;
     }
 
     public  ArrayList<Player> getPlayers(){
