@@ -9,17 +9,16 @@ public class CellView {
     private boolean occupied;
     private boolean vaticanSection;
     private boolean popeCell;
-    private String placeholder="\u2719";
-
+    private String placeholder = "\u2719";
 
 
     public CellView(int index, int victoryPoints) {
-        this.index=index;
-        this.victoryPoints=victoryPoints;
-        this.color = null;
-        this.occupied= false;
-        this.vaticanSection= false;
-        this.popeCell= false;
+        this.index = index;
+        this.victoryPoints = victoryPoints;
+        this.color = Color.reset();
+        this.occupied = false;
+        this.vaticanSection = false;
+        this.popeCell = false;
     }
 
     /**
@@ -28,16 +27,16 @@ public class CellView {
      * @param color of the worker
      */
     public void setPlaceHolder(Color color) {
-        this.placeholder = color.getAnsiCode()+ "\u2719";
+        this.placeholder = color.getAnsiCode() + "\u2719" + Color.reset()+"\n";
         this.occupied = true;
     }
 
     public void setIndex(int index) {
-        this.index= index;
+        this.index = index;
     }
 
     public void setVictoryPoints(int victoryPoints) {
-        this.victoryPoints= victoryPoints;
+        this.victoryPoints = victoryPoints;
     }
 
     public void setColor(Color color) {
@@ -45,39 +44,33 @@ public class CellView {
     }
 
     public void setVaticanSection(Boolean b) {
-        if(b){
+        if (b) {
             setColor(Color.BLUE_BACKGROUND);
         }
     }
 
-    public void display(int initX, int initY) {
-        Cursor.moveAbsoluteCursor(initX, initY);
-        System.out.print(this.color+"╔");
-        System.out.print("═════");
-        System.out.println("╗"+ Color.reset());
-        Cursor.moveAbsoluteCursor(initX+1, initY);
-        System.out.print(color+"║");
-        System.out.print(this.index+" ");
-        System.out.print("  "+this.victoryPoints);
-        System.out.println("║"+ Color.reset());
-        Cursor.moveAbsoluteCursor(initX+2, initY);
-        System.out.print(color+"╚");
-        System.out.print("═════");
-        System.out.println("╝"+ Color.reset());
-        Cursor.moveAbsoluteCursor(initX+3, initY);
-        if(occupied) System.out.print("  "+ Color.MAGENTA.getAnsiCode()+"\u2719");
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        string.append(this.color + "╔═════╗" + Color.reset() + "\n")
+                .append(color + "║" + this.index + "   " + this.victoryPoints + "║" + Color.reset() + "\n")
+                .append(color + "╚═════╝" + Color.reset() + "\n");
+        if (occupied) string.append("  " + placeholder);
+        return string.toString();
     }
-
-
 
 
     public static void main(String[] args) {
 
-      CellView cell= new CellView(2,3);
-      cell.setVaticanSection(true);
-      cell.setPlaceHolder(Color.MAGENTA);
-      cell.display(1,1);
+        Panel panel = new Panel(10000, 100, System.out);
+        for (int i = 0; i < 20; i++) {
+            CellView cell = new CellView(2, 3);
 
+            cell.setPlaceHolder(Color.MAGENTA);
+            DrawableObject d = new DrawableObject(cell.toString(), 15 * i, 1);
+            panel.addItem(d);
+
+        }
+        panel.show();
+    }
 
     }
-}
