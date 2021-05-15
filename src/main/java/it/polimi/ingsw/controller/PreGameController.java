@@ -3,6 +3,8 @@ package it.polimi.ingsw.controller;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.controller.modelChangeHandlers.DevCardGridHandler;
+import it.polimi.ingsw.controller.modelChangeHandlers.FaithTrackDataHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.LobbyHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.MarketHandler;
 import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
@@ -196,6 +198,11 @@ public class PreGameController {
         //Initialize match state
         MatchState matchState= new MatchState(players, devCards, 4, 3, marbles); //missing configuration options for market
         matchState.getMarket().addObserver(new MarketHandler(involvedPlayersNetworkData));
+        matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedPlayersNetworkData));
+        matchState.getPlayers().forEach(p -> {
+            FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedPlayersNetworkData, matchState);
+            p.getDashBoard().getFaithTrackData().addObserver(faithTrackDataHandler);
+        });
 
         //Initialize the controller
         VirtualView matchEventHandlerRegistry = new VirtualView();

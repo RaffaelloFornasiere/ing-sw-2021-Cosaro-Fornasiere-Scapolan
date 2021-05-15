@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model.FaithTrack;
 
 import it.polimi.ingsw.exceptions.OutOfBoundException;
+import it.polimi.ingsw.utilities.Observable;
 
 import java.util.HashMap;
 
-public class FaithTrackData {
+public class FaithTrackData extends Observable {
     private int position;
     private final FaithTrack physicalFaithTrack;
     private HashMap<Integer, PopeFavorCard> acquiredPopeFavorCards;
@@ -40,6 +41,7 @@ public class FaithTrackData {
     public void setPosition(int position) throws OutOfBoundException{
         if(position <= physicalFaithTrack.size()) this.position = position;
         else throw new OutOfBoundException();
+        notifyObservers();
     }
 
 
@@ -70,6 +72,7 @@ public class FaithTrackData {
      */
     public void addPopeFavorCard(int n,  PopeFavorCard card){
         acquiredPopeFavorCards.put(n, card);
+        notifyObservers();
     }
 
 
@@ -95,6 +98,7 @@ public class FaithTrackData {
     public void incrementPosition(int n) throws OutOfBoundException {
         if(position+n<= physicalFaithTrack.size()) position +=n;
         else throw new OutOfBoundException();
+        notifyObservers();
     }
 
 }

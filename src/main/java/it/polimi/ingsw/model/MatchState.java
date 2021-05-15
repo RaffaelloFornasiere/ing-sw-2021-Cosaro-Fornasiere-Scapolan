@@ -42,6 +42,10 @@ public class MatchState {
         throw new NotPresentException("The player with id "+playerID+" is not in this match");
     }
 
+    public DevCardGrid getDevCardGrid() {
+        return devCardGrid;
+    }
+
     public Market getMarket() {
         return market;
     }
