@@ -1,16 +1,21 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Class that represents a leader card
  */
 public class LeaderCard implements Serializable {
 
+    private String cardID;
     private int victoryPoints;
     private ArrayList<Requirement> activationRequirements;
     private ArrayList<LeaderPowerOwnership> powers;
@@ -37,6 +42,14 @@ public class LeaderCard implements Serializable {
             lpo.selected = false;
             this.powers.add(lpo);
         }
+    }
+
+    /**
+     * getter for the ID of the card
+     * @return the ID of the card
+     */
+    public String getCardID() {
+        return cardID;
     }
 
     /**
@@ -113,6 +126,33 @@ public class LeaderCard implements Serializable {
 
         throw new NotPresentException("The selected leader power does not belong to this card");
     }
+
+    /*public static void main(String[] args) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        Gson gson = builder.create();
+        for(int i=1; i<=16; i++){
+            String name = "LeaderCard" + i;
+            File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\" + name + ".json");
+            try {
+                FileReader r = new FileReader(file);
+                Scanner scanner = new Scanner(r);
+                StringBuilder s = new StringBuilder();
+                while(scanner.hasNext())
+                    s.append(scanner.nextLine());
+                LeaderCard c = gson.fromJson(s.toString(), LeaderCard.class);
+                c.cardID = name;
+                String JSONDevCard = gson.toJson(c, LeaderCard.class);
+                FileWriter w = new FileWriter(file);
+                w.write(JSONDevCard);
+                w.flush();
+                w.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
 
     /*public static void main(String[] args) {
         //index and victory points

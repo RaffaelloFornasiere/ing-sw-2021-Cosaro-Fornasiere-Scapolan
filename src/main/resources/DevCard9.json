@@ -1,1 +1,1 @@
-{"cost":{"SHIELD":3,"SERVANT":2},"level":1,"color":"GREEN","victoryPoints":3,"productionPower":{"consumedResources":{},"producedResources":{"COIN":1,"SHIELD":1,"ROCK":1},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":0}}
+{"cardID":"DevCard9","cost":{"SERVANT":2,"SHIELD":3},"level":1,"color":"GREEN","victoryPoints":3,"productionPower":{"consumedResources":{},"producedResources":{"COIN":1,"ROCK":1,"SHIELD":1},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":0}}

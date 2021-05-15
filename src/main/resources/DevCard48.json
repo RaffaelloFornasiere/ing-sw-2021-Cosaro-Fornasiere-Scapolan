@@ -1,1 +1,1 @@
-{"cost":{"ROCK":4,"SERVANT":4},"level":3,"color":"YELLOW","victoryPoints":12,"productionPower":{"consumedResources":{"SHIELD":1},"producedResources":{"ROCK":1,"SERVANT":3},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":0}}
+{"cardID":"DevCard48","cost":{"SERVANT":4,"ROCK":4},"level":3,"color":"YELLOW","victoryPoints":12,"productionPower":{"consumedResources":{"SHIELD":1},"producedResources":{"SERVANT":3,"ROCK":1},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":0}}
