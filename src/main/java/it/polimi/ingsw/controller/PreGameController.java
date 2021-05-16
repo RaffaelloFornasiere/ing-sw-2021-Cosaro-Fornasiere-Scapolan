@@ -116,8 +116,6 @@ public class PreGameController {
     private void prepareMatch(Lobby lobby) {
         //Build Gson object
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
-        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
         builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
         builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
         Gson gson = builder.create();
@@ -217,38 +215,32 @@ public class PreGameController {
         Controller matchController = new Controller(matchEventHandlerRegistry, matchState, clientHandlerSenders);
 
         //Initialize the leader cards
-        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
-        for(int i=1; i<=16; i++){ //16 configuration option
-            try {
-                String LeaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\LeaderCard" + i + ".json"));
-                leaderCards.add(gson.fromJson(LeaderCardJSON, LeaderCard.class));
-            } catch (IOException e) {
-                e.printStackTrace(); //how?!?!?!
-            }
-        }
-        Collections.shuffle(leaderCards);
+        ArrayList<String> leaderCardsIDs = new ArrayList<>();
+        for(int i=1; i<=16; i++)
+            leaderCardsIDs.add("leaderCard" + i);
+        Collections.shuffle(leaderCardsIDs);
 
         //Send to the players what they need to chose
         for (int i=0; i<playerOrder.size(); i++){
             int numberResourcesOfChoice = 0;
             int faithPoints = 0;
-            if(i>=2)
+            if(i>=1) //config
                 numberResourcesOfChoice++;
-            if(i>=3)
+            if(i>=2)
                 faithPoints++;
-            if(i>=4)
+            if(i>=3)
                 numberResourcesOfChoice++;
 
             if(faithPoints > 0);
             //move the player on the faith track
 
-            ArrayList<LeaderCard> cardsToChoseFrom = new ArrayList<>();
+            ArrayList<String> cardsToChoseFrom = new ArrayList<>();
             for(int j=0; j<=4; j++) { //4 configuration option
-                cardsToChoseFrom.add(leaderCards.get(leaderCards.size()-1));
-                leaderCards.remove(leaderCards.size()-1);
+                cardsToChoseFrom.add(leaderCardsIDs.get(leaderCardsIDs.size()-1));
+                leaderCardsIDs.remove(leaderCardsIDs.size()-1);
             }
 
-            InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom, numberResourcesOfChoice);
+            InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom, 2, numberResourcesOfChoice);
             networkData.get(playerOrder.get(i)).getClientHandlerSender().sendEvent(initialChoicesEvent);
         }
     }

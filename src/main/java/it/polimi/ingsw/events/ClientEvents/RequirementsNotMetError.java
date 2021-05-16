@@ -2,23 +2,23 @@ package it.polimi.ingsw.events.ClientEvents;
 
 public class RequirementsNotMetError extends ClientEvent {
 
-    int leaderCardIndex;
+    private String leaderCardID;
 
     /**
      * constructor for the class
      * @param playerID the player that generated(directly or indirectly) this event
-     * @param leaderCardIndex the index of the leader card that the player wanted to activate, but for which they don't meet the requirements
+     * @param leaderCardID the ID of the leader card that the player wanted to activate, but for which they don't meet the requirements
      */
-    public RequirementsNotMetError(String playerID, int leaderCardIndex) {
+    public RequirementsNotMetError(String playerID, String leaderCardID) {
         super(playerID);
-        this.leaderCardIndex = leaderCardIndex;
+        this.leaderCardID = leaderCardID;
     }
 
     /**
-     * getter for the index of the leader card that the player wanted to activate, but for which they don't meet the requirements
-     * @return the index of the leader card that the player wanted to activate, but for which they don't meet the requirements
+     * getter for the ID of the leader card that the player wanted to activate, but for which they don't meet the requirements
+     * @return the ID of the leader card that the player wanted to activate, but for which they don't meet the requirements
      */
-    public int getLeaderCardIndex() {
-        return leaderCardIndex;
+    public String getLeaderCardID() {
+        return leaderCardID;
     }
 }

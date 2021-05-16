@@ -6,22 +6,28 @@ import java.util.ArrayList;
 
 public class InitialChoicesEvent extends ClientEvent{
 
-    private ArrayList<LeaderCard> leaderCards;
+    private ArrayList<String> leaderCardsIDs;
     private int numberResourcesOfChoice;
+    private int numberOFLeaderCardsToChose;
 
     /**
      * constructor of the class
      *
      * @param playerId the player that generated(directly or indirectly) this event
      */
-    public InitialChoicesEvent(String playerId, ArrayList<LeaderCard> leaderCards, int numberResourcesOfChoice) {
+    public InitialChoicesEvent(String playerId, ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose, int numberResourcesOfChoice) {
         super(playerId);
-        this.leaderCards = (ArrayList<LeaderCard>) leaderCards.clone();
+        this.leaderCardsIDs = (ArrayList<String>) leaderCardsIDs.clone();
         this.numberResourcesOfChoice = numberResourcesOfChoice;
+        this.numberOFLeaderCardsToChose = numberOFLeaderCardsToChose;
     }
 
-    public ArrayList<LeaderCard> getLeaderCards() {
-        return (ArrayList<LeaderCard>) leaderCards.clone();
+    public ArrayList<String> getLeaderCards() {
+        return (ArrayList<String>) leaderCardsIDs.clone();
+    }
+
+    public int getNumberOFLeaderCardsToChose() {
+        return numberOFLeaderCardsToChose;
     }
 
     public int getNumberResourcesOfChoice() {

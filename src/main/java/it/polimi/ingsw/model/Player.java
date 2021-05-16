@@ -66,11 +66,19 @@ public class Player extends Observable {
      * @param leaderCards the leader cards to give the player
      */
     public void setLeaderCards(ArrayList<LeaderCard> leaderCards) {
-        Pair<LeaderCard, Boolean> lco;
+        this.leaderCards = new ArrayList<>();
         for(LeaderCard lc: leaderCards){
             this.leaderCards.add(new Pair<>(lc, false));
         }
         notifyObservers();
+    }
+
+    public LeaderCard getleaderCardFromID(String leaderCardID) throws NotPresentException{
+        for(Pair<LeaderCard, Boolean> lcp: leaderCards)
+            if(lcp.getKey().getCardID().equals(leaderCardID))
+                return lcp.getKey();
+
+        throw new NotPresentException("This player does not own any leader card with the given ID");
     }
 
     /**
