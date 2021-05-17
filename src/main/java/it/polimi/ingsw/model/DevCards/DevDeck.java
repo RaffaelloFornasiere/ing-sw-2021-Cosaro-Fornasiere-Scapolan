@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model.DevCards;
 
 import it.polimi.ingsw.model.CardColor;
+import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
 
-public class DevDeck {
+public class DevDeck{
     private ArrayList<DevCard> cards;
     int level;
     CardColor color;
@@ -33,7 +34,7 @@ public class DevDeck {
      *
      * @param card card to be added
      */
-    public void push(DevCard card) {
+    protected void push(DevCard card) {
         if (card.getColor() != color)
             throw new IllegalArgumentException("Card color does not match deck color");
         if (card.getLevel() != level)
@@ -45,14 +46,14 @@ public class DevDeck {
     /**
      * @param card removes the card passed by argument
      */
-    public void remove(DevCard card) {
+    private void remove(DevCard card) {
         cards.remove(card);
     }
 
     /**
      * @return pops the card on the deck's top
      */
-    public DevCard pop() {
+    protected DevCard pop() {
         DevCard aux = topCard();
         cards.remove(aux);
         return aux;

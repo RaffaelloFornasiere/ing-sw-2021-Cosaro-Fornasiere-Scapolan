@@ -3,8 +3,7 @@ package it.polimi.ingsw.controller;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.controller.modelChangeHandlers.LobbyHandler;
-import it.polimi.ingsw.controller.modelChangeHandlers.MarketHandler;
+import it.polimi.ingsw.controller.modelChangeHandlers.*;
 import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
 import it.polimi.ingsw.events.ClientEvents.InitialChoicesEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
@@ -119,8 +118,6 @@ public class PreGameController {
     private void prepareMatch(Lobby lobby) {
         //Build Gson object
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
-        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
         builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
         builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
         Gson gson = builder.create();
@@ -185,19 +182,29 @@ public class PreGameController {
         //initialize the dashboards and each player
         ArrayList<DashBoard> dashBoards = new ArrayList<>();
         ArrayList<Player> players= new ArrayList<>();
-        for (int i = 0; i < playerOrder.size(); i++) {
+        for (String s : playerOrder) {
             ArrayList<Integer> depotCapacities = new ArrayList<>();
             depotCapacities.add(1);
             depotCapacities.add(2);
             depotCapacities.add(3);
             ProductionPower personalPower = new ProductionPower(new HashMap<>(), new HashMap<>(), 2, 1, 0);
-            dashBoards.add(new DashBoard(3, depotCapacities, personalPower, faithTrack)); //3, depotCap and personalPower: configuration options
-            players.add(new Player(playerOrder.get(i), dashBoards.get(i)));
+            DashBoard dashBoard = new DashBoard(3, depotCapacities, personalPower, faithTrack); //3, depotCap and personalPower: configuration options
+            Player player = new Player(s, dashBoard);
+            dashBoard.addObserver(new DashBoardHandler(involvedPlayersNetworkData, player));
+            player.addObserver(new PlayerHandler(involvedPlayersNetworkData));
+            dashBoards.add(dashBoard);
+            players.add(player);
         }
 
         //Initialize match state
         MatchState matchState= new MatchState(players, devCards, 4, 3, marbles); //missing configuration options for market
         matchState.getMarket().addObserver(new MarketHandler(involvedPlayersNetworkData));
+        matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedPlayersNetworkData));
+        matchState.getPlayers().forEach(p -> {
+            FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedPlayersNetworkData, matchState);
+            p.getDashBoard().getFaithTrackData().addObserver(faithTrackDataHandler);
+        });
+        matchState.addObserver(new MatchStateHandler(involvedPlayersNetworkData));
 
         //Initialize the controller
         VirtualView matchEventHandlerRegistry = new VirtualView();
@@ -210,38 +217,32 @@ public class PreGameController {
         Controller matchController = new Controller(matchEventHandlerRegistry, matchState, clientHandlerSenders);
 
         //Initialize the leader cards
-        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
-        for(int i=1; i<=16; i++){ //16 configuration option
-            try {
-                String LeaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\LeaderCard" + i + ".json"));
-                leaderCards.add(gson.fromJson(LeaderCardJSON, LeaderCard.class));
-            } catch (IOException e) {
-                e.printStackTrace(); //how?!?!?!
-            }
-        }
-        Collections.shuffle(leaderCards);
+        ArrayList<String> leaderCardsIDs = new ArrayList<>();
+        for(int i=1; i<=16; i++)
+            leaderCardsIDs.add("leaderCard" + i);
+        Collections.shuffle(leaderCardsIDs);
 
         //Send to the players what they need to chose
         for (int i=0; i<playerOrder.size(); i++){
             int numberResourcesOfChoice = 0;
             int faithPoints = 0;
-            if(i>=2)
+            if(i>=1) //config
                 numberResourcesOfChoice++;
-            if(i>=3)
+            if(i>=2)
                 faithPoints++;
-            if(i>=4)
+            if(i>=3)
                 numberResourcesOfChoice++;
 
             if(faithPoints > 0);
             //move the player on the faith track
 
-            ArrayList<LeaderCard> cardsToChoseFrom = new ArrayList<>();
+            ArrayList<String> cardsToChoseFrom = new ArrayList<>();
             for(int j=0; j<=4; j++) { //4 configuration option
-                cardsToChoseFrom.add(leaderCards.get(leaderCards.size()-1));
-                leaderCards.remove(leaderCards.size()-1);
+                cardsToChoseFrom.add(leaderCardsIDs.get(leaderCardsIDs.size()-1));
+                leaderCardsIDs.remove(leaderCardsIDs.size()-1);
             }
 
-            InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom, numberResourcesOfChoice);
+            InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom, 2, numberResourcesOfChoice);
             networkData.get(playerOrder.get(i)).getClientHandlerSender().sendEvent(initialChoicesEvent);
         }
     }

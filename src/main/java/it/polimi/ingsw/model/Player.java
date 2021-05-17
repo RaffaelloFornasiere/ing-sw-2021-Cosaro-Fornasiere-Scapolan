@@ -5,19 +5,16 @@ import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.utilities.Observable;
+import it.polimi.ingsw.utilities.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Player {
+public class Player extends Observable {
     private String playerId;
-    ArrayList<LeaderCardOwnership> leaderCards;
-    DashBoard dashBoard;
-
-    private class LeaderCardOwnership {
-        protected LeaderCard leaderCard;
-        protected boolean active;
-    }
+    private ArrayList<Pair<LeaderCard, Boolean>> leaderCards;
+    private DashBoard dashBoard;
 
     public Player(String name, DashBoard dashBoard) {
         this.playerId = name;
@@ -47,8 +44,8 @@ public class Player {
      */
     public ArrayList<LeaderCard> getLeaderCards() {
         ArrayList<LeaderCard> lcs = new ArrayList<>();
-        for(LeaderCardOwnership lco: leaderCards)
-            lcs.add(lco.leaderCard);
+        for(Pair<LeaderCard, Boolean> lco: leaderCards)
+            lcs.add(lco.getKey());
         return lcs;
     }
 
@@ -58,9 +55,9 @@ public class Player {
      */
     public ArrayList<LeaderCard> getActiveLeaderCards(){
         ArrayList<LeaderCard> lcs = new ArrayList<>();
-        for(LeaderCardOwnership lco: leaderCards)
-            if(lco.active)
-                lcs.add(lco.leaderCard);
+        for(Pair<LeaderCard, Boolean> lco: leaderCards)
+            if(lco.getValue())
+                lcs.add(lco.getKey());
         return lcs;
     }
 
@@ -69,13 +66,19 @@ public class Player {
      * @param leaderCards the leader cards to give the player
      */
     public void setLeaderCards(ArrayList<LeaderCard> leaderCards) {
-        LeaderCardOwnership lco;
+        this.leaderCards = new ArrayList<>();
         for(LeaderCard lc: leaderCards){
-            lco = new LeaderCardOwnership();
-            lco.leaderCard=lc;
-            lco.active=false;
-            this.leaderCards.add(lco);
+            this.leaderCards.add(new Pair<>(lc, false));
         }
+        notifyObservers();
+    }
+
+    public LeaderCard getleaderCardFromID(String leaderCardID) throws NotPresentException{
+        for(Pair<LeaderCard, Boolean> lcp: leaderCards)
+            if(lcp.getKey().getCardID().equals(leaderCardID))
+                return lcp.getKey();
+
+        throw new NotPresentException("This player does not own any leader card with the given ID");
     }
 
     /**
@@ -85,10 +88,13 @@ public class Player {
      * @throws IllegalOperation if the leader card is already active
      */
     public void activateLeaderCard(LeaderCard leaderCard) throws NotPresentException, IllegalOperation {
-        for (LeaderCardOwnership lco : leaderCards) {
-            if (leaderCard == lco.leaderCard) {
-                if (lco.active) throw new IllegalOperation("Leader card already Active");
-                lco.active = true;
+        for (int i = 0, leaderCardsSize = leaderCards.size(); i < leaderCardsSize; i++) {
+            Pair<LeaderCard, Boolean> lco = leaderCards.get(i);
+            if (leaderCard == lco.getKey()) {
+                if (lco.getValue()) throw new IllegalOperation("Leader card already Active");
+                this.leaderCards.remove(i);
+                this.leaderCards.add(i, new Pair<>(lco.getKey(), true));
+                notifyObservers();
                 return;
             }
         }

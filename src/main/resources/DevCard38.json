@@ -1,1 +1,1 @@
-{"cost":{"SERVANT":5,"COIN":2},"level":3,"color":"VIOLET","victoryPoints":10,"productionPower":{"consumedResources":{"SHIELD":1,"ROCK":1},"producedResources":{"SERVANT":2,"COIN":2},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":1}}
+{"cardID":"DevCard38","cost":{"SERVANT":5,"COIN":2},"level":3,"color":"VIOLET","victoryPoints":10,"productionPower":{"consumedResources":{"ROCK":1,"SHIELD":1},"producedResources":{"SERVANT":2,"COIN":2},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":1}}

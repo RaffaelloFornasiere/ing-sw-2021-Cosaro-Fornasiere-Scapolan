@@ -1,13 +1,20 @@
 package it.polimi.ingsw.model.DevCards;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class DevCard
 {
+    private String cardID;
     private HashMap<Resource, Integer> cost;
     private int level;
     private CardColor color;
@@ -25,6 +32,9 @@ public class DevCard
         this.productionPower = productionPower;
     }
 
+    public String getCardID() {
+        return cardID;
+    }
 
     public HashMap<Resource, Integer> getCost() {
         return cost;
@@ -45,6 +55,30 @@ public class DevCard
     public ProductionPower getProductionPower() {
         return productionPower;
     }
+
+    /*public static void main(String[] args) {
+        Gson gson = new Gson();
+        for(int i=1; i<=48; i++){
+            String name = "DevCard" + i;
+            File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\" + name + ".json");
+            try {
+                FileReader r = new FileReader(file);
+                Scanner scanner = new Scanner(r);
+                StringBuilder s = new StringBuilder();
+                while(scanner.hasNext())
+                    s.append(scanner.nextLine());
+                DevCard c = gson.fromJson(s.toString(), DevCard.class);
+                c.cardID = name;
+                String JSONDevCard = gson.toJson(c, DevCard.class);
+                FileWriter w = new FileWriter(file);
+                w.write(JSONDevCard);
+                w.flush();
+                w.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
 
     /*public static void main(String[] args) {
         int index = 1;

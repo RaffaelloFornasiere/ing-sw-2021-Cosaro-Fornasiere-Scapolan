@@ -1,11 +1,18 @@
 package it.polimi.ingsw.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.model.FaithTrack.AbstractCell;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class LeaderCardManager {
@@ -133,6 +140,23 @@ public class LeaderCardManager {
         }
 
         return cleaned;
+    }
+
+    public void assignLeaderCard(Player player, ArrayList<String> leaderCardIDs){
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        Gson gson = builder.create();
+        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
+        try{
+            for(String leaderCardID: leaderCardIDs) {
+                String LeaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
+                leaderCards.add(gson.fromJson(LeaderCardJSON, LeaderCard.class));
+            }
+            player.setLeaderCards(leaderCards);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("The given ID is not valid");
+        }
     }
 
 }

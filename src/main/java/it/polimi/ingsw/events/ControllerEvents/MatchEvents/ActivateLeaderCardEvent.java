@@ -1,19 +1,16 @@
 package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
 public class ActivateLeaderCardEvent extends MatchEvent {
-    private int leaderCardIndex;
+    private String leaderCardID;
 
     /**
      * Constructor for the class
      * @param playerID the player that generated(directly or indirectly) this event
-     * @param leaderCardIndex the index of the leader card to activate
-     * @throws IllegalArgumentException if the index is negative
+     * @param leaderCardID the index of the leader card to activate
      */
-    public ActivateLeaderCardEvent(String playerID, int leaderCardIndex) throws IllegalArgumentException{
+    public ActivateLeaderCardEvent(String playerID, String leaderCardID){
         super(playerID);
-        if(leaderCardIndex<0)
-            throw new IllegalArgumentException("Index must be positive");
-        this.leaderCardIndex = leaderCardIndex;
+        this.leaderCardID = leaderCardID;
     }
 
 
@@ -21,10 +18,10 @@ public class ActivateLeaderCardEvent extends MatchEvent {
 
 
     /**
-     * getter for the index of the leader card to activate
-     * @return the index of the leader card to activate
+     * getter for the ID of the leader card to activate
+     * @return the ID of the leader card to activate
      */
-    public int getLeaderCardIndex() {
-        return leaderCardIndex;
+    public String getLeaderCardID() {
+        return leaderCardID;
     }
 }
