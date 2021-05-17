@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
 import it.polimi.ingsw.events.ClientEvents.DashBoardStateEvent;
+import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.model.DashBoard;
 import it.polimi.ingsw.model.Depot;
 import it.polimi.ingsw.model.DevCards.DevCard;
@@ -35,9 +36,9 @@ public class DashBoardHandler extends MatchObserver{
 
         HashMap<Resource, Integer> strongBox = dashBoard.getStrongBox();
 
-        ArrayList<Pair<Resource, Integer>> warehouse = new ArrayList<>();
+        ArrayList<DepotState> warehouse = new ArrayList<>();
         for(Depot d: dashBoard.getWarehouse()){
-            warehouse.add(new Pair<>(d.getResourceType(), d.getCurrentQuantity()));
+            warehouse.add(new DepotState(d.getResourceType(), d.getMaxQuantity(), d.getCurrentQuantity()));
         }
 
         sendToAll(new DashBoardStateEvent(dashBoardOwner.getPlayerId(), topCards, strongBox, warehouse));
