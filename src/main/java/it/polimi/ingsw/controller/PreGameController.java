@@ -25,6 +25,8 @@ import it.polimi.ingsw.virtualview.RequestsElaborator;
 import it.polimi.ingsw.virtualview.VirtualView;
 
 import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -242,6 +244,58 @@ public class PreGameController {
 
             InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom, 2, numberResourcesOfChoice);
             networkData.get(playerOrder.get(i)).getClientHandlerSender().sendEvent(initialChoicesEvent);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
+        builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
+        Gson gson = builder.create();
+        ArrayList<CellWithEffect> cellsWithEffectArray = new ArrayList<>();
+        try {
+            String cellsEffectJSON = Files.readString(Paths.get("src\\main\\resources\\CellsWithEffectArray.json"));
+            cellsEffectJSON = cellsEffectJSON.substring(1,cellsEffectJSON.length()-1);
+            String[] cells = cellsEffectJSON.split("(,)(?=\\{)");
+
+            for (String s : cells) {
+                CellWithEffect cell = (CellWithEffect)gson.fromJson(s, AbstractCell.class);
+                cellsWithEffectArray.add(cell);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Integer> victoryPoints = new ArrayList<>();
+        try {
+            String victoryPointsJSON = Files.readString(Paths.get("src\\main\\resources\\VictoryPoints.json"));
+            Type integerList = new TypeToken<ArrayList<Integer>>(){}.getType();
+            victoryPoints= gson.fromJson(victoryPointsJSON, integerList);
+        } catch (IOException e) {
+            e.printStackTrace(); //use default configuration
+        }
+        FaithTrack faithTrack = FaithTrack.initFaithTrack(victoryPoints.size(), cellsWithEffectArray, victoryPoints);
+
+        StringBuilder s= new StringBuilder();
+        s.append("["+ gson.toJson(FaithTrack.getArrayOfCells().get(0),AbstractCell.class));
+        for(int i=1; i< FaithTrack.getArrayOfCells().size(); i++){
+            s.append(","+ gson.toJson(FaithTrack.getArrayOfCells().get(i),AbstractCell.class));
+        }
+        s.append("]");
+        System.out.println(s.toString());
+        String path = "src\\main\\resources\\CompleteFaithTrack.json";
+        try {
+            File file = new File(path);
+            FileWriter fw = new FileWriter(file);
+            fw.write(s.toString());
+            fw.flush();
+            fw.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
         }
     }
 }

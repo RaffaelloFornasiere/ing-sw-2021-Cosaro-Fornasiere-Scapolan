@@ -32,7 +32,7 @@ public class FaithTrack {
                 arrayOfCells.set(e.getIndex(), e);
         });
 
-        arrayOfCells.set(arrayOfCells.size()-1, new LastCell(arrayOfCells.get(arrayOfCells.size()-1)));
+      //  arrayOfCells.set(arrayOfCells.size()-1, new LastCell(arrayOfCells.get(arrayOfCells.size()-1)));
 
     }
 

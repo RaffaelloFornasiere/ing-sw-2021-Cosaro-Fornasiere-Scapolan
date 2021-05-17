@@ -1,22 +1,23 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.events.*;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
-import it.polimi.ingsw.events.ControllerEvents.*;
-import it.polimi.ingsw.events.ClientEvents.*;
-import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.events.ClientEvents.ClientEvent;
+import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateLeaderCardEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
+import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
+import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.ui.UI;
-import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
-import java.io.Serial;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.*;
 
 public class NetworkAdapter {

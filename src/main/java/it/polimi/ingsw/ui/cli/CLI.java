@@ -1,7 +1,6 @@
 package it.polimi.ingsw.ui.cli;
 
 import it.polimi.ingsw.client.NetworkAdapter;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Resource;
 
 import java.io.PrintWriter;
@@ -95,7 +94,9 @@ public class CLI {
      *
      * @param availableCards a list with the available cards
      */
-    void displayChoicePersonalLeaderCard(List<LeaderCard> availableCards){};
+    void displayChoicePersonalLeaderCard(List<String> availableCards){
+
+    };
 
 
     /**
