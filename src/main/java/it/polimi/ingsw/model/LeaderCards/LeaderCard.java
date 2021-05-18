@@ -2,23 +2,20 @@ package it.polimi.ingsw.model.LeaderCards;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.utilities.Observable;
+import it.polimi.ingsw.utilities.Pair;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Class that represents a leader card
  */
-public class LeaderCard implements Serializable {
+public class LeaderCard extends Observable{
 
+    private String cardID;
     private int victoryPoints;
     private ArrayList<Requirement> activationRequirements;
-    private ArrayList<LeaderPowerOwnership> powers;
-
-    private class LeaderPowerOwnership{
-        protected LeaderPower power;
-        protected boolean selected;
-    }
+    private ArrayList<Pair<LeaderPower, Boolean>> powers;
 
     /**
      * Constructor for the class
@@ -30,13 +27,16 @@ public class LeaderCard implements Serializable {
         this.victoryPoints = victoryPoints;
         this.activationRequirements = (ArrayList<Requirement>)activationRequirements.clone();
         this.powers = new ArrayList<>();
-        LeaderPowerOwnership lpo;
-        for(LeaderPower lp: powers){
-            lpo = new LeaderPowerOwnership();
-            lpo.power = lp;
-            lpo.selected = false;
-            this.powers.add(lpo);
-        }
+        for(LeaderPower lp: powers)
+            this.powers.add(new Pair<>(lp, false));
+    }
+
+    /**
+     * getter for the ID of the card
+     * @return the ID of the card
+     */
+    public String getCardID() {
+        return cardID;
     }
 
     /**
@@ -61,8 +61,8 @@ public class LeaderCard implements Serializable {
      */
     public ArrayList<LeaderPower> getLeaderPowers() {
         ArrayList<LeaderPower> ret = new ArrayList<>();
-        for(LeaderPowerOwnership lpo: powers)
-            ret.add(lpo.power);
+        for(Pair<LeaderPower, Boolean> lpo: powers)
+            ret.add(lpo.getKey());
         return ret;
     }
 
@@ -72,9 +72,9 @@ public class LeaderCard implements Serializable {
      */
     public ArrayList<LeaderPower> getSelectedLeaderPowers(){
         ArrayList<LeaderPower> ret = new ArrayList<>();
-        for(LeaderPowerOwnership lpo: powers)
-            if(lpo.selected)
-                ret.add(lpo.power);
+        for(Pair<LeaderPower, Boolean> lpo: powers)
+            if(lpo.getValue())
+                ret.add(lpo.getKey());
         return ret;
     }
 
@@ -85,10 +85,13 @@ public class LeaderCard implements Serializable {
      * @throws IllegalOperation if the leader power was already selected
      */
     public void selectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
-        for (LeaderPowerOwnership lpo : powers) {
-            if (leaderPower == lpo.power) {
-                if (lpo.selected) throw new IllegalOperation("Leader power already selected");
-                lpo.selected = true;
+        for (int i = 0, powersSize = powers.size(); i < powersSize; i++) {
+            Pair<LeaderPower, Boolean> lpo = powers.get(i);
+            if (leaderPower == lpo.getKey()) {
+                if (lpo.getValue()) throw new IllegalOperation("Leader power already selected");
+                this.powers.remove(i);
+                this.powers.add(i, new Pair<>(lpo.getKey(), !lpo.getValue()));
+                notifyObservers();
                 return;
             }
         }
@@ -103,16 +106,46 @@ public class LeaderCard implements Serializable {
      * @throws IllegalOperation if the leader power was not selected
      */
     public void deselectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
-        for (LeaderPowerOwnership lpo : powers) {
-            if (leaderPower == lpo.power) {
-                if (!lpo.selected) throw new IllegalOperation("Leader power already not selected");
-                lpo.selected = false;
+        for (int i = 0, powersSize = powers.size(); i < powersSize; i++) {
+            Pair<LeaderPower, Boolean> lpo = powers.get(i);
+            if (leaderPower == lpo.getKey()) {
+                if (!lpo.getValue()) throw new IllegalOperation("Leader power already not selected");
+                this.powers.remove(i);
+                this.powers.add(i, new Pair<>(lpo.getKey(), !lpo.getValue()));
+                notifyObservers();
                 return;
             }
         }
 
         throw new NotPresentException("The selected leader power does not belong to this card");
     }
+
+    /*public static void main(String[] args) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        Gson gson = builder.create();
+        for(int i=1; i<=16; i++){
+            String name = "LeaderCard" + i;
+            File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\" + name + ".json");
+            try {
+                FileReader r = new FileReader(file);
+                Scanner scanner = new Scanner(r);
+                StringBuilder s = new StringBuilder();
+                while(scanner.hasNext())
+                    s.append(scanner.nextLine());
+                LeaderCard c = gson.fromJson(s.toString(), LeaderCard.class);
+                c.cardID = name;
+                String JSONDevCard = gson.toJson(c, LeaderCard.class);
+                FileWriter w = new FileWriter(file);
+                w.write(JSONDevCard);
+                w.flush();
+                w.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
 
     /*public static void main(String[] args) {
         //index and victory points

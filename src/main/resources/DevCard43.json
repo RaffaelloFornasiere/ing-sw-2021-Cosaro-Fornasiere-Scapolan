@@ -1,1 +1,1 @@
-{"cost":{"COIN":7},"level":3,"color":"BLUE","victoryPoints":11,"productionPower":{"consumedResources":{"ROCK":1},"producedResources":{"SHIELD":1},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":3}}
+{"cardID":"DevCard43","cost":{"COIN":7},"level":3,"color":"BLUE","victoryPoints":11,"productionPower":{"consumedResources":{"ROCK":1},"producedResources":{"SHIELD":1},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":3}}

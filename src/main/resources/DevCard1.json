@@ -1,1 +1,1 @@
-{"cost":{"SHIELD":2,"COIN":1},"level":1,"color":"GREEN","victoryPoints":1,"productionPower":{"consumedResources":{},"producedResources":{},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":1}}
+{"cardID":"DevCard1","cost":{"COIN":1,"SHIELD":2},"level":1,"color":"GREEN","victoryPoints":1,"productionPower":{"consumedResources":{},"producedResources":{},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":1}}
