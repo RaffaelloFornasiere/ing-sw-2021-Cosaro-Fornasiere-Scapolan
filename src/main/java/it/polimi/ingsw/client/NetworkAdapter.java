@@ -4,16 +4,12 @@ import it.polimi.ingsw.events.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.*;
 import it.polimi.ingsw.events.ClientEvents.*;
-import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.ui.UI;
-import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
-import java.io.Serial;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
@@ -84,9 +80,8 @@ public class NetworkAdapter {
 
     public static void main(String[] args) {
         try {
-            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("25.115.44.10"));
+            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("127.0.0.1"));
             nt.createMatch("raffaello");
-            //nt.createMatch("raffaello");
 
             System.out.println("aaa");
 
@@ -136,8 +131,6 @@ public class NetworkAdapter {
     }
 
 
-
-
     /*
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -152,73 +145,94 @@ public class NetworkAdapter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
-    public void BadRequestEventHandler(PropertyChangeEvent evt){
+    public void BadRequestEventHandler(PropertyChangeEvent evt) {
+        BadRequestEvent event = (BadRequestEvent)evt.getNewValue();
+        view.printError(event.getDescription());
+    }
+
+    public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt) {
+        IncompatiblePowersError event = (IncompatiblePowersError) evt.getNewValue();
+
+        //System.out.println(evt.getClass().getSimpleName());
+    }
+
+    public void InitialChoicesEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void ClientEventHandler(PropertyChangeEvent evt){
+
+    public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt){
+
+    public void LobbyStateEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void InitialChoicesEventHandler(PropertyChangeEvent evt){
+
+    public void MarketStateEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt){
+
+    public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void LobbyStateEventHandler(PropertyChangeEvent evt){
+
+    public void ControllerEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void MarketStateEventHandler(PropertyChangeEvent evt){
+
+    public void MatchEventsHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt){
+
+    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void ControllerEventHandler(PropertyChangeEvent evt){
+
+    public void ActivateProductionEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void MatchEventsHandler(PropertyChangeEvent evt){
+
+    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){
+
+    public void BuyDevCardsEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void ActivateProductionEventHandler(PropertyChangeEvent evt){
+
+    public void BuyResourcesEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt){
+
+    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void BuyDevCardsEventHandler(PropertyChangeEvent evt){
+
+    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void BuyResourcesEventHandler(PropertyChangeEvent evt){
+
+    public void MatchEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt){
+
+    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){
+
+    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void MatchEventHandler(PropertyChangeEvent evt){
+
+    public void NewPlayerEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt){
+
+    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
-    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
-    }
-    public void NewPlayerEventHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
-    }
-    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt){
-        System.out.println(evt.getClass().getSimpleName());
-    }
-    public void StartMatchEventHandler(PropertyChangeEvent evt){
+
+    public void StartMatchEventHandler(PropertyChangeEvent evt) {
         System.out.println(evt.getClass().getSimpleName());
     }
 }

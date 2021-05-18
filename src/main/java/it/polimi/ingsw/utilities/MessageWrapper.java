@@ -7,7 +7,7 @@ public class MessageWrapper {
     public static final String MESSAGE_END = "#-- END MESSAGE --#";
 
     public static String getScannerPattern(){
-        return '(' + MESSAGE_START + "(.)*" + MESSAGE_END + ")?";
+        return '(' + MESSAGE_START + ").*(" + MESSAGE_END + ")?";
     }
 
     public static String wrap(String s) throws IllegalOperation {
