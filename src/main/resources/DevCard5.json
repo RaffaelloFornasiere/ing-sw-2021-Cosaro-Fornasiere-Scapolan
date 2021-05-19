@@ -1,1 +1,1 @@
-{"cardID":"DevCard5","cost":{"SERVANT":1,"ROCK":1,"SHIELD":1},"level":1,"color":"GREEN","victoryPoints":2,"productionPower":{"consumedResources":{},"producedResources":{"SERVANT":1},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":0}}
+{"cardID":"DevCard5","cost":{"SERVANT":1,"ROCK":1,"SHIELD":1},"level":1,"color":"GREEN","victoryPoints":2,"productionPower":{"consumedResources":{"ROCK":1},"producedResources":{"SERVANT":1},"requiredResourceOfChoice":0,"producedResourceOfChoice":0,"faithPointsProduced":0}}
