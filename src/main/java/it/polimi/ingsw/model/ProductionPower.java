@@ -41,6 +41,14 @@ public class ProductionPower {
     }
 
     /**
+     * getter of produced FaithPoints
+     * @return faith points
+     */
+    public int getFaithPointsProduced() {
+        return faithPointsProduced;
+    }
+
+    /**
      * tells if the given resource satisfyies the consumed ones
      *
      * @param resources given resoruces

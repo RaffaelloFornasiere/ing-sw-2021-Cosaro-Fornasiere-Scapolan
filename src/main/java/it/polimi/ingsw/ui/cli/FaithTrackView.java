@@ -5,28 +5,33 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.EffectOfCell;
 import it.polimi.ingsw.model.FaithTrack.AbstractCell;
 import it.polimi.ingsw.model.FaithTrack.PopeCell;
+import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class FaithTrackView {
     private HashMap<String, Integer> playersPositions;
-    private HashMap<Integer, Integer> favorPopeCardPoints;
+    private HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
 
-    public FaithTrackView(ArrayList<String> playersInitials) {
+    public FaithTrackView(ArrayList<String> playersNames) {
         playersPositions = new HashMap<>();
-        for (String s : playersInitials) {
+        for (String s : playersNames) {
             playersPositions.put(s, 0);
         }
-        favorPopeCardPoints = new HashMap<>();
+        popeFavorCards = new HashMap<>();
+        for (String s : playersNames) {
+            popeFavorCards.put(s, new HashMap<>());
+        }
     }
 
-    public void display(String message) {
+    public void display(String message, String currentPlayer) {
 
         String legend = "\033[31;1;4mLEGEND\033[0m \nNormal cell\n" +
                 Color.CYAN.getAnsiCode() + "VaticanSectionCell\n" + Color.reset() +
@@ -38,7 +43,7 @@ public class FaithTrackView {
         panel0.addItem(o2);
         panel0.show();
 
-        Panel panel = new Panel(1000, 10, System.out);
+        Panel panel = new Panel(1000, 7, System.out);
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
@@ -64,13 +69,16 @@ public class FaithTrackView {
                         array.get(i).setVaticanSection();
                     }
                     cellView.setShowFavorPopeCard();
-                    if (favorPopeCardPoints.containsKey(cell.getIndex())) {
-                        cellView.setFavorPopeCardPoint(favorPopeCardPoints.get(cell.getIndex()));
+                    if (popeFavorCards.keySet().stream().map(entry->popeFavorCards.get(entry).containsKey(cell.getIndex())).reduce(false, (subtotal, element) -> subtotal||element)) {
+                        String popeFavorCardPlaceholder = popeFavorCards.keySet().stream().filter(f -> popeFavorCards.get(f).containsKey(cell.getIndex())).map(name->name.substring(0,1)).collect(Collectors.joining());
+                        cellView.setPopeFavorCardPlaceHolder(popeFavorCardPlaceholder);
+                        int points= popeFavorCards.get(popeFavorCards.keySet().stream().filter(f -> popeFavorCards.get(f).containsKey(cell.getIndex())).collect(Collectors.toCollection(ArrayList::new)).get(0)).get(cell.getIndex()).getVictoryPoints();
+                    cellView.setFavorPopeCardPoint(points);
                     }
                 }
 
                 if (playersPositions.containsValue(cell.getIndex())) {
-                    String placeholder = playersPositions.keySet().stream().filter(f -> playersPositions.get(f) == cell.getIndex()).collect(Collectors.joining());
+                    String placeholder = playersPositions.keySet().stream().filter(f -> playersPositions.get(f) == cell.getIndex()).map(name->name.substring(0,1)).collect(Collectors.joining());
                     cellView.setPlaceHolder(placeholder);
                 }
             }
@@ -89,6 +97,27 @@ public class FaithTrackView {
             e.printStackTrace();
         }
 
+        System.out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
+        StringBuilder othersPopeFavorCards = new StringBuilder();
+        popeFavorCards.keySet().stream().filter(f -> f != currentPlayer).forEach(p -> {
+            othersPopeFavorCards.append(p.toUpperCase() + "\n");
+            Collection<PopeFavorCard> pointsCard = popeFavorCards.get(p).values();
+            pointsCard.stream().forEach(c -> {
+                othersPopeFavorCards.append("╔═══╗" + " ");
+            });
+            othersPopeFavorCards.append(Color.reset() + "\n");
+            pointsCard.stream().forEach(c -> {
+                othersPopeFavorCards.append("║ " + c.getVictoryPoints() + " ║" + " ");
+            });
+            othersPopeFavorCards.append(Color.reset() + "\n");
+            pointsCard.stream().forEach(c -> {
+                othersPopeFavorCards.append("╚═══╝" + " ");
+            });
+
+            othersPopeFavorCards.append(Color.reset() + "\n");
+        });
+        System.out.println(othersPopeFavorCards.toString());
+
 
     }
 
@@ -97,22 +126,56 @@ public class FaithTrackView {
         playersPositions.put(p, newPosition);
     }
 
-    public void updateFavorPopeCard(int index, int vPoints) {
-        favorPopeCardPoints.put(index, vPoints);
+    public void updateFavorPopeCard(HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+        popeFavorCards.keySet().forEach(player ->
+                this.popeFavorCards.put(player, popeFavorCards.get(player)));
     }
 
     public static void main(String[] args) {
         ArrayList<String> a = new ArrayList<>();
-        a.add("S");
-        a.add("P");
-        a.add("L");
-        a.add("R");
+        a.add("SILVIA");
+        a.add("PAOLO");
+        a.add("LARA");
+        a.add("ROBERTO");
+        HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards = new HashMap<>();
+        PopeFavorCard cardS0 = new PopeFavorCard(2);
+        PopeFavorCard cardS1 = new PopeFavorCard(3);
+        PopeFavorCard cardP0 = new PopeFavorCard(2);
+        PopeFavorCard cardP1 = new PopeFavorCard(3);
+        PopeFavorCard cardP2 = new PopeFavorCard(5);
+        PopeFavorCard cardL0 = new PopeFavorCard(2);
+        PopeFavorCard cardL1 = new PopeFavorCard(3);
+        PopeFavorCard cardL2 = new PopeFavorCard(5);
+        PopeFavorCard cardR0 = new PopeFavorCard(2);
+        HashMap<Integer, PopeFavorCard> mapS = new HashMap<>();
+        mapS.put(16, cardS0);
+        mapS.put(24, cardS1);
+
+        HashMap<Integer, PopeFavorCard> mapP = new HashMap<>();
+        mapP.put(8, cardP0);
+        mapP.put(16, cardP1);
+        mapP.put(24, cardP2);
+
+        HashMap<Integer, PopeFavorCard> mapL = new HashMap<>();
+        mapL.put(8, cardL0);
+        mapL.put(16, cardL1);
+        mapL.put(24, cardL2);
+
+        HashMap<Integer, PopeFavorCard> mapR = new HashMap<>();
+        mapR.put(24, cardR0);
+
+        popeFavorCards.put("SILVIA", mapS);
+        popeFavorCards.put("PAOLO", mapP);
+        popeFavorCards.put("LARA", mapL);
+        popeFavorCards.put("ROBERTO", mapR);
+
 
         FaithTrackView f = new FaithTrackView(a);
-        f.updateFavorPopeCard(8, 5);
-        f.updateFavorPopeCard(12, 2);
-        //f.updatePlayerPosition("S",4);
+        f.updateFavorPopeCard(popeFavorCards);
 
-        f.display("Position incremented");
+        f.updatePlayerPosition("SILVIA",4);
+        f.updatePlayerPosition("PAOLO",6);
+
+        f.display("Position incremented", "LARA");
     }
 }

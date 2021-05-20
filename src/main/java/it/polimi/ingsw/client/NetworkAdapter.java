@@ -132,7 +132,7 @@ public class NetworkAdapter {
         send(event);
     }
 
-    public void activateLeaderCard(int index) {
+    public void activateLeaderCard(String index) {
         ActivateLeaderCardEvent event = new ActivateLeaderCardEvent(playerID, index);
         send(event);
     }
