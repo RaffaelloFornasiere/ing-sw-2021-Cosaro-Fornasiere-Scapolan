@@ -10,11 +10,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.IntStream;
 
-public class CardView {
+public class DevCardView {
     private DevCard card;
 
 
-    public CardView(String path) {
+    public DevCardView(String path) {
         Gson gson = new Gson();
         try {
             String cardJSON = Files.readString(Paths.get("src\\main\\resources\\"+ path+".json"));
@@ -23,7 +23,7 @@ public class CardView {
             e.printStackTrace();
         }
     }
-    public String translateColor(CardColor c){
+    private String translateColor(CardColor c){
         if (c==CardColor.BLUE) return Color.BLUE.getAnsiCode();
         if (c==CardColor.VIOLET) return Color.RED.getAnsiCode();
         if (c==CardColor.GREEN) return Color.GREEN.getAnsiCode();
@@ -77,7 +77,7 @@ public class CardView {
     public static void main(String[] args) {
         Panel panel= new Panel(10000, 50,System.out);
         IntStream.range(1,49).forEach(n->{
-            CardView card= new CardView("DevCard"+n);
+            DevCardView card= new DevCardView("DevCard"+n);
             DrawableObject obj1= new DrawableObject(card.toString(), 40*(n-1),0);
             panel.addItem(obj1);
 

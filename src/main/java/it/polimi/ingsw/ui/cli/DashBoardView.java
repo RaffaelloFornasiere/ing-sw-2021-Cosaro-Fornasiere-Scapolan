@@ -37,6 +37,10 @@ public class DashBoardView {
         else return "▼";
     }
 
+    public void display( String playerID){
+
+    }
+
 
 
 
@@ -104,7 +108,7 @@ public class DashBoardView {
         panel.addItem(devCards);
         AtomicInteger gap = new AtomicInteger(0);
         cards.stream().forEach(x -> {
-            DrawableObject obj = new DrawableObject(new CardView(x).toString(), gap.get() * 40, (int) (warehouse.getHeight() + strongBox.getHeight() + 6));
+            DrawableObject obj = new DrawableObject(new DevCardView(x).toString(), gap.get() * 40, (int) (warehouse.getHeight() + strongBox.getHeight() + 6));
             gap.getAndIncrement();
             panel.addItem(obj);
         });
