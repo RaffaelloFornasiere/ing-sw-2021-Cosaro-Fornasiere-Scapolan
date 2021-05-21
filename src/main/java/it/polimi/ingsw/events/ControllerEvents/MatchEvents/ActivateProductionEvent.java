@@ -4,18 +4,20 @@ import java.util.ArrayList;
 
 public class ActivateProductionEvent extends MatchEvent {
 
-    public ActivateProductionEvent(String playerID, ArrayList<Integer> devCards) {
+    public ActivateProductionEvent(String playerID, ArrayList<String> devCards, boolean personalPower) {
         super(playerID);
-        this.devCards = devCards;
+        this.devCards = (ArrayList<String>) devCards.clone();
     }
 
-    private final ArrayList<Integer> devCards;
+    private final ArrayList<String> devCards;
+    private boolean personalPower;
 
     @SuppressWarnings("unchecked")
-    public ArrayList<Integer> getDevCards() {return (ArrayList<Integer>) devCards.clone();}
+    public ArrayList<String> getDevCards() {return (ArrayList<String>) devCards.clone();}
 
-    private String eventName;
-
+    public boolean isPersonalPowerActive() {
+        return personalPower;
+    }
 
     @Override
     public String getEventName() {

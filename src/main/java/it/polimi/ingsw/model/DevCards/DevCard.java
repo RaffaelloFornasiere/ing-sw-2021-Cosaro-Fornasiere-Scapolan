@@ -56,6 +56,14 @@ public class DevCard
         return productionPower;
     }
 
+    public boolean checkCost(HashMap<Resource, Integer> availableResources){
+        for(Resource resource: cost.keySet()) {
+            if(cost.get(resource)>availableResources.getOrDefault(resource, 0))
+                return false;
+        }
+        return true;
+    }
+
     /*public static void main(String[] args) {
         Gson gson = new Gson();
         for(int i=1; i<=48; i++){

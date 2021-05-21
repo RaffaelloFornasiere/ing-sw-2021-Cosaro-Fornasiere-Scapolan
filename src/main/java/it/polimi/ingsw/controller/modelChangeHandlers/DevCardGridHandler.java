@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.modelChangeHandlers;
 import it.polimi.ingsw.events.ClientEvents.DevCardGridStateEvent;
 import it.polimi.ingsw.model.DevCards.DevCardGrid;
 import it.polimi.ingsw.model.DevCards.DevDeck;
+import it.polimi.ingsw.virtualview.ClientHandlerSender;
 import it.polimi.ingsw.virtualview.RequestsElaborator;
 
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 
 public class DevCardGridHandler extends MatchObserver{
 
-    public DevCardGridHandler(HashMap<String, RequestsElaborator> networkData) {
+    public DevCardGridHandler(HashMap<String, ClientHandlerSender> networkData) {
         super(networkData);
     }
 

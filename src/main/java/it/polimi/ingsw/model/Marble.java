@@ -6,7 +6,7 @@ public enum Marble{
     RED("Red"),
     YELLOW("Yellow"),
     GRAY("Gray"),
-    PURPLE("PURPLE"),
+    PURPLE("Purple"),
     BLUE("Blue");
     final private String color;
     Marble(String color)

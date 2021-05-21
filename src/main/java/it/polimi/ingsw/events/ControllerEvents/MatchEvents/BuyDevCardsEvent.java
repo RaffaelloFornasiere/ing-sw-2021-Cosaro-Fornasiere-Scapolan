@@ -1,32 +1,24 @@
 package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-public class BuyDevCardsEvent extends MatchEvent {
-    /**
-     *
-     * @param playerID the player that generated(directly or indirectly) this event
-     * @param row row of grid
-     * @param column column of grid
-     */
-    public BuyDevCardsEvent(String playerID, int row, int column) {
+import it.polimi.ingsw.model.Resource;
+
+import java.util.HashMap;
+
+public class BuyDevCardsEvent extends MatchEvent{
+    private String DevCardID;
+    private int cardSlot;
+
+    public BuyDevCardsEvent(String playerID, String devCardID, int cardSlot) {
         super(playerID);
-        this.row = row;
-        this.column = column;
+        DevCardID = devCardID;
+        this.cardSlot = cardSlot;
     }
 
-    private final int row;
-    private final int column;
-
-    public int getRow() {return row;}
-    public int getColumn() {return column;}
-
-    private String eventName;
-
-
-    @Override
-    public String getEventName() {
-        return this.getClass().getName();
+    public String getDevCardID() {
+        return DevCardID;
     }
 
-
-
+    public int getCardSlot() {
+        return cardSlot;
+    }
 }

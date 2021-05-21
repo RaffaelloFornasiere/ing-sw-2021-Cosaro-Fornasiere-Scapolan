@@ -40,6 +40,18 @@ public class ProductionPower {
         return producedResources;
     }
 
+    public int getRequiredResourceOfChoice() {
+        return requiredResourceOfChoice;
+    }
+
+    public int getProducedResourceOfChoice() {
+        return producedResourceOfChoice;
+    }
+
+    public int getFaithPointsProduced() {
+        return faithPointsProduced;
+    }
+
     /**
      * tells if the given resource satisfyies the consumed ones
      *
