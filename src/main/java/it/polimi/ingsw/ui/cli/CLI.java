@@ -7,14 +7,24 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class CLI {
     private final NetworkAdapter client;
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
 
+    private FaithTrackView faithTrack;
+    private ArrayList<DashBoardView> dashboards;
+    private ArrayList<String> players;
+    private DevCardGridView devCardGridView;
+
     public CLI( NetworkAdapter client) {
         this.client = client;
+        players= new ArrayList<>();
+        ArrayList<String> initials= (ArrayList<String>)players.stream().map(name->name.toUpperCase().substring(0,1)).collect(Collectors.toCollection(ArrayList::new));
+        this.faithTrack=new FaithTrackView(initials);
+        dashboards= new ArrayList<>();
 
     }
 
@@ -111,7 +121,9 @@ public class CLI {
      * Method that gives freedom of action to the player who is in turn.
      * In the CLI also allows who is in turn to choose an action between takeResources, buyDevCard,  produce.
      */
-    void displayWhoseTurnIsIt(){};
+    void displayWhoseTurnIsIt(){
+
+    };
 
     /**
      * Method that asks you if you want to activate a LeaderCard.
