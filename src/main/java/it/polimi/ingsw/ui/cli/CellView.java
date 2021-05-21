@@ -12,6 +12,7 @@ public class CellView {
     private String placeholder;
     private int favorPopeCardPoint;
     private boolean showFavorPopeCard;
+    private String popeFavorCardPlaceholder;
 
 
     public CellView(int index, int victoryPoints) {
@@ -29,6 +30,10 @@ public class CellView {
     public void setPlaceHolder(String s) {
         this.placeholder = s;
         this.occupied = true;
+    }
+
+    public void setPopeFavorCardPlaceHolder(String s) {
+        this.popeFavorCardPlaceholder= s;
     }
 
     public void setIndex(int index) {
@@ -82,10 +87,21 @@ public class CellView {
         } else string.append(color +"╚═════╝" + Color.reset() + "\n");
 
         if (popeCell) {
-            if (showFavorPopeCard && favorPopeCardPoint != 0)
+            if (showFavorPopeCard && favorPopeCardPoint != 0) {
                 string.append(color + "╠══" + favorPopeCardPoint + "══╣" + Color.reset() + "\n");
-            else string.append(color + "╠══ ══╣" + Color.reset() + "\n");
-        } else string.append(color + "       " + Color.reset() + "\n");
+                if( popeFavorCardPlaceholder.length()==1) string.append(color + "╚══" + popeFavorCardPlaceholder + "══╝" + Color.reset() + "\n");
+                else if (popeFavorCardPlaceholder.length()==2)string.append(color + "╚═" + popeFavorCardPlaceholder + "══╝" + Color.reset() + "\n");
+                else if (popeFavorCardPlaceholder.length()==3)string.append(color + "╚═" + popeFavorCardPlaceholder + "═╝" + Color.reset() + "\n");
+                else string.append(color + "╚" + popeFavorCardPlaceholder + "═╝" + Color.reset() + "\n");
+            }
+            else {
+                string.append(color + "╠══ ══╣" + Color.reset() + "\n");
+                string.append(color + "       " + Color.reset() + "\n");
+            }
+        } else {
+            string.append(color + "       " + Color.reset() + "\n");
+            string.append(color + "       " + Color.reset() + "\n");
+        }
 
 
         return string.toString();

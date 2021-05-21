@@ -1,0 +1,88 @@
+package it.polimi.ingsw.ui.cli;
+
+import com.google.gson.Gson;
+import it.polimi.ingsw.model.CardColor;
+import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.Resource;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.IntStream;
+
+public class CardView {
+    private DevCard card;
+
+
+    public CardView(String path) {
+        Gson gson = new Gson();
+        try {
+            String cardJSON = Files.readString(Paths.get("src\\main\\resources\\"+ path+".json"));
+            card= gson.fromJson(cardJSON,DevCard.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String translateColor(CardColor c){
+        if (c==CardColor.BLUE) return Color.BLUE.getAnsiCode();
+        if (c==CardColor.VIOLET) return Color.RED.getAnsiCode();
+        if (c==CardColor.GREEN) return Color.GREEN.getAnsiCode();
+        else  return Color.YELLOW.getAnsiCode();
+    }
+    private String shapeResource(Resource res) {
+        if (res == Resource.SERVANT) return "■";
+        if (res == Resource.SHIELD) return "◆";
+        if (res == Resource.COIN) return "●";
+        else  return "▼";
+    }
+    private String colorResource(Resource res) {
+        if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
+        if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
+        if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
+        else  return Color.YELLOW.getAnsiCode();
+    }
+    public String toString(){
+        String color= translateColor(card.getColor());
+        StringBuilder build= new StringBuilder();
+        build.append(
+                        color+ "   "+color +card.getCardID()+ color+"  " + Color.reset() + "\n"+
+                        color+ "╔════"+color+"Level"+color+"════╗" + Color.reset() + "\n"+
+                        color+ "║      "+color+ card.getLevel() +color+"      ║" + Color.reset() + "\n"+
+                        color+ "╠════"+color+"Cost"+color+"═════╣" + Color.reset() + "\n");
+        for (Resource resource : card.getCost().keySet()) {
+            build.append(color+ "║     " + colorResource(resource) + card.getCost().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+        }               build.append(color+ "╠═"+color+"Production"+color+"══╣" + Color.reset() + "\n");
+        for (Resource resource : card.getProductionPower().getConsumedResources().keySet()) {
+            build.append(color + "║     " + colorResource(resource) + card.getProductionPower().getConsumedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+        }          build.append(color+ "║   "+color+"--->>> "+color+ "   ║ " + Color.reset() + "\n");
+        for (Resource resource : card.getProductionPower().getProducedResources().keySet()) {
+            build.append(color + "║     " + colorResource(resource) + card.getProductionPower().getProducedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+        }
+        if(card.getProductionPower().getFaithPointsProduced()!=0){
+            build.append(color + "║     "+color+ + card.getProductionPower().getFaithPointsProduced() + " " +"+"  + color + "     ║" + Color.reset() + "\n" );
+        }
+
+
+                        build.append(color+ "╠═══"+color+"VPoints"+color+"═══╣" + Color.reset() + "\n");
+        if(card.getVictoryPoints()<10) {
+           build.append( color + "║      " + color + card.getVictoryPoints() + color + "      ║" + Color.reset() + "\n");
+        }else   build.append(color + "║     " + color + card.getVictoryPoints() + color + "      ║" + Color.reset() + "\n");
+        build.append(color+ "╚════"+color+color+"═════════╝" + Color.reset() + "\n");
+        for(int i=0; i<5; i++){
+            build.append(color+ "     "+color+color+"          " + Color.reset() + "\n");
+        }
+        return build.toString();
+    }
+
+    public static void main(String[] args) {
+        Panel panel= new Panel(10000, 50,System.out);
+        IntStream.range(1,49).forEach(n->{
+            CardView card= new CardView("DevCard"+n);
+            DrawableObject obj1= new DrawableObject(card.toString(), 40*(n-1),0);
+            panel.addItem(obj1);
+
+        });
+
+       panel.show();
+    }
+}
