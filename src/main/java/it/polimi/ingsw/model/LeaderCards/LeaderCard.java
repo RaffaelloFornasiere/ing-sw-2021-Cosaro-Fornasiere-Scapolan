@@ -67,6 +67,18 @@ public class LeaderCard extends Observable{
     }
 
     /**
+     * getter for all the powers, with respective boolean
+     * @return the powers of this card with respective boolean
+     */
+    public ArrayList<Pair<LeaderPower, Boolean>> getBooleanPowers() {
+       /* ArrayList<Pair<LeaderPower, Boolean>> ret = new ArrayList<>();
+        for(Pair<LeaderPower, Boolean> lpo: powers)
+            ret.add(new Pair<>(lpo.getKey(), lpo.getValue()));
+       */ return powers;
+    }
+
+
+    /**
      * getter for all the selected powers
      * @return the powers of this card
      */
