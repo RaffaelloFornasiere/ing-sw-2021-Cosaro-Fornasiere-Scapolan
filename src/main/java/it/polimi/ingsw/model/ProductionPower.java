@@ -48,10 +48,6 @@ public class ProductionPower {
         return producedResourceOfChoice;
     }
 
-    public int getFaithPointsProduced() {
-        return faithPointsProduced;
-    }
-
     /**
      * getter of produced FaithPoints
      * @return faith points
