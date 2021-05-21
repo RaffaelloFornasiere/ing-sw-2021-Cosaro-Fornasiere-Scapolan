@@ -13,7 +13,7 @@ import java.net.InetAddress;
 public class NetworkAdapterTest extends TestCase {
 
 
-    public void testConstructor()
+    /*public void testConstructor()
     {
         try {
             NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("192.168.0.172"));
@@ -46,5 +46,5 @@ public class NetworkAdapterTest extends TestCase {
     }
 
     public void testActivateLeaderCard() {
-    }
+    }*/
 }
