@@ -6,6 +6,8 @@ import it.polimi.ingsw.events.ControllerEvents.*;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.Direction;
+import it.polimi.ingsw.model.Marble;
+import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import org.reflections.Reflections;
@@ -132,10 +134,18 @@ public class NetworkAdapter {
         send(event);
     }
 
-    public void activateLeaderCard(int index) {
-        ActivateLeaderCardEvent event = new ActivateLeaderCardEvent(playerID, index);
+    public void activateLeaderCard(String leaderCardID) {
+        ActivateLeaderCardEvent event = new ActivateLeaderCardEvent(playerID, leaderCardID);
         send(event);
     }
+
+    public void displaceWarehouseMarbles(HashMap<Resource, Integer> resources)
+    {
+        OrganizeWarehouseResEvent event = new OrganizeWarehouseResEvent(playerID, resources);
+        send(event);
+    }
+
+
 
 
 
@@ -206,6 +216,8 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt){
+        OrganizeWarehouseResEvent event = (OrganizeWarehouseResEvent)evt.getNewValue();
+        view.getWarehouseDisplacement(event.getResources());
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
     public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt){
