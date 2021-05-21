@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class Player extends Observable {
     private String playerId;
-    private ArrayList<Pair<LeaderCard, Boolean>> leaderCards;
+    private HashMap<LeaderCard, Boolean> leaderCards;
     private DashBoard dashBoard;
 
     public Player(String name, DashBoard dashBoard) {
@@ -21,7 +21,7 @@ public class Player extends Observable {
 
         this.dashBoard= dashBoard;
 
-        this.leaderCards = new ArrayList<>();
+        this.leaderCards = new HashMap<>();
     }
 
     /**
@@ -43,10 +43,7 @@ public class Player extends Observable {
      * @return all leader cards
      */
     public ArrayList<LeaderCard> getLeaderCards() {
-        ArrayList<LeaderCard> lcs = new ArrayList<>();
-        for(Pair<LeaderCard, Boolean> lco: leaderCards)
-            lcs.add(lco.getKey());
-        return lcs;
+        return new ArrayList<>(leaderCards.keySet());
     }
 
     /**
@@ -54,11 +51,11 @@ public class Player extends Observable {
      * @return active leader cards
      */
     public ArrayList<LeaderCard> getActiveLeaderCards(){
-        ArrayList<LeaderCard> lcs = new ArrayList<>();
-        for(Pair<LeaderCard, Boolean> lco: leaderCards)
-            if(lco.getValue())
-                lcs.add(lco.getKey());
-        return lcs;
+        ArrayList<LeaderCard> alc = new ArrayList<>();
+        for(LeaderCard lc: leaderCards.keySet())
+            if(leaderCards.get(lc))
+                alc.add(lc);
+        return alc;
     }
 
     /**
@@ -66,17 +63,17 @@ public class Player extends Observable {
      * @param leaderCards the leader cards to give the player
      */
     public void setLeaderCards(ArrayList<LeaderCard> leaderCards) {
-        this.leaderCards = new ArrayList<>();
+        this.leaderCards = new HashMap<>();
         for(LeaderCard lc: leaderCards){
-            this.leaderCards.add(new Pair<>(lc, false));
+            this.leaderCards.put(lc, false);
         }
         notifyObservers();
     }
 
     public LeaderCard getLeaderCardFromID(String leaderCardID) throws NotPresentException{
-        for(Pair<LeaderCard, Boolean> lcp: leaderCards)
-            if(lcp.getKey().getCardID().equals(leaderCardID))
-                return lcp.getKey();
+        for(LeaderCard lc: leaderCards.keySet())
+            if(lc.getCardID().equals(leaderCardID))
+                return lc;
 
         throw new NotPresentException("This player does not own any leader card with the given ID");
     }
@@ -88,27 +85,16 @@ public class Player extends Observable {
      * @throws IllegalOperation if the leader card is already active
      */
     public void activateLeaderCard(LeaderCard leaderCard) throws NotPresentException, IllegalOperation {
-        for (int i = 0, leaderCardsSize = leaderCards.size(); i < leaderCardsSize; i++) {
-            Pair<LeaderCard, Boolean> lco = leaderCards.get(i);
-            if (leaderCard == lco.getKey()) {
-                if (lco.getValue()) throw new IllegalOperation("Leader card already Active");
-                this.leaderCards.remove(i);
-                this.leaderCards.add(i, new Pair<>(lco.getKey(), true));
-                notifyObservers();
-                return;
-            }
-        }
-
-        throw new NotPresentException("The selected leader card is not owned by this player");
+        boolean active = leaderCards.get(leaderCard);
+        if (leaderCard == null) throw new NotPresentException("The selected leader card is not owned by this player");
+        if (active) throw new IllegalOperation("Leader card already Active");
+        this.leaderCards.put(leaderCard, true);
+        notifyObservers();
     }
 
     public void removeLeaderCard(LeaderCard leaderCard) throws NotPresentException {
-        for(Pair<LeaderCard, Boolean> lco: leaderCards)
-            if(lco.getKey() == leaderCard) {
-                leaderCards.remove(lco);
-                return;
-            }
-        throw new NotPresentException("Leader card not present");
+        if(leaderCards.remove(leaderCard) == null)
+            throw new NotPresentException("Leader card not present");
     }
 
     /**

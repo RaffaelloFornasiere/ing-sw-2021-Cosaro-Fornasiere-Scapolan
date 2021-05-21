@@ -2,13 +2,16 @@ package it.polimi.ingsw.events.ClientEvents;
 
 import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
 
+/**
+ * Error sent to the client when he tried to use a non active leader card
+ */
 public class LeaderCardNotActiveError extends ClientEvent{
-    private String leaderCardID;
+    private final String leaderCardID;
 
     /**
-     * constructor for the class
-     * @param playerID the player that generated(directly or indirectly) this event
-     * @param leaderCardID the ID of the leader card that should be active
+     * Constructor for the class
+     * @param playerID The player that tried to use a non active leader card
+     * @param leaderCardID The ID of the leader card that should be active
      */
     public LeaderCardNotActiveError(String playerID, String leaderCardID) {
         super(playerID);
@@ -16,8 +19,8 @@ public class LeaderCardNotActiveError extends ClientEvent{
     }
 
     /**
-     * getter for the ID of the leader card that should be active
-     * @return the ID of the leader card that should be active
+     * Getter for the ID of the leader card that should be active
+     * @return The ID of the leader card that should be active
      */
     public String getLeaderCardIndex() {
         return leaderCardID;

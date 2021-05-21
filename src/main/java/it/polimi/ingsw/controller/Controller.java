@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.controller.modelChangeHandlers.ChosenMultipleExtraResourcePowerEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenMultipleExtraResourcePowerEvent;
 import it.polimi.ingsw.controller.modelChangeHandlers.DepositLeaderPowerHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;
 import it.polimi.ingsw.events.ClientEvents.*;
@@ -31,6 +31,14 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+//TODO document events
+//TODO remake leader cards
+//TODO wrapper
+//TODO 4
+//TODO better stop and ask to client in 3 points
+//TODO end of game
+//TODO disconnection
+//TODO reorganize
 
 public class Controller {
     MarketManager marketManager;
@@ -254,65 +262,75 @@ public class Controller {
     }
 
     private void organizeResources(HashMap<Resource, Integer> resources, Player player) {
-        clientHandlerSenders.get(player.getPlayerId()).sendEvent(new OrganizeResourcesEvent(player.getPlayerId(), resources));
-        waitForEvent(waitingForResourceOrganizationLock);
+        boolean goodChoice = false;
+        while(!goodChoice) {
+            clientHandlerSenders.get(player.getPlayerId()).sendEvent(new OrganizeResourcesEvent(player.getPlayerId(), resources));
+            waitForEvent(waitingForResourceOrganizationLock);
 
-        HashMap<Resource, Integer> totalStoredResources = new HashMap<>();
-        //validate deposit state
-        ArrayList<DepotState> eventDepotStates = newResourcesOrganizationEvent.getDepotStates();
-        ArrayList<DepotState> orderedDepotStates = new ArrayList<>();
-        boolean isNewDepotStateOK = true;
-        for(Depot depot: player.getDashBoard().getWarehouse()){
-            if(isNewDepotStateOK) {
-                isNewDepotStateOK = false;
-                for (DepotState depotState : eventDepotStates) {
-                    if (!isNewDepotStateOK && depot.getMaxQuantity() == depotState.getMaxQuantity()) {
-                        isNewDepotStateOK = true;
-                        orderedDepotStates.add(depotState);
-                        eventDepotStates.remove(depotState);
+            HashMap<Resource, Integer> totalStoredResources = new HashMap<>();
+            HashMap<Resource, Integer> discardedResources = newResourcesOrganizationEvent.getDiscardedResources();
+            //validate deposit state
+            ArrayList<DepotState> eventDepotStates = newResourcesOrganizationEvent.getDepotStates();
+            ArrayList<DepotState> orderedDepotStates = new ArrayList<>();
+            boolean isNewDepotStateOK = true;
+            for (Depot depot : player.getDashBoard().getWarehouse()) {
+                if (isNewDepotStateOK) {
+                    isNewDepotStateOK = false;
+                    for (DepotState depotState : eventDepotStates) {
+                        if (!isNewDepotStateOK && depot.getMaxQuantity() == depotState.getMaxQuantity()) {
+                            isNewDepotStateOK = true;
+                            orderedDepotStates.add(depotState);
+                            eventDepotStates.remove(depotState);
+                        }
                     }
                 }
             }
-        }
 
-        for (DepotState depotState : eventDepotStates) {
-            Resource type = depotState.getResourceType();
-            totalStoredResources.put(type, totalStoredResources.getOrDefault(type, 0) + depotState.getCurrentQuantity());
-        }
-
-        //validate leader power state
-        try {
-            if(!isNewDepotStateOK || !eventDepotStates.isEmpty()){
-                throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "The structure of the warehouse sent is incompatible with the one of the match", newResourcesOrganizationEvent));
+            for (DepotState depotState : eventDepotStates) {
+                Resource type = depotState.getResourceType();
+                totalStoredResources.put(type, totalStoredResources.getOrDefault(type, 0) + depotState.getCurrentQuantity());
             }
 
-            for(DepositLeaderPowerStateEvent e: newResourcesOrganizationEvent.getLeaderPowersState()){
-                HashMap<Resource, Integer> storedResource = e.getStoredResources();
-                LeaderCard lc = player.getLeaderCardFromID(e.getLeaderCardID());
-                if(!player.getActiveLeaderCards().contains(lc))
-                    throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "One of the leader card is not active", newResourcesOrganizationEvent));
-                LeaderPower lp = lc.getLeaderPowers().get(e.getLeaderPowerIndex());
-                if(lp.getClass() != DepositLeaderPower.class)
-                    throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "One of the leader powers is of the wrong type", newResourcesOrganizationEvent));
-                DepositLeaderPower dlp = (DepositLeaderPower) lp;
-                if(!new DepositLeaderPower(dlp.getMaxResources()).canStore(storedResource))
-                    throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "One of the selected leader powers can't store the resources indicated with it", newResourcesOrganizationEvent));
-                for(Resource r: storedResource.keySet()){
-                    totalStoredResources.put(r, storedResource.get(r) + storedResource.getOrDefault(r, 0));
+            //validate leader power state
+            try {
+                if (!isNewDepotStateOK || !eventDepotStates.isEmpty()) {
+                    throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "The structure of the warehouse sent is incompatible with the one of the match", newResourcesOrganizationEvent));
                 }
-            }
 
-            //check resources chosen
-            HashMap<Resource, Integer> discardedResources = newResourcesOrganizationEvent.getDiscardedResources();
-            for(Resource r: resources.keySet()){
-                if(resources.get(r)!= totalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0))
-                    throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "Total number of each resource given back does not correspond to the number sent", newResourcesOrganizationEvent));
-            }
+                for (DepositLeaderPowerStateEvent e : newResourcesOrganizationEvent.getLeaderPowersState()) {
+                    HashMap<Resource, Integer> storedResource = e.getStoredResources();
+                    LeaderCard lc = player.getLeaderCardFromID(e.getLeaderCardID());
+                    if (!player.getActiveLeaderCards().contains(lc))
+                        throw new HandlerCheckException(new LeaderCardNotActiveError(player.getPlayerId(), lc.getCardID()));
+                    LeaderPower lp = lc.getLeaderPowers().get(e.getLeaderPowerIndex());
+                    if (lp.getClass() != DepositLeaderPower.class)
+                        throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "One of the leader powers is of the wrong type", newResourcesOrganizationEvent));
+                    DepositLeaderPower dlp = (DepositLeaderPower) lp;
+                    if (!new DepositLeaderPower(dlp.getMaxResources()).canStore(storedResource))
+                        throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "One of the selected leader powers can't store the resources indicated with it", newResourcesOrganizationEvent));
+                    for (Resource r : storedResource.keySet()) {
+                        totalStoredResources.put(r, storedResource.get(r) + storedResource.getOrDefault(r, 0));
+                    }
+                }
 
-            //apply changes
+                //check resources chosen
+                for (Resource r : resources.keySet()) {
+                    if (resources.get(r) != totalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0))
+                        throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "Total number of each resource given back does not correspond to the number sent", newResourcesOrganizationEvent));
+                }
+
+                goodChoice = true;
+
+            } catch (NotPresentException notPresentException) {
+                goodChoice = false;
+                clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "One of the leader cards does not belong to this player", newResourcesOrganizationEvent));
+            } catch (HandlerCheckException e) {
+                goodChoice = false;
+                clientHandlerSenders.get(player.getPlayerId()).sendEvent(e.getEventToSend());
+            }
 
             ArrayList<Depot> warehouse = player.getDashBoard().getWarehouse();
-            for(int i=0; i<orderedDepotStates.size(); i++){
+            for (int i = 0; i < orderedDepotStates.size(); i++) {
                 Depot depot = warehouse.get(i);
                 DepotState depotState = orderedDepotStates.get(i);
                 try {
@@ -324,34 +342,28 @@ public class Controller {
                 }
             }
 
-            for(DepositLeaderPowerStateEvent e: newResourcesOrganizationEvent.getLeaderPowersState()){
+            for (DepositLeaderPowerStateEvent e : newResourcesOrganizationEvent.getLeaderPowersState()) {
                 HashMap<Resource, Integer> storedResource = e.getStoredResources();
-                LeaderCard lc = player.getLeaderCardFromID(e.getLeaderCardID());
-                DepositLeaderPower lp = (DepositLeaderPower) lc.getLeaderPowers().get(e.getLeaderPowerIndex());
-                try{
+                try {
+                    LeaderCard lc = player.getLeaderCardFromID(e.getLeaderCardID());
+                    DepositLeaderPower lp = (DepositLeaderPower) lc.getLeaderPowers().get(e.getLeaderPowerIndex());
                     lp.removeResources(lp.getCurrentResources());
                     lp.addResources(storedResource);
-                } catch (ResourcesLimitsException resourcesLimitsException) {
+                } catch (ResourcesLimitsException | NotPresentException exception) {
                     //impossible
-                    resourcesLimitsException.printStackTrace();
+                    exception.printStackTrace();
                 }
             }
 
             int numDiscardedResources = 0;
-            for(Resource r: discardedResources.keySet()){
+            for (Resource r : discardedResources.keySet()) {
                 numDiscardedResources += discardedResources.get(r);
             }
-            for(Player p: matchState.getPlayers()){
-                if(p!=player)
+            for (Player p : matchState.getPlayers()) {
+                if (p != player)
                     faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources);
             }
-
-        } catch (NotPresentException notPresentException) {
-            clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "One of the leader cards does not belong to this player", newResourcesOrganizationEvent));
-        } catch (HandlerCheckException e) {
-            clientHandlerSenders.get(player.getPlayerId()).sendEvent(e.getEventToSend());
         }
-
     }
 
     private void NewResourcesOrganizationEventHandler(PropertyChangeEvent evt){

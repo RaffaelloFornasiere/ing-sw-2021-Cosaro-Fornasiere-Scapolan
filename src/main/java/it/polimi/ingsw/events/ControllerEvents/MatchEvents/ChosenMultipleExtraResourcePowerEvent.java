@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.modelChangeHandlers;
+package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.model.Resource;

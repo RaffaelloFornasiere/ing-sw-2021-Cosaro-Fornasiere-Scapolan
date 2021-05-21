@@ -2,15 +2,18 @@ package it.polimi.ingsw.events.ClientEvents;
 
 import it.polimi.ingsw.events.Event;
 
+/**
+ * Event sent to the client when a previously sent request was malformed
+ */
 public class BadRequestEvent extends ClientEvent {
-    private String description;
-    private Event cause;
+    private final String description;
+    private final Event cause;
 
     /**
-     * constructor for the class
-     * @param playerID the player that generated(directly or indirectly) this event
-     * @param description description of why the request is bad
-     * @param cause the event that caused this
+     * Constructor for the class
+     * @param playerID The ID of the player that generated the event that was miss constructed
+     * @param description Description of why the request is bad
+     * @param cause The event that was miss constructed
      */
     public BadRequestEvent(String playerID, String description, Event cause){
         super(playerID);
@@ -19,16 +22,16 @@ public class BadRequestEvent extends ClientEvent {
     }
 
     /**
-     * getter for the description that explains why the request is bad
-     * @return the description that explains why the request is bad
+     * Getter for the description that explains why the request is bad
+     * @return The description that explains why the request is bad
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * getter for the event that caused the bad request
-     * @return the event that caused the bad request
+     * Getter for the event that was miss constructed
+     * @return The event that was miss constructed
      */
     public Event getCause(){
         return cause;
