@@ -31,10 +31,10 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//TODO document events
+//TODO document server events
 //TODO remake leader cards
-//TODO wrapper
 //TODO 4
+//TODO config
 //TODO better stop and ask to client in 3 points
 //TODO end of game
 //TODO disconnection

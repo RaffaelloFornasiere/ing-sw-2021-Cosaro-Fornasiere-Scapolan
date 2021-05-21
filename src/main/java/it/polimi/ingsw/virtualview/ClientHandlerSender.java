@@ -18,7 +18,6 @@ public class ClientHandlerSender {
         printWriter = new PrintWriter(outputStream);
     }
 
-    //TODO use a better read/write mechanism
     public void sendEvent(Event event) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
@@ -27,7 +26,11 @@ public class ClientHandlerSender {
         String eventJSON = gson.toJson(event, Event.class);
 
         //try {
-        printWriter.println(eventJSON);
+        try {
+            printWriter.println(MessageWrapper.wrap(eventJSON));
+        } catch (IllegalOperation illegalOperation) {
+            illegalOperation.printStackTrace();
+        }
         printWriter.flush();
         //printWriter.
 

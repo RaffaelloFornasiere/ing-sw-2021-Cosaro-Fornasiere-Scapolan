@@ -30,7 +30,7 @@ public class ClientHandlerReceiver {
 
 
         while(true) {
-            String eventJSON = scanner.nextLine();
+            String eventJSON = MessageWrapper.unwrap(scanner.nextLine());
             /*
             String eventJSON = scanner.next(MessageWrapper.getScannerPattern());
              maybe needs a timeOut to check if messages sent are good

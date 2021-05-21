@@ -2,11 +2,13 @@ package it.polimi.ingsw.utilities;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
 
-public class MessageWrapper {
-    public static final String MESSAGE_START = "#-- BEGIN MESSAGE --#";
-    public static final String MESSAGE_END = "#-- END MESSAGE --#";
+import java.util.HashMap;
 
-    public static String getScannerPattern(){
+public class MessageWrapper {
+    //public static final String MESSAGE_START = "#-- BEGIN MESSAGE --#";
+    //public static final String MESSAGE_END = "#-- END MESSAGE --#";
+
+    /*public static String getScannerPattern(){
         return '(' + MESSAGE_START + "(.)*" + MESSAGE_END + ")?";
     }
 
@@ -22,6 +24,32 @@ public class MessageWrapper {
             throw new IllegalOperation("String must begin with \""+ MESSAGE_START + "\" and end with \"" + MESSAGE_END + "\"");
 
         return s.replaceAll(MESSAGE_START, "").replaceAll(MESSAGE_END, "");
+    }*/
+
+    private static final HashMap<String, String> substitutions = new HashMap<>();
+
+    static {
+        substitutions.put("/n", "çaq0r1ga");
     }
 
+    @SuppressWarnings("unchecked")
+    public static HashMap<String, String> getSubstitutions(){
+        return (HashMap<String, String>) substitutions.clone();
+    }
+
+    public static String wrap(String s) throws IllegalOperation {
+        for(String from: substitutions.keySet()){
+            String to = substitutions.get(from);
+            if(s.contains(to)) throw new IllegalOperation("String cannot contain \"" + to + "\" to be wrappable");
+            s = s.replaceAll(from, to);
+        }
+        return s;
+    }
+
+    public static String unwrap(String s){
+        for(String from: substitutions.keySet()){
+            s = s.replaceAll(substitutions.get(from), from);
+        }
+        return s;
+    }
 }
