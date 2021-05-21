@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.Pair;
+import it.polimi.ingsw.virtualview.ClientHandlerSender;
 import it.polimi.ingsw.virtualview.RequestsElaborator;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.Stack;
 public class DashBoardHandler extends MatchObserver{
     private Player dashBoardOwner;
 
-    public DashBoardHandler(HashMap<String, RequestsElaborator> networkData, Player dashBoardOwner) {
+    public DashBoardHandler(HashMap<String, ClientHandlerSender> networkData, Player dashBoardOwner) {
         super(networkData);
         this.dashBoardOwner = dashBoardOwner;
     }

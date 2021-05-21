@@ -14,10 +14,13 @@ public class MatchState extends Observable {
     private  ArrayList<Player> players;
     private  DevCardGrid devCardGrid;
     private  Market market;
+    private TurnState turnState;
+    public boolean leaderActionExecuted;
 
     public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards){
         devCardGrid = new DevCardGrid(cards);
         this.players= (ArrayList<Player>) players.clone();
+        turnState = TurnState.WAITING_FOR_PLAYER;
     }
 
     public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards, int marketRow, int marketColumns, HashMap<Marble, Integer> marbles) {
@@ -28,7 +31,8 @@ public class MatchState extends Observable {
         this.players= (ArrayList<Player>) players.clone();
         lastRound=false;
         currentPlayerIndex=0;
-
+        turnState = TurnState.WAITING_FOR_PLAYER;
+        leaderActionExecuted = false;
     }
 
     public int getCurrentPlayerIndex() {
@@ -69,6 +73,23 @@ public class MatchState extends Observable {
     }
 
     public void beginMatch(){
+        turnState = TurnState.START;
+        notifyObservers();
+    }
+
+    public void nextTurn(){
+        turnState = TurnState.START;
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        leaderActionExecuted = false;
+        notifyObservers();
+    }
+
+    public TurnState getTurnState() {
+        return turnState;
+    }
+
+    public void setTurnState(TurnState turnState) {
+        this.turnState = turnState;
         notifyObservers();
     }
 }

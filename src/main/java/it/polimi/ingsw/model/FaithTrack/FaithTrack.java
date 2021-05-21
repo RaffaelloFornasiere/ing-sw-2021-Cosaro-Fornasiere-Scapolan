@@ -36,6 +36,14 @@ public class FaithTrack {
 
     }
 
+    protected FaithTrack(ArrayList<AbstractCell> arrayOfCells) throws IllegalArgumentException{
+        for(int i=0; i<= arrayOfCells.size(); i++) {
+            if(arrayOfCells.get(i).getIndex()!=i) throw new IllegalArgumentException("The cell with index " + i + " is in the wrong position");
+        }
+
+        FaithTrack.arrayOfCells = arrayOfCells;
+    }
+
 
 
 
@@ -47,6 +55,11 @@ public class FaithTrack {
      */
     public static FaithTrack initFaithTrack(int num, ArrayList<CellWithEffect> effects, ArrayList<Integer> victoryPoints) throws IllegalArgumentException {
         if (instance == null) instance = new FaithTrack(num, effects, victoryPoints);
+        return instance;
+    }
+
+    public static FaithTrack initFaithTrack(ArrayList<AbstractCell> arrayOfCells) throws IllegalArgumentException {
+        if (instance == null) instance = new FaithTrack(arrayOfCells);
         return instance;
     }
 

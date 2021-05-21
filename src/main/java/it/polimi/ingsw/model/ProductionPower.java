@@ -40,6 +40,14 @@ public class ProductionPower {
         return producedResources;
     }
 
+    public int getRequiredResourceOfChoice() {
+        return requiredResourceOfChoice;
+    }
+
+    public int getProducedResourceOfChoice() {
+        return producedResourceOfChoice;
+    }
+
     /**
      * getter of produced FaithPoints
      * @return faith points

@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.MatchState;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.virtualview.ClientHandlerSender;
 import it.polimi.ingsw.virtualview.RequestsElaborator;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class FaithTrackDataHandler extends MatchObserver{
 
     private MatchState matchState;
 
-    public FaithTrackDataHandler(HashMap<String, RequestsElaborator> networkData, MatchState matchState) {
+    public FaithTrackDataHandler(HashMap<String, ClientHandlerSender> networkData, MatchState matchState) {
         super(networkData);
         this.matchState = matchState;
     }

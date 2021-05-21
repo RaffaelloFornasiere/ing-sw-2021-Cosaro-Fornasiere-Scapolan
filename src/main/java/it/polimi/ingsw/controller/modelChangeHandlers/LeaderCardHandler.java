@@ -4,17 +4,17 @@ import it.polimi.ingsw.events.ClientEvents.LeaderCardStateEvent;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.virtualview.ClientHandlerSender;
 import it.polimi.ingsw.virtualview.RequestsElaborator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//TODO register this handler in the right point (after being given to a player)
 public class LeaderCardHandler extends MatchObserver {
 
     private Player leaderCardOwner;
 
-    public LeaderCardHandler(HashMap<String, RequestsElaborator> networkData, Player leaderCardOwner) {
+    public LeaderCardHandler(HashMap<String, ClientHandlerSender> networkData, Player leaderCardOwner) {
         super(networkData);
         this.leaderCardOwner = leaderCardOwner;
     }

@@ -73,7 +73,7 @@ public class Player extends Observable {
         notifyObservers();
     }
 
-    public LeaderCard getleaderCardFromID(String leaderCardID) throws NotPresentException{
+    public LeaderCard getLeaderCardFromID(String leaderCardID) throws NotPresentException{
         for(Pair<LeaderCard, Boolean> lcp: leaderCards)
             if(lcp.getKey().getCardID().equals(leaderCardID))
                 return lcp.getKey();
@@ -102,13 +102,33 @@ public class Player extends Observable {
         throw new NotPresentException("The selected leader card is not owned by this player");
     }
 
+    public void removeLeaderCard(LeaderCard leaderCard) throws NotPresentException {
+        for(Pair<LeaderCard, Boolean> lco: leaderCards)
+            if(lco.getKey() == leaderCard) {
+                leaderCards.remove(lco);
+                return;
+            }
+        throw new NotPresentException("Leader card not present");
+    }
+
     /**
      * gets all the resources stored in the dashboard, as well as in a leader power as an hashmap
      * if a resource is not present, the map will have an entry for it anyway, with value 0
      * @return all the resources in the warehouse and in the strongbox
      */
     public HashMap<Resource, Integer> getAllPayerResources(){
-        HashMap<Resource, Integer> resources = dashBoard.getAllDashboardResources();
+        HashMap<Resource, Integer> dashboardResources = dashBoard.getAllDashboardResources();
+        HashMap<Resource, Integer> resources = getLeaderCardsResources();
+
+        resources.replaceAll((r, v) -> v + dashboardResources.getOrDefault(r, 0));
+
+        return resources;
+    }
+
+    public HashMap<Resource, Integer> getLeaderCardsResources(){
+        HashMap<Resource, Integer> resources = new HashMap<>();
+        for(Resource r: Resource.values())
+            resources.put(r, 0);
 
         ArrayList<LeaderCard> leaderCards = getActiveLeaderCards();
         for(LeaderCard lc: leaderCards) {
@@ -120,8 +140,7 @@ public class Player extends Observable {
                         resources.put(r, lpResources.get(r) + resources.getOrDefault(r, 0));
                 }
         }
+
         return resources;
     }
-
-
 }
