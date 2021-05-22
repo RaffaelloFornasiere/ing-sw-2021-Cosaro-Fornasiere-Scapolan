@@ -113,7 +113,7 @@ public class NetworkAdapter {
     }
 
     public void createMatch(String username) {
-        NewPlayerEvent event = new NewPlayerEvent(username);
+        NewPlayerEvent event = new NewPlayerEvent(username, username);
         send(event);
     }
 

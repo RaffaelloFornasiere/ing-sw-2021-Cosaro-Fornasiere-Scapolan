@@ -10,9 +10,17 @@ import java.util.HashMap;
  */
 public class ChosenResourcesEvent extends SimpleChosenResourcesEvent{
 
-    private HashMap<Resource, Integer> selectedResourcesFromWarehouse;
-    private HashMap<Resource, Integer> selectedResourcesFromLeaderPowers;
+    private final HashMap<Resource, Integer> selectedResourcesFromWarehouse;
+    private final HashMap<Resource, Integer> selectedResourcesFromLeaderPowers;
 
+    /**
+     * Constructor for the class
+     * @param playerID The ID of the player that generated(directly or indirectly) this event
+     * @param allResourcesChosen All the resources chosen by the player
+     * @param selectedResourcesFromWarehouse The resources chosen from the warehouse
+     * @param selectedResourcesFromLeaderPowers The resources chosen from the powers of leader cards
+     */
+    @SuppressWarnings("unchecked")
     public ChosenResourcesEvent(String playerID, HashMap<Resource, Integer> allResourcesChosen, HashMap<Resource, Integer> selectedResourcesFromWarehouse, HashMap<Resource, Integer> selectedResourcesFromLeaderPowers) {
         super(playerID, allResourcesChosen);
         for(Resource r: Resource.values()){
@@ -23,10 +31,20 @@ public class ChosenResourcesEvent extends SimpleChosenResourcesEvent{
         this.selectedResourcesFromLeaderPowers = (HashMap<Resource, Integer>) selectedResourcesFromLeaderPowers.clone();
     }
 
+    /**
+     * Getter for the resources chosen from the warehouse
+     * @return The resources chosen from the warehouse
+     */
+    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getSelectedResourcesFromLeaderPowers() {
         return (HashMap<Resource, Integer>) selectedResourcesFromLeaderPowers.clone();
     }
 
+    /**
+     * Getter for the resources chosen from the powers of leader cards
+     * @return The resources chosen from the powers of leader cards
+     */
+    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getSelectedResourcesFromWarehouse() {
         return (HashMap<Resource, Integer>) selectedResourcesFromWarehouse.clone();
     }

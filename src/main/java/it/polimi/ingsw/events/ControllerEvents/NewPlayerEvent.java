@@ -5,24 +5,15 @@ package it.polimi.ingsw.events.ControllerEvents;
  * The client will receive a BadRequestEvent if this event was mal-posed
  */
 public class NewPlayerEvent extends ControllerEvent {
-    private String lobbyLeaderID;
+    private final String lobbyLeaderID;
 
     /**
-     * constructor for the class. Used when this event will signal the creation of a new lobby
-     * @param PlayerID the player that generated(directly or indirectly) this event
-     */
-    public NewPlayerEvent(String PlayerID){
-        super(PlayerID);
-        lobbyLeaderID = PlayerID;
-    }
-
-    /**
-     * constructor for the class
-     * @param PlayerID the player that generated(directly or indirectly) this event
+     * constructor for the class. To create a new lobby put the same lobbyLeaderID and playerID
+     * @param playerID the player that generated(directly or indirectly) this event
      * @param lobbyLeaderID the ID of the leader of the lobby to join
      */
-    public NewPlayerEvent(String PlayerID, String lobbyLeaderID){
-        this(PlayerID);
+    public NewPlayerEvent(String playerID, String lobbyLeaderID){
+        super(playerID);
         this.lobbyLeaderID = lobbyLeaderID;
     }
 

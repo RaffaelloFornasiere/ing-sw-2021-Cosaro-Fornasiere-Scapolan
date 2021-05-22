@@ -8,16 +8,16 @@ package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
  */
 public class LeaderPowerSelectStateEvent extends MatchEvent {
 
-    private String leaderCardID;
-    private int leaderPowerIndex;
-    private boolean selectState;
+    private final String leaderCardID;
+    private final int leaderPowerIndex;
+    private final boolean selectState;
 
     /**
      * Constructor for the class
-     * @param playerID the player that generated(directly or indirectly) this event
-     * @param leaderCardID the ID of the leader card containing the power in question
-     * @param leaderPowerIndex the index of the power in question
-     * @param selectState the select state of the power
+     * @param playerID The player that generated(directly or indirectly) this event
+     * @param leaderCardID The ID of the leader card containing the power in question
+     * @param leaderPowerIndex The index of the power in question
+     * @param selectState The new select state of the power
      * @throws IllegalArgumentException if the indexes are negative
      */
     public LeaderPowerSelectStateEvent(String playerID, String leaderCardID, int leaderPowerIndex, boolean selectState) throws IllegalArgumentException{
@@ -30,23 +30,23 @@ public class LeaderPowerSelectStateEvent extends MatchEvent {
     }
 
     /**
-     * getter for the index of the leader card containing the power in question
-     * @return the index of the leader card containing the power in question
+     * Getter for the index of the leader card containing the power in question
+     * @return The index of the leader card containing the power in question
      */
     public int getLeaderPowerIndex() {
         return leaderPowerIndex;
     }
 
     /**
-     * getter for the ID of the power in question
-     * @return the ID of the power in question
+     * Getter for the ID of the power in question
+     * @return The ID of the power in question
      */
     public String getLeaderCardID() {
         return leaderCardID;
     }
 
     /**
-     * @return the select state of the power
+     * @return The new select state of the power
      */
     public boolean isStateSelected() {
         return selectState;

@@ -11,11 +11,22 @@ import java.util.HashMap;
 public class ChosenMultipleExtraResourcePowerEvent extends MatchEvent {
     private HashMap<Resource, Integer> chosenResources;
 
+    /**
+     * Constructor for the class
+     * @param playerID The ID of the player that generated(directly or indirectly) this event
+     * @param chosenResources the resources chosen by the player
+     */
+    @SuppressWarnings("unchecked")
     public ChosenMultipleExtraResourcePowerEvent(String playerID, HashMap<Resource, Integer> chosenResources) {
         super(playerID);
         this.chosenResources = (HashMap<Resource, Integer>) chosenResources.clone();
     }
 
+    /**
+     * Getter for the resources chosen by the player
+     * @return The resources chosen by the player
+     */
+    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getChosenResources() {
         return (HashMap<Resource, Integer>) chosenResources.clone();
     }

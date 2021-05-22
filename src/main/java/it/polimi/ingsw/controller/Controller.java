@@ -32,10 +32,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 //TODO document server events
-//TODO remake leader cards
 //TODO personal production power
-//TODO config
 //TODO better stop and ask to client in 3 points
+//TODO config
 //TODO end of game
 //TODO disconnection
 //TODO reorganize
@@ -130,17 +129,12 @@ public class Controller {
             this.leaderCardManager.assignLeaderCards(player, leaderCards);
 
             int chosenResources = event.getChosenResources().values().stream().reduce(0, Integer::sum);
-            int expectedResources;
-            switch (matchState.getPlayerPosition(player)) { //TODO config
-                case 1:
-                    expectedResources = 1;
-                case 2:
-                    expectedResources = 1;
-                case 3:
-                    expectedResources = 2;
-                default:
-                    expectedResources = 0;
-            }
+            //TODO config
+            int expectedResources = switch (matchState.getPlayerPosition(player)) {
+                case 1, 2 -> 1;
+                case 3 -> 2;
+                default -> 0;
+            };
             if(chosenResources != expectedResources){
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Wrong number of resources chosen", event));
                 this.leaderCardManager.assignLeaderCards(player, new ArrayList<>());
@@ -319,6 +313,7 @@ public class Controller {
                     if (resources.get(r) != totalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0))
                         throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "Total number of each resource given back does not correspond to the number sent", newResourcesOrganizationEvent));
                 }
+                //TODO check if discarded resources have to be discarded
 
                 goodChoice = true;
 
