@@ -1,11 +1,20 @@
 package it.polimi.ingsw.model.LeaderCards;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
+import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Pair;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Class that represents a leader card
@@ -19,11 +28,13 @@ public class LeaderCard extends Observable{
 
     /**
      * Constructor for the class
+     * @param cardID The Id of the card
      * @param victoryPoints amount of points awarded to the player at the end of the match if the card is active
      * @param activationRequirements requirement that must be fulfilled to activate the card
      * @param powers effects of the card
      */
-    public LeaderCard(int victoryPoints, ArrayList<Requirement> activationRequirements, ArrayList<LeaderPower> powers){
+    public LeaderCard(String cardID, int victoryPoints, ArrayList<Requirement> activationRequirements, ArrayList<LeaderPower> powers){
+        this.cardID = cardID;
         this.victoryPoints = victoryPoints;
         this.activationRequirements = (ArrayList<Requirement>)activationRequirements.clone();
         this.powers = new ArrayList<>();
@@ -132,6 +143,37 @@ public class LeaderCard extends Observable{
         throw new NotPresentException("The selected leader power does not belong to this card");
     }
 
+    public static void main(String[] args) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
+        Gson gson = builder.create();
+        try {
+            for (int i = 5; i <= 16; i++) {
+                String name = "LeaderCard" + i;
+                File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\" + name + ".json");
+                FileReader r = new FileReader(file);
+                Scanner scanner = new Scanner(r);
+                StringBuilder s = new StringBuilder();
+                while (scanner.hasNext())
+                    s.append(scanner.nextLine());
+                DummyLeaderCard c = gson.fromJson(s.toString(), DummyLeaderCard.class);
+                ArrayList<LeaderPower> lps = new ArrayList<>();
+                for(DummyLeaderPower dlp: c.powers)
+                    lps.add(dlp.power);
+                LeaderCard lc = new LeaderCard(c.cardID, c.victoryPoints, c.activationRequirements, lps);
+                String JSONDevCard = gson.toJson(lc, LeaderCard.class);
+                FileWriter w = new FileWriter(file);
+                w.write(JSONDevCard);
+                w.flush();
+                w.close();
+            }
+            } catch(IOException e){
+                e.printStackTrace();
+            }
+    }
+
     /*public static void main(String[] args) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
@@ -218,4 +260,16 @@ public class LeaderCard extends Observable{
             e.printStackTrace();
         }
     }*/
+}
+
+class DummyLeaderCard{
+    public String cardID;
+    public int victoryPoints;
+    public ArrayList<Requirement> activationRequirements;
+    public ArrayList<DummyLeaderPower> powers;
+}
+
+class DummyLeaderPower {
+    public LeaderPower power;
+    public boolean selected;
 }

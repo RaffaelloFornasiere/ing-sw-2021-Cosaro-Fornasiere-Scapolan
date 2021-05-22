@@ -29,13 +29,14 @@ public class GsonInheritanceAdapterTest {
         ArrayList<LeaderPower> power = new ArrayList<>();
         power.add(p);
 
-        LeaderCard lc = new LeaderCard(vp, requirement, power);
+        LeaderCard lc = new LeaderCard("Test", vp, requirement, power);
 
         System.out.println(((DepositLeaderPower)lc.getLeaderPowers().get(0)).getMaxResources());
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
         Gson gson = builder.create();
         String JSONLeaderCard = gson.toJson(lc);
         String expected = "{\"victoryPoints\":3,\"activationRequirements\":[{\"CLASSNAME\":\"" +
@@ -62,11 +63,12 @@ public class GsonInheritanceAdapterTest {
         ArrayList<LeaderPower> power = new ArrayList<>();
         power.add(p);
 
-        LeaderCard lc = new LeaderCard(vp, requirement, power);
+        LeaderCard lc = new LeaderCard("Test", vp, requirement, power);
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
         Gson gson = builder.create();
         String JSONLeaderCard = gson.toJson(lc);
 

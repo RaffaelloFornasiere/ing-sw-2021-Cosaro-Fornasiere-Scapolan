@@ -55,7 +55,7 @@ public class PlayerTest {
             fail();
         }
 
-        LeaderCard leaderCard = new LeaderCard(3, new ArrayList<Requirement>(), leaderPowers);
+        LeaderCard leaderCard = new LeaderCard("test", 3, new ArrayList<Requirement>(), leaderPowers);
 
         Player player = new Player("test", dashBoard);
 
