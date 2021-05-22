@@ -1,10 +1,13 @@
 package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.HashMap;
 
+/**
+ * Event sent to the server when a player chooses a certain number of resources between different types
+ * The client will receive a BadRequestEvent if this event was mal-posed
+ */
 public class ChosenMultipleExtraResourcePowerEvent extends MatchEvent {
     private HashMap<Resource, Integer> chosenResources;
 

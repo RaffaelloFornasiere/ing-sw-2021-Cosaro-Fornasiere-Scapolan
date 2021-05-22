@@ -5,6 +5,13 @@ import it.polimi.ingsw.model.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Events sent to the server containing the initial choices a player has made
+ * After having sent this, the client should expect to receive a OrganizeResourcesEvent, at which it must answer with
+ *  a NewResourceOrganizationEvent
+ * After that the client should expect to receive a SetupDoneEvent at wich it does not need to answer
+ * The client will receive a BadRequestEvent if this event was mal-posed
+ */
 public class InitialDecisionsEvent extends MatchEvent{
     private ArrayList<String> chosenLeaderCardIDs;
     private HashMap<Resource, Integer> chosenResources;

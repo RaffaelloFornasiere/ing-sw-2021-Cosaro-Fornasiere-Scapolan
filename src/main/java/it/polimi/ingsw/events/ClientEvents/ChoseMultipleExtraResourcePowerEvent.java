@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Resource;
 import java.util.ArrayList;
 
 /**
- * Event sent to the client when it has to chose a certain number of resources between different types, like when the player
+ * Event sent to the client when it has to choose a certain number of resources between different types, like when the player
  * buys from the market some white marbles and they have multiple leader power selected that converts them into different kinds
  * resources
  */

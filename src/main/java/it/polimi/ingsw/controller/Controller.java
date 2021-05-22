@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 //TODO document server events
 //TODO remake leader cards
-//TODO 4
+//TODO personal production power
 //TODO config
 //TODO better stop and ask to client in 3 points
 //TODO end of game
@@ -173,6 +173,7 @@ public class Controller {
         return true;
     }
 
+    //TODO check row and column
     public void BuyResourcesEventHandler(PropertyChangeEvent evt){
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
         try {
@@ -702,7 +703,7 @@ public class Controller {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
             if(canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION) || canActionBePerformed(event, player, TurnState.END_OF_TURN)) return;
             matchState.nextTurn();
-            //deselect all selected leader powers
+            //TODO deselect all selected leader powers
         } catch (NotPresentException notPresentException) {
             //impossible
             notPresentException.printStackTrace();

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.events.ControllerEvents;
 
-import it.polimi.ingsw.events.Event;
-
+/**
+ * Event signaling the arrival of a new player
+ * The client will receive a BadRequestEvent if this event was mal-posed
+ */
 public class NewPlayerEvent extends ControllerEvent {
     private String lobbyLeaderID;
 

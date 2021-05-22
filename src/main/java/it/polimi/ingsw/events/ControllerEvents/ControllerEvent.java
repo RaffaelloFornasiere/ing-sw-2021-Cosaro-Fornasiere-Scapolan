@@ -2,6 +2,9 @@ package it.polimi.ingsw.events.ControllerEvents;
 
 import it.polimi.ingsw.events.Event;
 
+/**
+ * Event that will be handled by the server
+ */
 public abstract class ControllerEvent extends Event{
     /**
      * constructor of the class

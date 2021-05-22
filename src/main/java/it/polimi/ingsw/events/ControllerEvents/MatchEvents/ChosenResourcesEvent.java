@@ -4,6 +4,10 @@ import it.polimi.ingsw.model.Resource;
 
 import java.util.HashMap;
 
+/**
+ * Event sent to the server when a player has to select from where to take it's resources to do something
+ * The client will receive a BadRequestEvent if this event was mal-posed
+ */
 public class ChosenResourcesEvent extends SimpleChosenResourcesEvent{
 
     private HashMap<Resource, Integer> selectedResourcesFromWarehouse;
