@@ -5,6 +5,7 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
+import it.polimi.ingsw.events.EventRegistry;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -17,11 +18,11 @@ public class RequestsElaborator {
     private ClientHandlerSender clientHandlerSender;
     private ClientHandlerReceiver clientHandlerReceiver;
     private BlockingQueue<Event> requestsQueue;
-    private VirtualView mainEventHandlerRegistry;
-    private VirtualView matchEventHandlerRegistry;
+    private EventRegistry mainEventHandlerRegistry;
+    private EventRegistry matchEventHandlerRegistry;
     private String ownerUserID;
 
-    public RequestsElaborator(Socket socket, VirtualView mainEventHandlerRegistry) {
+    public RequestsElaborator(Socket socket, EventRegistry mainEventHandlerRegistry) {
         try {
             this.requestsQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
             this.clientHandlerSender = new ClientHandlerSender(socket.getOutputStream());
@@ -70,7 +71,7 @@ public class RequestsElaborator {
         return clientHandlerSender;
     }
 
-    public void setMatchEventHandlerRegistry(VirtualView matchEventHandlerRegistry) {
+    public void setMatchEventHandlerRegistry(EventRegistry matchEventHandlerRegistry) {
         this.matchEventHandlerRegistry = matchEventHandlerRegistry;
     }
 

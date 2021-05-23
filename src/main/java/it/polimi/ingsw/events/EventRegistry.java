@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Server;
+package it.polimi.ingsw.events;
 
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
@@ -6,10 +6,10 @@ import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class VirtualView implements PropertyChangeSubject {
+public class EventRegistry implements PropertyChangeSubject {
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public VirtualView(){}
+    public EventRegistry(){}
 
     public void sendEvent(Event event){
         support.firePropertyChange(event.getEventName(), null, event);

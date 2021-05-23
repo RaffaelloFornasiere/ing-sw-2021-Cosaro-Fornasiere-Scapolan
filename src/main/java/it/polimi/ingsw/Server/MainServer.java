@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.controller.PreGameController;
+import it.polimi.ingsw.events.EventRegistry;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -9,13 +10,13 @@ import java.net.Socket;
 
 public class MainServer{
     public static final int SERVER_PORT = 50885;
-    private VirtualView mainEventHandlerRegistry;
+    private EventRegistry mainEventHandlerRegistry;
 
     public MainServer(){
-        mainEventHandlerRegistry = new VirtualView();
+        mainEventHandlerRegistry = new EventRegistry();
     }
 
-    public VirtualView getMainEventHandlerRegistry() {
+    public EventRegistry getMainEventHandlerRegistry() {
         return mainEventHandlerRegistry;
     }
 

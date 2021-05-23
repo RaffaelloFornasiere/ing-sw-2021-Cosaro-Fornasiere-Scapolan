@@ -19,7 +19,7 @@ import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import it.polimi.ingsw.Server.ClientHandlerSender;
 import it.polimi.ingsw.Server.RequestsElaborator;
-import it.polimi.ingsw.Server.VirtualView;
+import it.polimi.ingsw.events.EventRegistry;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
@@ -209,7 +209,7 @@ public class PreGameController {
         matchState.addObserver(new MatchStateHandler(involvedClientHandlerSenders));
 
         //Initialize the controller
-        VirtualView matchEventHandlerRegistry = new VirtualView();
+        EventRegistry matchEventHandlerRegistry = new EventRegistry();
         for (String playerID: playerOrder) {
             RequestsElaborator requestsElaborator = networkData.get(playerID);
             requestsElaborator.setMatchEventHandlerRegistry(matchEventHandlerRegistry);
