@@ -1,6 +1,6 @@
 package it.polimi.ingsw.events.ControllerEvents;
 
-import it.polimi.ingsw.virtualview.RequestsElaborator;
+import it.polimi.ingsw.Server.RequestsElaborator;
 
 /**
  * Event decorator for NewPlayerEvent that adds network data for the player

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.virtualview;
+package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;

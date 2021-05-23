@@ -1,12 +1,10 @@
-package it.polimi.ingsw.virtualview;
+package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.HashMap;
 
 public class VirtualView implements PropertyChangeSubject {
     private PropertyChangeSupport support = new PropertyChangeSupport(this);

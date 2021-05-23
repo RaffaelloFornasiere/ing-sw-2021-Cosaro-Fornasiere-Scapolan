@@ -5,8 +5,7 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.MatchState;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.virtualview.ClientHandlerSender;
-import it.polimi.ingsw.virtualview.RequestsElaborator;
+import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 
