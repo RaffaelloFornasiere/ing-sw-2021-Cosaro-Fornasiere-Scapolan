@@ -92,4 +92,8 @@ public class MatchState extends Observable {
         this.turnState = turnState;
         notifyObservers();
     }
+
+    public void setLastRound(){
+        this.lastRound = true;
+    }
 }
