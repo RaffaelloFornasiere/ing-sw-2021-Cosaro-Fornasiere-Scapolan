@@ -19,7 +19,7 @@ import java.util.Scanner;
 /**
  * Class that represents a leader card
  */
-public class LeaderCard extends Observable{
+public class LeaderCard extends Observable {
 
     private String cardID;
     private int victoryPoints;
@@ -28,22 +28,24 @@ public class LeaderCard extends Observable{
 
     /**
      * Constructor for the class
-     * @param cardID The Id of the card
-     * @param victoryPoints amount of points awarded to the player at the end of the match if the card is active
+     *
+     * @param cardID                 The Id of the card
+     * @param victoryPoints          amount of points awarded to the player at the end of the match if the card is active
      * @param activationRequirements requirement that must be fulfilled to activate the card
-     * @param powers effects of the card
+     * @param powers                 effects of the card
      */
-    public LeaderCard(String cardID, int victoryPoints, ArrayList<Requirement> activationRequirements, ArrayList<LeaderPower> powers){
+    public LeaderCard(String cardID, int victoryPoints, ArrayList<Requirement> activationRequirements, ArrayList<LeaderPower> powers) {
         this.cardID = cardID;
         this.victoryPoints = victoryPoints;
-        this.activationRequirements = (ArrayList<Requirement>)activationRequirements.clone();
+        this.activationRequirements = (ArrayList<Requirement>) activationRequirements.clone();
         this.powers = new ArrayList<>();
-        for(LeaderPower lp: powers)
+        for (LeaderPower lp : powers)
             this.powers.add(new Pair<>(lp, false));
     }
 
     /**
      * getter for the ID of the card
+     *
      * @return the ID of the card
      */
     public String getCardID() {
@@ -52,6 +54,7 @@ public class LeaderCard extends Observable{
 
     /**
      * getter for the victory points
+     *
      * @return the value of victory points
      */
     public int getVictoryPoints() {
@@ -60,52 +63,57 @@ public class LeaderCard extends Observable{
 
     /**
      * getter for the requirements
+     *
      * @return the requirements
      */
     public ArrayList<Requirement> getActivationRequirement() {
-        return (ArrayList<Requirement>)activationRequirements.clone();
+        return (ArrayList<Requirement>) activationRequirements.clone();
     }
 
     /**
      * getter for all the powers
+     *
      * @return the powers of this card
      */
     public ArrayList<LeaderPower> getLeaderPowers() {
         ArrayList<LeaderPower> ret = new ArrayList<>();
-        for(Pair<LeaderPower, Boolean> lpo: powers)
+        for (Pair<LeaderPower, Boolean> lpo : powers)
             ret.add(lpo.getKey());
         return ret;
     }
 
     /**
      * getter for all the powers, with respective boolean
+     *
      * @return the powers of this card with respective boolean
      */
     public ArrayList<Pair<LeaderPower, Boolean>> getBooleanPowers() {
-       /* ArrayList<Pair<LeaderPower, Boolean>> ret = new ArrayList<>();
-        for(Pair<LeaderPower, Boolean> lpo: powers)
+        ArrayList<Pair<LeaderPower, Boolean>> ret = new ArrayList<>();
+        for (Pair<LeaderPower, Boolean> lpo : powers)
             ret.add(new Pair<>(lpo.getKey(), lpo.getValue()));
-       */ return powers;
+        return ret;
     }
 
 
     /**
      * getter for all the selected powers
+     *
      * @return the powers of this card
      */
-    public ArrayList<LeaderPower> getSelectedLeaderPowers(){
+    public ArrayList<LeaderPower> getSelectedLeaderPowers() {
         ArrayList<LeaderPower> ret = new ArrayList<>();
-        for(Pair<LeaderPower, Boolean> lpo: powers)
-            if(lpo.getValue())
+        for (Pair<LeaderPower, Boolean> lpo : powers)
+            if (lpo.getValue())
                 ret.add(lpo.getKey());
         return ret;
     }
 
     /**
      * Methods that selects a leader power
+     *
      * @param leaderPower the leader power to select
      * @throws NotPresentException if the leader power passed does not belong to the card
-     * @throws IllegalOperation if the leader power was already selected
+     * @throws IllegalOperation    if the leader power was already selected
      */
     public void selectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
         for (int i = 0, powersSize = powers.size(); i < powersSize; i++) {
@@ -124,9 +132,10 @@ public class LeaderCard extends Observable{
 
     /**
      * Methods that deselects a leader power
+     *
      * @param leaderPower the leader power to deselect
      * @throws NotPresentException if the leader power passed does not belong to the card
-     * @throws IllegalOperation if the leader power was not selected
+     * @throws IllegalOperation    if the leader power was not selected
      */
     public void deselectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
         for (int i = 0, powersSize = powers.size(); i < powersSize; i++) {
@@ -160,7 +169,7 @@ public class LeaderCard extends Observable{
                     s.append(scanner.nextLine());
                 DummyLeaderCard c = gson.fromJson(s.toString(), DummyLeaderCard.class);
                 ArrayList<LeaderPower> lps = new ArrayList<>();
-                for(DummyLeaderPower dlp: c.powers)
+                for (DummyLeaderPower dlp : c.powers)
                     lps.add(dlp.power);
                 LeaderCard lc = new LeaderCard(c.cardID, c.victoryPoints, c.activationRequirements, lps);
                 String JSONDevCard = gson.toJson(lc, LeaderCard.class);
@@ -169,9 +178,9 @@ public class LeaderCard extends Observable{
                 w.flush();
                 w.close();
             }
-            } catch(IOException e){
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*public static void main(String[] args) {
@@ -262,7 +271,7 @@ public class LeaderCard extends Observable{
     }*/
 }
 
-class DummyLeaderCard{
+class DummyLeaderCard {
     public String cardID;
     public int victoryPoints;
     public ArrayList<Requirement> activationRequirements;

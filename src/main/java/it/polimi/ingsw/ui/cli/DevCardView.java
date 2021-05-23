@@ -54,12 +54,19 @@ public class DevCardView {
         }               build.append(color+ "╠═"+color+"Production"+color+"══╣" + Color.reset() + "\n");
         for (Resource resource : card.getProductionPower().getConsumedResources().keySet()) {
             build.append(color + "║     " + colorResource(resource) + card.getProductionPower().getConsumedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
-        }          build.append(color+ "║   "+color+"--->>> "+color+ "   ║ " + Color.reset() + "\n");
+        }
+        if(card.getProductionPower().getRequiredResourceOfChoice()!=0){
+            build.append(color + "║     "+color+ + card.getProductionPower().getRequiredResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
+        }
+        build.append(color+ "║   "+color+"--->>> "+color+ "   ║ " + Color.reset() + "\n");
         for (Resource resource : card.getProductionPower().getProducedResources().keySet()) {
             build.append(color + "║     " + colorResource(resource) + card.getProductionPower().getProducedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
         }
         if(card.getProductionPower().getFaithPointsProduced()!=0){
             build.append(color + "║     "+color+ + card.getProductionPower().getFaithPointsProduced() + " " +"+"  + color + "     ║" + Color.reset() + "\n" );
+        }
+        if(card.getProductionPower().getProducedResourceOfChoice()!=0){
+            build.append(color + "║     "+color+ + card.getProductionPower().getProducedResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
         }
 
 

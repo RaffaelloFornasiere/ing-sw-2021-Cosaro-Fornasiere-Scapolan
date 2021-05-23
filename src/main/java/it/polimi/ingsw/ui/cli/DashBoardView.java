@@ -4,6 +4,7 @@ import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -12,15 +13,23 @@ public class DashBoardView {
     private ArrayList<String> topDevCards;
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<DepotState> warehouse;
-    String player;
+    private String player;
 
 
     public DashBoardView(ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse, String player) {
         this.topDevCards = topDevCards;
-        this.strongBox = strongBox;
+        this.strongBox = new HashMap<>();
+        Arrays.stream(Resource.values()).forEach(res->this.strongBox.put(res, 0));
+        strongBox.keySet().forEach(res->this.strongBox.put(res, strongBox.get(res)));
         this.warehouse = warehouse;
         this.player = player;
     }
+
+
+    public String getPlayer() {
+        return player;
+    }
+
 
 
     private String colorResource(Resource res) {
@@ -37,11 +46,88 @@ public class DashBoardView {
         else return "▼";
     }
 
-    public void display( String playerID){
+    public String resourceNumberToString() {
+        HashMap<Resource, Integer> totalRes = new HashMap();
+        Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
+        strongBox.keySet().forEach(resource -> {
+            totalRes.put(resource, totalRes.get(resource) + strongBox.get(resource));
+        });
+        warehouse.stream().forEach(depotState -> {
+                    totalRes.put(depotState.getResourceType(), totalRes.get(depotState.getResourceType()) + depotState.getCurrentQuantity());
+                });
+            StringBuilder builder = new StringBuilder();
+            builder.append("\033[31;1;4mTOTAL OF RESOURCES:\033[0m \n");
+            totalRes.keySet().forEach(resource -> {
+                String color = colorResource(resource);
+                String shape = shapeResource(resource);
+                builder.append(color + resource.toString() + ": ");
+                IntStream.range(0, totalRes.get(resource)).forEach(n -> builder.append(color + shape + " "));
+                builder.append(":" + totalRes.get(resource) + Color.reset() + "\n");
+            });
+            return builder.toString();
+        }
 
+    public String warehouseToString() {
+        StringBuilder warehouseBuilder = new StringBuilder();
+        warehouseBuilder.append("\033[31;1;4mWAREHOUSE\033[0m \n");
+        for (DepotState l : warehouse) {
+            String color = colorResource(l.getResourceType());
+            String shape = shapeResource(l.getResourceType());
+            warehouseBuilder.append(color + l.getResourceType().toString() + "\n");
+            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╔═══╗" + " "));
+            warehouseBuilder.append(Color.reset() + "\n");
+            IntStream.range(0, l.getCurrentQuantity()).forEach(n -> warehouseBuilder.append(color + "║ " + shape + " ║" + " "));
+            IntStream.range(0, (l.getMaxQuantity() - l.getCurrentQuantity())).forEach(n -> warehouseBuilder.append(color + "║   ║" + " "));
+            warehouseBuilder.append(Color.reset() + "\n");
+            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╚═══╝" + " "));
+            warehouseBuilder.append(Color.reset() + "\n");
+        }
+        return warehouseBuilder.toString();
     }
 
+    public String strongBoxToString() {
+        StringBuilder strongBoxBuilder = new StringBuilder();
+        strongBoxBuilder.append("\033[31;1;4mSTRONGBOX\033[0m \n");
+        strongBox.keySet().forEach(resource -> {
+            String color = colorResource(resource);
+            String shape = shapeResource(resource);
+            strongBoxBuilder.append(color + resource.toString() + ": ");
+            IntStream.range(0, strongBox.get(resource)).forEach(n -> strongBoxBuilder.append(color + shape + " "));
+            strongBoxBuilder.append(Color.reset() + "\n");
+        });
+        return strongBoxBuilder.toString();
+    }
 
+    public void displayDevCardSlots(){
+        Panel panel= new Panel(500, 30, System.out);
+        DrawableObject devCards = new DrawableObject("\033[31;1;4mDEVCARD SLOTS\033[0m \n", 1, 1);
+        panel.addItem(devCards);
+        AtomicInteger gap = new AtomicInteger(0);
+        topDevCards.stream().forEach(x -> {
+            DrawableObject obj = new DrawableObject(new DevCardView(x).toString(), gap.get() * 40, 3);
+            gap.getAndIncrement();
+            panel.addItem(obj);
+        });
+        panel.show();
+    }
+
+    public void displayAll(String playerID) {
+
+        System.out.println("\033[31;1;4mTHIS IS " + player + "'S DASHBOARD\033[0m \n");
+
+        String warehouseString = warehouseToString();
+        String strongBoxString = strongBoxToString();
+
+        DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
+        DrawableObject strongBox = new DrawableObject(strongBoxString, 0, (int) warehouse.getHeight() + 2);
+        Panel panel = new Panel(400, (int) warehouse.getHeight()+(int)strongBox.getHeight()+3, System.out);
+
+        panel.addItem(warehouse);
+        panel.addItem(strongBox);
+        panel.show();
+        displayDevCardSlots();
+
+    }
 
 
     public static void main(String[] args) {
@@ -65,54 +151,6 @@ public class DashBoardView {
         String player = "PAOLO";
 
         DashBoardView d = new DashBoardView(cards, str, totalLevels, player);
-
-
-        System.out.println("\033[31;1;4mTHIS IS " + player + "'S DASHBOARD\033[0m \n");
-        Panel panel = new Panel(400, 50, System.out);
-
-
-        StringBuilder warehouseBuilder = new StringBuilder();
-        warehouseBuilder.append("\033[31;1;4mWAREHOUSE\033[0m \n");
-        for (DepotState l : totalLevels) {
-            String color = d.colorResource(l.getResourceType());
-            String shape = d.shapeResource(l.getResourceType());
-            warehouseBuilder.append(color + l.getResourceType().toString() + "\n");
-            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append( color +"╔═══╗"+" "));
-            warehouseBuilder.append(Color.reset()+"\n");
-            IntStream.range(0, l.getCurrentQuantity()).forEach(n -> warehouseBuilder.append( color + "║ "+ shape+" ║" + " "));
-            IntStream.range(0, (l.getMaxQuantity()-l.getCurrentQuantity())).forEach(n -> warehouseBuilder.append( color + "║   ║" + " "));
-            warehouseBuilder.append(Color.reset() + "\n");
-            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append( color + "╚═══╝" + " "));
-            warehouseBuilder.append(Color.reset() + "\n");
-        }
-
-
-        StringBuilder strongBoxBuilder = new StringBuilder();
-        strongBoxBuilder.append("\033[31;1;4mSTRONGBOX\033[0m \n");
-        str.keySet().forEach(resource -> {
-            String color = d.colorResource(resource);
-            String shape = d.shapeResource(resource);
-            strongBoxBuilder.append(color + resource.toString() + ": ");
-            IntStream.range(0, str.get(resource)).forEach(n -> strongBoxBuilder.append(color + shape + " "));
-            strongBoxBuilder.append(Color.reset() + "\n");
-        });
-
-        String warehouseString = warehouseBuilder.toString();
-        String strongBoxString = strongBoxBuilder.toString();
-
-        DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
-        DrawableObject strongBox = new DrawableObject(strongBoxString, 0, (int) warehouse.getHeight() + 2);
-        panel.addItem(warehouse);
-        panel.addItem(strongBox);
-        DrawableObject devCards = new DrawableObject("\033[31;1;4mDEVCARD SLOTS\033[0m \n", 0, (int) (warehouse.getHeight() + strongBox.getHeight() + 4));
-        panel.addItem(devCards);
-        AtomicInteger gap = new AtomicInteger(0);
-        cards.stream().forEach(x -> {
-            DrawableObject obj = new DrawableObject(new DevCardView(x).toString(), gap.get() * 40, (int) (warehouse.getHeight() + strongBox.getHeight() + 6));
-            gap.getAndIncrement();
-            panel.addItem(obj);
-        });
-
-        panel.show();
+        d.displayAll(player);
     }
 }
