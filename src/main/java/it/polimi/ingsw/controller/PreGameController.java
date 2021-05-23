@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.modelChangeHandlers.*;
 import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
 import it.polimi.ingsw.events.ClientEvents.InitialChoicesEvent;
+import it.polimi.ingsw.events.ClientEvents.PersonalProductionPowerStateEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
@@ -191,6 +192,7 @@ public class PreGameController {
         //initialize the dashboards and each player
         //ArrayList<DashBoard> dashBoards = new ArrayList<>();
         ArrayList<Player> players= new ArrayList<>();
+        PlayerHandler playerHandler = new PlayerHandler(involvedClientHandlerSenders);
         for (String s : playerOrder) {
             ArrayList<Integer> depotCapacities = new ArrayList<>();
             depotCapacities.add(1);
@@ -200,7 +202,7 @@ public class PreGameController {
             DashBoard dashBoard = new DashBoard(3, depotCapacities, personalPower, faithTrack); //3, depotCap and personalPower: configuration options
             Player player = new Player(s, dashBoard);
             dashBoard.addObserver(new DashBoardHandler(involvedClientHandlerSenders, player));
-            player.addObserver(new PlayerHandler(involvedClientHandlerSenders));
+            player.addObserver(playerHandler);
             //dashBoards.add(dashBoard);
             players.add(player);
         }
@@ -209,10 +211,8 @@ public class PreGameController {
         MatchState matchState= new MatchState(players, devCards, 4, 3, marbles); //missing configuration options for market
         matchState.getMarket().addObserver(new MarketHandler(involvedClientHandlerSenders));
         matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedClientHandlerSenders));
-        matchState.getPlayers().forEach(p -> {
-            FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedClientHandlerSenders, matchState);
-            p.getDashBoard().getFaithTrackData().addObserver(faithTrackDataHandler);
-        });
+        FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedClientHandlerSenders, matchState);
+        matchState.getPlayers().forEach(p -> p.getDashBoard().getFaithTrackData().addObserver(faithTrackDataHandler));
         matchState.addObserver(new MatchStateHandler(involvedClientHandlerSenders));
 
         //Initialize the controller
@@ -248,6 +248,16 @@ public class PreGameController {
                 cardsToChoseFrom.add(leaderCardsIDs.get(leaderCardsIDs.size()-1));
                 leaderCardsIDs.remove(leaderCardsIDs.size()-1);
             }
+
+            //Notify the clients on the initial state of the game
+            matchState.getPlayers().forEach(p -> {
+                p.getDashBoard().notifyObservers();
+                p.notifyObservers();
+                for(ClientHandlerSender c: involvedClientHandlerSenders.values())
+                    c.sendEvent(new PersonalProductionPowerStateEvent(p.getPlayerId(), p.getDashBoard().getPersonalPower()));
+            });
+            matchState.getMarket().notifyObservers();
+            matchState.getDevCardGrid().notifyObservers();
 
             InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom, 2, numberResourcesOfChoice);
             networkData.get(playerOrder.get(i)).getClientHandlerSender().sendEvent(initialChoicesEvent);
