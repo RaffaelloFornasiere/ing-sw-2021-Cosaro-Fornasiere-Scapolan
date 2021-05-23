@@ -165,34 +165,40 @@ public class Controller {
         return true;
     }
 
-    //TODO check row and column
     public synchronized void BuyResourcesEventHandler(PropertyChangeEvent evt){
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
             if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
-            var marbles = new ArrayList<>(marketManager.buy(
-                    event.getDirection(),
-                    event.getIndex()));
+
+            HashMap<Resource, Integer> resources = new HashMap<>();
+            int faithPoints = 0;
+            int whiteMarbles = 0;
+            try {
+                var marbles = marketManager.buy(
+                        event.getDirection(),
+                        event.getIndex());
+
+                for(Marble m: marbles.keySet()) {
+                    switch (m) {
+                        case BLUE -> resources.put(Resource.SHIELD, marbles.get(m));
+                        case GRAY -> resources.put(Resource.ROCK, marbles.get(m));
+                        case YELLOW -> resources.put(Resource.COIN, marbles.get(m));
+                        case PURPLE -> resources.put(Resource.SERVANT, marbles.get(m));
+                        case RED -> faithPoints = marbles.get(m);
+                        case WHITE -> whiteMarbles = marbles.get(m);
+                    }
+                }
+            } catch (IllegalArgumentException e){
+                clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "Index passed out of bound", event));
+                return;
+            }
+
             var powers = leaderCardManager.getSelectedPowers(player, ExtraResourceLeaderPower.class)
                     .stream()
                     .map(x -> (ExtraResourceLeaderPower)x)
                     .collect(Collectors.toList());
 
-            HashMap<Resource, Integer> resources = new HashMap<>();
-            int faithPoints = 0;
-            int whiteMarbles = 0;
-
-            for(Marble m: marbles) {
-                switch (m) {
-                    case BLUE -> resources.put(Resource.SHIELD, resources.getOrDefault(Resource.SHIELD, 0) + 1);
-                    case GRAY -> resources.put(Resource.ROCK, resources.getOrDefault(Resource.ROCK, 0) + 1);
-                    case YELLOW -> resources.put(Resource.COIN, resources.getOrDefault(Resource.COIN, 0) + 1);
-                    case PURPLE -> resources.put(Resource.SERVANT, resources.getOrDefault(Resource.SERVANT, 0) + 1);
-                    case RED -> faithPoints++;
-                    case WHITE -> whiteMarbles++;
-                }
-            }
             if(powers.size() > 1 && whiteMarbles>0)
             {
                 ArrayList<Resource> resourceTypes= new ArrayList<>();

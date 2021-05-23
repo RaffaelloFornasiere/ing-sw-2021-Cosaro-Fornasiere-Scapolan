@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Market;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MarketManager {
     Market market;
@@ -17,9 +18,9 @@ public class MarketManager {
         market.shuffleMarket();
     }
 
-    public ArrayList<Marble> buy(Direction direction, int index)
+    public HashMap<Marble, Integer> buy(Direction direction, int index)
     {
-        var marbles = market.getMarblesAsList(direction, index);
+        var marbles = market.getMarbles(direction, index);
         market.update(direction, index);
         return  marbles;
     }
