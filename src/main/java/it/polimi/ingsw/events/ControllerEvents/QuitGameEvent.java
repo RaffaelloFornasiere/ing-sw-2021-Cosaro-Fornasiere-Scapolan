@@ -1,16 +1,15 @@
 package it.polimi.ingsw.events.ControllerEvents;
 
-import it.polimi.ingsw.events.Event;
-
 /**
- * Event that will be handled by the server
+ * Event sent to the server when the player quits the game
  */
-public abstract class ControllerEvent extends Event{
+public class QuitGameEvent extends ControllerEvent {
+
     /**
      * Constructor of the class
      * @param playerId The player that generated(directly or indirectly) this event
      */
-    public ControllerEvent(String playerId) {
+    public QuitGameEvent(String playerId) {
         super(playerId);
     }
 }

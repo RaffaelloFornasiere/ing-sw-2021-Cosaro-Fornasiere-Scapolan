@@ -1,4 +1,4 @@
-package it.polimi.ingsw.events;
+package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
@@ -44,5 +44,10 @@ public class EventRegistry implements PropertyChangeSubject {
     @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public PropertyChangeListener[] getAllPropertyChangeListener(){
+        return support.getPropertyChangeListeners();
     }
 }

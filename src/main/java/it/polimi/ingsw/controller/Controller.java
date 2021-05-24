@@ -8,32 +8,32 @@ import it.polimi.ingsw.controller.modelChangeHandlers.DepositLeaderPowerHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
+import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.DevCards.DevCardGrid;
+import it.polimi.ingsw.model.FaithTrack.FaithTrack;
+import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.LeaderCards.*;
+import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.Pair;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
-import it.polimi.ingsw.virtualview.ClientHandlerSender;
+import it.polimi.ingsw.Server.ClientHandlerSender;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO config
-//TODO end of game
-//TODO disconnection
 //TODO reorganize
 
 public class Controller {
@@ -42,6 +42,8 @@ public class Controller {
     FaithTrackManager faithTrackManager;
     MatchState matchState;
     HashMap<String, ClientHandlerSender> clientHandlerSenders;
+    PropertyChangeSubject eventsRegistry;
+    HashMap<String, Boolean> disconnected;
     private final ArrayList<String> setuppedPlayers;
 
     private final Object waitingForResourcesLock = new Object();
@@ -63,6 +65,12 @@ public class Controller {
         subject.addPropertyChangeListener(SelectMultiLPowersEvent.class.getName(),
                 this::SelectMultipleLeaderPowersHandler);*/
 
+        ArrayList<String> playerIDsInMatch = new ArrayList<>();
+        for(Player p: matchState.getPlayers())
+            playerIDsInMatch.add(p.getPlayerId());
+
+        if(!playerIDsInMatch.containsAll(clientHandlerSenders.keySet())) throw new IllegalArgumentException("must have the clientHandlerSenders of all the players in the match");
+
         Reflections reflections = new Reflections("it.polimi.ingsw.events");
         Set<Class<? extends MatchEvent>> events = reflections.getSubTypesOf(MatchEvent.class);
 
@@ -82,8 +90,14 @@ public class Controller {
             }
         }
 
+        subject.addPropertyChangeListener(QuitGameEvent.class.getSimpleName(), this::QuitGameEventHandler);
+
         this.matchState = matchState;
-        this.clientHandlerSenders = (HashMap<String, ClientHandlerSender>)clientHandlerSenders.clone();
+        this.clientHandlerSenders = clientHandlerSenders;
+        this.eventsRegistry = subject;
+        this.disconnected = new HashMap<>();
+        for(String playerID: this.clientHandlerSenders.keySet())
+            disconnected.put(playerID, false);
 
         faithTrackManager = new FaithTrackManager(matchState);
         leaderCardManager = new LeaderCardManager();
@@ -100,7 +114,7 @@ public class Controller {
             return;
         }
 
-        if(event.getChosenLeaderCardIDs().size()!=2){ //config
+        if(event.getChosenLeaderCardIDs().size()!= Config.getInstance().getLeaderCardPerPlayerToChoose()){
             clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Wrong number of leader cards chosen", event));
             return;
         }
@@ -127,13 +141,7 @@ public class Controller {
             this.leaderCardManager.assignLeaderCards(player, leaderCards);
 
             int chosenResources = event.getChosenResources().values().stream().reduce(0, Integer::sum);
-            //TODO config
-            int expectedResources = switch (matchState.getPlayerPosition(player)) {
-                case 1, 2 -> 1;
-                case 3 -> 2;
-                default -> 0;
-            };
-            if(chosenResources != expectedResources){
+            if(chosenResources != Config.getInstance().getResourcesHandicap().get(matchState.getPlayerPosition(player))){
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Wrong number of resources chosen", event));
                 this.leaderCardManager.assignLeaderCards(player, new ArrayList<>());
                 return;
@@ -501,6 +509,14 @@ public class Controller {
             for(Resource r: resourcesFromStrongBox.keySet())
                 player.getDashBoard().subResourcesToStrongBox(r, resourcesFromStrongBox.get(r));
             player.getDashBoard().addCard(event.getCardSlot(), devCard);
+
+            int totalDevCard = 0;
+            for(Stack<DevCard> stack: player.getDashBoard().getCardSlots())
+                totalDevCard += stack.size();
+
+            if(totalDevCard >= Config.getInstance().getDevCardsToWin())
+                matchState.setLastRound();
+
             matchState.setTurnState(TurnState.AFTER_MAIN_ACTION);
         } catch (NotPresentException notPresentException) {
             //The card is not at the top of any devDeck
@@ -563,7 +579,7 @@ public class Controller {
             leaderCardManager.removeLeaderCard(player, player.getLeaderCardFromID(event.getLeaderCardID()));
             for(Player p: matchState.getPlayers())
                 if(p!=player)
-                    faithTrackManager.incrementFaithTrackPosition(p, 1); //TODO config?
+                    faithTrackManager.incrementFaithTrackPosition(p, Config.getInstance().getFaithPointPerDiscardedResource());
             matchState.leaderActionExecuted = true;
             if(matchState.getTurnState() == TurnState.START) matchState.setTurnState(TurnState.AFTER_LEADER_CARD_ACTION);
             else matchState.setTurnState(TurnState.END_OF_TURN);
@@ -722,16 +738,89 @@ public class Controller {
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
             if(canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION) || canActionBePerformed(event, player, TurnState.END_OF_TURN)) return;
-            for(LeaderCard lc: player.getLeaderCards()){
-                for(LeaderPower lp: lc.getLeaderPowers()){
-                    leaderCardManager.deselectLeaderPower(player, lc, lp);
+            nextTurn(player);
+        } catch (NotPresentException notPresentException) {
+            //impossible
+            notPresentException.printStackTrace();
+        }
+    }
+
+    private void nextTurn(Player previousPlayer){
+        try {
+            for (LeaderCard lc : previousPlayer.getLeaderCards()) {
+                for (LeaderPower lp : lc.getLeaderPowers()) {
+                    leaderCardManager.deselectLeaderPower(previousPlayer, lc, lp);
                 }
             }
-            matchState.nextTurn();
+
+            boolean allAFK = true;
+            for(Player p: matchState.getPlayers()) {
+                if (allAFK) allAFK = disconnected.getOrDefault(p.getPlayerId(), true);
+            }
+
+            if(allAFK) endGame(); //TODO For now, maybe FA
+
+            if (matchState.isLastRound() && matchState.getCurrentPlayerIndex() == matchState.getPlayers().size() - 1)
+                endGame();
+            else {
+                do {
+                    matchState.nextTurn();
+                } while (disconnected.get(matchState.getPlayers().get(matchState.getCurrentPlayerIndex()).getPlayerId()));
+            }
         } catch (NotPresentException | IllegalOperation | LeaderCardNotActiveException notPresentException) {
             //impossible
             notPresentException.printStackTrace();
         }
+    }
+
+    private synchronized void endGame() {
+        ArrayList<FinalPlayerState> finalPlayerStates = createLeaderboard();
+        for(String playerID: clientHandlerSenders.keySet()){
+            clientHandlerSenders.get(playerID).sendEvent(new GameEndedEvent(playerID, finalPlayerStates));
+        }
+        matchState.setTurnState(TurnState.MATCH_ENDED);
+
+        for(PropertyChangeListener listener :this.eventsRegistry.getAllPropertyChangeListener()){
+            this.eventsRegistry.removePropertyChangeListener(listener);
+        }
+    }
+
+    private synchronized ArrayList<FinalPlayerState> createLeaderboard() {
+        ArrayList<FinalPlayerState> finalPlayerStates = new ArrayList<>();
+
+        for(Player p: matchState.getPlayers()){
+            int totalPoints = 0;
+
+            //devCards
+            for(Stack<DevCard> stack: p.getDashBoard().getCardSlots()){
+                for(DevCard devCard: stack){
+                    totalPoints+=devCard.getVictoryPoints();
+                }
+            }
+
+            //FaithTrack
+            FaithTrackData faithTrackData = p.getDashBoard().getFaithTrackData();
+            totalPoints += FaithTrack.getArrayOfCells().get(faithTrackData.getPosition()).getVictoryPoints();
+            totalPoints += faithTrackData.getFavorPopeCardPoints();
+
+            //LeaderCards
+            for(LeaderCard lc: p.getLeaderCards())
+                totalPoints+=lc.getVictoryPoints();
+
+            //Resources
+            int allResources = 0;
+            HashMap<Resource, Integer> allPlayerResources = p.getAllPayerResources();
+            for(Resource r: allPlayerResources.keySet())
+                allResources += allPlayerResources.get(r);
+
+            totalPoints+= allResources/Config.getInstance().getResourcesPerVictoryPoint();
+
+            finalPlayerStates.add(new FinalPlayerState(p.getPlayerId(), totalPoints, allResources));
+        }
+
+        Collections.sort(finalPlayerStates);
+
+        return finalPlayerStates;
     }
 
     private void ChosenResourcesEventHandler(PropertyChangeEvent evt){
@@ -759,6 +848,42 @@ public class Controller {
             }
             simpleChosenResourcesEvent = event;
             waitingForSimpleResourcesLock.notifyAll();
+        }
+    }
+
+    public synchronized void QuitGameEventHandler(PropertyChangeEvent evt){
+        QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
+
+        synchronized (waitingForMultipleExtraResourceLeaderPowerLock){
+            chosenMultipleExtraResourcePowerEvent = null;
+            waitingForMultipleExtraResourceLeaderPowerLock.notifyAll();
+        }
+
+        synchronized (waitingForSimpleResourcesLock){
+            simpleChosenResourcesEvent = null;
+            waitingForSimpleResourcesLock.notifyAll();
+        }
+
+        synchronized (waitingForResourcesLock){
+            chosenResourcesEvent = null;
+            waitingForResourcesLock.notifyAll();
+        }
+
+        synchronized (waitingForResourceOrganizationLock){
+            newResourcesOrganizationEvent = null;
+            waitingForResourceOrganizationLock.notifyAll();
+        }
+
+        synchronized (this) {
+            disconnected.put(event.getPlayerId(), true);
+            clientHandlerSenders.remove(event.getPlayerId());
+            try {
+                Player disconnectedPlayer = matchState.getPlayerFromID(event.getPlayerId());
+                if(disconnectedPlayer == matchState.getPlayers().get(matchState.getCurrentPlayerIndex()))
+                    nextTurn(disconnectedPlayer);
+            } catch (NotPresentException notPresentException) {
+                notPresentException.printStackTrace();
+            }
         }
     }
 }
