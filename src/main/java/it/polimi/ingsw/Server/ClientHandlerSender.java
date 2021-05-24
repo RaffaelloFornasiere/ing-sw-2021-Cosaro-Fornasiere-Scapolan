@@ -38,4 +38,8 @@ public class ClientHandlerSender {
                     "\" or \"" + MessageWrapper.MESSAGE_END + "\") somewhere");
         }*/
     }
+
+    public void closeConnection() {
+        printWriter.close();
+    }
 }

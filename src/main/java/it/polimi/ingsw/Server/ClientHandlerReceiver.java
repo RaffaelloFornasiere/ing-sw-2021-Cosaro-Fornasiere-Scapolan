@@ -53,4 +53,8 @@ public class ClientHandlerReceiver {
             }
         }
     }
+
+    public void closeConnection() {
+        scanner.close();
+    }
 }

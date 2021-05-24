@@ -10,7 +10,7 @@ public abstract class MatchObserver implements Observer {
     protected HashMap<String, ClientHandlerSender> networkData;
 
     public MatchObserver(HashMap<String, ClientHandlerSender> networkData){
-        this.networkData = (HashMap<String, ClientHandlerSender>) networkData.clone();
+        this.networkData = networkData;
     }
 
     protected void sendToAll(Event event){

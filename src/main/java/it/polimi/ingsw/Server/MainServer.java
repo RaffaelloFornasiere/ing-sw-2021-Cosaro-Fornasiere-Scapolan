@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.controller.PreGameController;
-import it.polimi.ingsw.events.EventRegistry;
+import it.polimi.ingsw.controller.EventRegistry;
 
 import java.io.IOException;
 import java.net.InetAddress;

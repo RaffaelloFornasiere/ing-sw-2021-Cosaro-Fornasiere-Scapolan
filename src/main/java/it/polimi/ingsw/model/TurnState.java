@@ -6,7 +6,8 @@ public enum TurnState {
     AFTER_LEADER_CARD_ACTION(3),
     AFTER_MAIN_ACTION(4),
     END_OF_TURN(5),
-    WAITING_FOR_SOMETHING(6);
+    WAITING_FOR_SOMETHING(6),
+    MATCH_ENDED(7);
 
     TurnState(int state) { }
 }
