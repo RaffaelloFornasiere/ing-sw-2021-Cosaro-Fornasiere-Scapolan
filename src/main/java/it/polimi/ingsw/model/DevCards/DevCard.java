@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * Immutable class
+ */
 public class DevCard
 {
     private String cardID;
@@ -25,7 +28,7 @@ public class DevCard
     public DevCard(HashMap<Resource, Integer> cost, int level, CardColor color, int victoryPoints, ProductionPower productionPower)
     {
         if(level <0) throw new IllegalArgumentException("The card level cannot be negative");
-        this.cost = cost;
+        this.cost = (HashMap<Resource, Integer>) cost.clone();
         this.level = level;
         this.color = color;
         this.victoryPoints = victoryPoints;
@@ -37,7 +40,7 @@ public class DevCard
     }
 
     public HashMap<Resource, Integer> getCost() {
-        return cost;
+        return (HashMap<Resource, Integer>) cost.clone();
     }
 
     public int getLevel() {
