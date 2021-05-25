@@ -137,15 +137,15 @@ public class NetworkAdapter {
         send(event);
     }
 
-    public void displaceWarehouseMarbles(HashMap<Resource, Integer> resources)
-    {
+    public void displaceWarehouseMarbles(HashMap<Resource, Integer> resources) {
         OrganizeWarehouseResEvent event = new OrganizeWarehouseResEvent(playerID, resources);
         send(event);
     }
 
+    public void sendSelectedResources(HashMap<Resource, Integer> resources)
+    {
 
-
-
+    }
 
 
     /*
@@ -162,76 +162,105 @@ public class NetworkAdapter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
-    public void BadRequestEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void ClientEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void InitialChoicesEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void LobbyStateEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void ControllerEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void MatchEventsHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void ActivateProductionEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void BuyDevCardsEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void BuyResourcesEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void MatchEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt){
-        OrganizeWarehouseResEvent event = (OrganizeWarehouseResEvent)evt.getNewValue();
-        view.getWarehouseDisplacement(event.getResources());
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void NewPlayerEventHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt){
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    public void StartMatchEventHandler(PropertyChangeEvent evt){
+    public void BadRequestEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
-    public void MarketStateEventHandler(PropertyChangeEvent evt){
+    public void ClientEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void InitialChoicesEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void LobbyStateEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void ControllerEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void MatchEventsHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void ActivateProductionEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void BuyDevCardsEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void BuyResourcesEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void MatchEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+        OrganizeWarehouseResEvent event = (OrganizeWarehouseResEvent) evt.getNewValue();
+        var displacement = view.getWarehouseDisplacement(event.getResources());
+        send(new OrganizeWarehouseResEvent(playerID, displacement));
+    }
+
+    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void NewPlayerEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void StartMatchEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void MarketStateEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void ResourceSelectionEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+        ResourceSelectionEvent event = (ResourceSelectionEvent)evt.getNewValue();
+        var selection = view.getResourcesSelection(event.getRequired());
+        send(new ResourceSelectionEvent(playerID, null, selection.get(0), selection.get(1)));
     }
 }

@@ -48,4 +48,5 @@ public abstract class UI {
 
 
 
+    abstract public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required);
 }
