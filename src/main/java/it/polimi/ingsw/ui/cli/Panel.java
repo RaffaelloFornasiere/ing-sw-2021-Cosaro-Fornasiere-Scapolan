@@ -19,6 +19,16 @@ public class Panel {
             this.writer = new PrintWriter(os);
         }
 
+    Panel(int width, int height, PrintWriter writer) {
+        this.width = width;
+        this.height = height;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < width * height; i++)
+            sb.append(" ");
+        objects = new ArrayList<>();
+        this.writer = writer;
+    }
+
         public void addItem(DrawableObject o) throws IllegalArgumentException {
             if (o.getX() + o.getWidth() >= width
                     || o.getY() + o.getHeight() >= height)

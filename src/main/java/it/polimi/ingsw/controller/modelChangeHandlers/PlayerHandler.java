@@ -3,12 +3,12 @@ package it.polimi.ingsw.controller.modelChangeHandlers;
 import it.polimi.ingsw.events.ClientEvents.PlayerStateEvent;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.virtualview.RequestsElaborator;
+import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 
 public class PlayerHandler extends MatchObserver{
-    public PlayerHandler(HashMap<String, RequestsElaborator> networkData) {
+    public PlayerHandler(HashMap<String, ClientHandlerSender> networkData) {
         super(networkData);
     }
 

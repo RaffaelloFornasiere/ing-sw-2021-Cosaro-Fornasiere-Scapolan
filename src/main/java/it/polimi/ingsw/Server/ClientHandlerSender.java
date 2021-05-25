@@ -1,10 +1,9 @@
-package it.polimi.ingsw.virtualview;
+package it.polimi.ingsw.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.IllegalOperation;
-import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.MessageWrapper;
 
@@ -18,7 +17,6 @@ public class ClientHandlerSender {
         printWriter = new PrintWriter(outputStream);
     }
 
-    //TODO use a better read/write mechanism
     public void sendEvent(Event event) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
@@ -27,7 +25,11 @@ public class ClientHandlerSender {
         String eventJSON = gson.toJson(event, Event.class);
 
         //try {
-        printWriter.println(eventJSON);
+        try {
+            printWriter.println(MessageWrapper.wrap(eventJSON));
+        } catch (IllegalOperation illegalOperation) {
+            illegalOperation.printStackTrace();
+        }
         printWriter.flush();
         //printWriter.
 
@@ -35,5 +37,9 @@ public class ClientHandlerSender {
             System.out.println("The event to send contains the messages delimiters(\"" + MessageWrapper.MESSAGE_START +
                     "\" or \"" + MessageWrapper.MESSAGE_END + "\") somewhere");
         }*/
+    }
+
+    public void closeConnection() {
+        printWriter.close();
     }
 }

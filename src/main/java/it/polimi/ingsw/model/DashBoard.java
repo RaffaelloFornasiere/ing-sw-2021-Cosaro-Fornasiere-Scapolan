@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,8 +83,14 @@ public class DashBoard extends Observable {
                 .stream()
                 .filter(x -> x.getResourceType().equals(resource))
                 .findFirst().orElse(null);
-        if(depot == null)
-            throw new IllegalArgumentException("Incompatible resource type");
+        if(depot == null) {
+            depot = warehouse
+                    .stream()
+                    .filter(x -> x.getCurrentQuantity()==0 && x.getMaxQuantity()<=quantity)
+                    .findFirst().orElse(null);
+            if(depot == null)
+                throw new IllegalArgumentException("Incompatible resource type");
+        }
         try{depot.subResources(quantity, resource);
             notifyObservers();}
         catch (DepotResourceException e){}
@@ -104,6 +111,22 @@ public class DashBoard extends Observable {
         try{depot.subResources(quantity, resource);
             notifyObservers();}
             catch (DepotResourceException e){}
+    }
+
+    public void subResourcesToWarehouse(HashMap<Resource, Integer> resources) throws
+            ResourcesLimitsException {
+        HashMap<Resource, Integer> subbedResources = new HashMap<>();
+        try {
+            for (Resource r : resources.keySet()) {
+                subResourcesToWarehouse(r, resources.get(r));
+                subbedResources.put(r, resources.get(r));
+            }
+        } catch (Exception e){
+            for (Resource r : subbedResources.keySet()) {
+                addResourcesToWarehouse(r, resources.get(r));
+            }
+            throw e;
+        }
     }
 
 
@@ -132,6 +155,13 @@ public class DashBoard extends Observable {
         }
     }
 
+    public boolean checkSlot(DevCard devCard, int slotIndex){
+        if(cardSlots.get(slotIndex).isEmpty())
+            return devCard.getLevel()==1;
+
+        return cardSlots.get(slotIndex).peek().getLevel()+1==devCard.getLevel();
+    }
+
     /**
      * Getter of StrongBox
      * @return a copy of the strongbox
@@ -148,6 +178,14 @@ public class DashBoard extends Observable {
     @SuppressWarnings("unchecked")
     public ArrayList<Stack<DevCard>> getCardSlots() {
         return (ArrayList<Stack<DevCard>>)cardSlots.clone();
+    }
+
+    public ArrayList<DevCard> getTopCards(){
+        ArrayList<DevCard> ret = new ArrayList<>();
+        for(Stack<DevCard> stack: cardSlots)
+            ret.add(stack.peek());
+
+        return ret;
     }
 
     /**
@@ -188,6 +226,10 @@ public class DashBoard extends Observable {
             resources.put(r, strongBox.get(r) + resources.getOrDefault(r, 0));
 
         return resources;
+    }
+
+    public ProductionPower getPersonalPower() {
+        return personalPower;
     }
 
     /**

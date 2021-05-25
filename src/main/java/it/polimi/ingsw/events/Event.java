@@ -4,8 +4,8 @@ public abstract class Event {
     protected String playerId;
 
     /**
-     * constructor of the class
-     * @param playerId the player that generated(directly or indirectly) this event
+     * Constructor of the class
+     * @param playerId The player that generated(directly or indirectly) this event
      */
     public Event(String playerId) {
         this.playerId = playerId;
@@ -13,16 +13,16 @@ public abstract class Event {
     public Event(){}
 
     /**
-     * the getter for the player that generated(directly or indirectly) this event
-     * @return the player that generated(directly or indirectly) this event
+     * The getter for the player that generated(directly or indirectly) this event
+     * @return The player that generated(directly or indirectly) this event
      */
     public String getPlayerId() {
         return playerId;
     }
 
     /**
-     * gets the event name
-     * @return the event name
+     * The getter for the event name
+     * @return The event name
      */
     public String getEventName() {
         return this.getClass().getSimpleName();

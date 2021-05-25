@@ -55,7 +55,7 @@ public class DepositLeaderPower extends LeaderPower{
      */
     public void addResources(HashMap<Resource, Integer> resourcesAdded) throws ResourcesLimitsException {
         for(Resource r: resourcesAdded.keySet()){
-            if(!maxResources.containsKey(r) || resourcesAdded.get(r)+currentResources.get(r)>maxResources.get(r))
+            if((!maxResources.containsKey(r) && resourcesAdded.get(r)!=0) || resourcesAdded.get(r)+currentResources.get(r)>maxResources.get(r))
                 throw new ResourcesLimitsException();
 
             currentResources.compute(r, (key,val) -> val + resourcesAdded.get(r));
@@ -70,11 +70,19 @@ public class DepositLeaderPower extends LeaderPower{
      */
     public void removeResources(HashMap<Resource, Integer> resourcesRemoved) throws ResourcesLimitsException {
         for(Resource r: resourcesRemoved.keySet()){
-            if(!currentResources.containsKey(r) || resourcesRemoved.get(r)>currentResources.get(r))
+            if((!currentResources.containsKey(r) && resourcesRemoved.get(r)!=0) || resourcesRemoved.get(r)>currentResources.get(r))
                 throw new ResourcesLimitsException();
 
             currentResources.compute(r, (key,val) -> val - resourcesRemoved.get(r));
         }
         notifyObservers();
+    }
+
+    public boolean canStore(HashMap<Resource, Integer> resources){
+        for(Resource r: resources.keySet()){
+            if(!maxResources.containsKey(r)) return false;
+            if(maxResources.get(r) - currentResources.getOrDefault(r, 0)<resources.get(r)) return false;
+        }
+        return true;
     }
 }

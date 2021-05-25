@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
+import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
@@ -8,11 +9,6 @@ import java.util.ArrayList;
 public class Lobby extends Observable {
     private String leaderID;
     private ArrayList<String> otherPLayersID;
-
-    /**
-     * The maximum players that can play the game together
-     */
-    public static final int MAX_PLAYERS = 4;
 
     /**
      * constructor for the class
@@ -51,7 +47,7 @@ public class Lobby extends Observable {
      * @return whether this lobby is full
      */
     public boolean isFull(){
-        return otherPLayersID.size() + 1 > MAX_PLAYERS;
+        return otherPLayersID.size() + 1 > Config.getInstance().getMaxPlayers();
     }
 
     /**

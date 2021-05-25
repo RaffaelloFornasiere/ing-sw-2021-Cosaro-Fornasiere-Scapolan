@@ -118,7 +118,7 @@ public class ResourcesRequirementTest {
             fail();
         }
 
-        LeaderCard leaderCard = new LeaderCard(3, new ArrayList<>(), leaderPowers);
+        LeaderCard leaderCard = new LeaderCard("Test", 3, new ArrayList<>(), leaderPowers);
 
         Player player = new Player("test", dashBoard);
 
@@ -178,7 +178,7 @@ public class ResourcesRequirementTest {
             fail();
         }
 
-        LeaderCard leaderCard = new LeaderCard(3, new ArrayList<>(), leaderPowers);
+        LeaderCard leaderCard = new LeaderCard("Test", 3, new ArrayList<>(), leaderPowers);
 
         Player player = new Player("test", dashBoard);
 

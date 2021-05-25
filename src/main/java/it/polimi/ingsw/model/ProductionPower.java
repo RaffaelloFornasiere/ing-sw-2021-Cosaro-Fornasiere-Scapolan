@@ -11,7 +11,7 @@ public class ProductionPower {
     private int producedResourceOfChoice;
     private int faithPointsProduced;
 
-    public ProductionPower(){};
+    public ProductionPower(){}
 
     public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources,
                            int requiredResourceOfChoice, int producedResourceOfChoice, int faithPointsProduced) {
@@ -38,6 +38,14 @@ public class ProductionPower {
      */
     public HashMap<Resource, Integer> getProducedResources() {
         return producedResources;
+    }
+
+    public int getRequiredResourceOfChoice() {
+        return requiredResourceOfChoice;
+    }
+
+    public int getProducedResourceOfChoice() {
+        return producedResourceOfChoice;
     }
 
     /**

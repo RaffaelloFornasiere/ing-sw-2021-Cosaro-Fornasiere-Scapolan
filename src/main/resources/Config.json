@@ -1,0 +1,68 @@
+{
+  "maxPlayers": 4,
+  "devCardNumber": 48,
+  "devCardsToWin": 7,
+  "leaderCardNumber": 16,
+  "leaderCarPerPlayerToChoseFrom": 4,
+  "leaderCarPerPlayerToChose": 2,
+  "numberOfCardSlots": 3,
+  "faithPointPerDiscardedResource": 1,
+  "resourcesPerVictoryPoint": 5,
+  "depotCapacities": [
+    1,
+    2,
+    3
+  ],
+  "marketRows": 4,
+  "marketColumns": 3,
+  "marbles": {
+    "BLUE": 2,
+    "GRAY": 2,
+    "YELLOW": 2,
+    "RED": 1,
+    "WHITE": 4,
+    "PURPLE": 2
+  },
+  "personalPowers": [
+    {
+      "consumedResources": {},
+      "producedResources": {},
+      "requiredResourceOfChoice": 2,
+      "producedResourceOfChoice": 1,
+      "faithPointsProduced": 0
+    },
+    {
+      "consumedResources": {},
+      "producedResources": {},
+      "requiredResourceOfChoice": 2,
+      "producedResourceOfChoice": 1,
+      "faithPointsProduced": 0
+    },
+    {
+      "consumedResources": {},
+      "producedResources": {},
+      "requiredResourceOfChoice": 2,
+      "producedResourceOfChoice": 1,
+      "faithPointsProduced": 0
+    },
+    {
+      "consumedResources": {},
+      "producedResources": {},
+      "requiredResourceOfChoice": 2,
+      "producedResourceOfChoice": 1,
+      "faithPointsProduced": 0
+    }
+  ],
+  "faithPointHandicap": [
+    0,
+    0,
+    1,
+    1
+  ],
+  "resourcesHandicap": [
+    0,
+    1,
+    1,
+    2
+  ]
+}

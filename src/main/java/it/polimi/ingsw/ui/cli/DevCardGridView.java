@@ -8,11 +8,11 @@ public class DevCardGridView {
     }
 
     public void display(){
-        CardView[][] cardGrid= new CardView[topDevCardIDs.length][topDevCardIDs[0].length];
+        DevCardView[][] cardGrid= new DevCardView[topDevCardIDs.length][topDevCardIDs[0].length];
         Panel panel = new Panel(500, 100, System.out);
         for(int x=0; x<topDevCardIDs.length; x++){
             for(int y=0; y<topDevCardIDs[0].length; y++){
-                panel.addItem(new DrawableObject((new  CardView(topDevCardIDs[x][y])).toString(),40*x,20*y));
+                panel.addItem(new DrawableObject((new DevCardView(topDevCardIDs[x][y])).toString(),40*x,20*y));
             }
         }
        panel.show();

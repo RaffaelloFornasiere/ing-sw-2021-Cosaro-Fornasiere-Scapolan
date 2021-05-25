@@ -113,7 +113,7 @@ public class NetworkAdapter {
     }
 
     public void createMatch(String username) {
-        NewPlayerEvent event = new NewPlayerEvent(username);
+        NewPlayerEvent event = new NewPlayerEvent(username, username);
         send(event);
     }
 
@@ -122,13 +122,13 @@ public class NetworkAdapter {
         send(event);
     }
 
-    public void buyDevCards(int row, int column) {
-        BuyDevCardsEvent event = new BuyDevCardsEvent(playerID, row, column);
+    public void buyDevCards(String cardID, int cardSlot) {
+        BuyDevCardsEvent event = new BuyDevCardsEvent(playerID, cardID, cardSlot);
         send(event);
     }
 
-    public void activateProduction(ArrayList<Integer> devCards) {
-        ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards);
+    public void activateProduction(ArrayList<String> devCards, boolean personalPower) {
+        ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards, personalPower);
         send(event);
     }
 
