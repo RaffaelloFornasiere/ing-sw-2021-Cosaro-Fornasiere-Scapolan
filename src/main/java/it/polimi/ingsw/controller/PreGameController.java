@@ -109,14 +109,7 @@ public class PreGameController {
         }
     }
 
-    //TODO get parameters from configuration files(tip: in case of error resort to default conf.)
     private void prepareMatch(Lobby lobby) {
-        //Build Gson object
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
-        builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
-        Gson gson = builder.create();
-
         //Decide player Order
         ArrayList<String> playerOrder= new ArrayList<>();
         playerOrder.add(lobby.getLeaderID());
@@ -129,50 +122,7 @@ public class PreGameController {
             involvedClientHandlerSenders.put(playerID, networkData.get(playerID).getClientHandlerSender());
 
         //Initialize faith track
-
-        /*ArrayList<CellWithEffect> cellsWithEffectArray = new ArrayList<>();
-        try {
-            String cellsEffectJSON = Files.readString(Paths.get("src\\main\\resources\\CellsWithEffectArray.json"));
-            cellsEffectJSON = cellsEffectJSON.substring(1,cellsEffectJSON.length()-1);
-            String[] cells = cellsEffectJSON.split("(,)(?=\\{)");
-
-            for (String s : cells) {
-                CellWithEffect cell = (CellWithEffect)gson.fromJson(s, AbstractCell.class);
-                cellsWithEffectArray.add(cell);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<Integer> victoryPoints = new ArrayList<>();
-        try {
-            String victoryPointsJSON = Files.readString(Paths.get("src\\main\\resources\\VictoryPoints.json"));
-            Type integerList = new TypeToken<ArrayList<Integer>>(){}.getType();
-            victoryPoints= gson.fromJson(victoryPointsJSON, integerList);
-        } catch (IOException e) {
-            e.printStackTrace(); //use default configuration
-        }*/
-
-        ArrayList<AbstractCell> arrayOfCells = new ArrayList<>();
-        try {
-            String faithTrackJSON = Files.readString(Paths.get("src\\main\\resources\\CompleteFaithTrack.json"));
-            arrayOfCells = gson.fromJson(faithTrackJSON, new TypeToken<ArrayList<AbstractCell>>(){}.getType());
-        } catch (IOException e) {
-            e.printStackTrace(); //TODO use default configuration
-        }
-
-        FaithTrack faithTrack = FaithTrack.initFaithTrack(arrayOfCells);
-
-        //Initialize development cards
-        ArrayList<DevCard> devCards = new ArrayList<>();
-        for(int i = 1; i<= Config.getInstance().getDevCardNumber(); i++){
-            try {
-                String DevCardJSON = Files.readString(Paths.get("src\\main\\resources\\DevCard" + i + ".json"));
-                devCards.add(gson.fromJson(DevCardJSON, DevCard.class));
-            } catch (IOException e) {
-                e.printStackTrace(); //TODO use default configuration
-            }
-        }
+        FaithTrack faithTrack = FaithTrack.initFaithTrack(Config.getInstance().getFaithTrack());
 
         //initialize the dashboards and each player
         //ArrayList<DashBoard> dashBoards = new ArrayList<>();
@@ -190,7 +140,7 @@ public class PreGameController {
         }
 
         //Initialize match state
-        MatchState matchState= new MatchState(players, devCards, Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
+        MatchState matchState= new MatchState(players, Config.getInstance().getDevCards(), Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
         matchState.getMarket().addObserver(new MarketHandler(involvedClientHandlerSenders));
         matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedClientHandlerSenders));
         FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedClientHandlerSenders, matchState);

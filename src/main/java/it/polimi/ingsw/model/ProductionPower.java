@@ -3,6 +3,9 @@ package it.polimi.ingsw.model;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Immutable class
+ */
 public class ProductionPower {
     private HashMap<Resource, Integer> consumedResources;
     private HashMap<Resource, Integer> producedResources;
@@ -15,8 +18,8 @@ public class ProductionPower {
 
     public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources,
                            int requiredResourceOfChoice, int producedResourceOfChoice, int faithPointsProduced) {
-        this.consumedResources = consumedResources;
-        this.producedResources = producedResources;
+        this.consumedResources = (HashMap<Resource, Integer>) consumedResources.clone();
+        this.producedResources = (HashMap<Resource, Integer>) producedResources.clone();
         this.requiredResourceOfChoice = requiredResourceOfChoice;
         this.producedResourceOfChoice = producedResourceOfChoice;
         this.faithPointsProduced = faithPointsProduced;
@@ -28,7 +31,7 @@ public class ProductionPower {
      * @return the consumed resources
      */
     public HashMap<Resource, Integer> getConsumedResources() {
-        return consumedResources;
+        return (HashMap<Resource, Integer>) consumedResources.clone();
     }
 
     /**
@@ -37,7 +40,7 @@ public class ProductionPower {
      * @return the produced resources
      */
     public HashMap<Resource, Integer> getProducedResources() {
-        return producedResources;
+        return (HashMap<Resource, Integer>) producedResources.clone();
     }
 
     public int getRequiredResourceOfChoice() {
