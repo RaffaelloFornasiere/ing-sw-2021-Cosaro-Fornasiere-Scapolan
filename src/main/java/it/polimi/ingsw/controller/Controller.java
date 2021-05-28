@@ -17,6 +17,7 @@ import it.polimi.ingsw.model.DevCards.DevCardGrid;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.LeaderCards.*;
+import it.polimi.ingsw.model.singlePlayer.SinglePlayerMatchState;
 import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.Pair;
@@ -742,8 +743,36 @@ public class Controller {
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
             if(canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION) || canActionBePerformed(event, player, TurnState.END_OF_TURN)) return;
-            nextTurn(player);
+            if(matchState.getClass() != SinglePlayerMatchState.class)
+                nextTurn(player);
+            else
+                doIATurn();
         } catch (NotPresentException notPresentException) {
+            //impossible
+            notPresentException.printStackTrace();
+        }
+    }
+
+    private void doIATurn() {
+        SinglePlayerMatchState singlePlayerMatchState = (SinglePlayerMatchState) matchState;
+        try {
+            Player player =  singlePlayerMatchState.getPlayer();
+            boolean endGame = singlePlayerMatchState.popSoloActionTokens().doAction(singlePlayerMatchState);
+            if(!endGame){
+                for (LeaderCard lc : player.getActiveLeaderCards()) {
+                    for (LeaderPower lp : lc.getSelectedLeaderPowers()) {
+                        leaderCardManager.deselectLeaderPower(player, lc, lp);
+                    }
+                }
+                singlePlayerMatchState.nextTurn();
+            }
+            else{
+                clientHandlerSenders.get(player.getPlayerId()).sendEvent(new SinglePlayerLostEvent(player.getPlayerId()));
+                endGame();
+            }
+        } catch (IllegalOperation illegalOperation) {
+            System.err.println("The token pile is empty");
+        } catch (NotPresentException | LeaderCardNotActiveException notPresentException) {
             //impossible
             notPresentException.printStackTrace();
         }
@@ -751,8 +780,8 @@ public class Controller {
 
     private void nextTurn(Player previousPlayer){
         try {
-            for (LeaderCard lc : previousPlayer.getLeaderCards()) {
-                for (LeaderPower lp : lc.getLeaderPowers()) {
+            for (LeaderCard lc : previousPlayer.getActiveLeaderCards()) {
+                for (LeaderPower lp : lc.getSelectedLeaderPowers()) {
                     leaderCardManager.deselectLeaderPower(previousPlayer, lc, lp);
                 }
             }

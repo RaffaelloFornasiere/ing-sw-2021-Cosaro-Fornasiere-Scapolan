@@ -42,9 +42,15 @@ public class PreGameController {
         this.networkData = new HashMap<>();
     }
 
-    public void NewPlayerEventHandler(PropertyChangeEvent evt){
+    public synchronized void NewPlayerEventHandler(PropertyChangeEvent evt){
         NewPlayerEventWithNetworkData event = (NewPlayerEventWithNetworkData) evt.getNewValue();
         System.out.println("Handling NewPlayerEvent");
+
+        if(event.getPlayerId().equals("*")){
+            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
+                    "Username cannot be \"*\"", new NewPlayerEvent(event.getPlayerId(), event.getLobbyLeaderID())));
+            return;
+        }
 
         if(networkData.containsKey(event.getPlayerId())){
             event.getRequestsElaborator().getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
@@ -52,6 +58,30 @@ public class PreGameController {
             return;
         }
         System.out.println("The username si free");
+
+        if(event.getLobbyLeaderID().equals("*")){
+            int lobbyIndex = searchFirstLobbyNotFull();
+            if(lobbyIndex==-1){
+                System.out.println("Creating new Lobby");
+                Lobby lobby = new Lobby();
+                lobby.addObserver(new LobbyHandler(this.networkData));
+                networkData.put(event.getPlayerId(), event.getRequestsElaborator());
+                lobby.setLeaderID(event.getPlayerId());
+                lobbies.add(lobby);
+                event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
+            }
+            else {
+                try {
+                    lobbies.get(lobbyIndex).addPlayerID(event.getPlayerId());
+                    networkData.put(event.getPlayerId(), event.getRequestsElaborator());
+                    event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
+                } catch (IllegalOperation illegalOperation) {
+                    //impossible
+                    illegalOperation.printStackTrace();
+                }
+            }
+            return;
+        }
 
         if(event.getPlayerId().equals(event.getLobbyLeaderID())){
             System.out.println("Creating new Lobby");
@@ -80,6 +110,14 @@ public class PreGameController {
         }
     }
 
+    private int searchFirstLobbyNotFull() {
+        for(int i = 0; i< lobbies.size(); i++)
+            if(!lobbies.get(i).isFull())
+                return i;
+
+        return -1;
+    }
+
     private int searchLobbyByLeader(String lobbyLeaderID) {
         for(int i = 0; i< lobbies.size(); i++)
             if(lobbies.get(i).getLeaderID().equals(lobbyLeaderID))
@@ -88,7 +126,15 @@ public class PreGameController {
         return -1;
     }
 
-    public void StartMatchEventHandler(PropertyChangeEvent evt){
+    private int searchLobby(String playerID) {
+        for(int i = 0; i< lobbies.size(); i++)
+            if(lobbies.get(i).getLeaderID().equals(playerID) || lobbies.get(i).getOtherPLayersID().contains(playerID))
+                return i;
+
+        return -1;
+    }
+
+    public synchronized void StartMatchEventHandler(PropertyChangeEvent evt){
         StartMatchEvent event = (StartMatchEvent) evt.getNewValue();
         RequestsElaborator re = networkData.getOrDefault(event.getPlayerId(), null);
 
@@ -188,16 +234,36 @@ public class PreGameController {
         }
     }
 
-    public void QuitGameEventHandler(PropertyChangeEvent evt){
+    public synchronized void QuitGameEventHandler(PropertyChangeEvent evt){
         QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
 
         RequestsElaborator requestsElaborator = networkData.get(event.getPlayerId());
-        networkData.remove(event.getPlayerId());
         if(requestsElaborator==null) return;
+        networkData.remove(event.getPlayerId());
+
+        Lobby lobby = lobbies.get(searchLobby(event.getPlayerId()));
+        removeLobbyIfEmpty(lobby);
 
         requestsElaborator.getMatchEventHandlerRegistry().sendEvent(event);
 
         requestsElaborator.closeConnection();
+    }
+
+    private void removeLobbyIfEmpty(Lobby lobby) {
+        boolean allAFK = true;
+        if(networkData.containsKey(lobby.getLeaderID()))
+            allAFK = false;
+        else {
+            for (String playerID : lobby.getOtherPLayersID()) {
+                if (networkData.containsKey(playerID)) {
+                    allAFK = false;
+                    break;
+                }
+            }
+        }
+
+        if(allAFK)
+            lobbies.remove(lobby);
     }
 
     /*public static void main(String[] args) {
