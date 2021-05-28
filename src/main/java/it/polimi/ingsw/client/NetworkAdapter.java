@@ -233,8 +233,8 @@ public class NetworkAdapter {
     public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
         OrganizeWarehouseResEvent event = (OrganizeWarehouseResEvent) evt.getNewValue();
-        var displacement = view.getWarehouseDisplacement(event.getResources());
-        send(new OrganizeWarehouseResEvent(playerID, displacement));
+        //var displacement = view.getWarehouseDisplacement(event.getResources());
+        //send(new OrganizeWarehouseResEvent(playerID, displacement));
     }
 
     public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt) {

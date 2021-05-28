@@ -9,14 +9,18 @@
        (example: group 99 will have artifactId PSP99 -->
   <artifactId>PSP44</artifactId>
 
+
   <version>1.0-SNAPSHOT</version>
   <name>MastersOfRenaissance</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <javafx.version>16</javafx.version>
+    <javafx.maven.plugin.version>0.0.6</javafx.maven.plugin.version>
   </properties>
 
   <dependencies>
+
 
     <!-- JUnit provides unit testing for Java applications -->
     <dependency>
@@ -55,6 +59,12 @@
       <version>30.1.1-jre</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>${javafx.version}</version>
+    </dependency>
+
 
   </dependencies>
 
@@ -71,6 +81,15 @@
           <source>15</source>
           <!-- Minimum JRE version the JAR will be compatible with -->
           <target>15</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>${javafx.maven.plugin.version}</version>
+        <configuration>
+          <mainClass>HelloFX</mainClass>
         </configuration>
       </plugin>
 
