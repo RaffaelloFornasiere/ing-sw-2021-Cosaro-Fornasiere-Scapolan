@@ -20,23 +20,21 @@ public class CLI {
 
     private String thisPlayer;
     private FaithTrackView faithTrack;
-    private HashMap<String, DashBoardView> dashboards;
+    private HashMap<String, PlayerState> playerStates;
     private ArrayList<String> players;
     private DevCardGridView devCardGridView;
-    private HashMap<String, ArrayList<LeaderCardView>> leaderCards;
+    //private HashMap<String, ArrayList<LeaderCardView>> leaderCards;
     private MarketView market;
 
     public CLI(NetworkAdapter client) {
         this.client = client;
         players = new ArrayList<>();
-        players = players.stream().map(name -> name.toUpperCase()).collect(Collectors.toCollection(ArrayList::new));
+        //players = players.stream().map(name -> name.toUpperCase()).collect(Collectors.toCollection(ArrayList::new));
         faithTrack = new FaithTrackView(players);
-        dashboards = new HashMap<>();
-        leaderCards = new HashMap<>();
-        for (String player : players) {
-            leaderCards.put(player, new ArrayList<>());
-            dashboards.put(player, null);
-        }
+        playerStates = new HashMap<>();
+        /*for (String player : players) {
+            playerStates.put(player, new PlayerState(null, new ArrayList<>()));
+        }*/
 
     }
 
@@ -48,8 +46,9 @@ public class CLI {
 
     public void displayDashBoardState(String playerId) {
         out.println("One dashboard has been updated!");
-        if (dashboards.get(playerId) != null) {
-            dashboards.get(playerId).display(playerId.toUpperCase());
+        DashBoardView dashBoardView = playerStates.get(playerId).dashBoard;
+        if (dashBoardView != null) {
+            dashBoardView.display(playerId.toUpperCase());
         }
 
     }
@@ -107,8 +106,8 @@ public class CLI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response == "YES") {
-            leaderCards.put(thisPlayer, leaderCardsChosen);
+        if (response.equals("YES")) {
+            playerStates.get(thisPlayer).leaderCards.addAll(leaderCardsChosen);
             displayInitialResourcesChoiceForm(numberOFResourcesToChose);
         } else displayInitialChoiceForm(leaderCardsIDs, numberOFLeaderCardsToChose, numberOFResourcesToChose);
     }
