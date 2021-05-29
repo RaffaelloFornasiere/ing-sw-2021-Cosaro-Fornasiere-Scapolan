@@ -338,7 +338,7 @@ public class CLI {
             displayResourcesChoiceForm(allResources, numberOFResourcesToChose);
         } else displayInitialChoiceForm(leaderCardsIDs, numberOFLeaderCardsToChose, numberOFResourcesToChose);
     }
-  /*  public static void main(String[] args) {
+    public static void main(String[] args) {
         String player = "PAOLO";
 
         ArrayList<String> ids = new ArrayList<>();
@@ -394,7 +394,7 @@ public class CLI {
         if (response.equals("YES")) {
            System.out.println("good");
         } else  System.out.println("bad");
-    }*/
+    }
 
 
     public void displayResourcesChoiceForm(ArrayList<Resource> resourceType, int numberOFResources) {
@@ -510,15 +510,90 @@ public class CLI {
         out.println(card.toString());
         dashboards.get(thisPlayer).displayDevCardSlots();
     }
-    public void displayIncompatiblePowersError(){
+
+    public void displayIncompatiblePowersError(String leaderCardID, int leaderPowerIndex){
+        String powerName= leaderCards.get(thisPlayer).get(leaderCardID).getLeaderPowerName(leaderPowerIndex).toUpperCase();
+        out.println("SORRY, "+powerName+" IN "+leaderCardID.toUpperCase()+" IS NOT COMPATIBLE WITH THE SELECTED POWERS");
+        out.println( leaderCards.get(thisPlayer).get(leaderCardID).toString());
 
     }
-    public void displayLeaderCardNotActiveError(){
-
+    public void displayLeaderCardNotActiveError(String leaderCardID){
+        out.println("SORRY, "+leaderCardID.toUpperCase()+" IS NOT ACTIVE");
+        out.println( leaderCards.get(thisPlayer).get(leaderCardID).toString());
     }
-    public void displayLobbyState(){
-
+    public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID){
+        out.println("\033[31;1;4mHERE IS THE LOBBY STATE\033[0m \n");
+        String color= Color.WHITE.getAnsiCode();
+        StringBuilder builder= new StringBuilder();
+        builder.append(Color.RED.getAnsiCode() + "╔═");
+        IntStream.range(0, leaderID.length()).forEach(letter->builder.append("═"));
+        builder.append("═╗" + " ");
+        otherPLayersID.stream().forEach(name -> {
+            builder.append(color + "╔═");
+            IntStream.range(0,name.length()).forEach(letter->builder.append("═"));
+            builder.append("═╗" + " ");
+        });
+        builder.append(Color.reset() + "\n");
+        builder.append(Color.RED.getAnsiCode() + "║ " + leaderID + " ║" + " ");
+        otherPLayersID.stream().forEach(name -> {
+            builder.append(color + "║ " + name + " ║" + " ");
+        });
+        builder.append(Color.reset() + "\n");
+        builder.append(Color.RED.getAnsiCode() + "╚═");
+        IntStream.range(0,leaderID.length()).forEach(letter->builder.append("═"));
+        builder.append("═╝" + " ");
+        otherPLayersID.stream().forEach(name -> {
+            builder.append(color + "╚═");
+            IntStream.range(0,name.length()).forEach(letter->builder.append("═"));
+            builder.append("═╝" + " ");
+        });
+        builder.append(Color.reset() + "\n");
+        DrawableObject lobby= new DrawableObject(builder.toString(), 40, 0);
+        Panel panel= new Panel(500, (int)lobby.getHeight()+2, out);
+        panel.addItem(lobby);
+        panel.show();
     }
+
+  /*  public static void main(String[] args) {
+        String leaderID= "Liz97";
+        ArrayList<String> otherPLayersID= new ArrayList<>();
+        otherPLayersID.add("PietroZeta");
+        otherPLayersID.add("Giorgia");
+        otherPLayersID.add("Max 8004");
+
+        out.println("\033[31;1;4mHERE IS THE LOBBY STATE\033[0m \n");
+        String color= Color.WHITE.getAnsiCode();
+        StringBuilder builder= new StringBuilder();
+        builder.append(Color.RED.getAnsiCode() + "╔═");
+        IntStream.range(0, leaderID.length()).forEach(letter->builder.append("═"));
+        builder.append("═╗" + " ");
+        otherPLayersID.stream().forEach(name -> {
+            builder.append(color + "╔═");
+            IntStream.range(0,name.length()).forEach(letter->builder.append("═"));
+            builder.append("═╗" + " ");
+        });
+        builder.append(Color.reset() + "\n");
+        builder.append(Color.RED.getAnsiCode() + "║ " + leaderID + " ║" + " ");
+        otherPLayersID.stream().forEach(name -> {
+            builder.append(color + "║ " + name + " ║" + " ");
+        });
+        builder.append(Color.reset() + "\n");
+        builder.append(Color.RED.getAnsiCode() + "╚═");
+        IntStream.range(0,leaderID.length()).forEach(letter->builder.append("═"));
+        builder.append("═╝" + " ");
+        otherPLayersID.stream().forEach(name -> {
+            builder.append(color + "╚═");
+            IntStream.range(0,name.length()).forEach(letter->builder.append("═"));
+            builder.append("═╝" + " ");
+        });
+        builder.append(Color.reset() + "\n");
+        DrawableObject lobby= new DrawableObject(builder.toString(), 40, 0);
+        Panel panel= new Panel(500, (int)lobby.getHeight()+2, out);
+        panel.addItem(lobby);
+        panel.show();
+    }
+
+   */
     public void displayMatchState(){
 
     }
