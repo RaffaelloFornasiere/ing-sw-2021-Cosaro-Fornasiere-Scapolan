@@ -17,12 +17,6 @@ public class MatchState extends Observable {
     private TurnState turnState;
     public boolean leaderActionExecuted;
 
-    public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards){
-        devCardGrid = new DevCardGrid(cards);
-        this.players= (ArrayList<Player>) players.clone();
-        turnState = TurnState.WAITING_FOR_PLAYER;
-    }
-
     public MatchState( ArrayList<Player> players, ArrayList<DevCard> cards, int marketRow, int marketColumns, HashMap<Marble, Integer> marbles) {
         devCardGrid = new DevCardGrid(cards);
 
@@ -91,5 +85,9 @@ public class MatchState extends Observable {
     public void setTurnState(TurnState turnState) {
         this.turnState = turnState;
         notifyObservers();
+    }
+
+    public void setLastRound(){
+        this.lastRound = true;
     }
 }

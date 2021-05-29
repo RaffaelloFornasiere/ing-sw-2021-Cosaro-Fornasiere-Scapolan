@@ -34,7 +34,7 @@ public class DevDeck{
      *
      * @param card card to be added
      */
-    protected void push(DevCard card) {
+    public void push(DevCard card) {
         if (card.getColor() != color)
             throw new IllegalArgumentException("Card color does not match deck color");
         if (card.getLevel() != level)
@@ -53,7 +53,7 @@ public class DevDeck{
     /**
      * @return pops the card on the deck's top
      */
-    protected DevCard pop() {
+    public DevCard pop() {
         DevCard aux = topCard();
         cards.remove(aux);
         return aux;
@@ -65,6 +65,10 @@ public class DevDeck{
      */
     public DevCard topCard() {
         return cards.get(cards.size() - 1);
+    }
+
+    public int size(){
+        return cards.size();
     }
 
 

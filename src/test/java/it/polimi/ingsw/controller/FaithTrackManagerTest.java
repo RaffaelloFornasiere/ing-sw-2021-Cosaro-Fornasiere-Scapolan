@@ -56,7 +56,7 @@ public class FaithTrackManagerTest extends TestCase {
                 aDevCard.add(devCard);
                 assertEquals(1, aDevCard.size());
                 //create MatchState
-                MatchState matchState= new MatchState(players, aDevCard);
+                MatchState matchState= new MatchState(players, aDevCard, 0, 0, new HashMap<Marble, Integer>(){{put(Marble.RED, 1);}});
                 //player1 has incremented its position of one step, now ITS POSITION SHOULD BE 1.
                 new FaithTrackManager(matchState).incrementFaithTrackPosition(player1, 1);
                 assertEquals(1, (int) player1.getDashBoard().getFaithTrackData().getPosition());

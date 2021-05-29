@@ -9,13 +9,24 @@ import java.util.HashMap;
  * The client will receive a BadRequestEvent if this event was mal-pose
  */
 public class SimpleChosenResourcesEvent extends MatchEvent{
-    private HashMap<Resource, Integer> allResourcesChosen;
+    private final HashMap<Resource, Integer> allResourcesChosen;
 
+    /**
+     * Constructor for the class
+     * @param playerID The ID of the player that generated(directly or indirectly) this event
+     * @param allResourcesChosen All the resources chosen by the player
+     */
+    @SuppressWarnings("unchecked")
     public SimpleChosenResourcesEvent(String playerID, HashMap<Resource, Integer> allResourcesChosen) {
         super(playerID);
         this.allResourcesChosen = (HashMap<Resource, Integer>) allResourcesChosen.clone();
     }
 
+    /**
+     * Getter for all the resources chosen by the player
+     * @return All the resources chosen by the player
+     */
+    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getAllResourcesChosen() {
         return (HashMap<Resource, Integer>) allResourcesChosen.clone();
     }

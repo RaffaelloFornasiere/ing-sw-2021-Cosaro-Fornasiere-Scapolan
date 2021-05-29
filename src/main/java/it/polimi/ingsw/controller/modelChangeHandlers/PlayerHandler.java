@@ -3,8 +3,7 @@ package it.polimi.ingsw.controller.modelChangeHandlers;
 import it.polimi.ingsw.events.ClientEvents.PlayerStateEvent;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.virtualview.ClientHandlerSender;
-import it.polimi.ingsw.virtualview.RequestsElaborator;
+import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 

@@ -31,18 +31,17 @@ public class GsonInheritanceAdapterTest {
 
         LeaderCard lc = new LeaderCard("Test", vp, requirement, power);
 
-        System.out.println(((DepositLeaderPower)lc.getLeaderPowers().get(0)).getMaxResources());
-
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
         builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
         Gson gson = builder.create();
         String JSONLeaderCard = gson.toJson(lc);
-        String expected = "{\"victoryPoints\":3,\"activationRequirements\":[{\"CLASSNAME\":\"" +
-                "it.polimi.ingsw.model.LeaderCards.ResourcesRequirement\",\"INSTANCE\":{\"resources\":{\"SHIELD\":5}}}]," +
-                "\"powers\":[{\"key\":{\"CLASSNAME\":\"it.polimi.ingsw.model.LeaderCards.DepositLeaderPower\"," +
-                "\"INSTANCE\":{\"maxResources\":{\"COIN\":2},\"currentResources\":{\"COIN\":0},\"observers\":[]}},\"value\":false}],\"observers\":[]}";
+        String expected = "{\"cardID\":\"Test\",\"victoryPoints\":3,\"activationRequirements\":[{\"CLASSNAME\":" +
+                "\"it.polimi.ingsw.model.LeaderCards.ResourcesRequirement\",\"INSTANCE\":{\"resources\":{\"SHIELD\":5}}}]," +
+                "\"powers\":[{\"KEY_CLASSNAME\":\"it.polimi.ingsw.model.LeaderCards.DepositLeaderPower\"," +
+                "\"KEY_INSTANCE\":{\"maxResources\":{\"COIN\":2},\"currentResources\":{\"COIN\":0},\"observers\":[]}," +
+                "\"VALUE_CLASSNAME\":\"java.lang.Boolean\",\"VALUE_INSTANCE\":false}],\"observers\":[]}";
 
         assertEquals(expected, JSONLeaderCard);
     }

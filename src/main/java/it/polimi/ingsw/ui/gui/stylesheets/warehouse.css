@@ -1,0 +1,32 @@
+.Coin {
+    -fx-image: url(images/coin.png);
+}
+
+.Servant {
+    -fx-image: url(images/servant.png);
+}
+
+.Rock {
+    -fx-image: url(images/rock.png);
+}
+
+.Shield {
+    -fx-image: url(images/shield.png);
+}
+
+
+.StrongBox {
+    -fx-background-image: url(images/strongbox.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 150 150;
+    -fx-background-position: center center;
+}
+
+.Cell {
+
+}
+
+.DashBoardView
+{
+    -fx-image: url(images/Dashboard.png);
+}

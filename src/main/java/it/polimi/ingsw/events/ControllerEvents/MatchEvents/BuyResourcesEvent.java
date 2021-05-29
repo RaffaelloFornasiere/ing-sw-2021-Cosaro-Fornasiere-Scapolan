@@ -12,10 +12,10 @@ import it.polimi.ingsw.model.Direction;
  */
 public class BuyResourcesEvent extends MatchEvent {
     /**
-     *
-     * @param playerID the player that generated(directly or indirectly) this event
-     * @param direction row or column
-     * @param index index of row or column
+     * Constructor for the class
+     * @param playerID The ID of the player that generated(directly or indirectly) this event
+     * @param direction Row or column
+     * @param index The index of row or column
      */
     public BuyResourcesEvent(String playerID, Direction direction, int index) {
         super(playerID);
@@ -23,19 +23,18 @@ public class BuyResourcesEvent extends MatchEvent {
         this.index = index;
     }
 
-    private Direction direction;
-    private int index;
-    private boolean UseLeaderPowers;
-    private String eventName;
+    private final Direction direction;
+    private final int index;
 
+    /**
+     * Getter for the row or column
+     * @return The row or column
+     */
     public Direction getDirection() {return direction;}
+
+    /**
+     * Getter for the index of row or column
+     * @return The index of row or column
+     */
     public int getIndex() {return index;}
-
-    @Override
-    public String getEventName() {
-        return this.getClass().getName();
-    }
-
-
-
 }

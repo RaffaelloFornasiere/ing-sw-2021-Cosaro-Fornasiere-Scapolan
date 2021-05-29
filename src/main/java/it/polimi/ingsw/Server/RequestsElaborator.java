@@ -1,10 +1,12 @@
-package it.polimi.ingsw.virtualview;
+package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
+import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.events.QueueStopEvent;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -14,15 +16,17 @@ import java.util.concurrent.BlockingQueue;
 public class RequestsElaborator {
     public static final int QUEUE_SIZE = 10;
 
+    private Socket socket;
     private ClientHandlerSender clientHandlerSender;
     private ClientHandlerReceiver clientHandlerReceiver;
     private BlockingQueue<Event> requestsQueue;
-    private VirtualView mainEventHandlerRegistry;
-    private VirtualView matchEventHandlerRegistry;
+    private EventRegistry mainEventHandlerRegistry;
+    private EventRegistry matchEventHandlerRegistry;
     private String ownerUserID;
 
-    public RequestsElaborator(Socket socket, VirtualView mainEventHandlerRegistry) {
+    public RequestsElaborator(Socket socket, EventRegistry mainEventHandlerRegistry) {
         try {
+            this.socket = socket;
             this.requestsQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
             this.clientHandlerSender = new ClientHandlerSender(socket.getOutputStream());
             this.clientHandlerReceiver = new ClientHandlerReceiver(socket.getInputStream(), requestsQueue);
@@ -32,31 +36,27 @@ public class RequestsElaborator {
         }
     }
 
-    @SuppressWarnings("InfiniteLoopStatement")
     public void elaborateRequests(){
         new Thread(()->clientHandlerReceiver.waitForEvent()).start();
 
-        while(true) {
+        while(socket!=null) {
             try {
-                boolean done = false;
-                while (!done) {
-                    Event event = requestsQueue.take();
-                    done = true;
+                Event event = requestsQueue.take();
+                if(socket!=null) {
                     System.out.println("Elaborating: " + event.getEventName());
-                    if(event.getClass() == NewPlayerEvent.class)
+                    if (event.getClass() == NewPlayerEvent.class)
                         event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
-                    else if(!ownerUserID.equals(event.getPlayerId()))
+                    else if (!ownerUserID.equals(event.getPlayerId()))
                         mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
                                 "The userID given is wrong", event));
 
-                    if(MatchEvent.class.isAssignableFrom(event.getClass())) {
+                    if (MatchEvent.class.isAssignableFrom(event.getClass())) {
                         if (matchEventHandlerRegistry == null)
                             mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
                                     "The match has not started yet", event));
                         else
                             matchEventHandlerRegistry.sendEvent(event);
-                    }
-                    else{
+                    } else {
                         mainEventHandlerRegistry.sendEvent(event);
                     }
                 }
@@ -70,11 +70,27 @@ public class RequestsElaborator {
         return clientHandlerSender;
     }
 
-    public void setMatchEventHandlerRegistry(VirtualView matchEventHandlerRegistry) {
+    public EventRegistry getMatchEventHandlerRegistry() {
+        return matchEventHandlerRegistry;
+    }
+
+    public void setMatchEventHandlerRegistry(EventRegistry matchEventHandlerRegistry) {
         this.matchEventHandlerRegistry = matchEventHandlerRegistry;
     }
 
     public void setOwnerUserID(String ownerUserID) {
         this.ownerUserID = ownerUserID;
+    }
+
+    public void closeConnection() {
+        clientHandlerSender.closeConnection();
+        clientHandlerReceiver.closeConnection();
+        try {
+            socket.close();
+            socket = null;
+            requestsQueue.put(new QueueStopEvent());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

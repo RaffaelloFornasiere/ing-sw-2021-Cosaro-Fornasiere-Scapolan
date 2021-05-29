@@ -30,7 +30,8 @@ public class DashBoardStateEvent extends ClientEvent{
     }
 
     /**
-     * Getter for the ID of the development cards at the top of each card slot
+     * Getter for the ID of the development cards at the top of each card slot. If there's no card in some slot, there
+     * will be a null object in its position
      * @return The ID of the development cards at the top of each card slot
      */
     @SuppressWarnings("unchecked")
