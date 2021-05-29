@@ -20,7 +20,7 @@ public class CLI {
     private HashMap<String, DashBoardView> dashboards;
     private ArrayList<String> players;
     private DevCardGridView devCardGridView;
-    private HashMap<String, HashMap<String,LeaderCardView>> leaderCards;
+    private HashMap<String, HashMap<String, LeaderCardView>> leaderCards;
     private MarketView market;
 
     public CLI(NetworkAdapter client) {
@@ -31,7 +31,7 @@ public class CLI {
         dashboards = new HashMap<>();
         leaderCards = new HashMap<>();
         for (String player : players) {
-            leaderCards.put(player, new HashMap<String,LeaderCardView>());
+            leaderCards.put(player, new HashMap<String, LeaderCardView>());
             dashboards.put(player, null);
         }
 
@@ -320,7 +320,7 @@ public class CLI {
         out.println("YOU HAVE CHOSEN THIS LEADER CARDS:");
         Panel panel2 = new Panel(1000, 15, out);
         n.set(0);
-        HashMap<String,LeaderCardView> leaderCardsChosen = new HashMap<>();
+        HashMap<String, LeaderCardView> leaderCardsChosen = new HashMap<>();
         cardIndexes.stream().forEach(index -> {
             LeaderCardView card = new LeaderCardView("LeaderCard" + index);
             leaderCardsChosen.put("LeaderCard" + index, card);
@@ -403,14 +403,14 @@ public class CLI {
             initialResources.put(res, 0);
         }
         out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResources + " RESOURCES AMONG:");
-        resourceType.stream().forEach(el->out.println( colorResource(el)+ el.toString().toUpperCase()+"\n"+ Color.reset()));
+        resourceType.stream().forEach(el -> out.println(colorResource(el) + el.toString().toUpperCase() + "\n" + Color.reset()));
 
         for (Resource res : resourceType) {
             if (res != resourceType.get(resourceType.size() - 1) && numberOFResources > 0) {
-                out.println("HOW MANY " +colorResource(res) + res.toString()+ Color.reset()  + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResources + " LEFT)");
+                out.println("HOW MANY " + colorResource(res) + res.toString() + Color.reset() + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResources + " LEFT)");
                 int n = in.nextInt();
                 while (numberOFResources - n < 0) {
-                    out.println("RETRY, HOW MANY "+colorResource(res) + res.toString()+ Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
+                    out.println("RETRY, HOW MANY " + colorResource(res) + res.toString() + Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
                     n = in.nextInt();
                 }
                 initialResources.put(res, n);
@@ -420,7 +420,7 @@ public class CLI {
         if (numberOFResources >= 0) {
             if (numberOFResources == 0) out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT");
             else {
-                out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT: THESE WILL BE " +colorResource(resourceType.get(resourceType.size() - 1))+ resourceType.get(resourceType.size() - 1).toString()+ Color.reset());
+                out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT: THESE WILL BE " + colorResource(resourceType.get(resourceType.size() - 1)) + resourceType.get(resourceType.size() - 1).toString() + Color.reset());
                 initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResources);
             }
         }
@@ -443,102 +443,201 @@ public class CLI {
         } else displayResourcesChoiceForm(resourceType, numberOFResources);
     }
 
-  /*  public static void main(String[] args) {
-        String thisPlayer = "paolo";
-        int numberOFResources = 7;
-        ArrayList<Resource> resourceType = new ArrayList<>();
-        resourceType.add(Resource.COIN);
-        resourceType.add(Resource.ROCK);
-       // resourceType.add(Resource.SERVANT);
-        resourceType.add(Resource.SHIELD);
+    /*  public static void main(String[] args) {
+          String thisPlayer = "paolo";
+          int numberOFResources = 7;
+          ArrayList<Resource> resourceType = new ArrayList<>();
+          resourceType.add(Resource.COIN);
+          resourceType.add(Resource.ROCK);
+         // resourceType.add(Resource.SERVANT);
+          resourceType.add(Resource.SHIELD);
 
-        HashMap<Resource, Integer> initialResources = new HashMap<>();
-        for (Resource res : resourceType) {
-            initialResources.put(res, 0);
-        }
-        out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResources + " RESOURCES AMONG:");
-        resourceType.stream().forEach(el->out.println( colorResource(el)+ el.toString().toUpperCase()+"\n"+ Color.reset()));
+          HashMap<Resource, Integer> initialResources = new HashMap<>();
+          for (Resource res : resourceType) {
+              initialResources.put(res, 0);
+          }
+          out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResources + " RESOURCES AMONG:");
+          resourceType.stream().forEach(el->out.println( colorResource(el)+ el.toString().toUpperCase()+"\n"+ Color.reset()));
 
-        for (Resource res : resourceType) {
-            if (res != resourceType.get(resourceType.size() - 1) && numberOFResources > 0) {
-                out.println("HOW MANY " +colorResource(res) + res.toString()+ Color.reset()  + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResources + " LEFT)");
-                int n = in.nextInt();
-                while (numberOFResources - n < 0) {
-                    out.println("RETRY, HOW MANY "+colorResource(res) + res.toString()+ Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
-                    n = in.nextInt();
-                }
-                initialResources.put(res, n);
-                numberOFResources = numberOFResources - n;
-            }
-        }
-        if (numberOFResources >= 0) {
-            if (numberOFResources == 0) out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT");
-            else {
-                out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT: THESE WILL BE " +colorResource(resourceType.get(resourceType.size() - 1))+ resourceType.get(resourceType.size() - 1).toString()+ Color.reset());
-                initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResources);
-            }
-        }
-        out.println("YOU HAVE CHOSEN THIS RESOURCES:");
-        StringBuilder builder = new StringBuilder();
+          for (Resource res : resourceType) {
+              if (res != resourceType.get(resourceType.size() - 1) && numberOFResources > 0) {
+                  out.println("HOW MANY " +colorResource(res) + res.toString()+ Color.reset()  + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResources + " LEFT)");
+                  int n = in.nextInt();
+                  while (numberOFResources - n < 0) {
+                      out.println("RETRY, HOW MANY "+colorResource(res) + res.toString()+ Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
+                      n = in.nextInt();
+                  }
+                  initialResources.put(res, n);
+                  numberOFResources = numberOFResources - n;
+              }
+          }
+          if (numberOFResources >= 0) {
+              if (numberOFResources == 0) out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT");
+              else {
+                  out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT: THESE WILL BE " +colorResource(resourceType.get(resourceType.size() - 1))+ resourceType.get(resourceType.size() - 1).toString()+ Color.reset());
+                  initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResources);
+              }
+          }
+          out.println("YOU HAVE CHOSEN THIS RESOURCES:");
+          StringBuilder builder = new StringBuilder();
 
-        initialResources.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
-            builder.append(color + resource.toString() + ": ");
-            IntStream.range(0, initialResources.get(resource)).forEach(n -> builder.append(color + shape + " "));
-            builder.append(Color.reset() + "\n");
-        });
-        out.println(builder.toString());
-        out.println("DO YOU AGREE? yes/no");
-        String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
-            //put in dashboard event
-            out.println("resources put in dashboard");
-        }
+          initialResources.keySet().forEach(resource -> {
+              String color = colorResource(resource);
+              String shape = shapeResource(resource);
+              builder.append(color + resource.toString() + ": ");
+              IntStream.range(0, initialResources.get(resource)).forEach(n -> builder.append(color + shape + " "));
+              builder.append(Color.reset() + "\n");
+          });
+          out.println(builder.toString());
+          out.println("DO YOU AGREE? yes/no");
+          String response = in.next().toUpperCase();
+          if (response.equals("YES")) {
+              //put in dashboard event
+              out.println("resources put in dashboard");
+          }
 
+      }
+  */
+    public void updateDepositLeaderPowerState(String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
+        out.println(thisPlayer + " , THE DEPOSIT LEADER POWER OF " + leaderCardID.toUpperCase() + "\n HAS BEEN UPDATED! CHECK IT OUT!");
+        leaderCards.get(thisPlayer).get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
+        out.println(leaderCards.get(thisPlayer).get(leaderCardID).toString());
     }
-*/
-    public void updateDepositLeaderPowerState( String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
-    out.println(thisPlayer+" , THE DEPOSIT LEADER POWER OF "+  leaderCardID.toUpperCase()+"\n HAS BEEN UPDATED! CHECK IT OUT!");
-    leaderCards.get(thisPlayer).get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
-    out.println(leaderCards.get(thisPlayer).get(leaderCardID).toString());
-    }
 
-    public void displayDevCardSlotError( String devCardID, int cardSlot){
-        out.println("SORRY, "+devCardID+" CANNOT BE ADDED TO THE SELECTED SLOT, SINCE IT \n  DOES NOT FULFILL THE SPECIFIED LEVEL REQUIREMENTS");
-        DevCardView card= new DevCardView(devCardID);
+    public void displayDevCardSlotError(String devCardID, int cardSlot) {
+        out.println("SORRY, " + devCardID + " CANNOT BE ADDED TO THE SELECTED SLOT, SINCE IT \n  DOES NOT FULFILL THE SPECIFIED LEVEL REQUIREMENTS");
+        DevCardView card = new DevCardView(devCardID);
         out.println(card.toString());
         dashboards.get(thisPlayer).displayDevCardSlots();
     }
-    public void displayIncompatiblePowersError(){
 
-    }
-    public void displayLeaderCardNotActiveError(){
-
-    }
-    public void displayLobbyState(){
-
-    }
-    public void displayMatchState(){
+    public void displayIncompatiblePowersError(String leaderCardID, int leaderPowerIndex) {
+        LeaderCardView card = leaderCards.get(thisPlayer).get(leaderCardID);
+        System.out.println(card.getLeaderPowerName(leaderPowerIndex) + "IN" + leaderCardID.toUpperCase() + " IS NOT COMPATIBLE WITH OTHER SELECTED POWERS");
+        System.out.println(card.toString());
 
     }
 
-    public void displayOrganizeResourcesForm(){
+    public void displayLeaderCardNotActiveError(String leaderCardID) {
+        LeaderCardView card = leaderCards.get(thisPlayer).get(leaderCardID);
+        System.out.println("SORRY, " + leaderCardID.toUpperCase() + " IS NOT ACTIVE, YOU CAN'T USE IT");
+        System.out.println(card.toString());
+    }
+
+    public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
+        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
+        StringBuilder builder = new StringBuilder();
+        builder.append(Color.RED.getAnsiCode() + "╔═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╗  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╔═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╗  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "║ ");
+        builder.append(leaderID);
+        builder.append(" ║  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("║ ");
+            builder.append(name);
+            builder.append(" ║  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "╚═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╝  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╚═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╝  ");
+        });
+
+        DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
+        Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
+        panel.addItem(obj);
+        panel.show();
+    }
+/*
+    public static void main(String[] args) {
+        String leaderID = "Steve100";
+        ArrayList<String> otherPlayersID = new ArrayList<>();
+        otherPlayersID.add("Michael");
+        otherPlayersID.add("FILIP");
+        otherPlayersID.add("GIAN20034");
+
+
+        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
+        StringBuilder builder = new StringBuilder();
+        builder.append(Color.RED.getAnsiCode() + "╔═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╗  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╔═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╗  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "║ ");
+        builder.append(leaderID);
+        builder.append(" ║  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("║ ");
+            builder.append(name);
+            builder.append(" ║  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "╚═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╝  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╚═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╝  ");
+        });
+
+        DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
+        Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
+        panel.addItem(obj);
+        panel.show();
+    }
+*/
+
+    public void displayMatchState() {
 
     }
-    public void displayPlayerState(){
+
+    public void displayOrganizeResourcesForm(HashMap<Resource, Integer> resourcesToOrganize) {
+
 
     }
-    public void displayRequirementsNotMetError(){
+
+    public void displayPlayerState() {
 
     }
-     public void displaySetupDone(){
 
-     }
+    public void displayRequirementsNotMetError() {
 
-     public void displaySimpleChoseResourcesForm(){
+    }
 
-     }
+    public void displaySetupDone() {
+
+    }
+
+    public void displaySimpleChoseResourcesForm() {
+
+    }
 
 
     private static String colorResource(Resource res) {
