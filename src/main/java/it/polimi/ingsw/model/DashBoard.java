@@ -228,6 +228,10 @@ public class DashBoard extends Observable {
         return resources;
     }
 
+    public ProductionPower getPersonalPower() {
+        return personalPower;
+    }
+
     /**
      * Getter for the faith track
      * @return the faith track

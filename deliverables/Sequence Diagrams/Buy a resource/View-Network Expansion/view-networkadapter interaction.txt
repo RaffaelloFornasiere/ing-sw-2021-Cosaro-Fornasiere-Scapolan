@@ -1,0 +1,100 @@
+title Cli view-networkadapter interaction
+
+actor user
+participant view
+participant networkAdapter
+
+
+
+
+note over view:console interface
+user->view: start
+user<-view: insert server's port and ip
+user->view: (ip, port)
+view->networkAdapter: connectToServer(ip, port)
+loop while status != connected && !timeout.expired()
+view->networkAdapter: getConnectionStatus()
+end
+====
+alt if not connected
+view<--networkAdapter: connection failed
+user<-view: connection failed
+view->view: end game
+end
+====
+networkAdapter->networkAdapter: new Socket()
+networkAdapter->*networkHandlerSender: new netWorkHandlerServer(Socket)
+networkAdapter->*networkHandlerReader: new netWorkHandlerReader(Socket)
+view<-networkAdapter:connection succesfull
+
+user<--view: connection succesfull
+user<-view: insert username
+user->view: (username)
+view->networkAdapter:joinGame(username)
+networkAdapter->networkAdapter: new JoinGameEvent()
+networkAdapter->networkHandlerSender:send(joinGameEvent)
+note over networkHandlerSender: convert event to JSON
+networkHandlerSender->]:write(JSONEvent)
+
+networkHandlerReader<-]: TCP packet
+note over networkHandlerReader: convert event from JSON
+networkAdapter<-networkHandlerReader: EventHandler(UserAcceptedEvent)
+
+view<-networkAdapter: "request accpeted"
+user<-view: you're logged in
+user<-view: wait for other users to join
+====
+
+networkHandlerReader<-]: TCP packet
+note over networkHandlerReader: convert event from JSON
+networkAdapter<-networkHandlerReader: EventHandler(GameStartedEvent)
+
+view<-networkAdapter: UpdateView("Game started")
+user<-view: game started
+==Generic User's Turn==
+loop not user's turn
+networkHandlerReader<-]: TCP packet
+note over networkHandlerReader: convert event from JSON
+note over networkAdapter: events that only modify the view\nto show user what other players are doing
+networkAdapter<-networkHandlerReader: EventHandler(SepcificEvent)
+networkAdapter->networkAdapter:update local variables
+view<-networkAdapter: UpdateView()
+end 
+
+user<-view: "it is your turn, choose an action:\n1) Buy Resources from market\n2) Buy devCard\n3) Activate produciton power\n4) Activate leader card"
+
+user->view:1
+user<-view: marketState\nselect direction and index
+user->view:(dir, index)
+view->networkAdapter:buyResources(dir, index)
+networkAdapter->networkAdapter: new BuyResourcesEvent()
+networkAdapter->networkHandlerSender: send(BuyResourcesEvent()
+note over networkHandlerSender: convert event to JSON
+networkHandlerSender->]:write(JSONEvent)
+alt if there are multiple leader cards and white marbles
+networkHandlerReader<-]: TCP Packet
+networkAdapter<-networkHandlerReader:EventHandler(Event)
+view<-networkAdapter: Ask for leaderCard-marble matching
+user<-view: 
+user->view: matching
+view->networkAdapter: HashMap<LeaderCard, nMarbles>
+networkAdapter->networkAdapter: new SelectMultipleLeaderPowersCardEvent()
+networkAdapter->networkHandlerSender: send(event)
+networkHandlerSender->]:write(JSONEvent)
+end
+
+alt if can't be placed
+end
+
+networkHandlerReader<-]: TCP Packet
+networkAdapter<-networkHandlerReader:EventHandler(ResoruceDisplacement)
+view<-networkAdapter: Ask for displacing resources
+user<-view: 
+user->view:
+view->networkAdapter: ArrayList<ArrayList> displacement
+networkAdapter->networkAdapter: new ResourceDisplacementEvent
+networkAdapter->networkHandlerSender: send(event)
+networkHandlerSender->]:write(JSONEvent)
+
+
+==continues in similar way==

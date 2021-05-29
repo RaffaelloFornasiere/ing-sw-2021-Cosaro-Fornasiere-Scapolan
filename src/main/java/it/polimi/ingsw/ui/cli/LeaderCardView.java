@@ -36,11 +36,18 @@ public class LeaderCardView {
     public void updateDepositLeaderPower(int leaderPowerIndex, HashMap<Resource, Integer> storedResources)  {
         if(card.getLeaderPowers().get(leaderPowerIndex) instanceof DepositLeaderPower ){
             try {
-                ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).addResources(storedResources);
+                HashMap<Resource,Integer> prev= ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources();
+                HashMap<Resource,Integer> diff= new HashMap<>();
+                prev.keySet().forEach(resource -> diff.put(resource, storedResources.get(resource)-prev.get(resource)));
+                ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).addResources(diff);
             } catch (ResourcesLimitsException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String getLeaderPowerName( int leaderPowerIndex){
+        return card.getLeaderPowers().get(leaderPowerIndex).getClass().getName().substring(34);
     }
 
 

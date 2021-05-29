@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller.modelChangeHandlers;
 import it.polimi.ingsw.events.ClientEvents.LobbyStateEvent;
 import it.polimi.ingsw.model.Lobby;
 import it.polimi.ingsw.utilities.Observer;
-import it.polimi.ingsw.virtualview.RequestsElaborator;
+import it.polimi.ingsw.Server.RequestsElaborator;
 
 import java.util.HashMap;
 

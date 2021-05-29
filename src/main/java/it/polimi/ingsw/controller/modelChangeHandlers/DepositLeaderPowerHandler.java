@@ -5,8 +5,7 @@ import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.virtualview.ClientHandlerSender;
-import it.polimi.ingsw.virtualview.RequestsElaborator;
+import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.ArrayList;
 import java.util.HashMap;

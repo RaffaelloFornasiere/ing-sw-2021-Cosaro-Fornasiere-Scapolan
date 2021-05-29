@@ -9,16 +9,16 @@ participant "lse:LobbyStateEvent" as CLobbyStateEvent
 participant "clientGson:Gson" as CGson
 participant ":NetworkHandlerSender" as NetworkHandlerSender
 participant ":NetworkHandlerReciver" as NetworkHandlerReciver
-participant "clientSoket:Soket" as CSoket
+participant "clientSocket:Socket" as CSocket
 participant "clientPrintWriter:PrintWriter" as CPrintWriter
 participant "clientScanner:Scanner" as CScanner
 end
 
-participantgroup #lightblue **VirtualView**
+participantgroup #lightblue **Server - VirtualView**
 participant ":MainServerThread" as MainServerThread
-participant ":ServerSoket" as ServerSoket
-participant "serverSoket:Soket" as SSoket
-participant "requestQueue:RequestQueue" as SRequestQueue
+participant ":ServerSocket" as ServerSocket
+participant "serverSocket:Socket" as SSocket
+participant "requestQueue:BlockingQueue" as SRequestQueue
 participant ":RequestsElaborator" as SRequestsElaborator
 participant ":ClientHandlerSender" as ClientHandlerSender
 participant ":ClientHandlerReciver" as ClientHandlerReciver
@@ -29,93 +29,113 @@ participant "npeS:NewPlayerEvent" as SNewPlayerEvent
 end
 
 participantgroup #pink **Controller**
-participant ":LobbyManager" as LobbyManager
+participant ":EventRegistry" as EventRegistry
+participant ":PreGameControllerr" as PreGameController
+participant ":LobbyHandler" as LobbyHandler
 end
 
 participantgroup #lightgray **Model**
-participant ":Lobby" as Lobby
+participant "lobby:Lobby" as Lobby
 end
 
-MainServerThread ->>*ServerSoket: new(serverPort)
-MainServerThread ->ServerSoket: accept()
+MainServerThread->>*ServerSocket: new(serverPort)
+MainServerThread->ServerSocket: accept()
+activate ServerSocket
+
+PreGameController->>EventRegistry: addPropertyChangeListener(NewPlayerEvent.class.getSimpleName(), this::NewPlayerEventHandler)
 
 AUser->>View: inserts serverPort and \nplayerName and clicks confirm
 View->>NetworkHandlerSender: joinGame(serverPort, playerName)
-NetworkHandlerSender->>*CSoket: new(serverIP, serverPort)
+NetworkHandlerSender->>*CSocket: new(serverIP, serverPort)
 loop while connection unsuccessful
-CSoket-->>NetworkHandlerSender:constructionError
-destroy CSoket
+CSocket-->>NetworkHandlerSender:constructionError
+destroy CSocket
 NetworkHandlerSender-->>View: connectionError
 View->>AUser: update the view to report\nthe connection error
 AUser->>View: inserts serverPort and \nplayerName and clicks confirm
 View->>NetworkHandlerSender: joinGame(serverPort, playerName)
-NetworkHandlerSender->>*CSoket: new(serverIP, serverPort)
+NetworkHandlerSender->>*CSocket: new(serverIP, serverPort)
 end
 
-CSoket-->>ServerSoket: connection
-ServerSoket->>*SSoket: new()
-ServerSoket-->MainServerThread: serverSoket
+CSocket-->>ServerSocket: connection
+ServerSocket->>*SSocket: new()
+ServerSocket-->MainServerThread: serverSocket
+deactivate ServerSocket
 note over MainServerThread, SRequestsElaborator:RequestsElaborator willwork on its separate thread
-MainServerThread->>*SRequestsElaborator: new(serverSoket)
-MainServerThread ->ServerSoket: accept()
+MainServerThread->>*SRequestsElaborator: new(serverSocket)
+MainServerThread ->ServerSocket: accept()
+activate ServerSocket
 
 SRequestsElaborator->>*SRequestQueue: new(dim)
-SRequestsElaborator->>*ClientHandlerSender: new(serverSoket.getOutputStream())
-ClientHandlerSender->>*SPrintWriter: new(serverSoket.getOutputStream())
+SRequestsElaborator->>*ClientHandlerSender: new(serverSocket.getOutputStream())
+ClientHandlerSender->>*SPrintWriter: new(serverSocket.getOutputStream())
 note over ClientHandlerReciver, SRequestsElaborator:ClientHandlerReciver will \nwork on its separate thread
-SRequestsElaborator->>*ClientHandlerReciver: new(serverSoket.getInputtStream(), requestQueue)
-ClientHandlerReciver->>*SScanner: new(serverSoket.getInputtStream())
+SRequestsElaborator->>*ClientHandlerReciver: new(serverSocket.getInputtStream(), requestQueue)
+ClientHandlerReciver->>*SScanner: new(serverSocket.getInputtStream())
 SRequestsElaborator->SRequestQueue:consume()
-note over SRequestQueue, SRequestsElaborator: Thiss will block the thread that RequestsElaborator is working\non untill there is a Request to elaborate into the queue
-ClientHandlerReciver->SScanner: read()
+activate SRequestQueue
+note over SRequestQueue, SRequestsElaborator: This will block the thread that RequestsElaborator is working\non untill there is a Request to elaborate into the queue
+ClientHandlerReciver->SScanner:readLine()
+activate SScanner
 note over ClientHandlerReciver, SScanner: This will block the thread that ClientHandlerReciever is running on,\nmaking it wait untill the client will send a message to the server,\nat which point the ClientHandlerReciever will decode it into a POJO\nand put it into the RequestQueue
 
-NetworkHandlerSender->>*CPrintWriter: new(clientSoket.getOutputStream())
+NetworkHandlerSender->>*CPrintWriter: new(clientSocket.getOutputStream())
 note over NetworkHandlerReciver, NetworkHandlerSender:NetworkHandlerReciver will \nwork on its separate thread
-NetworkHandlerSender->>*NetworkHandlerReciver: new(view, clientSoket)
-NetworkHandlerReciver->>*CScanner: new(clientSoket.getInputtStream())
-NetworkHandlerReciver->CScanner:read()
+NetworkHandlerSender->>*NetworkHandlerReciver: new(view, clientSocket)
+NetworkHandlerReciver->>*CScanner: new(clientSocket.getInputtStream())
+NetworkHandlerReciver->CScanner:readLine()
+activate CScanner
 note over NetworkHandlerReciver, CScanner: This will block the thread that NetworkHandlerReciever is running on,\nmaking it wait untill the server will send a message to this client,\nat which point the NetworkHandlerReciever will work out the server\nrequest and do what it was asked to do
 
-note over SSoket, CSoket: since from now on ServerSoket, and the two Sokets will work in background, we will remove their lines for visual clarity
-destroysilent ServerSoket
-destroysilent SSoket
-destroysilent CSoket
+note over SSocket, CSocket: since from now on ServerSocket, and the two Sockets will work in background, we will remove their lines for visual clarity
+destroysilent ServerSocket
+destroysilent SSocket
+destroysilent CSocket
 
 NetworkHandlerSender->>*CNewPlayerEvent: new(playerName)
 NetworkHandlerSender->CGson: toJson(npeC)
 CGson->NetworkHandlerSender: newPlayerEventJSON
 destroysilent CNewPlayerEvent
-NetworkHandlerSender->>CPrintWriter: write(newPlayerEventJSON)
+NetworkHandlerSender->>CPrintWriter: println(newPlayerEventJSON)
 CPrintWriter-#6B0505>>SScanner: newPlayerEventJSON
 SScanner-->ClientHandlerReciver: newPlayerEventJSON
+deactivate SScanner
 
 ClientHandlerReciver->SGson: fromJSON(newPlayerEventJSON, Event.class)
+activate SGson
 SGson->>*SNewPlayerEvent: new()
 SGson-->ClientHandlerReciver: npeS
+deactivate SGson
 ClientHandlerReciver->>SRequestQueue:produce(npeS)
-ClientHandlerReciver->SScanner: read()
-note over ClientHandlerReciver,SScanner: This thread will again be blocked on this read() call
+ClientHandlerReciver->SScanner: readLine()
+activate SScanner
+note over ClientHandlerReciver,SScanner: This thread will again be blocked on this readLine() call
 
 SRequestQueue-->SRequestsElaborator: npeS
-SRequestsElaborator->>SNewPlayerEvent: notify()
-SNewPlayerEvent->>LobbyManager: update(npeS)
-LobbyManager->>Lobby: addPlayer(npeS.playerName)
+deactivate SRequestQueue
+SRequestsElaborator->>EventRegistry: NewPlayerEventHandler(npeS)
+EventRegistry->>PreGameController: NewPlayerEventHandler(npeS)
+PreGameController->>Lobby: addPlayer(npeS.playerName)
 Lobby->>Lobby: notify()
-Lobby->>LobbyManager: update(lobbyStateEvent)
-LobbyManager->>ClientHandlerSender: drawLobby(lobbyStateEvent)
+Lobby->>LobbyHandler: update(lobby)
+LobbyHandler->>ClientHandlerSender: sendEvent(lobbyStateEvent)
 note left of ClientHandlerSender: we skip the part where the event is tranformed into a JSON\nsince it will work exactly as before
-ClientHandlerSender->>SPrintWriter: write(lobbyStateEventJSON)
+ClientHandlerSender->>SPrintWriter: println(lobbyStateEventJSON)
 SRequestsElaborator->SRequestQueue:consume()
+activate SRequestQueue
 note over SRequestsElaborator, SRequestQueue: Afterhaving elaborated the previous request, this thread\nwill try to get the next request to work on. If none is present\nit will wait for oe to show in the queue
 SPrintWriter-#6B0505>>CScanner: lobbyStateEventJSON
 CScanner-->NetworkHandlerReciver: lobbyStateEventJSON
+deactivate CScanner
 
 NetworkHandlerReciver->CGson: fromJSON(n lobbyStateEventJSON, Event.class)
+activate CGson
 CGson->>*CLobbyStateEvent: new()
 CGson-->NetworkHandlerReciver: lse
+deactivate CGson
 NetworkHandlerReciver->>CLobbyStateEvent: notify()
 note over NetworkHandlerReciver,CLobbyStateEvent: The Notify() call will happen on a separate thread, while this thread will again be blocked on the following read() call
-NetworkHandlerReciver->CScanner: read()
+NetworkHandlerReciver->CScanner:readLine()
+activate CScanner
 CLobbyStateEvent->>View: update(lse)
 View->>AUser: visualize the lobby

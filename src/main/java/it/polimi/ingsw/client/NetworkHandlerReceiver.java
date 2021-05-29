@@ -77,4 +77,9 @@ public class NetworkHandlerReceiver implements PropertyChangeSubject {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
+
+    @Override
+    public PropertyChangeListener[] getAllPropertyChangeListener(){
+        return support.getPropertyChangeListeners();
+    }
 }

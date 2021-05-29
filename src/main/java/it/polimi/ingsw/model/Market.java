@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.HandlerCheckException;
 import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
@@ -72,22 +73,30 @@ public class Market extends Observable {
      */
     public HashMap<Marble, Integer> getMarbles(Direction direction, int index) {
         HashMap<Marble, Integer> res = new HashMap<>();
-        if (direction == Direction.ROW)
+        if (direction == Direction.ROW) {
+            if(0<index && index>rows) throw new IllegalArgumentException("Index out of bounds");
             for (int i = 0; i < grid[index].length; i++)
                 res.put(grid[index][i], res.containsKey(grid[index][i]) ? res.get(grid[index][i]) + 1 : 1);
-        else
+        }
+        else {
+            if(0<index && index>cols) throw new IllegalArgumentException("Index out of bounds");
             for (Marble[] marbles : grid)
                 res.put(marbles[index], res.containsKey(marbles[index]) ? res.get(marbles[index]) + 1 : 1);
+        }
         return res;
     }
 
     public ArrayList<Marble> getMarblesAsList(Direction direction, int index) {
         ArrayList<Marble> res = new ArrayList<>();
-        if (direction == Direction.ROW)
+        if (direction == Direction.ROW) {
+            if(0<index && index>rows) throw new IllegalArgumentException("Index out of bounds");
             Collections.addAll(res, grid[index]);
-        else
+        }
+        else {
+            if(0<index && index>cols) throw new IllegalArgumentException("Index out of bounds");
             for (Marble[] marbles : grid)
                 res.add(marbles[index]);
+        }
         return res;
     }
 
@@ -102,10 +111,12 @@ public class Market extends Observable {
     public void update(Direction direction, int index) {
         Marble aux;
         if (direction == Direction.ROW) {
+            if(0<index && index>rows) throw new IllegalArgumentException("Index out of bounds");
             aux = grid[index][0];
             System.arraycopy(grid[index], 1, grid[index], 0, grid[index].length - 1);
             grid[index][grid[index].length - 1] = marbleLeft;
         } else {
+            if(0<index && index>cols) throw new IllegalArgumentException("Index out of bounds");
             aux = grid[0][index];
             for (int i = 0; i < grid[index].length - 1; i++)
                 grid[i][index] = grid[i + 1][index];
