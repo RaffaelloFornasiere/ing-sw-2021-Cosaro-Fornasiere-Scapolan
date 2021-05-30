@@ -13,11 +13,15 @@ import it.polimi.ingsw.utilities.Pair;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class LeaderCardView {
     private LeaderCard card;
+    boolean selected;
+    String idCard;
 
 
     public LeaderCardView(String path) {
@@ -28,17 +32,20 @@ public class LeaderCardView {
         Gson gson = builder.create();
         try {
             String cardJSON = Files.readString(Paths.get("src\\main\\resources\\" + path + ".json"));
-            card = gson.fromJson(cardJSON,LeaderCard.class);
+            card = gson.fromJson(cardJSON, LeaderCard.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        selected = false;
+        idCard = card.getCardID();
     }
-    public void updateDepositLeaderPower(int leaderPowerIndex, HashMap<Resource, Integer> storedResources)  {
-        if(card.getLeaderPowers().get(leaderPowerIndex) instanceof DepositLeaderPower ){
+
+    public void updateDepositLeaderPower(int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
+        if (card.getLeaderPowers().get(leaderPowerIndex) instanceof DepositLeaderPower) {
             try {
-                HashMap<Resource,Integer> prev= ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources();
-                HashMap<Resource,Integer> diff= new HashMap<>();
-                prev.keySet().forEach(resource -> diff.put(resource, storedResources.get(resource)-prev.get(resource)));
+                HashMap<Resource, Integer> prev = ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources();
+                HashMap<Resource, Integer> diff = new HashMap<>();
+                prev.keySet().forEach(resource -> diff.put(resource, storedResources.get(resource) - prev.get(resource)));
                 ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).addResources(diff);
             } catch (ResourcesLimitsException e) {
                 e.printStackTrace();
@@ -46,8 +53,60 @@ public class LeaderCardView {
         }
     }
 
-    public String getLeaderPowerName( int leaderPowerIndex){
+    public DepotResultMessage updateDepositLeaderPower(int leaderPowerIndex, Resource res) {
+        try {
+            if (((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources().containsKey(res)) {
+                if (((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources().get(res) + 1 > ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getMaxResources().get(res)) {
+                    HashMap<Resource, Integer> toAdd = new HashMap<>();
+                    toAdd.put(res, 1);
+                    ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).addResources(toAdd);
+                }
+                return DepotResultMessage.REACH_MAX_CAP_LEADER;
+            }
+            return DepotResultMessage.INVALID_RES_LEADER;
+        } catch (ResourcesLimitsException e) {
+            e.printStackTrace();
+        }
+        return DepotResultMessage.SUCCESSFUL_LEADER;
+    }
+
+    public String getLeaderPowerName(int leaderPowerIndex) {
         return card.getLeaderPowers().get(leaderPowerIndex).getClass().getName().substring(34);
+    }
+
+    public String depositPowersToString() {
+        if (selected) {
+            StringBuilder builder = new StringBuilder();
+
+            card.getLeaderPowers().stream().forEach(power -> {
+                if (power instanceof DepositLeaderPower) {
+                    builder.append("\033[31;1;4mDEPOSIT OF " + card.getCardID().toUpperCase() + " \033[0m \n");
+                    int m = 1;
+
+                    AtomicInteger count = new AtomicInteger(1);
+                    ((DepositLeaderPower) power).getCurrentResources().keySet().forEach(resource -> {
+                        int current = ((DepositLeaderPower) power).getCurrentResources().get(resource);
+                        int max = ((DepositLeaderPower) power).getMaxResources().get(resource);
+                        String color = colorResource(resource);
+                        String shape = shapeResource(resource);
+                        builder.append(color + "   " + resource.toString() + "\n   ");
+                        IntStream.range(0, max).forEach(n -> builder.append(color + "╔═══╗" + " "));
+                        builder.append(Color.reset() + "\n" + "." + count.intValue() + " ");
+                        IntStream.range(0, current).forEach(n -> builder.append(color + "║ " + shape + " ║" + " "));
+                        IntStream.range(0, max - current).forEach(n -> builder.append(color + "║   ║" + " "));
+                        builder.append(Color.reset() + "\n   ");
+                        IntStream.range(0, max).forEach(n -> builder.append(color + "╚═══╝" + " "));
+                        builder.append(Color.reset() + "\n");
+                        count.getAndIncrement();
+                    });
+
+                }
+
+            });
+            return builder.toString();
+        }
+        return "";
+
     }
 
 
@@ -60,8 +119,8 @@ public class LeaderCardView {
 
     private String shapeResource(Resource res) {
         if (res == Resource.SERVANT) return "■";
-        if (res == Resource.SHIELD) return  "◆";
-        if (res == Resource.COIN) return    "●";
+        if (res == Resource.SHIELD) return "◆";
+        if (res == Resource.COIN) return "●";
         else return "▼";
     }
 
@@ -74,69 +133,87 @@ public class LeaderCardView {
 
     private String translateBoolean(Boolean b) {
         if (b) return "✓";
-        else return   "✗";
+        else return "✗";
     }
 
+    public void setSelected(boolean b) {
+        selected = b;
+    }
+
+    public boolean getSelected() {
+        return selected;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+
+    public ArrayList<LeaderPower> getLeaderPowersActive() {
+        ArrayList<LeaderPower> a = new ArrayList<>();
+        card.getSelectedLeaderPowers().stream().forEach(power -> a.add(power));
+        return a;
+    }
 
     public String toString() {
         String color = Color.WHITE.getAnsiCode();
         StringBuilder build = new StringBuilder();
         build.append(
-               color+ "   " + color + card.getCardID() + color + "  " + Color.reset() + "\n" +
-                       color+ "╔═" + color + "Requirements" + color + "═╗" + Color.reset() + "\n");
+                color + " " + color + card.getCardID() + " " + translateBoolean(selected) + " " + color + " " + Color.reset() + "\n" +
+                        color + "╔═" + color + "Requirements" + color + "═╗" + Color.reset() + "\n");
         for (Requirement req : card.getActivationRequirement()) {
             if (req instanceof ResourcesRequirement) {
                 ((ResourcesRequirement) req).getResources().keySet().forEach(resource -> {
-                    build.append(color+"║     " + colorResource(resource) + ((ResourcesRequirement) req).getResources().get(resource) + " " + shapeResource(resource) + color + "      ║" + Color.reset() + "\n");
+                    build.append(color + "║     " + colorResource(resource) + ((ResourcesRequirement) req).getResources().get(resource) + " " + shapeResource(resource) + color + "      ║" + Color.reset() + "\n");
                 });
             } else if (req instanceof LevelCardRequirement) {
-                build.append(color+"║  " + translateColor(((LevelCardRequirement) req).getType()) + ((LevelCardRequirement) req).getQuantity() + " ▊" + " level" + ((LevelCardRequirement) req).getLevel() + color + "  ║" + Color.reset() + "\n");
+                build.append(color + "║  " + translateColor(((LevelCardRequirement) req).getType()) + ((LevelCardRequirement) req).getQuantity() + " ▊" + " level" + ((LevelCardRequirement) req).getLevel() + color + "  ║" + Color.reset() + "\n");
             } else {
-                build.append(color+"║      " + translateColor(((LevellessCardRequirement) req).getType()) + ((LevellessCardRequirement) req).getQuantity()+ " ▊" + color + "     ║" + Color.reset() + "\n");
+                build.append(color + "║      " + translateColor(((LevellessCardRequirement) req).getType()) + ((LevellessCardRequirement) req).getQuantity() + " ▊" + color + "     ║" + Color.reset() + "\n");
             }
         }
         for (Pair<LeaderPower, Boolean> power : card.getBooleanPowers()) {
-            build.append(color+"╠══" + color + power.getKey().getClass().getName().substring(34, 38) + "Power " + translateBoolean(power.getValue()) + color + "═╣" + Color.reset() + "\n");
+            build.append(color + "╠══" + color + power.getKey().getClass().getName().substring(34, 38) + "Power " + translateBoolean(power.getValue()) + color + "═╣" + Color.reset() + "\n");
             if (power.getKey() instanceof DepositLeaderPower) {
                 ((DepositLeaderPower) power.getKey()).getCurrentResources().keySet().forEach(resource -> {
-                    build.append(color+"║ " + colorResource(resource) + ((DepositLeaderPower) power.getKey()).getCurrentResources().get(resource) + " " + shapeResource(resource) + " out of " + ((DepositLeaderPower) power.getKey()).getMaxResources().get(resource) + color + " ║" + Color.reset() + "\n");
+                    build.append(color + "║ " + colorResource(resource) + ((DepositLeaderPower) power.getKey()).getCurrentResources().get(resource) + " " + shapeResource(resource) + " out of " + ((DepositLeaderPower) power.getKey()).getMaxResources().get(resource) + color + " ║" + Color.reset() + "\n");
 
                 });
             } else if (power.getKey() instanceof DiscountLeaderPower) {
                 ((DiscountLeaderPower) power.getKey()).getDiscount().keySet().forEach(resource -> {
-                    build.append(color+"║     " + colorResource(resource) + "-" + ((DiscountLeaderPower) power.getKey()).getDiscount().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+                    build.append(color + "║     " + colorResource(resource) + "-" + ((DiscountLeaderPower) power.getKey()).getDiscount().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
                 });
             } else if (power.getKey() instanceof ExtraResourceLeaderPower) {
                 Resource resource = ((ExtraResourceLeaderPower) power.getKey()).getResourceType();
-                build.append(color+"║     " + "● = " + colorResource(resource) + shapeResource(resource) + color + "    ║" + Color.reset() + "\n");
+                build.append(color + "║     " + "● = " + colorResource(resource) + shapeResource(resource) + color + "    ║" + Color.reset() + "\n");
             } else if (power.getKey() instanceof ProductionLeaderPower) {
                 for (Resource resource : ((ProductionLeaderPower) power.getKey()).getEffectPower().getConsumedResources().keySet()) {
-                    build.append(color+"║      " + colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getConsumedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+                    build.append(color + "║      " + colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getConsumedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
                 }
-                if(((ProductionLeaderPower) power.getKey()).getEffectPower().getRequiredResourceOfChoice() != 0){
-                    build.append(color + "║      " + color+ + ((ProductionLeaderPower) power.getKey()).getEffectPower().getRequiredResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
+                if (((ProductionLeaderPower) power.getKey()).getEffectPower().getRequiredResourceOfChoice() != 0) {
+                    build.append(color + "║      " + color + +((ProductionLeaderPower) power.getKey()).getEffectPower().getRequiredResourceOfChoice() + " " + "?" + color + "     ║" + Color.reset() + "\n");
                 }
-                build.append(color+"║    " + color + "--->>> " + color + "   ║ " + Color.reset() + "\n");
+                build.append(color + "║    " + color + "--->>> " + color + "   ║ " + Color.reset() + "\n");
                 for (Resource resource : ((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResources().keySet()) {
-                    build.append(color+"║      " + colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+                    build.append(color + "║      " + colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
                 }
                 if (((ProductionLeaderPower) power.getKey()).getEffectPower().getFaithPointsProduced() != 0) {
-                    build.append(color + "║      " + color +((ProductionLeaderPower) power.getKey()).getEffectPower().getFaithPointsProduced() + " " + "+" + color + "     ║" + Color.reset() + "\n");
+                    build.append(color + "║      " + color + ((ProductionLeaderPower) power.getKey()).getEffectPower().getFaithPointsProduced() + " " + "+" + color + "     ║" + Color.reset() + "\n");
                 }
-                if(((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResourceOfChoice() != 0){
-                    build.append(color + "║      " + color+ + ((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
+                if (((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResourceOfChoice() != 0) {
+                    build.append(color + "║      " + color + +((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResourceOfChoice() + " " + "?" + color + "     ║" + Color.reset() + "\n");
                 }
             }
         }
 
-        build.append(color+"╠═══" + color + "VPoints" + color + "════╣" + Color.reset() + "\n");
+        build.append(color + "╠═══" + color + "VPoints" + color + "════╣" + Color.reset() + "\n");
         if (card.getVictoryPoints() < 10) {
-            build.append(color+"║       " + color + card.getVictoryPoints() + color + "      ║" + Color.reset() + "\n");
+            build.append(color + "║       " + color + card.getVictoryPoints() + color + "      ║" + Color.reset() + "\n");
         } else
             build.append(color + "║     " + color + card.getVictoryPoints() + color + "      ║" + Color.reset() + "\n");
-        build.append(color+"╚════" + color + color + "══════════╝" + Color.reset() + "\n");
+        build.append(color + "╚════" + color + color + "══════════╝" + Color.reset() + "\n");
         for (int i = 0; i < 3; i++) {
-            build.append(color+"     " + color + color + "           " + Color.reset() + "\n");
+            build.append(color + "     " + color + color + "           " + Color.reset() + "\n");
         }
         return build.toString();
     }
@@ -152,5 +229,11 @@ public class LeaderCardView {
         });
 
         panel.show();
+        IntStream.range(1, 17).forEach(n -> {
+            LeaderCardView card = new LeaderCardView("LeaderCard" + n);
+            card.setSelected(true);
+            System.out.println(card.depositPowersToString());
+        });
     }
+
 }

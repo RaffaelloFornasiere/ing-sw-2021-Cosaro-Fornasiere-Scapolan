@@ -1,6 +1,7 @@
 package it.polimi.ingsw.events.ClientEvents;
 
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.ui.cli.DepotResultMessage;
 
 /**
  * Class used for representing the state of a depot
@@ -46,5 +47,11 @@ public class DepotState {
      */
     public int getCurrentQuantity() {
         return currentQuantity;
+    }
+
+    public DepotResultMessage tryAddResource(Resource r){
+      if(r!=resourceType) return DepotResultMessage.INVALID_RES_DEPOT ;
+      if(currentQuantity+1>maxQuantity) return DepotResultMessage.REACH_MAX_CAP_DEPOT;
+      return DepotResultMessage.SUCCESSFUL_DEPOT;
     }
 }
