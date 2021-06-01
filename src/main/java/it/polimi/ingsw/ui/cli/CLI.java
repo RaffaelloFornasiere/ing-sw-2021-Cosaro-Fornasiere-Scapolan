@@ -26,24 +26,16 @@ public class CLI {
 
     private String thisPlayer;
     private FaithTrackView faithTrack;
-    private HashMap<String, DashBoardView> dashboards;
+    private HashMap<String, PlayerState> playerStates;
     private ArrayList<String> players;
     private DevCardGridView devCardGridView;
-    private HashMap<String, HashMap<String, LeaderCardView>> leaderCards;
     private MarketView market;
 
     public CLI(NetworkAdapter client) {
         this.client = client;
         players = new ArrayList<>();
-        players = players.stream().map(name -> name.toUpperCase()).collect(Collectors.toCollection(ArrayList::new));
         faithTrack = new FaithTrackView(players);
-        dashboards = new HashMap<>();
-        leaderCards = new HashMap<>();
-        for (String player : players) {
-            leaderCards.put(player, new HashMap<String, LeaderCardView>());
-            dashboards.put(player, null);
-        }
-
+        playerStates = new HashMap<>();
     }
 
 
@@ -55,7 +47,7 @@ public class CLI {
     public void displayCantAffordError(String id) {
         out.println(thisPlayer + ", IT SEEMS YOU DON'T HAVE THE REQUIRED RESOURCES TO BUY " + id.toUpperCase() + ", TRY AGAIN");
         DrawableObject obj = new DrawableObject(new DevCardView(id).toString(), 50, 0);
-        DrawableObject resources = new DrawableObject(dashboards.get(thisPlayer).resourceNumberToString(), 0, (int) obj.getHeight() + 3);
+        DrawableObject resources = new DrawableObject(playerStates.get(thisPlayer).dashBoard.resourceNumberToString(), 0, (int) obj.getHeight() + 3);
         Panel panel = new Panel(250, (int) obj.getHeight() + (int) resources.getHeight() + 4, out);
         panel.addItem(obj);
         panel.addItem(resources);
@@ -297,8 +289,9 @@ public class CLI {
 
     public void displayDashBoardState(String playerId) {
         out.println("One dashboard has been updated!");
-        if (dashboards.get(playerId) != null) {
-            dashboards.get(playerId).displayAll(playerId.toUpperCase());
+        DashBoardView dashBoardView = playerStates.get(playerId).dashBoard;
+        if (dashBoardView != null) {
+            dashBoardView.displayAll(playerId.toUpperCase());
         }
 
     }
@@ -366,7 +359,7 @@ public class CLI {
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
         if (response.equals("YES")) {
-            leaderCards.put(thisPlayer, leaderCardsChosen);
+            playerStates.get(thisPlayer).leaderCards.putAll(leaderCardsChosen);
             ArrayList<Resource> allResources = Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new));
             displayResourcesChoiceForm(allResources, numberOFResourcesToChose);
         } else displayInitialChoiceForm(leaderCardsIDs, numberOFLeaderCardsToChose, numberOFResourcesToChose);
@@ -533,26 +526,26 @@ public class CLI {
   */
     public void updateDepositLeaderPowerState(String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
         out.println(thisPlayer + " , THE DEPOSIT LEADER POWER OF " + leaderCardID.toUpperCase() + "\n HAS BEEN UPDATED! CHECK IT OUT!");
-        leaderCards.get(thisPlayer).get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
-        out.println(leaderCards.get(thisPlayer).get(leaderCardID).toString());
+        playerStates.get(thisPlayer).leaderCards.get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
+        out.println(playerStates.get(thisPlayer).leaderCards.get(leaderCardID).toString());
     }
 
     public void displayDevCardSlotError(String devCardID, int cardSlot) {
         out.println("SORRY, " + devCardID + " CANNOT BE ADDED TO THE SELECTED SLOT, SINCE IT \n  DOES NOT FULFILL THE SPECIFIED LEVEL REQUIREMENTS");
         DevCardView card = new DevCardView(devCardID);
         out.println(card.toString());
-        dashboards.get(thisPlayer).displayDevCardSlots();
+        playerStates.get(thisPlayer).dashBoard.displayDevCardSlots();
     }
 
     public void displayIncompatiblePowersError(String leaderCardID, int leaderPowerIndex) {
-        LeaderCardView card = leaderCards.get(thisPlayer).get(leaderCardID);
+        LeaderCardView card = playerStates.get(thisPlayer).leaderCards.get(leaderCardID);
         System.out.println(card.getLeaderPowerName(leaderPowerIndex) + "IN" + leaderCardID.toUpperCase() + " IS NOT COMPATIBLE WITH OTHER SELECTED POWERS");
         System.out.println(card.toString());
 
     }
 
     public void displayLeaderCardNotActiveError(String leaderCardID) {
-        LeaderCardView card = leaderCards.get(thisPlayer).get(leaderCardID);
+        LeaderCardView card = playerStates.get(thisPlayer).leaderCards.get(leaderCardID);
         System.out.println("SORRY, " + leaderCardID.toUpperCase() + " IS NOT ACTIVE, YOU CAN'T USE IT");
         System.out.println(card.toString());
     }
@@ -659,11 +652,11 @@ public class CLI {
         HashMap<Resource, Integer> discardedResources = new HashMap<>();
         //-----------------------------------------------------
         //Image of the current state of depots
-        ArrayList<DepotState> currentDepotStates = dashboards.get(thisPlayer).getWarehouse();
+        ArrayList<DepotState> currentDepotStates = playerStates.get(thisPlayer).dashBoard.getWarehouse();
         //Initially the depotState to give back to model is the current state of this dashboard.
         depotStates = currentDepotStates;
         //Takes only the active LeaderCards
-        ArrayList<LeaderCardView> leaderCardViews = leaderCards.get(thisPlayer).values().stream().collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).leaderCards.values().stream().collect(Collectors.toCollection(ArrayList::new));
         //Selects only DepositLeaderPowers active
         ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
 
@@ -702,8 +695,8 @@ public class CLI {
             // prepare panel to display current state of all deposits.
             StringBuilder builder = new StringBuilder();
             builder.append("\n\n");
-            builder.append("THESE ARE THE AVAILABLE PLACES \n:" + dashboards.get(thisPlayer).warehouseToString() + "\n\n");
-            leaderCards.get(thisPlayer).values().forEach(card -> builder.append(card.depositPowersToString()));
+            builder.append("THESE ARE THE AVAILABLE PLACES \n:" + playerStates.get(thisPlayer).dashBoard.warehouseToString() + "\n\n");
+            playerStates.get(thisPlayer).leaderCards.values().forEach(card -> builder.append(card.depositPowersToString()));
             DrawableObject obj = new DrawableObject(builder.toString(), 2, 0);
             Panel panel = new Panel(1000, (int) obj.getHeight() + 2, out);
             panel.addItem(obj);
