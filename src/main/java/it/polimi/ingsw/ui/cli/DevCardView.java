@@ -29,18 +29,8 @@ public class DevCardView {
         if (c==CardColor.GREEN) return Color.GREEN.getAnsiCode();
         else  return Color.YELLOW.getAnsiCode();
     }
-    private String shapeResource(Resource res) {
-        if (res == Resource.SERVANT) return "■";
-        if (res == Resource.SHIELD) return "◆";
-        if (res == Resource.COIN) return "●";
-        else  return "▼";
-    }
-    private String colorResource(Resource res) {
-        if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
-        if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
-        if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
-        else  return Color.YELLOW.getAnsiCode();
-    }
+
+
     public String toString(){
         String color= translateColor(card.getColor());
         StringBuilder build= new StringBuilder();
@@ -50,17 +40,17 @@ public class DevCardView {
                         color+ "║      "+color+ card.getLevel() +color+"      ║" + Color.reset() + "\n"+
                         color+ "╠════"+color+"Cost"+color+"═════╣" + Color.reset() + "\n");
         for (Resource resource : card.getCost().keySet()) {
-            build.append(color+ "║     " + colorResource(resource) + card.getCost().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+            build.append(color+ "║     " + CLI.colorResource(resource) + card.getCost().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
         }               build.append(color+ "╠═"+color+"Production"+color+"══╣" + Color.reset() + "\n");
         for (Resource resource : card.getProductionPower().getConsumedResources().keySet()) {
-            build.append(color + "║     " + colorResource(resource) + card.getProductionPower().getConsumedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+            build.append(color + "║     " + CLI.colorResource(resource) + card.getProductionPower().getConsumedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
         }
         if(card.getProductionPower().getRequiredResourceOfChoice()!=0){
             build.append(color + "║     "+color+ + card.getProductionPower().getRequiredResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
         }
         build.append(color+ "║   "+color+"--->>> "+color+ "   ║ " + Color.reset() + "\n");
         for (Resource resource : card.getProductionPower().getProducedResources().keySet()) {
-            build.append(color + "║     " + colorResource(resource) + card.getProductionPower().getProducedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+            build.append(color + "║     " + CLI.colorResource(resource) + card.getProductionPower().getProducedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
         }
         if(card.getProductionPower().getFaithPointsProduced()!=0){
             build.append(color + "║     "+color+ + card.getProductionPower().getFaithPointsProduced() + " " +"+"  + color + "     ║" + Color.reset() + "\n" );

@@ -87,8 +87,8 @@ public class LeaderCardView {
                     ((DepositLeaderPower) power).getCurrentResources().keySet().forEach(resource -> {
                         int current = ((DepositLeaderPower) power).getCurrentResources().get(resource);
                         int max = ((DepositLeaderPower) power).getMaxResources().get(resource);
-                        String color = colorResource(resource);
-                        String shape = shapeResource(resource);
+                        String color = CLI.colorResource(resource);
+                        String shape = CLI.shapeResource(resource);
                         builder.append(color + "   " + resource.toString() + "\n   ");
                         IntStream.range(0, max).forEach(n -> builder.append(color + "╔═══╗" + " "));
                         builder.append(Color.reset() + "\n" + "." + count.intValue() + " ");
@@ -117,19 +117,8 @@ public class LeaderCardView {
         else return Color.YELLOW.getAnsiCode();
     }
 
-    private String shapeResource(Resource res) {
-        if (res == Resource.SERVANT) return "■";
-        if (res == Resource.SHIELD) return "◆";
-        if (res == Resource.COIN) return "●";
-        else return "▼";
-    }
 
-    private String colorResource(Resource res) {
-        if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
-        if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
-        if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
-        else return Color.YELLOW.getAnsiCode();
-    }
+
 
     private String translateBoolean(Boolean b) {
         if (b) return "✓";
@@ -164,7 +153,7 @@ public class LeaderCardView {
         for (Requirement req : card.getActivationRequirement()) {
             if (req instanceof ResourcesRequirement) {
                 ((ResourcesRequirement) req).getResources().keySet().forEach(resource -> {
-                    build.append(color + "║     " + colorResource(resource) + ((ResourcesRequirement) req).getResources().get(resource) + " " + shapeResource(resource) + color + "      ║" + Color.reset() + "\n");
+                    build.append(color + "║     " + CLI.colorResource(resource) + ((ResourcesRequirement) req).getResources().get(resource) + " " + CLI.shapeResource(resource) + color + "      ║" + Color.reset() + "\n");
                 });
             } else if (req instanceof LevelCardRequirement) {
                 build.append(color + "║  " + translateColor(((LevelCardRequirement) req).getType()) + ((LevelCardRequirement) req).getQuantity() + " ▊" + " level" + ((LevelCardRequirement) req).getLevel() + color + "  ║" + Color.reset() + "\n");
@@ -176,26 +165,26 @@ public class LeaderCardView {
             build.append(color + "╠══" + color + power.getKey().getClass().getName().substring(34, 38) + "Power " + translateBoolean(power.getValue()) + color + "═╣" + Color.reset() + "\n");
             if (power.getKey() instanceof DepositLeaderPower) {
                 ((DepositLeaderPower) power.getKey()).getCurrentResources().keySet().forEach(resource -> {
-                    build.append(color + "║ " + colorResource(resource) + ((DepositLeaderPower) power.getKey()).getCurrentResources().get(resource) + " " + shapeResource(resource) + " out of " + ((DepositLeaderPower) power.getKey()).getMaxResources().get(resource) + color + " ║" + Color.reset() + "\n");
+                    build.append(color + "║ " + CLI.colorResource(resource) + ((DepositLeaderPower) power.getKey()).getCurrentResources().get(resource) + " " + CLI.shapeResource(resource) + " out of " + ((DepositLeaderPower) power.getKey()).getMaxResources().get(resource) + color + " ║" + Color.reset() + "\n");
 
                 });
             } else if (power.getKey() instanceof DiscountLeaderPower) {
                 ((DiscountLeaderPower) power.getKey()).getDiscount().keySet().forEach(resource -> {
-                    build.append(color + "║     " + colorResource(resource) + "-" + ((DiscountLeaderPower) power.getKey()).getDiscount().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+                    build.append(color + "║     " + CLI.colorResource(resource) + "-" + ((DiscountLeaderPower) power.getKey()).getDiscount().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
                 });
             } else if (power.getKey() instanceof ExtraResourceLeaderPower) {
                 Resource resource = ((ExtraResourceLeaderPower) power.getKey()).getResourceType();
-                build.append(color + "║     " + "● = " + colorResource(resource) + shapeResource(resource) + color + "    ║" + Color.reset() + "\n");
+                build.append(color + "║     " + "● = " + CLI.colorResource(resource) + CLI.shapeResource(resource) + color + "    ║" + Color.reset() + "\n");
             } else if (power.getKey() instanceof ProductionLeaderPower) {
                 for (Resource resource : ((ProductionLeaderPower) power.getKey()).getEffectPower().getConsumedResources().keySet()) {
-                    build.append(color + "║      " + colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getConsumedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+                    build.append(color + "║      " + CLI.colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getConsumedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
                 }
                 if (((ProductionLeaderPower) power.getKey()).getEffectPower().getRequiredResourceOfChoice() != 0) {
                     build.append(color + "║      " + color + +((ProductionLeaderPower) power.getKey()).getEffectPower().getRequiredResourceOfChoice() + " " + "?" + color + "     ║" + Color.reset() + "\n");
                 }
                 build.append(color + "║    " + color + "--->>> " + color + "   ║ " + Color.reset() + "\n");
                 for (Resource resource : ((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResources().keySet()) {
-                    build.append(color + "║      " + colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResources().get(resource) + " " + shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+                    build.append(color + "║      " + CLI.colorResource(resource) + ((ProductionLeaderPower) power.getKey()).getEffectPower().getProducedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
                 }
                 if (((ProductionLeaderPower) power.getKey()).getEffectPower().getFaithPointsProduced() != 0) {
                     build.append(color + "║      " + color + ((ProductionLeaderPower) power.getKey()).getEffectPower().getFaithPointsProduced() + " " + "+" + color + "     ║" + Color.reset() + "\n");

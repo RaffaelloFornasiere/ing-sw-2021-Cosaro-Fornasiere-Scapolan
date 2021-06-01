@@ -5,11 +5,15 @@ import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
+import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.Pair;
 
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -144,20 +148,20 @@ public class CLI {
         String inputString;
         ArrayList<Integer> inputs = new ArrayList<>();
         while (m > 0) {
-                    inputString = in.next();
-                    if (inputString.matches("-?\\d+")) {
-                        int input=Integer.parseInt(inputString);
-                        if (inputs.contains(input)) {
-                            out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
-                        } else if (input < 1 || input > size) {
-                            out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
-                        } else {
-                            inputs.add(input);
-                            m--;
-                        }
-                }else{
-                        out.println("PLEASE INSERT A NUMBER");
-                    }
+            inputString = in.next();
+            if (inputString.matches("-?\\d+")) {
+                int input = Integer.parseInt(inputString);
+                if (inputs.contains(input)) {
+                    out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
+                } else if (input < 1 || input > size) {
+                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                } else {
+                    inputs.add(input);
+                    m--;
+                }
+            } else {
+                out.println("PLEASE INSERT A NUMBER");
+            }
         }
 
         out.println("YOU HAVE CHOSEN: \n");
@@ -165,7 +169,7 @@ public class CLI {
         inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
 
         inputs.forEach(index -> {
-            builder2.append(index + 1 + " -> " +option_itsColor.get(index).getValue()+ option_itsColor.get(index).getKey()+Color.reset() + "\n");
+            builder2.append(index + 1 + " -> " + option_itsColor.get(index).getValue() + option_itsColor.get(index).getKey() + Color.reset() + "\n");
         });
         out.println(builder2.toString());
 
@@ -648,151 +652,6 @@ public class CLI {
     }
 
     public void displayOrganizeResourcesForm(HashMap<Resource, Integer> resourcesToOrganize) {
-        //Parameters to giveback to the NewResourcesOrganizationEvent
-        ArrayList<DepotState> depotStates;
-        ArrayList<DepositLeaderPowerStateEvent> leaderPowersState;
-        HashMap<Resource, Integer> discardedResources = new HashMap<>();
-        //-----------------------------------------------------
-        //Image of the current state of depots
-        ArrayList<DepotState> currentDepotStates = dashboards.get(thisPlayer).getWarehouse();
-        //Initially the depotState to give back to model is the current state of this dashboard.
-        depotStates = currentDepotStates;
-        //Takes only the active LeaderCards
-        ArrayList<LeaderCardView> leaderCardViews = leaderCards.get(thisPlayer).values().stream().collect(Collectors.toCollection(ArrayList::new));
-        //Selects only DepositLeaderPowers active
-        ArrayList<Pair<String, DepositLeaderPower>> thisDepositLeaderPowers = new ArrayList<>();
-
-        leaderCardViews.stream().forEach(cardView -> {
-            if (cardView.getSelected()) {
-                cardView.getLeaderPowersActive().stream().forEach(power -> {
-                    if (power instanceof DepositLeaderPower)
-                        thisDepositLeaderPowers.add(new Pair<String, DepositLeaderPower>(cardView.getIdCard(), (DepositLeaderPower) power));
-                });
-            }
-        });
-        // Initially the DepositLeaderPower states to give back to the model are the current states of leaderPower.
-
-        //display the resources available for storing
-        StringBuilder builder0 = new StringBuilder();
-        builder0.append(" YOU  CAN NOW STORE THE FOLLOWING RESOURCES \n\n");
-        resourcesToOrganize.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
-            builder0.append(color + resource.toString() + ": ");
-            IntStream.range(0, resourcesToOrganize.get(resource)).forEach(n -> builder0.append(color + shape + " "));
-            builder0.append(Color.WHITE.getAnsiCode() + " --> " + resourcesToOrganize.get(resource) + "\n");
-        });
-        out.println(builder0.toString());
-        System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE 'DONE'");
-        if (in.next().toUpperCase().equals("DONE")) {
-            //GENERATE NEW NewResourcesOrganizationEvent
-            out.println("Done");
-            out.println(depotStates.size());
-            out.println(thisDepositLeaderPowers.size());
-            resourcesToOrganize.keySet().forEach(entry -> discardedResources.put(entry, resourcesToOrganize.get(entry)));
-            out.println(discardedResources.size());
-
-        } else {
-            // prepare panel to display current state of all deposits.
-            StringBuilder builder = new StringBuilder();
-            builder.append("\n\n");
-            builder.append("THESE ARE THE AVAILABLE PLACES:" + dashboards.get(thisPlayer).warehouseToString() + "\n\n");
-            leaderCards.get(thisPlayer).values().forEach(card -> builder.append(card.depositPowersToString()));
-            DrawableObject obj = new DrawableObject(builder.toString(), 2, 0);
-            Panel panel = new Panel(1000, (int) obj.getHeight() + 2, out);
-
-            // select one resource at a time among those available
-            ArrayList<Pair<String, String>> resourcesOptions = new ArrayList<>();
-            ArrayList<Resource> justResources = new ArrayList<>();
-
-            resourcesToOrganize.keySet().forEach(resType -> {
-                IntStream.range(0, resourcesToOrganize.get(resType)).forEach(n -> {
-                    resourcesOptions.add(new Pair<>(shapeResource(resType), colorResource(resType)));
-                    justResources.add(resType);
-                });
-            });
-            // the chosen resource needs to be assigned to one of the deposits
-            int inputResource = displaySelectionForm(resourcesOptions, null, 1).get(0);
-            System.out.println("WHERE DO YOU WANT TO PUT THIS RESOURCE ( " + resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset() + " )?");
-            // prepare the selection form for deposits.
-
-            ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
-            IntStream.range(0, currentDepotStates.size()).forEach(n -> depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType()))));
-
-            ArrayList<DepositLeaderPower> justLeaderPowers = new ArrayList<>();
-
-
-            IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> {
-                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode()));
-                justLeaderPowers.add(thisDepositLeaderPowers.get(n).getValue());
-            });
-            AtomicBoolean successfull = new AtomicBoolean(false);
-            int inputDeposit = displaySelectionForm(depositOptions, null, 1).get(0);
-            if (inputDeposit < currentDepotStates.size()) {
-                DepotResultMessage result = currentDepotStates.get(inputDeposit).tryAddResource(justResources.get(inputDeposit));
-                successfull.set(result.getSuccessfull());
-                out.println(result.getMessage());
-            } else {
-                int index = inputDeposit - currentDepotStates.size() + 1;
-                HashMap<Resource, Integer> resInput = new HashMap<>();
-                resInput.put(justResources.get(inputResource), 1);
-
-                String cardId = thisDepositLeaderPowers.get(index).getKey();
-                leaderCardViews.stream().forEach(cardView -> {
-                    if (cardView.getIdCard() == thisDepositLeaderPowers.get(index).getKey()) {
-                        DepotResultMessage result = cardView.updateDepositLeaderPower(index, justResources.get(inputResource));
-                        successfull.set(result.getSuccessfull());
-                        out.println(result.getMessage());
-                    }
-                });
-            }
-            if (successfull.get()) {
-                resourcesToOrganize.put(justResources.get(inputResource), (resourcesToOrganize.get(justResources.get(inputResource)) - 1));
-                displayOrganizeResourcesForm(resourcesToOrganize);
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        HashMap<String, DashBoardView> dashboards = new HashMap<>();
-        DepotState depot = new DepotState(Resource.COIN, 3, 3);
-        DepotState depot2 = new DepotState(Resource.SERVANT, 4, 2);
-        DepotState depot3 = new DepotState(Resource.SHIELD, 6, 4);
-        ArrayList<DepotState> totalLevels = new ArrayList();
-        totalLevels.add(depot);
-        totalLevels.add(depot2);
-        totalLevels.add(depot3);
-
-        HashMap<Resource, Integer> str = new HashMap<>();
-        str.put(Resource.COIN, 6);
-        str.put(Resource.ROCK, 7);
-
-        ArrayList<String> cards = new ArrayList<>();
-        cards.add("DevCard10");
-        cards.add("DevCard40");
-        cards.add("DevCard16");
-
-        String thisPlayer = "PAOLO";
-
-        DashBoardView d = new DashBoardView(cards, str, totalLevels, thisPlayer);
-        dashboards.put(thisPlayer, d);
-
-        HashMap<String, HashMap<String, LeaderCardView>> leaderCards = new HashMap<>();
-        HashMap<String, LeaderCardView> leaderCardsSet = new HashMap<>();
-        LeaderCardView card1 = new LeaderCardView("LeaderCard5");
-        card1.setSelected(true);
-        leaderCardsSet.put("LeaderCard5", card1);
-        LeaderCardView card2 = new LeaderCardView("LeaderCard11");
-        card1.setSelected(true);
-        leaderCardsSet.put("LeaderCard11", card2);
-        leaderCards.put(thisPlayer, leaderCardsSet);
-
-        HashMap<Resource, Integer> resourcesToOrganize = new HashMap<>();
-        resourcesToOrganize.put(Resource.SHIELD, 3);
-        resourcesToOrganize.put(Resource.ROCK, 5);
-        resourcesToOrganize.put(Resource.COIN, 2);
-        resourcesToOrganize.put(Resource.SERVANT, 4);
-
 
         //Parameters to giveback to the NewResourcesOrganizationEvent
         ArrayList<DepotState> depotStates;
@@ -806,13 +665,14 @@ public class CLI {
         //Takes only the active LeaderCards
         ArrayList<LeaderCardView> leaderCardViews = leaderCards.get(thisPlayer).values().stream().collect(Collectors.toCollection(ArrayList::new));
         //Selects only DepositLeaderPowers active
-        ArrayList<Pair<String, DepositLeaderPower>> thisDepositLeaderPowers = new ArrayList<>();
+        ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
 
         leaderCardViews.stream().forEach(cardView -> {
             if (cardView.getSelected()) {
-                cardView.getLeaderPowersActive().stream().forEach(power -> {
+                IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
+                    LeaderPower power = cardView.getLeaderPowersActive().get(index);
                     if (power instanceof DepositLeaderPower)
-                        thisDepositLeaderPowers.add(new Pair<String, DepositLeaderPower>(cardView.getIdCard(), (DepositLeaderPower) power));
+                        thisDepositLeaderPowers.add(new InfoPower((DepositLeaderPower) power, cardView.getIdCard(), index));
                 });
             }
         });
@@ -861,36 +721,211 @@ public class CLI {
             // the chosen resource needs to be assigned to one of the deposits
             int inputResource = displaySelectionForm(resourcesOptions, panel, 1).get(0);
             System.out.println("WHERE DO YOU WANT TO PUT THIS RESOURCE ( " + resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset() + " )?");
-            // prepare the selection form for deposits.
 
+            // prepare the selection form for deposits.
             ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
             IntStream.range(0, currentDepotStates.size()).forEach(n -> depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType()))));
 
-            ArrayList<DepositLeaderPower> justLeaderPowers = new ArrayList<>();
-
-
             IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> {
-                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode()));
-                justLeaderPowers.add(thisDepositLeaderPowers.get(n).getValue());
+                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n+1), Color.WHITE.getAnsiCode()));
             });
+
+            //result of transition
             AtomicBoolean successfull = new AtomicBoolean(false);
+            //inputDeposit is the result of the selection of one destination among deposits
             int inputDeposit = displaySelectionForm(depositOptions, null, 1).get(0);
+            //if the selected index belongs to depots...
             if (inputDeposit < currentDepotStates.size()) {
                 DepotResultMessage result = currentDepotStates.get(inputDeposit).tryAddResource(justResources.get(inputResource));
                 successfull.set(result.getSuccessfull());
                 out.println(result.getMessage());
-            } else {
+            }
+            //or if it belongs to leader card extra depots...
+            else {
                 int index = inputDeposit - currentDepotStates.size();
                 HashMap<Resource, Integer> resInput = new HashMap<>();
                 resInput.put(justResources.get(inputResource), 1);
 
-                String cardId = thisDepositLeaderPowers.get(index).getKey();
-                int powerIndex = 0;
-                while (thisDepositLeaderPowers.get(powerIndex).getKey() != cardId) powerIndex++;
-                int finalPowerIndex = powerIndex;
+                String cardId = thisDepositLeaderPowers.get(index).getCardId();
                 leaderCardViews.stream().forEach(cardView -> {
-                    if (cardView.getIdCard() == thisDepositLeaderPowers.get(index).getKey()) {
-                        DepotResultMessage result = cardView.updateDepositLeaderPower(finalPowerIndex, justResources.get(inputResource));
+                    if (cardView.getIdCard() == thisDepositLeaderPowers.get(index).getCardId()) {
+                        DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), justResources.get(inputResource));
+                        successfull.set(result.getSuccessfull());
+                        out.println(result.getMessage());
+                    }
+                });
+            }
+            if (successfull.get()) {
+                resourcesToOrganize.put(justResources.get(inputResource), (resourcesToOrganize.get(justResources.get(inputResource)) - 1));
+                displayOrganizeResourcesForm(resourcesToOrganize);
+            }
+        }
+    }
+
+    private static class InfoPower {
+        private DepositLeaderPower power;
+        private String cardId;
+        private int powerIndex;
+
+        public InfoPower(DepositLeaderPower power, String cardId, int powerIndex) {
+            this.power = power;
+            this.powerIndex = powerIndex;
+            this.cardId = cardId;
+        }
+
+        public DepositLeaderPower getPower() {
+            return power;
+        }
+
+        public String getCardId() {
+            return cardId;
+        }
+
+        public int getPowerIndex() {
+            return powerIndex;
+        }
+
+
+    }
+
+    public static void main(String[] args) {
+        HashMap<String, DashBoardView> dashboards = new HashMap<>();
+        DepotState depot = new DepotState(Resource.COIN, 3, 3);
+        DepotState depot2 = new DepotState(Resource.SERVANT, 4, 2);
+        DepotState depot3 = new DepotState(Resource.SHIELD, 6, 4);
+        ArrayList<DepotState> totalLevels = new ArrayList();
+        totalLevels.add(depot);
+        totalLevels.add(depot2);
+        totalLevels.add(depot3);
+
+        HashMap<Resource, Integer> str = new HashMap<>();
+        str.put(Resource.COIN, 6);
+        str.put(Resource.ROCK, 7);
+
+        ArrayList<String> cards = new ArrayList<>();
+        cards.add("DevCard10");
+        cards.add("DevCard40");
+        cards.add("DevCard16");
+
+        String thisPlayer = "PAOLO";
+
+        DashBoardView d = new DashBoardView(cards, str, totalLevels, thisPlayer);
+        dashboards.put(thisPlayer, d);
+
+        HashMap<String, HashMap<String, LeaderCardView>> leaderCards = new HashMap<>();
+        HashMap<String, LeaderCardView> leaderCardsSet = new HashMap<>();
+        LeaderCardView card1 = new LeaderCardView("LeaderCard5");
+        card1.setSelected(true);
+        leaderCardsSet.put("LeaderCard5", card1);
+        LeaderCardView card2 = new LeaderCardView("LeaderCard6");
+        card2.setSelected(true);
+        leaderCardsSet.put("LeaderCard6", card2);
+        leaderCards.put(thisPlayer, leaderCardsSet);
+
+        HashMap<Resource, Integer> resourcesToOrganize = new HashMap<>();
+        resourcesToOrganize.put(Resource.SHIELD, 3);
+        resourcesToOrganize.put(Resource.ROCK, 5);
+        resourcesToOrganize.put(Resource.COIN, 2);
+        resourcesToOrganize.put(Resource.SERVANT, 4);
+
+
+        //Parameters to giveback to the NewResourcesOrganizationEvent
+        ArrayList<DepotState> depotStates;
+        ArrayList<DepositLeaderPowerStateEvent> leaderPowersState;
+        HashMap<Resource, Integer> discardedResources = new HashMap<>();
+        //-----------------------------------------------------
+        //Image of the current state of depots
+        ArrayList<DepotState> currentDepotStates = dashboards.get(thisPlayer).getWarehouse();
+        //Initially the depotState to give back to model is the current state of this dashboard.
+        depotStates = currentDepotStates;
+        //Takes only the active LeaderCards
+        ArrayList<LeaderCardView> leaderCardViews = leaderCards.get(thisPlayer).values().stream().collect(Collectors.toCollection(ArrayList::new));
+        //Selects only DepositLeaderPowers active
+        ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
+
+        leaderCardViews.stream().forEach(cardView -> {
+            if (cardView.getSelected()) {
+                IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
+                    LeaderPower power = cardView.getLeaderPowersActive().get(index);
+                    if (power instanceof DepositLeaderPower)
+                        thisDepositLeaderPowers.add(new InfoPower((DepositLeaderPower) power, cardView.getIdCard(), index));
+                });
+            }
+        });
+        // Initially the DepositLeaderPower states to give back to the model are the current states of leaderPower.
+
+        //display the resources available for storing
+        StringBuilder builder0 = new StringBuilder();
+        builder0.append(" YOU  CAN NOW STORE THE FOLLOWING RESOURCES \n\n");
+        resourcesToOrganize.keySet().forEach(resource -> {
+            String color = colorResource(resource);
+            String shape = shapeResource(resource);
+            builder0.append(color + resource.toString() + ": ");
+            IntStream.range(0, resourcesToOrganize.get(resource)).forEach(n -> builder0.append(color + shape + " "));
+            builder0.append(Color.WHITE.getAnsiCode() + " --> " + resourcesToOrganize.get(resource) + "\n");
+        });
+        out.println(builder0.toString());
+        System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE 'DONE' OTHERWISE TYPE 'CONTINUE'");
+        if (in.next().toUpperCase().equals("DONE")) {
+            //GENERATE NEW NewResourcesOrganizationEvent
+            out.println("Done");
+            out.println(depotStates.size());
+            out.println(thisDepositLeaderPowers.size());
+            resourcesToOrganize.keySet().forEach(entry -> discardedResources.put(entry, resourcesToOrganize.get(entry)));
+            out.println(discardedResources.size());
+
+        } else {
+            // prepare panel to display current state of all deposits.
+            StringBuilder builder = new StringBuilder();
+            builder.append("\n\n");
+            builder.append("THESE ARE THE AVAILABLE PLACES \n:" + dashboards.get(thisPlayer).warehouseToString() + "\n\n");
+            leaderCards.get(thisPlayer).values().forEach(card -> builder.append(card.depositPowersToString()));
+            DrawableObject obj = new DrawableObject(builder.toString(), 2, 0);
+            Panel panel = new Panel(1000, (int) obj.getHeight() + 2, out);
+            panel.addItem(obj);
+
+            // select one resource at a time among those available
+            ArrayList<Pair<String, String>> resourcesOptions = new ArrayList<>();
+            ArrayList<Resource> justResources = new ArrayList<>();
+
+            resourcesToOrganize.keySet().forEach(resType -> {
+                IntStream.range(0, resourcesToOrganize.get(resType)).forEach(n -> {
+                    resourcesOptions.add(new Pair<>(shapeResource(resType), colorResource(resType)));
+                    justResources.add(resType);
+                });
+            });
+            // the chosen resource needs to be assigned to one of the deposits
+            int inputResource = displaySelectionForm(resourcesOptions, panel, 1).get(0);
+            System.out.println("WHERE DO YOU WANT TO PUT THIS RESOURCE ( " + resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset() + " )?");
+
+            // prepare the selection form for deposits.
+            ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
+            IntStream.range(0, currentDepotStates.size()).forEach(n -> depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType()))));
+
+            IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> {
+                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n+1), Color.WHITE.getAnsiCode()));
+            });
+
+            //result of transition
+            AtomicBoolean successfull = new AtomicBoolean(false);
+            //inputDeposit is the result of the selection of one destination among deposits
+            int inputDeposit = displaySelectionForm(depositOptions, null, 1).get(0);
+            //if the selected index belongs to depots...
+            if (inputDeposit < currentDepotStates.size()) {
+                DepotResultMessage result = currentDepotStates.get(inputDeposit).tryAddResource(justResources.get(inputResource));
+                successfull.set(result.getSuccessfull());
+                out.println(result.getMessage());
+            }
+            //or if it belongs to leader card extra depots...
+            else {
+                int index = inputDeposit - currentDepotStates.size();
+                HashMap<Resource, Integer> resInput = new HashMap<>();
+                resInput.put(justResources.get(inputResource), 1);
+
+                String cardId = thisDepositLeaderPowers.get(index).getCardId();
+                leaderCardViews.stream().forEach(cardView -> {
+                    if (cardView.getIdCard() == thisDepositLeaderPowers.get(index).getCardId()) {
+                        DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), justResources.get(inputResource));
                         successfull.set(result.getSuccessfull());
                         out.println(result.getMessage());
                     }
@@ -904,14 +939,17 @@ public class CLI {
                 out.println(currentDepotStates.get(1).getCurrentQuantity());
                 out.println(currentDepotStates.get(2).getCurrentQuantity());
                 out.println(card1.getLeaderPowersActive().get(0));
-                out.println(((DepositLeaderPower)card1.getLeaderPowersActive().get(0)).getCurrentResources());
+                out.println(((DepositLeaderPower) card1.getLeaderPowersActive().get(0)).getCurrentResources());
+                out.println(((DepositLeaderPower) card2.getLeaderPowersActive().get(0)).getCurrentResources());
+
 
             } else {
                 out.println(resourcesToOrganize.toString());
                 out.println(currentDepotStates.get(0).getCurrentQuantity());
                 out.println(currentDepotStates.get(1).getCurrentQuantity());
                 out.println(currentDepotStates.get(2).getCurrentQuantity());
-                out.println(((DepositLeaderPower)card1.getLeaderPowersActive().get(0)).getCurrentResources());
+                out.println(((DepositLeaderPower) card1.getLeaderPowersActive().get(0)).getCurrentResources());
+                out.println(((DepositLeaderPower) card2.getLeaderPowersActive().get(0)).getCurrentResources());
             }
         }
     }
@@ -934,14 +972,14 @@ public class CLI {
     }
 
 
-    private static String colorResource(Resource res) {
+  public static String colorResource(Resource res) {
         if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
         if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
         if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
         else return Color.YELLOW.getAnsiCode();
     }
 
-    private static String shapeResource(Resource res) {
+    public static String shapeResource(Resource res) {
         if (res == Resource.SERVANT) return "■";
         if (res == Resource.SHIELD) return "◆";
         if (res == Resource.COIN) return "●";

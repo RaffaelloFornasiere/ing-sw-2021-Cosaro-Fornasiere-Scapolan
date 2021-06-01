@@ -36,19 +36,8 @@ public class DashBoardView {
     }
 
 
-    private String colorResource(Resource res) {
-        if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
-        if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
-        if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
-        else return Color.YELLOW.getAnsiCode();
-    }
 
-    private String shapeResource(Resource res) {
-        if (res == Resource.SERVANT) return "■";
-        if (res == Resource.SHIELD) return "◆";
-        if (res == Resource.COIN) return "●";
-        else return "▼";
-    }
+
 
     public String resourceNumberToString() {
         HashMap<Resource, Integer> totalRes = new HashMap();
@@ -62,8 +51,8 @@ public class DashBoardView {
         StringBuilder builder = new StringBuilder();
         builder.append("\033[31;1;4mTOTAL OF RESOURCES:\033[0m \n");
         totalRes.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
+            String color = CLI.colorResource(resource);
+            String shape = CLI.shapeResource(resource);
             builder.append(color + resource.toString() + ": ");
             IntStream.range(0, totalRes.get(resource)).forEach(n -> builder.append(color + shape + " "));
             builder.append(":" + totalRes.get(resource) + Color.reset() + "\n");
@@ -76,8 +65,8 @@ public class DashBoardView {
         warehouseBuilder.append("\033[31;1;4mWAREHOUSE\033[0m \n");
         int m = 1;
         for (DepotState l : warehouse) {
-            String color = colorResource(l.getResourceType());
-            String shape = shapeResource(l.getResourceType());
+            String color = CLI.colorResource(l.getResourceType());
+            String shape = CLI.shapeResource(l.getResourceType());
 
             warehouseBuilder.append(color +"   " +l.getResourceType().toString() + "\n   ");
             IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╔═══╗" + " "));
@@ -96,8 +85,8 @@ public class DashBoardView {
         StringBuilder strongBoxBuilder = new StringBuilder();
         strongBoxBuilder.append("\033[31;1;4mSTRONGBOX\033[0m \n");
         strongBox.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
+            String color = CLI.colorResource(resource);
+            String shape = CLI.shapeResource(resource);
             strongBoxBuilder.append(color + resource.toString() + ": ");
             IntStream.range(0, strongBox.get(resource)).forEach(n -> strongBoxBuilder.append(color + shape + " "));
             strongBoxBuilder.append(Color.reset() + "\n");
