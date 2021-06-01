@@ -5,11 +5,16 @@ import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
+import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
 
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,20 +24,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class CLI {
-    private final NetworkAdapter client;
+public class CLI extends UI {
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
 
-    private String thisPlayer;
     private FaithTrackView faithTrack;
     private HashMap<String, PlayerState> playerStates;
     private ArrayList<String> players;
     private DevCardGridView devCardGridView;
     private MarketView market;
 
-    public CLI(NetworkAdapter client) {
-        this.client = client;
+    public CLI() {
         players = new ArrayList<>();
         faithTrack = new FaithTrackView(players);
         playerStates = new HashMap<>();
@@ -753,6 +755,75 @@ public class CLI {
                 displayOrganizeResourcesForm(resourcesToOrganize);
             }
         }
+    }
+
+    @Override
+    public void printMessage(String message) {
+        out.println(message);
+    }
+
+    @Override
+    public void printError(String error) {
+        out.println(Color.RED + error + Color.reset());
+    }
+
+    @Override
+    public void printWarning(String warning) {
+        out.println(Color.YELLOW + warning + Color.reset());
+    }
+
+    @Override
+    public InetAddress askIP() {
+        InetAddress inetAddress = null;
+        while (inetAddress == null){
+            out.println("Insert the server IP address");
+            String IP = in.nextLine();
+
+            if(IP.equals("0")) //TODO only for testing purpose, must be removed
+                IP = "127.0.0.1";
+
+            try {
+                inetAddress = InetAddress.getByName(IP);
+            } catch (UnknownHostException e) {
+                printError("Please, insert a valid IP address");
+            }
+        }
+        return inetAddress;
+    }
+
+    @Override
+    public void beginGame() {
+
+    }
+
+    @Override
+    public void setUserTurnActive(boolean active) {
+
+    }
+
+    @Override
+    public void ack() {
+
+    }
+
+    @Override
+    public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
+        return null;
+    }
+
+    @Override
+    public HashMap<Resource, Integer> getWarehouseDisplacement(ArrayList<Resource> resources) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
+        return null;
     }
 
     private static class InfoPower {

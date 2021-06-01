@@ -1,9 +1,11 @@
 package it.polimi.ingsw.ui;
 
+import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Resource;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,13 +15,22 @@ import java.util.HashMap;
  */
 public abstract class UI {
     private boolean turnActive;
+    protected NetworkAdapter client;
+    protected String thisPlayer;
+
+    public void setClient(NetworkAdapter networkAdapter){
+        this.client = networkAdapter;
+    }
 
 
     //generics
-    abstract public void beginGame();
-    abstract public void setUserTurnActive(boolean active);
     abstract public void printMessage(String message);
     abstract public void printError(String error);
+    abstract public void printWarning(String warning);
+    public abstract InetAddress askIP();
+
+    abstract public void beginGame();
+    abstract public void setUserTurnActive(boolean active);
     abstract public void ack();
 
     //game related
