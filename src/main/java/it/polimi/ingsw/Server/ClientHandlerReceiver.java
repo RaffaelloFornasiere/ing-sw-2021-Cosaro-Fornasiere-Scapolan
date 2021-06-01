@@ -8,6 +8,7 @@ import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.MessageWrapper;
 
 import java.io.InputStream;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 
@@ -28,9 +29,10 @@ public class ClientHandlerReceiver {
 
 
         while(true) {
-            String eventJSON = MessageWrapper.unwrap(scanner.nextLine());
-            System.out.println("Received: "+ eventJSON);
+            String eventJSON = "";
             try {
+            eventJSON = MessageWrapper.unwrap(scanner.nextLine());
+            System.out.println("Received: "+ eventJSON);
                 Event event = gson.fromJson(eventJSON, Event.class);
                 boolean done = false;
                 while (!done) {
@@ -44,6 +46,10 @@ public class ClientHandlerReceiver {
             } catch (JsonSyntaxException e) {
                 System.err.println("Bad message received");
                 System.err.println(eventJSON);
+            }catch (NoSuchElementException | IllegalStateException e){
+                //TODO disconnect
+                System.out.println("Client disconnected");
+                break;
             }
         }
     }

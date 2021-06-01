@@ -21,7 +21,7 @@ public class MainServer{
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    private void startServer() throws IOException{
+    public void startServer() throws IOException{
         ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
         //serverSocket.setSoTimeout(10*1000);
         System.out.println("Beginning to accept clients on " + InetAddress.getLocalHost());
