@@ -552,46 +552,6 @@ public class CLI extends UI {
         System.out.println(card.toString());
     }
 
-    public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
-        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
-        StringBuilder builder = new StringBuilder();
-        builder.append(Color.RED.getAnsiCode() + "╔═");
-        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
-        builder.append("═╗  " + Color.WHITE.getAnsiCode());
-
-        otherPlayersID.stream().forEach(name -> {
-            builder.append("╔═");
-            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
-            builder.append("═╗  ");
-        });
-        builder.append("\n");
-
-        builder.append(Color.RED.getAnsiCode() + "║ ");
-        builder.append(leaderID);
-        builder.append(" ║  " + Color.WHITE.getAnsiCode());
-
-        otherPlayersID.stream().forEach(name -> {
-            builder.append("║ ");
-            builder.append(name);
-            builder.append(" ║  ");
-        });
-        builder.append("\n");
-
-        builder.append(Color.RED.getAnsiCode() + "╚═");
-        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
-        builder.append("═╝  " + Color.WHITE.getAnsiCode());
-
-        otherPlayersID.stream().forEach(name -> {
-            builder.append("╚═");
-            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
-            builder.append("═╝  ");
-        });
-
-        DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
-        Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
-        panel.addItem(obj);
-        panel.show();
-    }
 /*
     public static void main(String[] args) {
         String leaderID = "Steve100";
@@ -789,6 +749,71 @@ public class CLI extends UI {
             }
         }
         return inetAddress;
+    }
+
+    @Override
+    public boolean askIfNewLobby() {
+        ArrayList<Pair<String, String>> options= new ArrayList<>();
+        options.add(new Pair<>("Create Lobby", Color.reset()));
+        options.add(new Pair<>("Join Lobby", Color.reset()));
+
+        ArrayList<Integer> choices = displaySelectionForm(options, null, 1);
+        return choices.get(0)==0;
+    }
+
+    @Override
+    public String askUserID() {
+        out.println("Insert username");
+        return in.nextLine();
+    }
+
+    @Override
+    public String askLeaderID() {
+        out.println("Insert the username of the leader of the lobby you want to join");
+        out.println("Put * to join a random lobby");
+        return in.nextLine();
+    }
+
+    @Override
+    public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
+        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
+        StringBuilder builder = new StringBuilder();
+        builder.append(Color.RED.getAnsiCode() + "╔═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╗  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╔═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╗  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "║ ");
+        builder.append(leaderID);
+        builder.append(" ║  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("║ ");
+            builder.append(name);
+            builder.append(" ║  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "╚═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╝  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╚═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╝  ");
+        });
+
+        DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
+        Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
+        panel.addItem(obj);
+        panel.show();
     }
 
     @Override

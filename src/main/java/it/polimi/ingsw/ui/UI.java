@@ -29,6 +29,12 @@ public abstract class UI {
     abstract public void printWarning(String warning);
     public abstract InetAddress askIP();
 
+    public abstract boolean askIfNewLobby();
+    public abstract String askUserID();
+    public abstract String askLeaderID();
+
+    public abstract void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID);
+
     abstract public void beginGame();
     abstract public void setUserTurnActive(boolean active);
     abstract public void ack();

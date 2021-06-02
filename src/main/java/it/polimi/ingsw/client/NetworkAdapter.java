@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.ClientApp;
 import it.polimi.ingsw.events.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.*;
@@ -30,8 +31,9 @@ public class NetworkAdapter {
     String playerID;
     UI view;
 
-    public NetworkAdapter(InetAddress address) throws IOException {
+    public NetworkAdapter(InetAddress address, UI ui) throws IOException {
         connectToServer(address);
+        view = ui;
 
         // method-event binding
         Reflections reflections = new Reflections("it.polimi.ingsw.events");
@@ -82,19 +84,6 @@ public class NetworkAdapter {
         };
         //timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
         return true;
-    }
-
-    public static void main(String[] args) {
-        try {
-            NetworkAdapter nt = new NetworkAdapter(InetAddress.getByName("127.0.0.1"));
-            nt.createMatch("raffaello");
-            //nt.createMatch("raffaello");
-
-            System.out.println("aaa");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void send(Event e) {
@@ -182,10 +171,6 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
-    public void LobbyStateEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
     public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
@@ -222,8 +207,19 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
-    public void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+    public void LobbyErrorHandler(PropertyChangeEvent evt) {
+        LobbyError event = (LobbyError) evt.getNewValue();
+        System.out.println("Received" + event.getEventName());
+
+        view.printError(event.getErrorMsg());
+        ClientApp.joinLobby(view, this);
+    }
+
+    public void LobbyStateEventHandler(PropertyChangeEvent evt) {
+        LobbyStateEvent event = (LobbyStateEvent) evt.getNewValue();
+        System.out.println("Received" + event.getEventName());
+
+        view.displayLobbyState(event.getLeaderID(), event.getOtherPLayersID());
     }
 
     public void MatchEventHandler(PropertyChangeEvent evt) {
@@ -262,5 +258,13 @@ public class NetworkAdapter {
         ResourceSelectionEvent event = (ResourceSelectionEvent)evt.getNewValue();
         var selection = view.getResourcesSelection(event.getRequired());
         send(new ResourceSelectionEvent(playerID, null, selection.get(0), selection.get(1)));
+    }
+
+    public void UsernameErrorHandler(PropertyChangeEvent evt) {
+        UsernameError event = (UsernameError) evt.getNewValue();
+        System.out.println("Received" + event.getEventName());
+
+        view.printError(event.getErrorMsg());
+        ClientApp.joinLobby(view, this);
     }
 }

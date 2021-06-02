@@ -3,6 +3,8 @@ package it.polimi.ingsw.events.ControllerEvents;
 /**
  * Event signaling the arrival of a new player
  * The client will receive a BadRequestEvent if this event was mal-posed
+ * The client will receive a UsernameError if the username inserted is invalid
+ * The client will receive a LobbyError if the lobby is full or does not exist
  */
 public class NewPlayerEvent extends ControllerEvent {
     private final String lobbyLeaderID;

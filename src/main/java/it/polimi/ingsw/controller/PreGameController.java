@@ -4,9 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.modelChangeHandlers.*;
-import it.polimi.ingsw.events.ClientEvents.BadRequestEvent;
-import it.polimi.ingsw.events.ClientEvents.InitialChoicesEvent;
-import it.polimi.ingsw.events.ClientEvents.PersonalProductionPowerStateEvent;
+import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
 import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
@@ -47,14 +45,14 @@ public class PreGameController {
         System.out.println("Handling NewPlayerEvent");
 
         if(event.getPlayerId().equals("*")){
-            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
-                    "Username cannot be \"*\"", new NewPlayerEvent(event.getPlayerId(), event.getLobbyLeaderID())));
+            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new UsernameError(event.getPlayerId(),
+                    "Username cannot be \"*\""));
             return;
         }
 
         if(networkData.containsKey(event.getPlayerId())){
-            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
-                    "Username already taken", new NewPlayerEvent(event.getPlayerId(), event.getLobbyLeaderID())));
+            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new UsernameError(event.getPlayerId(),
+                    "Username already taken"));
             return;
         }
         System.out.println("The username si free");
@@ -96,16 +94,16 @@ public class PreGameController {
 
         int lobbyIndex = searchLobbyByLeader(event.getLobbyLeaderID());
         if(lobbyIndex == -1)
-            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
-                    "No lobby with the given Leader", new NewPlayerEvent(event.getPlayerId(), event.getLobbyLeaderID())));
+            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new LobbyError(event.getPlayerId(),
+                    "No lobby with the given Leader"));
         else{
             try {
                 lobbies.get(lobbyIndex).addPlayerID(event.getPlayerId());
                 networkData.put(event.getPlayerId(), event.getRequestsElaborator());
                 event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
             } catch (IllegalOperation illegalOperation) {
-                event.getRequestsElaborator().getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
-                        "The lobby is full", new NewPlayerEvent(event.getPlayerId(), event.getLobbyLeaderID())));
+                event.getRequestsElaborator().getClientHandlerSender().sendEvent(new LobbyError(event.getPlayerId(),
+                        "The lobby is full"));
             }
         }
     }
