@@ -169,9 +169,12 @@ public class CLI extends UI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        in.nextLine();
+        if (response.equals("YES") || response.equals("Y")) {
             return inputs;
-        } else return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose);
+        } else{
+            return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose);
+        }
 
     }
 
@@ -724,12 +727,12 @@ public class CLI extends UI {
 
     @Override
     public void printError(String error) {
-        out.println(Color.RED + error + Color.reset());
+        out.println(Color.RED.getAnsiCode() + error + Color.reset());
     }
 
     @Override
     public void printWarning(String warning) {
-        out.println(Color.YELLOW + warning + Color.reset());
+        out.println(Color.YELLOW.getAnsiCode() + warning + Color.reset());
     }
 
     @Override

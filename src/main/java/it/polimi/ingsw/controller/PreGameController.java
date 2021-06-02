@@ -51,6 +51,7 @@ public class PreGameController {
         }
 
         if(networkData.containsKey(event.getPlayerId())){
+            System.out.println("Username already taken");
             event.getRequestsElaborator().getClientHandlerSender().sendEvent(new UsernameError(event.getPlayerId(),
                     "Username already taken"));
             return;
@@ -70,8 +71,8 @@ public class PreGameController {
             }
             else {
                 try {
-                    lobbies.get(lobbyIndex).addPlayerID(event.getPlayerId());
                     networkData.put(event.getPlayerId(), event.getRequestsElaborator());
+                    lobbies.get(lobbyIndex).addPlayerID(event.getPlayerId());
                     event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
                 } catch (IllegalOperation illegalOperation) {
                     //impossible
@@ -98,8 +99,8 @@ public class PreGameController {
                     "No lobby with the given Leader"));
         else{
             try {
-                lobbies.get(lobbyIndex).addPlayerID(event.getPlayerId());
                 networkData.put(event.getPlayerId(), event.getRequestsElaborator());
+                lobbies.get(lobbyIndex).addPlayerID(event.getPlayerId());
                 event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
             } catch (IllegalOperation illegalOperation) {
                 event.getRequestsElaborator().getClientHandlerSender().sendEvent(new LobbyError(event.getPlayerId(),

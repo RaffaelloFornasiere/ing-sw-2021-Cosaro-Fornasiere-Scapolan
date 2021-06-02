@@ -36,14 +36,14 @@ public class NetworkHandlerReceiver implements PropertyChangeSubject {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public void receive() {
+        GsonBuilder jsonBuilder = new GsonBuilder();
+        jsonBuilder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
+        Gson gson = jsonBuilder.create();
         while (true) {
             String json;
             if (scanner.hasNext()) {
                 json = scanner.nextLine();
                 System.out.println(json);
-                GsonBuilder jsonBuilder = new GsonBuilder();
-                jsonBuilder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
-                Gson gson = jsonBuilder.create();
                 Event event = gson.fromJson(json, Event.class);
                 support.firePropertyChange(event.getEventName(), null, event);
             }

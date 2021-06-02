@@ -24,19 +24,12 @@ public class ClientHandlerSender {
 
         String eventJSON = gson.toJson(event, Event.class);
 
-        //try {
         try {
             printWriter.println(MessageWrapper.wrap(eventJSON));
+            printWriter.flush();
         } catch (IllegalOperation illegalOperation) {
             illegalOperation.printStackTrace();
         }
-        printWriter.flush();
-        //printWriter.
-
-        /*} catch (IllegalOperation illegalOperation) {
-            System.out.println("The event to send contains the messages delimiters(\"" + MessageWrapper.MESSAGE_START +
-                    "\" or \"" + MessageWrapper.MESSAGE_END + "\") somewhere");
-        }*/
     }
 
     public void closeConnection() {

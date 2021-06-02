@@ -47,7 +47,7 @@ public class Lobby extends Observable {
      * @return whether this lobby is full
      */
     public boolean isFull(){
-        return otherPLayersID.size() + 1 > Config.getInstance().getMaxPlayers();
+        return otherPLayersID.size() + 1 >= Config.getInstance().getMaxPlayers();
     }
 
     /**

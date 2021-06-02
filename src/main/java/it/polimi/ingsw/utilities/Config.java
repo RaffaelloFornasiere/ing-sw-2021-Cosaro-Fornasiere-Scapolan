@@ -110,7 +110,7 @@ public class Config {
 
             config.devCards = loadDevCards(config);
 
-            if(config.devCardsToWin<config.devCardNumber){
+            if(config.devCardsToWin>config.devCardNumber){
                 System.err.println("Development card needed to win more than total development card. Loading default option for it");
                 config.devCardsToWin = devCardsToWinDefault;
             }
@@ -129,7 +129,11 @@ public class Config {
                 config.maxPlayers = maxPlayersDefault;
             }
 
-            if(config.marbles.size()!=(config.marketRows*config.marketColumns)+1){
+            int marbleNumber = 0;
+            for(Marble m: config.marbles.keySet()) {
+                marbleNumber += config.marbles.get(m);
+            }
+            if(marbleNumber!=(config.marketRows*config.marketColumns)+1){
                 System.err.println("Number of marbles different from (rows*column)+1. Loading default option for the market");
                 config.leaderCardPerPlayerToChoose = leaderCardPerPlayerToChooseDefault;
                 config.marketRows = marketRowsDefault;
