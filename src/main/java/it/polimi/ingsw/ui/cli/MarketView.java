@@ -3,6 +3,7 @@ package it.polimi.ingsw.ui.cli;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.Marble;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class MarketView {
@@ -12,8 +13,12 @@ public class MarketView {
     private int cols;
 
     MarketView(Marble left, Marble[][] grid, int rows, int cols) {
+        if(grid.length!=rows || !Arrays.stream(grid).allMatch(a -> a.length==cols)) throw new IllegalArgumentException(
+                "number of rows and columns don't match");
         marbleLeft = left;
-        this.grid = grid;
+        this.grid = new Marble[rows][cols];
+        for (int i = 0; i < rows; i++)
+            System.arraycopy(grid[i], 0, this.grid[i], 0, cols);
         this.rows = rows;
         this.cols = cols;
     }

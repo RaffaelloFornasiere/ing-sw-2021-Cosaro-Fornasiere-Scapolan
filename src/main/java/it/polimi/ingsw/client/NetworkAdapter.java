@@ -1,16 +1,15 @@
 package it.polimi.ingsw.client;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.ClientApp;
 import it.polimi.ingsw.events.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.*;
 import it.polimi.ingsw.events.ClientEvents.*;
-import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.DevCards.DevCardGrid;
 import it.polimi.ingsw.model.Direction;
-import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
-import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
@@ -39,7 +38,7 @@ public class NetworkAdapter {
         Reflections reflections = new Reflections("it.polimi.ingsw.events");
 
         Set<Class<? extends Event>> events = new HashSet<>(reflections.getSubTypesOf(ClientEvent.class));
-        events.addAll(reflections.getSubTypesOf(ControllerEvent.class));
+        //events.addAll(reflections.getSubTypesOf(ControllerEvent.class));
 
 
         for (var event : events) {
@@ -102,8 +101,13 @@ public class NetworkAdapter {
     }
 
     public void createMatch(String username) {
+        this.playerID = username;
         NewPlayerEvent event = new NewPlayerEvent(username, username);
         send(event);
+    }
+
+    public void startMatch(){
+        send(new StartMatchEvent(playerID));
     }
 
     public void buyResources(Direction direction, int index) {
@@ -123,11 +127,6 @@ public class NetworkAdapter {
 
     public void activateLeaderCard(String leaderCardID) {
         ActivateLeaderCardEvent event = new ActivateLeaderCardEvent(playerID, leaderCardID);
-        send(event);
-    }
-
-    public void displaceWarehouseMarbles(HashMap<Resource, Integer> resources) {
-        OrganizeWarehouseResEvent event = new OrganizeWarehouseResEvent(playerID, resources);
         send(event);
     }
 
@@ -152,10 +151,49 @@ public class NetworkAdapter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
     public void BadRequestEventHandler(PropertyChangeEvent evt) {
+        System.err.println(new Gson().toJson(evt.getNewValue()));
+    }
+
+    public void CantAffordErrorHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void ChoseMultipleExtraResourcePowerEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void ChoseResourcesEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
     public void ClientEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void DashBoardStateEventHandler(PropertyChangeEvent evt) {
+        DashBoardStateEvent event = (DashBoardStateEvent) evt.getNewValue();
+        view.updateDashboard(event.getPlayerId(), event.getTopDevCards(), event.getStrongBox(), event.getWarehouse());
+    }
+
+    public void DepositLeaderPowerStateEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void DevCardGridStateEventHandler(PropertyChangeEvent evt) {
+        DevCardGridStateEvent event = (DevCardGridStateEvent) evt.getNewValue();
+        view.updateDevCardGrid(event.getTopDevCardIDs());
+    }
+
+    public void DevCardSlotErrorHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void FaithTrackEventHandler(PropertyChangeEvent evt) {
+        FaithTrackEvent event = (FaithTrackEvent) evt.getNewValue();
+        view.updateFaithTrack(event.getPlayerId(), event.getPosition(), event.getPopeFavorCards());
+    }
+
+    public void GameEndedEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
@@ -171,10 +209,80 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
+    public void LeaderCardStateEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void LobbyErrorHandler(PropertyChangeEvent evt) {
+        LobbyError event = (LobbyError) evt.getNewValue();
+        System.out.println("Received" + event.getEventName());
+
+        view.printError(event.getErrorMsg());
+        ClientApp.joinLobby(view, this);
+    }
+
+    public void LobbyStateEventHandler(PropertyChangeEvent evt) {
+        LobbyStateEvent event = (LobbyStateEvent) evt.getNewValue();
+        System.out.println("Received" + event.getEventName());
+
+        view.displayLobbyState(event.getLeaderID(), event.getOtherPLayersID());
+    }
+
+    public void MarketStateEventHandler(PropertyChangeEvent evt) {
+        MarketStateEvent event = (MarketStateEvent) evt.getNewValue();
+        view.updateMarket(event.getRows(), event.getCols(), event.getMarketStatus(), event.getMarbleLeft());
+    }
+
+    public void MatchStateEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void OrganizeResourcesEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void PersonalProductionPowerStateEventHandler(PropertyChangeEvent evt) {
+        PersonalProductionPowerStateEvent event = (PersonalProductionPowerStateEvent) evt.getNewValue();
+        view.setPersonalProductionPower(event.getPlayerId(), event.getPersonalProductionPower());
+    }
+
+    public void PlayerStateEventHandler(PropertyChangeEvent evt) {
+        PlayerStateEvent event = (PlayerStateEvent) evt.getNewValue();
+        view.updateLeaderCardsState(event.getPlayerId(), event.getLeaderCards());
+    }
+
     public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
+    public void ResourceSelectionEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+        ResourceSelectionEvent event = (ResourceSelectionEvent)evt.getNewValue();
+        var selection = view.getResourcesSelection(event.getRequired());
+        send(new ResourceSelectionEvent(playerID, null, selection.get(0), selection.get(1)));
+    }
+
+    public void SetupDoneEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void SimpleChoseResourcesEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void SinglePlayerLostEventHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
+    public void UsernameErrorHandler(PropertyChangeEvent evt) {
+        UsernameError event = (UsernameError) evt.getNewValue();
+        System.out.println("Received" + event.getEventName());
+
+        view.printError(event.getErrorMsg());
+        ClientApp.joinLobby(view, this);
+    }
+
+    /*
     public void ControllerEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
@@ -207,21 +315,6 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
-    public void LobbyErrorHandler(PropertyChangeEvent evt) {
-        LobbyError event = (LobbyError) evt.getNewValue();
-        System.out.println("Received" + event.getEventName());
-
-        view.printError(event.getErrorMsg());
-        ClientApp.joinLobby(view, this);
-    }
-
-    public void LobbyStateEventHandler(PropertyChangeEvent evt) {
-        LobbyStateEvent event = (LobbyStateEvent) evt.getNewValue();
-        System.out.println("Received" + event.getEventName());
-
-        view.displayLobbyState(event.getLeaderID(), event.getOtherPLayersID());
-    }
-
     public void MatchEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
@@ -248,23 +341,9 @@ public class NetworkAdapter {
     public void StartMatchEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
+    */
 
-    public void MarketStateEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void ResourceSelectionEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-        ResourceSelectionEvent event = (ResourceSelectionEvent)evt.getNewValue();
-        var selection = view.getResourcesSelection(event.getRequired());
-        send(new ResourceSelectionEvent(playerID, null, selection.get(0), selection.get(1)));
-    }
-
-    public void UsernameErrorHandler(PropertyChangeEvent evt) {
-        UsernameError event = (UsernameError) evt.getNewValue();
-        System.out.println("Received" + event.getEventName());
-
-        view.printError(event.getErrorMsg());
-        ClientApp.joinLobby(view, this);
+    public static void main(String[] args) {
+        ClientApp.main(args);
     }
 }

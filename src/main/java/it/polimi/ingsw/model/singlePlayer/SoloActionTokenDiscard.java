@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.singlePlayer;
 
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.DevCards.DevCardGrid;
 import it.polimi.ingsw.model.DevCards.DevDeck;
@@ -35,13 +36,17 @@ public class SoloActionTokenDiscard extends SoloActionToken {
                 int size = devDeck.size();
                 if(toDiscard<=size) {
                     for (int i = 0; i < toDiscard; i++) {
-                        devDeck.pop();
+                        try {
+                            devDeck.pop();
+                        } catch (NotPresentException ignore) { }
                     }
                     return true;
                 }
                 else{
                     for (int i = 0; i < size; i++) {
-                        devDeck.pop();
+                        try {
+                            devDeck.pop();
+                        } catch (NotPresentException ignore) {}
                     }
                     toDiscard -= size;
                 }

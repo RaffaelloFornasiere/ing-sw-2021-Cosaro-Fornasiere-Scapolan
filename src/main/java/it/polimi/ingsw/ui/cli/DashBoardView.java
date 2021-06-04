@@ -1,6 +1,7 @@
 package it.polimi.ingsw.ui.cli;
 
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
@@ -12,16 +13,18 @@ import java.util.stream.IntStream;
 public class DashBoardView {
     private ArrayList<String> topDevCards;
     private HashMap<Resource, Integer> strongBox;
- private ArrayList<DepotState> warehouse;
+    private ArrayList<DepotState> warehouse;
+    private ProductionPower personalProductionPower;
     private String player;
 
 
     public DashBoardView(ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse, String player) {
-        this.topDevCards = topDevCards;
-        this.strongBox = new HashMap<>();
-        Arrays.stream(Resource.values()).forEach(res -> this.strongBox.put(res, 0));
-        strongBox.keySet().forEach(res -> this.strongBox.put(res, strongBox.get(res)));
-        this.warehouse = warehouse;
+        this.topDevCards = (ArrayList<String>) topDevCards.clone();
+        this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
+        this.warehouse = new ArrayList<>();
+        for(DepotState d: warehouse){
+            this.warehouse.add(new DepotState(d.getResourceType(), d.getMaxQuantity(), d.getCurrentQuantity()));
+        }
         this.player = player;
     }
 
@@ -36,8 +39,24 @@ public class DashBoardView {
     }
 
 
+    public void updateTopDevCards(ArrayList<String> topDevCards) {
+        this.topDevCards = (ArrayList<String>) topDevCards.clone();
+    }
 
+    public void updateStrongBox(HashMap<Resource, Integer> strongBox) {
+        this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
+    }
 
+    public void updateWarehouse(ArrayList<DepotState> warehouse) {
+        this.warehouse = new ArrayList<>();
+        for(DepotState d: warehouse){
+            this.warehouse.add(new DepotState(d.getResourceType(), d.getMaxQuantity(), d.getCurrentQuantity()));
+        }
+    }
+
+    public void setPersonalProductionPower(ProductionPower personalProductionPower) {
+        this.personalProductionPower = personalProductionPower;
+    }
 
     public String resourceNumberToString() {
         HashMap<Resource, Integer> totalRes = new HashMap();

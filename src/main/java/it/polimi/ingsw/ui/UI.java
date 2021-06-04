@@ -1,8 +1,11 @@
 package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
+import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
+import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 
 import java.net.InetAddress;
@@ -40,6 +43,18 @@ public abstract class UI {
     abstract public void ack();
 
     //game related
+
+    public abstract void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower);
+
+    public abstract void updateFaithTrack(String playerID, int position, HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards);
+
+    public abstract void updateDashboard(String playerId, ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse);
+
+    public abstract void updateLeaderCardsState(String playerId, HashMap<String, Boolean> leaderCards);
+
+    public abstract void updateMarket(int rows, int cols, Marble[][] marketStatus, Marble marbleLeft);
+
+    public abstract void updateDevCardGrid(String[][] topDevCardIDs);
 
     /**
      * Asks the user to select which leader powers use with which marbles

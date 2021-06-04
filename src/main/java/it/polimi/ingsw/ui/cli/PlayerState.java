@@ -1,6 +1,5 @@
 package it.polimi.ingsw.ui.cli;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlayerState {

@@ -1,13 +1,14 @@
 package it.polimi.ingsw.ui.cli;
 
-import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.Marble;
+import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
@@ -33,10 +34,11 @@ public class CLI extends UI {
     private ArrayList<String> players;
     private DevCardGridView devCardGridView;
     private MarketView market;
+    
+    private Thread activeRequest;
 
     public CLI() {
         players = new ArrayList<>();
-        faithTrack = new FaithTrackView(players);
         playerStates = new HashMap<>();
     }
 
@@ -626,7 +628,7 @@ public class CLI extends UI {
         ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
 
         leaderCardViews.stream().forEach(cardView -> {
-            if (cardView.getSelected()) {
+            if (cardView.isSelected()) {
                 IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
                     LeaderPower power = cardView.getLeaderPowersActive().get(index);
                     if (power instanceof DepositLeaderPower)
@@ -689,13 +691,13 @@ public class CLI extends UI {
             });
 
             //result of transition
-            AtomicBoolean successfull = new AtomicBoolean(false);
+            AtomicBoolean successful = new AtomicBoolean(false);
             //inputDeposit is the result of the selection of one destination among deposits
             int inputDeposit = displaySelectionForm(depositOptions, null, 1).get(0);
             //if the selected index belongs to depots...
             if (inputDeposit < currentDepotStates.size()) {
                 DepotResultMessage result = currentDepotStates.get(inputDeposit).tryAddResource(justResources.get(inputResource));
-                successfull.set(result.getSuccessfull());
+                successful.set(result.getSuccessfull());
                 out.println(result.getMessage());
             }
             //or if it belongs to leader card extra depots...
@@ -708,150 +710,16 @@ public class CLI extends UI {
                 leaderCardViews.stream().forEach(cardView -> {
                     if (cardView.getIdCard() == thisDepositLeaderPowers.get(index).getCardId()) {
                         DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), justResources.get(inputResource));
-                        successfull.set(result.getSuccessfull());
+                        successful.set(result.getSuccessfull());
                         out.println(result.getMessage());
                     }
                 });
             }
-            if (successfull.get()) {
+            if (successful.get()) {
                 resourcesToOrganize.put(justResources.get(inputResource), (resourcesToOrganize.get(justResources.get(inputResource)) - 1));
                 displayOrganizeResourcesForm(resourcesToOrganize);
             }
         }
-    }
-
-    @Override
-    public void printMessage(String message) {
-        out.println(message);
-    }
-
-    @Override
-    public void printError(String error) {
-        out.println(Color.RED.getAnsiCode() + error + Color.reset());
-    }
-
-    @Override
-    public void printWarning(String warning) {
-        out.println(Color.YELLOW.getAnsiCode() + warning + Color.reset());
-    }
-
-    @Override
-    public InetAddress askIP() {
-        InetAddress inetAddress = null;
-        while (inetAddress == null){
-            out.println("Insert the server IP address");
-            String IP = in.nextLine();
-
-            if(IP.equals("0")) //TODO only for testing purpose, must be removed
-                IP = "127.0.0.1";
-
-            try {
-                inetAddress = InetAddress.getByName(IP);
-            } catch (UnknownHostException e) {
-                printError("Please, insert a valid IP address");
-            }
-        }
-        return inetAddress;
-    }
-
-    @Override
-    public boolean askIfNewLobby() {
-        ArrayList<Pair<String, String>> options= new ArrayList<>();
-        options.add(new Pair<>("Create Lobby", Color.reset()));
-        options.add(new Pair<>("Join Lobby", Color.reset()));
-
-        ArrayList<Integer> choices = displaySelectionForm(options, null, 1);
-        return choices.get(0)==0;
-    }
-
-    @Override
-    public String askUserID() {
-        out.println("Insert username");
-        return in.nextLine();
-    }
-
-    @Override
-    public String askLeaderID() {
-        out.println("Insert the username of the leader of the lobby you want to join");
-        out.println("Put * to join a random lobby");
-        return in.nextLine();
-    }
-
-    @Override
-    public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
-        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
-        StringBuilder builder = new StringBuilder();
-        builder.append(Color.RED.getAnsiCode() + "╔═");
-        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
-        builder.append("═╗  " + Color.WHITE.getAnsiCode());
-
-        otherPlayersID.stream().forEach(name -> {
-            builder.append("╔═");
-            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
-            builder.append("═╗  ");
-        });
-        builder.append("\n");
-
-        builder.append(Color.RED.getAnsiCode() + "║ ");
-        builder.append(leaderID);
-        builder.append(" ║  " + Color.WHITE.getAnsiCode());
-
-        otherPlayersID.stream().forEach(name -> {
-            builder.append("║ ");
-            builder.append(name);
-            builder.append(" ║  ");
-        });
-        builder.append("\n");
-
-        builder.append(Color.RED.getAnsiCode() + "╚═");
-        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
-        builder.append("═╝  " + Color.WHITE.getAnsiCode());
-
-        otherPlayersID.stream().forEach(name -> {
-            builder.append("╚═");
-            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
-            builder.append("═╝  ");
-        });
-
-        DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
-        Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
-        panel.addItem(obj);
-        panel.show();
-    }
-
-    @Override
-    public void beginGame() {
-
-    }
-
-    @Override
-    public void setUserTurnActive(boolean active) {
-
-    }
-
-    @Override
-    public void ack() {
-
-    }
-
-    @Override
-    public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
-        return null;
-    }
-
-    @Override
-    public HashMap<Resource, Integer> getWarehouseDisplacement(ArrayList<Resource> resources) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
-        return null;
     }
 
     private static class InfoPower {
@@ -936,7 +804,7 @@ public class CLI extends UI {
         ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
 
         leaderCardViews.stream().forEach(cardView -> {
-            if (cardView.getSelected()) {
+            if (cardView.isSelected()) {
                 IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
                     LeaderPower power = cardView.getLeaderPowersActive().get(index);
                     if (power instanceof DepositLeaderPower)
@@ -1064,7 +932,7 @@ public class CLI extends UI {
     }
 
 
-  public static String colorResource(Resource res) {
+    public static String colorResource(Resource res) {
         if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
         if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
         if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
@@ -1078,5 +946,213 @@ public class CLI extends UI {
         else return "▼";
     }
 
+    @Override
+    public void printMessage(String message) {
+        out.println(message);
+    }
 
+    @Override
+    public void printError(String error) {
+        out.println(Color.RED.getAnsiCode() + error + Color.reset());
+    }
+
+    @Override
+    public void printWarning(String warning) {
+        out.println(Color.YELLOW.getAnsiCode() + warning + Color.reset());
+    }
+
+    @Override
+    public InetAddress askIP() {
+        InetAddress inetAddress = null;
+        while (inetAddress == null){
+            out.println("Insert the server IP address");
+            String IP = in.nextLine();
+
+            if(IP.equals("0")) //TODO only for testing purpose, must be removed
+                IP = "127.0.0.1";
+
+            try {
+                inetAddress = InetAddress.getByName(IP);
+            } catch (UnknownHostException e) {
+                printError("Please, insert a valid IP address");
+            }
+        }
+        return inetAddress;
+    }
+
+    @Override
+    public boolean askIfNewLobby() {
+        ArrayList<Pair<String, String>> options= new ArrayList<>();
+        options.add(new Pair<>("Create Lobby", Color.reset()));
+        options.add(new Pair<>("Join Lobby", Color.reset()));
+
+        ArrayList<Integer> choices = displaySelectionForm(options, null, 1);
+        return choices.get(0)==0;
+    }
+
+    @Override
+    public String askUserID() {
+        out.println("Insert username");
+        this.thisPlayer = in.nextLine();
+        return this.thisPlayer;
+    }
+
+    @Override
+    public String askLeaderID() {
+        out.println("Insert the username of the leader of the lobby you want to join");
+        out.println("Put * to join a random lobby");
+        return in.nextLine();
+    }
+
+    @Override
+    public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
+        if(!players.contains(leaderID)) players.add(leaderID);
+        playerStates.putIfAbsent(leaderID, new PlayerState());
+        for(String playerID: otherPlayersID){
+            if(!players.contains(playerID)) players.add(playerID);
+            playerStates.putIfAbsent(playerID, new PlayerState());
+        }
+        faithTrack = new FaithTrackView(players);
+
+        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
+        StringBuilder builder = new StringBuilder();
+        builder.append(Color.RED.getAnsiCode() + "╔═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╗  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╔═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╗  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "║ ");
+        builder.append(leaderID);
+        builder.append(" ║  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("║ ");
+            builder.append(name);
+            builder.append(" ║  ");
+        });
+        builder.append("\n");
+
+        builder.append(Color.RED.getAnsiCode() + "╚═");
+        IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
+        builder.append("═╝  " + Color.WHITE.getAnsiCode());
+
+        otherPlayersID.stream().forEach(name -> {
+            builder.append("╚═");
+            IntStream.range(0, name.length()).forEach(letter -> builder.append("═"));
+            builder.append("═╝  ");
+        });
+
+        DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
+        Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
+        panel.addItem(obj);
+        panel.show();
+
+        if(this.thisPlayer.equals(leaderID)){
+            new Thread(this::askForGameStart).start();
+        }
+    }
+
+    private void askForGameStart() {
+        out.println("Type \"start\" to start the game");
+        String s;
+        try {
+            do {
+                s = in.nextLine().toUpperCase();
+            } while (!s.equals("START"));
+            client.startMatch();
+        } catch (Exception ignore){}
+    }
+
+    @Override
+    public void beginGame() {
+
+    }
+
+    @Override
+    public void setUserTurnActive(boolean active) {
+
+    }
+
+    @Override
+    public void ack() {
+
+    }
+
+    @Override
+    public void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower) {
+        if(playerStates.get(playerId).dashBoard == null){
+            playerStates.get(playerId).dashBoard = new DashBoardView(new ArrayList<>(), new HashMap<>(), new ArrayList<>(), playerId);
+        }
+        playerStates.get(playerId).dashBoard.setPersonalProductionPower(personalProductionPower);
+
+    }
+
+    @Override
+    public void updateFaithTrack(String playerID, int position, HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+        faithTrack.updatePlayerPosition(playerID, position);
+        faithTrack.updateFavorPopeCard(popeFavorCards);
+    }
+
+    @Override
+    public void updateDashboard(String playerId, ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse) {
+        DashBoardView dashBoardView = playerStates.get(playerId).dashBoard;
+        if(dashBoardView == null){
+            playerStates.get(playerId).dashBoard = new DashBoardView(topDevCards, strongBox, warehouse, playerId);
+        }
+        else {
+            dashBoardView.updateTopDevCards(topDevCards);
+            dashBoardView.updateStrongBox(strongBox);
+            dashBoardView.updateWarehouse(warehouse);
+        }
+    }
+
+    @Override
+    public void updateLeaderCardsState(String playerId, HashMap<String, Boolean> leaderCards) {
+        HashMap<String, LeaderCardView> leaderCardsViews = playerStates.get(playerId).leaderCards;
+
+        for(String leaderCardID: leaderCards.keySet()){
+            LeaderCardView leaderCardView = leaderCardsViews.get(leaderCardID);
+            if(leaderCardView==null){
+                leaderCardsViews.put(leaderCardID, new LeaderCardView(leaderCardID));
+                leaderCardView = leaderCardsViews.get(leaderCardID);
+            }
+            leaderCardView.setActive(leaderCards.get(leaderCardID));
+        }
+    }
+
+    @Override
+    public void updateMarket(int rows, int cols, Marble[][] marketStatus, Marble marbleLeft) {
+        market = new MarketView(marbleLeft, marketStatus, rows, cols);
+    }
+
+    @Override
+    public void updateDevCardGrid(String[][] topDevCardIDs) {
+        devCardGridView = new DevCardGridView(topDevCardIDs);
+    }
+
+    @Override
+    public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
+        return null;
+    }
+
+    @Override
+    public HashMap<Resource, Integer> getWarehouseDisplacement(ArrayList<Resource> resources) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
+        return null;
+    }
 }

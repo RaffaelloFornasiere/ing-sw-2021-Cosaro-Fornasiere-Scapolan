@@ -26,7 +26,7 @@ public class DashBoardHandler extends MatchObserver{
         DashBoard dashBoard = (DashBoard) o;
 
         ArrayList<String> topCards = new ArrayList<>();
-        for(Stack<DevCard> slot: ((DashBoard) o).getCardSlots()) {
+        for(Stack<DevCard> slot: dashBoard.getCardSlots()) {
             if(!slot.empty())
                 topCards.add(slot.peek().getCardID());
             else

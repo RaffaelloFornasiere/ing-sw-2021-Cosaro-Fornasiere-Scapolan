@@ -36,7 +36,7 @@ public class DashBoard extends Observable {
     }
     //initializes a number of slots for the devcard. The number of slots is passed as parameter numberOfSlots
     cardSlots= new ArrayList<>();
-        IntStream.range(0,numberOfSlots-1).forEach(n -> cardSlots.add(new Stack<>()));
+        IntStream.range(0,numberOfSlots).forEach(n -> cardSlots.add(new Stack<>()));
 
     //initializes the depots to their max capacity
     warehouse=new ArrayList<>();

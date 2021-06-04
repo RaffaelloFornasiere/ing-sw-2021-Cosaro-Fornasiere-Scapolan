@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.MessageWrapper;
@@ -13,15 +14,20 @@ import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 
 public class ClientHandlerReceiver {
-    Scanner scanner;
-    BlockingQueue<Event> requestsQueue;
+    private final Scanner scanner;
+    private final BlockingQueue<Event> requestsQueue;
+    private String ownerUserID;
 
     public ClientHandlerReceiver(InputStream inputStream, BlockingQueue<Event> requestsQueue) {
         scanner = new Scanner(inputStream);
         this.requestsQueue = requestsQueue;
+        ownerUserID = null;
     }
 
-    @SuppressWarnings("InfiniteLoopStatement")
+    public void setOwnerUserID(String ownerUserID) {
+        this.ownerUserID = ownerUserID;
+    }
+
     public void waitForEvent(){
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
@@ -47,8 +53,17 @@ public class ClientHandlerReceiver {
                 System.err.println("Bad message received");
                 System.err.println(eventJSON);
             }catch (NoSuchElementException | IllegalStateException e){
-                //TODO disconnect
-                System.out.println("Client disconnected");
+                if(ownerUserID ==null) {
+                    System.out.println("Client disconnected");
+                }
+                else{
+                    System.out.println("Client of " + ownerUserID + " disconnected");
+                    try {
+                        requestsQueue.put(new QuitGameEvent(ownerUserID));
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                }
                 break;
             }
         }
