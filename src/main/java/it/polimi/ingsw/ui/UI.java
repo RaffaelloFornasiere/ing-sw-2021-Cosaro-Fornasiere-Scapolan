@@ -38,11 +38,17 @@ public abstract class UI {
 
     public abstract void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID);
 
+    public abstract void displayWaitingForPlayerToSetupState(String playerID);
+
     abstract public void beginGame();
     abstract public void setUserTurnActive(boolean active);
     abstract public void ack();
 
     //game related
+
+    public abstract ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose);
+
+    public abstract HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources);
 
     public abstract void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower);
 

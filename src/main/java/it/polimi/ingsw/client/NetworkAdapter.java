@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NetworkAdapter {
 
@@ -202,7 +203,13 @@ public class NetworkAdapter {
     }
 
     public void InitialChoicesEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        InitialChoicesEvent event = (InitialChoicesEvent) evt.getNewValue();
+        ArrayList<String> chosenLeaderCards = view.choseInitialLeaderCards(event.getLeaderCards(), event.getNumberOFLeaderCardsToChose());
+
+        ArrayList<Resource> allResources = Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new));
+        HashMap<Resource, Integer> chosenResources = view.choseResources(allResources, event.getNumberResourcesOfChoice());
+
+        send(new InitialDecisionsEvent(event.getPlayerId(), chosenLeaderCards, chosenResources));
     }
 
     public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt) {
@@ -263,7 +270,9 @@ public class NetworkAdapter {
     }
 
     public void SetupDoneEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        SetupDoneEvent event = (SetupDoneEvent) evt.getNewValue();
+
+        view.displayWaitingForPlayerToSetupState(event.getPlayerId());
     }
 
     public void SimpleChoseResourcesEventHandler(PropertyChangeEvent evt) {

@@ -186,7 +186,9 @@ public class PreGameController {
         }
 
         //Initialize match state
-        MatchState matchState= new MatchState(players, Config.getInstance().getDevCards(), Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
+        ArrayList<DevCard> devCards = Config.getInstance().getDevCards();
+        Collections.shuffle(devCards);
+        MatchState matchState= new MatchState(players, devCards, Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
         matchState.getMarket().addObserver(new MarketHandler(involvedClientHandlerSenders));
         matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedClientHandlerSenders));
         FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedClientHandlerSenders, matchState);

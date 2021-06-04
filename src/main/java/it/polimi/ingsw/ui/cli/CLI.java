@@ -291,7 +291,7 @@ public class CLI extends UI {
     public void displayChooseMultipleExtraResourcePowerForm(ArrayList<Resource> resourceTypes, int numberOfResources) {
         out.println("SOME ACTIVE EXTRA RESOURCE POWER ALLOWS YOU \n " +
                 "TO ADD " + numberOfResources + " RESOURCES TO YOUR STORE! \n ");
-        displayResourcesChoiceForm(resourceTypes, numberOfResources);
+        choseResources(resourceTypes, numberOfResources);
     }
 
     public void displayDashBoardState(String playerId) {
@@ -320,57 +320,6 @@ public class CLI extends UI {
         faithTrack.display(causeMessage, causePlayer);
     }
 
-
-    public void displayInitialChoiceForm(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose, int numberOFResourcesToChose) {
-        ArrayList<Integer> indexes = leaderCardsIDs.stream().map(name -> Integer.parseInt(name.substring(10))).collect(Collectors.toCollection(ArrayList::new));
-
-
-        out.println(thisPlayer.toUpperCase() + ", CHOOSE " + numberOFLeaderCardsToChose + " AMONG THESE LEADER CARDS:");
-        Panel panel = new Panel(1000, 15, out);
-        AtomicInteger n = new AtomicInteger();
-        leaderCardsIDs.stream().forEach(name -> {
-            LeaderCardView card = new LeaderCardView(name);
-            DrawableObject obj1 = new DrawableObject(card.toString(), 50 * (n.get()) + 10, 0);
-            n.getAndIncrement();
-            panel.addItem(obj1);
-        });
-        panel.show();
-        ArrayList<Integer> cardIndexes = new ArrayList<Integer>();
-        while (numberOFLeaderCardsToChose > 0) {
-            out.println("YOU HAVE " + numberOFLeaderCardsToChose + " CARDS LEFT TO CHOOSE,\n PLEASE TYPE THE NUMBER OF ONE CARD: ");
-            int input = in.nextInt();
-            while (input < indexes.get(0) || input > indexes.get(indexes.size() - 1)) {
-                out.println("WRONG NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
-                input = in.nextInt();
-            }
-            if (cardIndexes.contains(input)) {
-                out.println("YOU HAVE ALREADY SELECTED THIS NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
-                input = in.nextInt();
-            }
-            cardIndexes.add(input);
-            numberOFLeaderCardsToChose--;
-        }
-        out.println("YOU HAVE CHOSEN THIS LEADER CARDS:");
-        Panel panel2 = new Panel(1000, 15, out);
-        n.set(0);
-        HashMap<String, LeaderCardView> leaderCardsChosen = new HashMap<>();
-        cardIndexes.stream().forEach(index -> {
-            LeaderCardView card = new LeaderCardView("LeaderCard" + index);
-            leaderCardsChosen.put("LeaderCard" + index, card);
-            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n.get()) + 10, 0);
-            n.getAndIncrement();
-            panel2.addItem(obj1);
-        });
-        panel2.show();
-
-        out.println("DO YOU AGREE? yes/no");
-        String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
-            playerStates.get(thisPlayer).leaderCards.putAll(leaderCardsChosen);
-            ArrayList<Resource> allResources = Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new));
-            displayResourcesChoiceForm(allResources, numberOFResourcesToChose);
-        } else displayInitialChoiceForm(leaderCardsIDs, numberOFLeaderCardsToChose, numberOFResourcesToChose);
-    }
   /*  public static void main(String[] args) {
         String player = "PAOLO";
 
@@ -429,52 +378,6 @@ public class CLI extends UI {
         } else  System.out.println("bad");
     }*/
 
-
-    public void displayResourcesChoiceForm(ArrayList<Resource> resourceType, int numberOFResources) {
-        HashMap<Resource, Integer> initialResources = new HashMap<>();
-        for (Resource res : resourceType) {
-            initialResources.put(res, 0);
-        }
-        out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResources + " RESOURCES AMONG:");
-        resourceType.stream().forEach(el -> out.println(colorResource(el) + el.toString().toUpperCase() + "\n" + Color.reset()));
-
-        for (Resource res : resourceType) {
-            if (res != resourceType.get(resourceType.size() - 1) && numberOFResources > 0) {
-                out.println("HOW MANY " + colorResource(res) + res.toString() + Color.reset() + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResources + " LEFT)");
-                int n = in.nextInt();
-                while (numberOFResources - n < 0) {
-                    out.println("RETRY, HOW MANY " + colorResource(res) + res.toString() + Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
-                    n = in.nextInt();
-                }
-                initialResources.put(res, n);
-                numberOFResources = numberOFResources - n;
-            }
-        }
-        if (numberOFResources >= 0) {
-            if (numberOFResources == 0) out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT");
-            else {
-                out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT: THESE WILL BE " + colorResource(resourceType.get(resourceType.size() - 1)) + resourceType.get(resourceType.size() - 1).toString() + Color.reset());
-                initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResources);
-            }
-        }
-        out.println("YOU HAVE CHOSEN THIS RESOURCES:");
-        StringBuilder builder = new StringBuilder();
-
-        initialResources.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
-            builder.append(color + resource.toString() + ": ");
-            IntStream.range(0, initialResources.get(resource)).forEach(n -> builder.append(color + shape + " "));
-            builder.append(Color.reset() + "\n");
-        });
-        out.println(builder.toString());
-        out.println("DO YOU AGREE? yes/no");
-        String response = in.next().toUpperCase();
-        if (response == "YES") {
-            //put in dashboard event
-            out.println("resources put in dashboard");
-        } else displayResourcesChoiceForm(resourceType, numberOFResources);
-    }
 
     /*  public static void main(String[] args) {
           String thisPlayer = "paolo";
@@ -748,7 +651,7 @@ public class CLI extends UI {
 
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         HashMap<String, DashBoardView> dashboards = new HashMap<>();
         DepotState depot = new DepotState(Resource.COIN, 3, 3);
         DepotState depot2 = new DepotState(Resource.SERVANT, 4, 2);
@@ -912,7 +815,7 @@ public class CLI extends UI {
                 out.println(((DepositLeaderPower) card2.getLeaderPowersActive().get(0)).getCurrentResources());
             }
         }
-    }
+    }*/
 
 
     public void displayPlayerState() {
@@ -1058,6 +961,18 @@ public class CLI extends UI {
         }
     }
 
+    private ArrayList<String> toSetupPlayers = null;
+
+    @Override
+    public void displayWaitingForPlayerToSetupState(String playerID) {
+        if(toSetupPlayers == null) toSetupPlayers = (ArrayList<String>) players.clone();
+        toSetupPlayers.remove(playerID);
+
+        out.println("Waiting for");
+        for(String p: toSetupPlayers) out.println(p);
+        out.println("to finish their setup");
+    }
+
     private void askForGameStart() {
         out.println("Type \"start\" to start the game");
         String s;
@@ -1082,6 +997,105 @@ public class CLI extends UI {
     @Override
     public void ack() {
 
+    }
+
+    @Override
+    public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
+        ArrayList<Integer> indexes = leaderCardsIDs.stream().map(name -> Integer.parseInt(name.substring(10))).collect(Collectors.toCollection(ArrayList::new));
+
+
+        out.println(thisPlayer.toUpperCase() + ", CHOOSE " + numberOFLeaderCardsToChose + " AMONG THESE LEADER CARDS:");
+        Panel panel = new Panel(1000, 15, out);
+        AtomicInteger n = new AtomicInteger();
+        leaderCardsIDs.stream().forEach(name -> {
+            LeaderCardView card = new LeaderCardView(name);
+            DrawableObject obj1 = new DrawableObject(card.toString(), 50 * (n.get()) + 10, 0);
+            n.getAndIncrement();
+            panel.addItem(obj1);
+        });
+        panel.show();
+        ArrayList<Integer> cardIndexes = new ArrayList<Integer>();
+        while (numberOFLeaderCardsToChose > 0) {
+            out.println("YOU HAVE " + numberOFLeaderCardsToChose + " CARDS LEFT TO CHOOSE,\n PLEASE TYPE THE NUMBER OF ONE CARD: ");
+            int input = in.nextInt();
+            while (input < indexes.get(0) || input > indexes.get(indexes.size() - 1)) {
+                out.println("WRONG NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
+                input = in.nextInt();
+            }
+            if (cardIndexes.contains(input)) {
+                out.println("YOU HAVE ALREADY SELECTED THIS NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
+                input = in.nextInt();
+            }
+            cardIndexes.add(input);
+            numberOFLeaderCardsToChose--;
+        }
+        out.println("YOU HAVE CHOSEN THIS LEADER CARDS:");
+        Panel panel2 = new Panel(1000, 15, out);
+        n.set(0);
+        HashMap<String, LeaderCardView> leaderCardsChosen = new HashMap<>();
+        cardIndexes.stream().forEach(index -> {
+            LeaderCardView card = new LeaderCardView("LeaderCard" + index);
+            leaderCardsChosen.put("LeaderCard" + index, card);
+            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n.get()) + 10, 0);
+            n.getAndIncrement();
+            panel2.addItem(obj1);
+        });
+        panel2.show();
+
+        out.println("DO YOU AGREE? yes/no");
+        String response = in.next().toUpperCase();
+        if (response.equals("YES")) {
+            playerStates.get(thisPlayer).leaderCards.putAll(leaderCardsChosen);
+            return new ArrayList<>(leaderCardsChosen.keySet());
+        } else return choseInitialLeaderCards(leaderCardsIDs, numberOFLeaderCardsToChose);
+    }
+
+    @Override
+    public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
+        HashMap<Resource, Integer> initialResources = new HashMap<>();
+        for (Resource res : resourceType) {
+            initialResources.put(res, 0);
+        }
+        out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResources + " RESOURCES AMONG:");
+        resourceType.stream().forEach(el -> out.println(colorResource(el) + el.toString().toUpperCase() + "\n" + Color.reset()));
+
+        for (Resource res : resourceType) {
+            if (res != resourceType.get(resourceType.size() - 1) && numberOFResources > 0) {
+                out.println("HOW MANY " + colorResource(res) + res.toString() + Color.reset() + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResources + " LEFT)");
+                int n = in.nextInt();
+                while (numberOFResources - n < 0) {
+                    out.println("RETRY, HOW MANY " + colorResource(res) + res.toString() + Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
+                    n = in.nextInt();
+                }
+                initialResources.put(res, n);
+                numberOFResources = numberOFResources - n;
+            }
+        }
+        if (numberOFResources >= 0) {
+            if (numberOFResources == 0) out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT");
+            else {
+                out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT: THESE WILL BE " + colorResource(resourceType.get(resourceType.size() - 1)) + resourceType.get(resourceType.size() - 1).toString() + Color.reset());
+                initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResources);
+            }
+        }
+        out.println("YOU HAVE CHOSEN THESE RESOURCES:");
+        StringBuilder builder = new StringBuilder();
+
+        initialResources.keySet().forEach(resource -> {
+            String color = colorResource(resource);
+            String shape = shapeResource(resource);
+            builder.append(color + resource.toString() + ": ");
+            IntStream.range(0, initialResources.get(resource)).forEach(n -> builder.append(color + shape + " "));
+            builder.append(Color.reset() + "\n");
+        });
+        out.println(builder.toString());
+        out.println("DO YOU AGREE? yes/no");
+        String response = in.next().toUpperCase();
+        if (response == "YES") {
+            //put in dashboard event
+            out.println("resources put in dashboard");
+            return initialResources;
+        } else return choseResources(resourceType, numberOFResources);
     }
 
     @Override
