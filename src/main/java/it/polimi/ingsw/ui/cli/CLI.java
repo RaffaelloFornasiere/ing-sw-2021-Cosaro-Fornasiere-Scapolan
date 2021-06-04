@@ -1053,7 +1053,7 @@ public class CLI extends UI {
         panel.addItem(obj);
         panel.show();
 
-        if(this.thisPlayer.equals(leaderID)){
+        if(this.thisPlayer.equals(leaderID) && players.size()>1){
             new Thread(this::askForGameStart).start();
         }
     }
