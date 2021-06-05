@@ -2,6 +2,7 @@ package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
@@ -75,7 +76,7 @@ public abstract class UI {
      * @param resources resources to put in whareouse
      * @return 3 arraylist with the marbles
      */
-    abstract public HashMap<Resource, Integer> getWarehouseDisplacement(ArrayList<Resource> resources);
+    abstract public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource,Integer> resources);
 
     /**
      * ask which active leader cards use
