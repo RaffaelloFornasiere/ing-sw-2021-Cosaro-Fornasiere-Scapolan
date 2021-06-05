@@ -65,4 +65,14 @@ public class DepotState {
         this.currentQuantity++;
         return DepotResultMessage.SUCCESSFUL_DEPOT;
     }
+    public DepotResultMessage switchDepot( DepotState depot) {
+        if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) return DepotResultMessage.UNSUCCESSFUL_SWITCH;
+        Resource tempResourceType = this.resourceType;
+        this.resourceType=depot.getResourceType();
+        depot.resourceType=tempResourceType;
+        int tempCurrentQuantity=this.currentQuantity;
+        this.currentQuantity=depot.getCurrentQuantity();
+        depot.currentQuantity=tempCurrentQuantity;
+        return DepotResultMessage.SUCCESSFUL_SWITCH;
+    }
 }

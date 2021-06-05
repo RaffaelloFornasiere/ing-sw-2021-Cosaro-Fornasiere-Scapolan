@@ -35,13 +35,10 @@ public class DashBoardView {
        return warehouse;
     }
 
-    public void resetDashboard(){
-
+    public DepotResultMessage switchDepots(int depot1, int depot2){
+       DepotResultMessage result=warehouse.get(depot1).switchDepot(warehouse.get(depot2));
+       return result;
     }
-
-
-
-
 
     public String resourceNumberToString() {
         HashMap<Resource, Integer> totalRes = new HashMap();

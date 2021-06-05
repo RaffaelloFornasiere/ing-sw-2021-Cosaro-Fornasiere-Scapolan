@@ -1,6 +1,5 @@
 package it.polimi.ingsw.ui.cli;
 
-import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.Event;
@@ -88,9 +87,10 @@ public class CLI extends UI {
         panel.show();
     }*/
 
-    public static ArrayList<Integer> displaySelectionForm(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose) {
+    public static ArrayList<Integer> displaySelectionForm(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
         String resetColor = Color.WHITE.getAnsiCode();
         StringBuilder builder = new StringBuilder();
+        builder.append(message);
         builder.append("YOU HAVE TO CHOOSE " + numberOfOptionsToChose +
                 " OF THE FOLLOWING OPTIONS \n");
 
@@ -172,8 +172,8 @@ public class CLI extends UI {
         in.nextLine();
         if (response.equals("YES") || response.equals("Y")) {
             return inputs;
-        } else{
-            return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose);
+        } else {
+            return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, "");
         }
 
     }
@@ -676,8 +676,9 @@ public class CLI extends UI {
                     justResources.add(resType);
                 });
             });
+
             // the chosen resource needs to be assigned to one of the deposits
-            int inputResource = displaySelectionForm(resourcesOptions, panel, 1).get(0);
+            int inputResource = displaySelectionForm(resourcesOptions, panel, 1, "THESE ARE THE DEPOSITS AVAILABLE FOR STORING ").get(0);
             System.out.println("WHERE DO YOU WANT TO PUT THIS RESOURCE ( " + resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset() + " )?");
 
             // prepare the selection form for deposits.
@@ -685,13 +686,13 @@ public class CLI extends UI {
             IntStream.range(0, currentDepotStates.size()).forEach(n -> depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType()))));
 
             IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> {
-                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n+1), Color.WHITE.getAnsiCode()));
+                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode()));
             });
 
             //result of transition
             AtomicBoolean successfull = new AtomicBoolean(false);
             //inputDeposit is the result of the selection of one destination among deposits
-            int inputDeposit = displaySelectionForm(depositOptions, null, 1).get(0);
+            int inputDeposit = displaySelectionForm(depositOptions, null, 1, "").get(0);
             //if the selected index belongs to depots...
             if (inputDeposit < currentDepotStates.size()) {
                 DepotResultMessage result = currentDepotStates.get(inputDeposit).tryAddResource(justResources.get(inputResource));
@@ -738,11 +739,11 @@ public class CLI extends UI {
     @Override
     public InetAddress askIP() {
         InetAddress inetAddress = null;
-        while (inetAddress == null){
+        while (inetAddress == null) {
             out.println("Insert the server IP address");
             String IP = in.nextLine();
 
-            if(IP.equals("0")) //TODO only for testing purpose, must be removed
+            if (IP.equals("0")) //TODO only for testing purpose, must be removed
                 IP = "127.0.0.1";
 
             try {
@@ -756,12 +757,12 @@ public class CLI extends UI {
 
     @Override
     public boolean askIfNewLobby() {
-        ArrayList<Pair<String, String>> options= new ArrayList<>();
+        ArrayList<Pair<String, String>> options = new ArrayList<>();
         options.add(new Pair<>("Create Lobby", Color.reset()));
         options.add(new Pair<>("Join Lobby", Color.reset()));
 
-        ArrayList<Integer> choices = displaySelectionForm(options, null, 1);
-        return choices.get(0)==0;
+        ArrayList<Integer> choices = displaySelectionForm(options, null, 1, "");
+        return choices.get(0) == 0;
     }
 
     @Override
@@ -957,8 +958,8 @@ public class CLI extends UI {
             builder0.append(Color.WHITE.getAnsiCode() + " --> " + resourcesToOrganize.get(resource) + "\n");
         });
         out.println(builder0.toString());
-        System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE 'DONE' OTHERWISE TYPE 'CONTINUE'");
-        if (in.next().toUpperCase().equals("DONE")) {
+        System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE D FOR 'DONE' OTHERWISE TYPE C FOR 'CONTINUE'");
+        if (in.next().toUpperCase().equals("D")) {
             //GENERATE NEW NewResourcesOrganizationEvent
             out.println("Done");
             out.println(depotStates.size());
@@ -975,6 +976,38 @@ public class CLI extends UI {
             DrawableObject obj = new DrawableObject(builder.toString(), 2, 0);
             Panel panel = new Panel(1000, (int) obj.getHeight() + 2, out);
             panel.addItem(obj);
+            panel.show();
+            //this is the moment where the user is asked if they want to switch depot.
+            out.println("DO YOU WANT TO SWITCH SOME DEPOTS? Y/N");
+            String y_n = in.next();
+            while (y_n.toUpperCase().equals("Y")) {
+                int count = 2;
+                int[] indexes = {-1, -1};
+                DepotResultMessage done;
+
+                out.println("WHICH DEPOTS? INSERT TWO NUMBERS");
+                while (count > 0) {
+                    String inp = in.next();
+                    if (!inp.matches("-?\\d+")) {
+                        out.println("YOU HAVE TO INSERT NUMBERS");
+                        continue;
+                    }
+                    int chosenDepotIndex = Integer.parseInt(inp);
+                    if (chosenDepotIndex - 1 < 0 || chosenDepotIndex > depotStates.size()) {
+                        out.println("THIS DEPOT DOESN'T EXIST. INSERT A NUMBER BETWEEN 1 AND " + depotStates.size());
+                        continue;
+                    }
+                    indexes[2 - count] = chosenDepotIndex - 1;
+                    count--;
+
+                }
+                out.println(indexes[0] + " " + indexes[1]);
+                done = d.switchDepots(indexes[0], indexes[1]);
+                out.println(done.getMessage());
+                out.println(d.warehouseToString());
+                out.println("DO YOU WANT TO SWITCH SOME DEPOTS? Y/N");
+                y_n = in.next();
+            }
 
             // select one resource at a time among those available
             ArrayList<Pair<String, String>> resourcesOptions = new ArrayList<>();
@@ -986,8 +1019,9 @@ public class CLI extends UI {
                     justResources.add(resType);
                 });
             });
+            String s = "THESE ARE THE RESOURCES AVAILABLE FOR STORING, LET'S STORE ONE AT A TIME\n";
             // the chosen resource needs to be assigned to one of the deposits
-            int inputResource = displaySelectionForm(resourcesOptions, panel, 1).get(0);
+            int inputResource = displaySelectionForm(resourcesOptions, null, 1, s).get(0);
             System.out.println("WHERE DO YOU WANT TO PUT THIS RESOURCE ( " + resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset() + " )?");
 
             // prepare the selection form for deposits.
@@ -995,13 +1029,13 @@ public class CLI extends UI {
             IntStream.range(0, currentDepotStates.size()).forEach(n -> depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType()))));
 
             IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> {
-                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n+1), Color.WHITE.getAnsiCode()));
+                depositOptions.add(new Pair<String, String>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode()));
             });
 
             //result of transition
             AtomicBoolean successfull = new AtomicBoolean(false);
             //inputDeposit is the result of the selection of one destination among deposits
-            int inputDeposit = displaySelectionForm(depositOptions, null, 1).get(0);
+            int inputDeposit = displaySelectionForm(depositOptions, null, 1, "THESE ARE THE AVAILABLE DEPOSITS\n").get(0);
             //if the selected index belongs to depots...
             if (inputDeposit < currentDepotStates.size()) {
                 DepotResultMessage result = currentDepotStates.get(inputDeposit).tryAddResource(justResources.get(inputResource));
@@ -1044,6 +1078,7 @@ public class CLI extends UI {
                 out.println(((DepositLeaderPower) card2.getLeaderPowersActive().get(0)).getCurrentResources());
             }
         }
+
     }
 
 
@@ -1064,7 +1099,7 @@ public class CLI extends UI {
     }
 
 
-  public static String colorResource(Resource res) {
+    public static String colorResource(Resource res) {
         if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
         if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
         if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
