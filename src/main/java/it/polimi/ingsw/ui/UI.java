@@ -2,6 +2,8 @@ package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
@@ -62,6 +64,12 @@ public abstract class UI {
     public abstract void updateMarket(int rows, int cols, Marble[][] marketStatus, Marble marbleLeft);
 
     public abstract void updateDevCardGrid(String[][] topDevCardIDs);
+
+    public abstract BuyResourcesEvent askForMarketRow();
+
+    public abstract BuyDevCardsEvent askForDevCard();
+
+
 
     /**
      * Asks the user to select which leader powers use with which marbles
