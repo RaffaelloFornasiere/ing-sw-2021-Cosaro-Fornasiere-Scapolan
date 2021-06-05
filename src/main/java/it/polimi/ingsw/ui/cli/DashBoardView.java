@@ -32,7 +32,11 @@ public class DashBoardView {
 
 
     public ArrayList<DepotState> getWarehouse() {
-        return warehouse;
+       return warehouse;
+    }
+
+    public void resetDashboard(){
+
     }
 
 
