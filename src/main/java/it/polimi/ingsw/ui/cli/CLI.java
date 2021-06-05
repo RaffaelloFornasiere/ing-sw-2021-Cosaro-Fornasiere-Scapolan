@@ -507,6 +507,10 @@ public class CLI extends UI {
         Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
         panel.addItem(obj);
         panel.show();
+
+        if(this.thisPlayer.equals(leaderID) && players.size()>1){
+            new Thread(this::askForGameStart).start();
+        }
     }
 */
 
