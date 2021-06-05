@@ -135,12 +135,12 @@ public class LeaderCardView {
         selected = b;
     }
 
-    public boolean isActive() {
-        return active;
+    public boolean getSelected() {
+        return selected;
     }
 
-    public boolean isSelected() {
-        return selected;
+    public boolean isActive() {
+        return active;
     }
 
     public String getIdCard() {
@@ -234,5 +234,6 @@ public class LeaderCardView {
             System.out.println(card.depositPowersToString());
         });
     }
+
 
 }

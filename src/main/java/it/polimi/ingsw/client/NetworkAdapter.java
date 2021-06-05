@@ -2,11 +2,11 @@ package it.polimi.ingsw.client;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.ClientApp;
-import it.polimi.ingsw.events.*;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
-import it.polimi.ingsw.events.ControllerEvents.*;
 import it.polimi.ingsw.events.ClientEvents.*;
-import it.polimi.ingsw.model.DevCards.DevCardGrid;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
+import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
+import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
+import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
@@ -245,7 +245,9 @@ public class NetworkAdapter {
     }
 
     public void OrganizeResourcesEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        OrganizeResourcesEvent event = (OrganizeResourcesEvent) evt.getNewValue();
+        NewResourcesOrganizationEvent newOrganisation= view.getWarehouseDisplacement(event.getResourcesToOrganize());
+        send(newOrganisation);
     }
 
     public void PersonalProductionPowerStateEventHandler(PropertyChangeEvent evt) {
