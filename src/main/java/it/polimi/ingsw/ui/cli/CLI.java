@@ -2,7 +2,8 @@ package it.polimi.ingsw.ui.cli;
 
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.LeaderPowerSelectStateEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
@@ -19,7 +20,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -1034,7 +1034,7 @@ public class CLI extends UI {
         options.add(new Pair<>("Create Lobby", Color.reset()));
         options.add(new Pair<>("Join Lobby", Color.reset()));
 
-        ArrayList<Integer> choices = displaySelectionForm(options, null, 1);
+        ArrayList<Integer> choices = displaySelectionForm(options, null, 1, "");
         return choices.get(0)==0;
     }
 
@@ -1293,6 +1293,16 @@ public class CLI extends UI {
     @Override
     public void updateDevCardGrid(String[][] topDevCardIDs) {
         devCardGridView = new DevCardGridView(topDevCardIDs);
+    }
+
+    @Override
+    public BuyResourcesEvent askForMarketRow() {
+        return null;
+    }
+
+    @Override
+    public BuyDevCardsEvent askForDevCard() {
+        return null;
     }
 
     @Override

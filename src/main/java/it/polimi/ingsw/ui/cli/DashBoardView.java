@@ -53,6 +53,10 @@ public class DashBoardView {
             this.warehouse.add(new DepotState(d.getResourceType(), d.getMaxQuantity(), d.getCurrentQuantity()));
         }
     }
+    public DepotResultMessage switchDepots(int depot1, int depot2){
+        DepotResultMessage result=warehouse.get(depot1).switchDepot(warehouse.get(depot2));
+        return result;
+    }
 
     public void setPersonalProductionPower(ProductionPower personalProductionPower) {
         this.personalProductionPower = personalProductionPower;
