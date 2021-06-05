@@ -60,4 +60,28 @@ public class Lobby extends Observable {
         this.otherPLayersID.add(playerID);
         notifyObservers();
     }
+
+    /**
+     * Removes the player given from the lobby if present. If it is the leader, it also passes the leadership of the
+     * lobby to another player
+     * @param playerId the player to remove
+     * @return the number of players left in the lobby
+     */
+    public int removePlayer(String playerId) {
+        if(playerId.equals(leaderID)){
+            if(otherPLayersID.size()>0){
+                leaderID = otherPLayersID.get(0);
+                otherPLayersID.remove(0);
+            }
+            else{
+                leaderID = null;
+                return 0;
+            }
+        }
+        else{
+            otherPLayersID.remove(playerId);
+        }
+        notifyObservers();
+        return otherPLayersID.size() + 1;
+    }
 }

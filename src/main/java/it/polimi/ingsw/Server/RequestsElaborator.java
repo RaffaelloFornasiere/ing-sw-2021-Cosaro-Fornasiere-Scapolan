@@ -80,6 +80,7 @@ public class RequestsElaborator {
 
     public void setOwnerUserID(String ownerUserID) {
         this.ownerUserID = ownerUserID;
+        this.clientHandlerReceiver.setOwnerUserID(ownerUserID);
     }
 
     public void closeConnection() {

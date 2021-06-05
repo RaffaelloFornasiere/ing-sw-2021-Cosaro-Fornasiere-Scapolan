@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.DevCards;
+import com.google.gson.Gson;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
+import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Pair;
 
@@ -16,10 +18,10 @@ public class DevCardGrid extends Observable {
     public DevCardGrid(ArrayList<DevCard> cards)
     {
         int levels = cards.stream().mapToInt(DevCard::getLevel).max().getAsInt();
-        decks = new DevDeck[levels+1][CardColor.values().length];
-        IntStream.range(0, levels+1).forEach(i -> {
+        decks = new DevDeck[levels][CardColor.values().length];
+        IntStream.range(1, levels+1).forEach(i -> {
             for(CardColor color:CardColor.values()){
-                decks[i][color.getCode()]=
+                decks[i-1][color.getCode()]=
                         new DevDeck(cards.stream().filter(c->c.getLevel()==i && c.getColor()==color).collect(Collectors.toCollection(ArrayList::new)));
             }
         });
@@ -55,7 +57,7 @@ public class DevCardGrid extends Observable {
         push(card, indexes.getKey(), indexes.getValue());
     }
 
-    public DevCard pop(int column, int row) {
+    public DevCard pop(int column, int row) throws NotPresentException {
         if (column<0 || column>=getColumnsNumber())
             throw new IllegalArgumentException("Column index out of bounds");
         if (row<0 || row>getRowsNumber())
@@ -66,11 +68,11 @@ public class DevCardGrid extends Observable {
         return ret;
     }
 
-    public DevCard pop(Pair<Integer, Integer> indexes) {
+    public DevCard pop(Pair<Integer, Integer> indexes) throws NotPresentException {
         return pop(indexes.getKey(), indexes.getValue());
     }
 
-    public DevCard topCard(int column, int row) {
+    public DevCard topCard(int column, int row) throws NotPresentException {
         if (column<0 || column>=getColumnsNumber())
             throw new IllegalArgumentException("Column index out of bounds");
         if (row<0 || row>getRowsNumber())
@@ -79,7 +81,7 @@ public class DevCardGrid extends Observable {
         return decks[column][row].topCard();
     }
 
-    public DevCard topCard(Pair<Integer, Integer> indexes) {
+    public DevCard topCard(Pair<Integer, Integer> indexes) throws NotPresentException {
         return topCard(indexes.getKey(), indexes.getValue());
     }
 
@@ -92,4 +94,22 @@ public class DevCardGrid extends Observable {
         }
         throw new NotPresentException("There's no leader card at the top of any deck with the given ID");
     }
+
+    /*public static void main(String[] args) {
+        ArrayList<DevCard> devCards = Config.getInstance().getDevCards();
+
+        devCards.removeIf(x->x.getLevel()==2);
+
+        DevCardGrid devCardGrid = new DevCardGrid(devCards);
+
+        for(DevDeck[] devDeckArray: devCardGrid.getDecks()){
+            for(DevDeck devDeck: devDeckArray){
+                try {
+                    System.out.println(new Gson().toJson(devDeck.topCard()));
+                } catch (NotPresentException notPresentException) {
+                    System.out.println("Not present");
+                }
+            }
+        }
+    }*/
 }

@@ -379,7 +379,7 @@ public class Controller {
         }
     }
 
-    private void NewResourcesOrganizationEventHandler(PropertyChangeEvent evt){
+    public void NewResourcesOrganizationEventHandler(PropertyChangeEvent evt){
         NewResourcesOrganizationEvent event = (NewResourcesOrganizationEvent) evt.getNewValue();
         synchronized (waitingForResourceOrganizationLock){
             try {
@@ -393,7 +393,7 @@ public class Controller {
         }
     }
 
-    public synchronized void ToggleLeaderPowerSelectEventHandler(PropertyChangeEvent evt){
+    public synchronized void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){
         LeaderPowerSelectStateEvent event = (LeaderPowerSelectStateEvent) evt.getNewValue();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
@@ -455,7 +455,7 @@ public class Controller {
         }
     }
 
-    public synchronized void BuyDevelopmentCardEventHandler(PropertyChangeEvent evt){
+    public synchronized void  BuyDevCardsEventHandler(PropertyChangeEvent evt){
         BuyDevCardsEvent event = (BuyDevCardsEvent) evt.getNewValue();
 
         DevCardGrid devCardGrid = matchState.getDevCardGrid();
@@ -571,7 +571,7 @@ public class Controller {
         throw new NotPresentException("Not enough resources in the leaderCards");
     }
 
-    private synchronized void DiscardLeaderCardEventHandler(PropertyChangeEvent evt){
+    public synchronized void DiscardLeaderCardEventHandler(PropertyChangeEvent evt){
         DiscardLeaderCardEvent event = (DiscardLeaderCardEvent) evt.getNewValue();
 
         try {
@@ -597,7 +597,7 @@ public class Controller {
         }
     }
 
-    private synchronized void ActivateProductionEventHandler(PropertyChangeEvent evt){
+    public synchronized void ActivateProductionEventHandler(PropertyChangeEvent evt){
         ActivateProductionEvent event = (ActivateProductionEvent) evt.getNewValue();
 
         new Thread(()->{
@@ -856,7 +856,7 @@ public class Controller {
         return finalPlayerStates;
     }
 
-    private void ChosenResourcesEventHandler(PropertyChangeEvent evt){
+    public void ChosenResourcesEventHandler(PropertyChangeEvent evt){
         ChosenResourcesEvent event = (ChosenResourcesEvent) evt.getNewValue();
         synchronized (waitingForResourcesLock){
             try {
@@ -870,7 +870,7 @@ public class Controller {
         }
     }
 
-    private void SimpleChosenResourcesEventHandler(PropertyChangeEvent evt){
+    public void SimpleChosenResourcesEventHandler(PropertyChangeEvent evt){
         SimpleChosenResourcesEvent event = (SimpleChosenResourcesEvent) evt.getNewValue();
         synchronized (waitingForSimpleResourcesLock){
             try {

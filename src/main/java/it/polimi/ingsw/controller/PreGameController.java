@@ -137,21 +137,22 @@ public class PreGameController {
         StartMatchEvent event = (StartMatchEvent) evt.getNewValue();
         RequestsElaborator re = networkData.getOrDefault(event.getPlayerId(), null);
 
-        for(Lobby lobby: lobbies){
-            if(lobby.getLeaderID().equals(event.getEventName())) {
-                if(lobby.getOtherPLayersID().size()>0) {
-                    prepareMatch(lobby);
-                    return;
-                }
-                if(re!=null)
-                    re.getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
-                            "Not enough player to start", event));
-            }
-        }
-        if(re != null){
+        int lobbyIndex = searchLobbyByLeader(event.getPlayerId());
+
+        if(lobbyIndex==-1 && re!=null){
             re.getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
                     "The player is not a leader of any lobby", event));
+            return;
         }
+
+        Lobby lobby = lobbies.get(lobbyIndex);
+        if(lobby.getOtherPLayersID().size()<=0 && re!=null) {
+            re.getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
+                    "Not enough player to start", event));
+            return;
+        }
+
+        prepareMatch(lobby);
     }
 
     private void prepareMatch(Lobby lobby) {
@@ -185,7 +186,9 @@ public class PreGameController {
         }
 
         //Initialize match state
-        MatchState matchState= new MatchState(players, Config.getInstance().getDevCards(), Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
+        ArrayList<DevCard> devCards = Config.getInstance().getDevCards();
+        Collections.shuffle(devCards);
+        MatchState matchState= new MatchState(players, devCards, Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
         matchState.getMarket().addObserver(new MarketHandler(involvedClientHandlerSenders));
         matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedClientHandlerSenders));
         FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedClientHandlerSenders, matchState);
@@ -206,31 +209,34 @@ public class PreGameController {
             leaderCardsIDs.add("leaderCard" + i);
         Collections.shuffle(leaderCardsIDs);
 
-        //Send to the players what they need to chose
         FaithTrackManager faithTrackManager = new FaithTrackManager(matchState);
-        for (int i=0; i<playerOrder.size(); i++){
-            faithTrackManager.incrementFaithTrackPosition(players.get(i), Config.getInstance().getFaithPointHandicap().get(i));
 
+        //Notify the clients on the initial state of the game
+        matchState.getMarket().notifyObservers();
+        matchState.getDevCardGrid().notifyObservers();
+        for (int i=0; i<playerOrder.size(); i++){
+            Player p = matchState.getPlayers().get(i);
+            p.getDashBoard().notifyObservers();
+            p.notifyObservers();
+            for(ClientHandlerSender c: involvedClientHandlerSenders.values())
+                c.sendEvent(new PersonalProductionPowerStateEvent(p.getPlayerId(), p.getDashBoard().getPersonalPower()));
+
+            faithTrackManager.incrementFaithTrackPosition(players.get(i), Config.getInstance().getFaithPointHandicap().get(i));
+        }
+
+        //Send to the players what they need to chose
+        for (int i=0; i<playerOrder.size(); i++){
             ArrayList<String> cardsToChoseFrom = new ArrayList<>();
-            for(int j = 0; j<=Config.getInstance().getLeaderCardPerPlayerToChooseFrom(); j++) {
+            for(int j = 0; j<Config.getInstance().getLeaderCardPerPlayerToChooseFrom(); j++) {
                 cardsToChoseFrom.add(leaderCardsIDs.get(leaderCardsIDs.size()-1));
                 leaderCardsIDs.remove(leaderCardsIDs.size()-1);
             }
-
-            //Notify the clients on the initial state of the game
-            matchState.getPlayers().forEach(p -> {
-                p.getDashBoard().notifyObservers();
-                p.notifyObservers();
-                for(ClientHandlerSender c: involvedClientHandlerSenders.values())
-                    c.sendEvent(new PersonalProductionPowerStateEvent(p.getPlayerId(), p.getDashBoard().getPersonalPower()));
-            });
-            matchState.getMarket().notifyObservers();
-            matchState.getDevCardGrid().notifyObservers();
-
             InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom,
                     Config.getInstance().getLeaderCardPerPlayerToChoose(), Config.getInstance().getResourcesHandicap().get(i));
             networkData.get(playerOrder.get(i)).getClientHandlerSender().sendEvent(initialChoicesEvent);
         }
+
+        System.out.println("All initial choices sent");
     }
 
     public synchronized void QuitGameEventHandler(PropertyChangeEvent evt){
@@ -243,7 +249,13 @@ public class PreGameController {
         Lobby lobby = lobbies.get(searchLobby(event.getPlayerId()));
         removeLobbyIfEmpty(lobby);
 
-        requestsElaborator.getMatchEventHandlerRegistry().sendEvent(event);
+        EventRegistry matchEventRegistry = requestsElaborator.getMatchEventHandlerRegistry();
+        if(matchEventRegistry==null){
+            if(lobby.removePlayer(event.getPlayerId()) == 0)
+                lobbies.remove(lobby);
+        }
+        else
+            matchEventRegistry.sendEvent(event);
 
         requestsElaborator.closeConnection();
     }

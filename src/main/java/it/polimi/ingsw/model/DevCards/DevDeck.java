@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.DevCards;
 
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.utilities.Observable;
 
@@ -15,7 +16,7 @@ public class DevDeck{
      * construct the deck from a list of cards. check the coherence of the cards
      * @param cards cards to construct the deck
      */
-    DevDeck(ArrayList<DevCard> cards) {
+    public DevDeck(ArrayList<DevCard> cards) {
         if (cards.size() != 0) {
             level = cards.get(0).getLevel();
             color = cards.get(0).getColor();
@@ -25,8 +26,8 @@ public class DevDeck{
                 if (x.getLevel() != level)
                     throw new IllegalArgumentException("Card level does not match deck level");
             });
-            this.cards = cards;
         }
+        this.cards = cards;
     }
 
     /**
@@ -53,7 +54,7 @@ public class DevDeck{
     /**
      * @return pops the card on the deck's top
      */
-    public DevCard pop() {
+    public DevCard pop() throws NotPresentException {
         DevCard aux = topCard();
         cards.remove(aux);
         return aux;
@@ -63,7 +64,8 @@ public class DevDeck{
      * @return the card on the first position of the deck (
      * behaves as a LIFO stack)
      */
-    public DevCard topCard() {
+    public DevCard topCard() throws NotPresentException {
+        if(cards.size() == 0) throw new NotPresentException("The deck is empty");
         return cards.get(cards.size() - 1);
     }
 

@@ -37,7 +37,7 @@ public class FaithTrack {
     }
 
     protected FaithTrack(ArrayList<AbstractCell> arrayOfCells) throws IllegalArgumentException{
-        for(int i=0; i<= arrayOfCells.size(); i++) {
+        for(int i=0; i< arrayOfCells.size(); i++) {
             if(arrayOfCells.get(i).getIndex()!=i) throw new IllegalArgumentException("The cell with index " + i + " is in the wrong position");
         }
 

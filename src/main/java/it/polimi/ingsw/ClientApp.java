@@ -27,13 +27,13 @@ public class ClientApp
         String leaderID;
         if(ui.askIfNewLobby()){
             playerID = ui.askUserID();
-            leaderID = playerID;
+            networkAdapter.createMatch(playerID);
         }
         else{
             playerID = ui.askUserID();
             leaderID = ui.askLeaderID();
+            networkAdapter.enterMatch(playerID, leaderID);
         }
-        networkAdapter.enterMatch(playerID, leaderID);
     }
 
     private static NetworkAdapter connectToServer(UI ui) {

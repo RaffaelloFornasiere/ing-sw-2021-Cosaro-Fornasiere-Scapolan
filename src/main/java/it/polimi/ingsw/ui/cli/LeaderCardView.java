@@ -20,22 +20,24 @@ import java.util.stream.IntStream;
 
 public class LeaderCardView {
     private LeaderCard card;
+    boolean active;
     boolean selected;
     String idCard;
 
 
-    public LeaderCardView(String path) {
+    public LeaderCardView(String leaderCardID) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
         builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
         Gson gson = builder.create();
         try {
-            String cardJSON = Files.readString(Paths.get("src\\main\\resources\\" + path + ".json"));
+            String cardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
             card = gson.fromJson(cardJSON, LeaderCard.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        active = false;
         selected = false;
         idCard = card.getCardID();
     }
@@ -125,11 +127,19 @@ public class LeaderCardView {
         else return "✗";
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void setSelected(boolean b) {
         selected = b;
     }
 
-    public boolean getSelected() {
+    public boolean isActive() {
+        return active;
+    }
+
+    public boolean isSelected() {
         return selected;
     }
 
