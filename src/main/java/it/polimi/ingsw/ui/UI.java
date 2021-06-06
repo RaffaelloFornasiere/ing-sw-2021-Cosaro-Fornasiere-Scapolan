@@ -28,6 +28,12 @@ public abstract class UI {
         this.client = networkAdapter;
     }
 
+    //DON'T USE, NEEDED FOR DEBUGGING
+    @Deprecated
+    public void setThisPlayer(String thisPlayer) {
+        this.thisPlayer = thisPlayer;
+    }
+
 
     //generics
     abstract public void printMessage(String message);
