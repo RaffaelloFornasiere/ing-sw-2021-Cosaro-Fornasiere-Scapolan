@@ -1148,8 +1148,11 @@ public class CLI extends UI {
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
         ArrayList<Integer> indexes = leaderCardsIDs.stream().map(name -> Integer.parseInt(name.substring(10))).collect(Collectors.toCollection(ArrayList::new));
 
+        if(numberOFLeaderCardsToChose<=0) return new ArrayList<>();
 
-        out.println(thisPlayer.toUpperCase() + ", CHOOSE " + numberOFLeaderCardsToChose + " AMONG THESE LEADER CARDS:");
+        int numberOFLeaderCardsToChoseLeft = numberOFLeaderCardsToChose;
+
+        out.println(thisPlayer.toUpperCase() + ", CHOOSE " + numberOFLeaderCardsToChoseLeft + " AMONG THESE LEADER CARDS:");
         Panel panel = new Panel(1000, 15, out);
         AtomicInteger n = new AtomicInteger();
         leaderCardsIDs.stream().forEach(name -> {
@@ -1160,21 +1163,21 @@ public class CLI extends UI {
         });
         panel.show();
         ArrayList<Integer> cardIndexes = new ArrayList<Integer>();
-        while (numberOFLeaderCardsToChose > 0) {
-            out.println("YOU HAVE " + numberOFLeaderCardsToChose + " CARDS LEFT TO CHOOSE,\n PLEASE TYPE THE NUMBER OF ONE CARD: ");
+        while (numberOFLeaderCardsToChoseLeft > 0) {
+            out.println("YOU HAVE " + numberOFLeaderCardsToChoseLeft + " CARDS LEFT TO CHOOSE,\n PLEASE TYPE THE NUMBER OF ONE CARD: ");
             int input = in.nextInt();
-            while (input < indexes.get(0) || input > indexes.get(indexes.size() - 1)) {
+            while (!indexes.contains(input)) {
                 out.println("WRONG NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
                 input = in.nextInt();
             }
-            if (cardIndexes.contains(input)) {
+            while (cardIndexes.contains(input)) {
                 out.println("YOU HAVE ALREADY SELECTED THIS NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
                 input = in.nextInt();
             }
             cardIndexes.add(input);
-            numberOFLeaderCardsToChose--;
+            numberOFLeaderCardsToChoseLeft--;
         }
-        out.println("YOU HAVE CHOSEN THIS LEADER CARDS:");
+        out.println("YOU HAVE CHOSEN THESE LEADER CARDS:");
         Panel panel2 = new Panel(1000, 15, out);
         n.set(0);
         HashMap<String, LeaderCardView> leaderCardsChosen = new HashMap<>();
@@ -1201,26 +1204,30 @@ public class CLI extends UI {
         for (Resource res : resourceType) {
             initialResources.put(res, 0);
         }
-        out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResources + " RESOURCES AMONG:");
+        if(numberOFResources <= 0) return initialResources;
+
+        int numberOFResourcesLeft = numberOFResources;
+
+        out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResourcesLeft + " RESOURCES AMONG:");
         resourceType.stream().forEach(el -> out.println(colorResource(el) + el.toString().toUpperCase() + "\n" + Color.reset()));
 
         for (Resource res : resourceType) {
-            if (res != resourceType.get(resourceType.size() - 1) && numberOFResources > 0) {
-                out.println("HOW MANY " + colorResource(res) + res.toString() + Color.reset() + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResources + " LEFT)");
+            if (res != resourceType.get(resourceType.size() - 1) && numberOFResourcesLeft > 0) {
+                out.println("HOW MANY " + colorResource(res) + res.toString() + Color.reset() + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResourcesLeft + " LEFT)");
                 int n = in.nextInt();
-                while (numberOFResources - n < 0) {
+                while (numberOFResourcesLeft - n < 0) {
                     out.println("RETRY, HOW MANY " + colorResource(res) + res.toString() + Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
                     n = in.nextInt();
                 }
                 initialResources.put(res, n);
-                numberOFResources = numberOFResources - n;
+                numberOFResourcesLeft = numberOFResourcesLeft - n;
             }
         }
-        if (numberOFResources >= 0) {
-            if (numberOFResources == 0) out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT");
+        if (numberOFResourcesLeft >= 0) {
+            if (numberOFResourcesLeft == 0) out.println("YOU HAVE " + numberOFResourcesLeft + " RESOURCES LEFT");
             else {
-                out.println("YOU HAVE " + numberOFResources + " RESOURCES LEFT: THESE WILL BE " + colorResource(resourceType.get(resourceType.size() - 1)) + resourceType.get(resourceType.size() - 1).toString() + Color.reset());
-                initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResources);
+                out.println("YOU HAVE " + numberOFResourcesLeft + " RESOURCES LEFT: THESE WILL BE " + colorResource(resourceType.get(resourceType.size() - 1)) + resourceType.get(resourceType.size() - 1).toString() + Color.reset());
+                initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResourcesLeft);
             }
         }
         out.println("YOU HAVE CHOSEN THESE RESOURCES:");
@@ -1236,7 +1243,7 @@ public class CLI extends UI {
         out.println(builder.toString());
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response == "YES") {
+        if (response.equals("YES")) {
             //put in dashboard event
             out.println("resources put in dashboard");
             return initialResources;

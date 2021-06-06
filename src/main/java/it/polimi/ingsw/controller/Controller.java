@@ -18,10 +18,7 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.LeaderCards.*;
 import it.polimi.ingsw.model.singlePlayer.SinglePlayerMatchState;
-import it.polimi.ingsw.utilities.Config;
-import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
-import it.polimi.ingsw.utilities.Pair;
-import it.polimi.ingsw.utilities.PropertyChangeSubject;
+import it.polimi.ingsw.utilities.*;
 import it.polimi.ingsw.Server.ClientHandlerSender;
 import org.reflections.Reflections;
 
@@ -123,6 +120,7 @@ public class Controller {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
         Gson gson = builder.create();
         ArrayList<LeaderCard> leaderCards = new ArrayList<>();
         try{
@@ -131,10 +129,12 @@ public class Controller {
             DepositLeaderPowerHandler depositLeaderPowerHandler = new DepositLeaderPowerHandler(this.clientHandlerSenders, player);
             for(String leaderCardID: event.getChosenLeaderCardIDs()) {
                 String leaderCardJSON;
+                System.out.println("Loading leader card "+leaderCardID+" from default? "+Config.getInstance().isLeaderCardDefault());
                 if(Config.getInstance().isLeaderCardDefault())
                     leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\default\\" + leaderCardID + ".json"));
                 else
                     leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
+                System.out.println(leaderCardJSON);
                 LeaderCard lc = gson.fromJson(leaderCardJSON, LeaderCard.class);
                 lc.addObserver(leaderCardHandler);
                 for(LeaderPower lp: lc.getLeaderPowers()){

@@ -202,11 +202,10 @@ public class Config {
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
         Gson gson = builder.create();
-        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
         for(int i = 1; i<= config.leaderCardNumber; i++){
             try {
                 String leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\LeaderCard" + i + ".json"));
-                leaderCards.add(gson.fromJson(leaderCardJSON, LeaderCard.class));
+                gson.fromJson(leaderCardJSON, LeaderCard.class);
             } catch (IOException e) {
                 System.err.println("Leader cards corrupted. Checking defaults");
                 config.leaderCardNumber = leaderCardNumberDefault;
@@ -222,11 +221,10 @@ public class Config {
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
         Gson gson = builder.create();
-        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
         for(int i = 1; i<= leaderCardNumberDefault; i++){
             try {
                 String leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\LeaderCard" + i + ".json"));
-                leaderCards.add(gson.fromJson(leaderCardJSON, LeaderCard.class));
+                gson.fromJson(leaderCardJSON, LeaderCard.class);
             } catch (IOException e) {
                 System.err.println("Default leader cards corrupted");
                 throw new IllegalArgumentException("Default leader cards corrupted");
