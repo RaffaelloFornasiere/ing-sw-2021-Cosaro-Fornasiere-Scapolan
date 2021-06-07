@@ -33,7 +33,7 @@
             <Label layoutX="7.0" text="Insert match ID" />
          </children>
       </Group>
-      <HBox layoutX="431.0" layoutY="355.0">
+      <HBox layoutX="440.0" layoutY="355.0">
          <children>
             <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0" prefWidth="65.0" text="Cancel">
                <HBox.margin>
