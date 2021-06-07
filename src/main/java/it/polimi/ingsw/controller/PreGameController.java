@@ -1,29 +1,20 @@
 package it.polimi.ingsw.controller;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.modelChangeHandlers.*;
 import it.polimi.ingsw.events.ClientEvents.*;
-import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
 import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.FaithTrack.AbstractCell;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.utilities.Config;
-import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import it.polimi.ingsw.Server.ClientHandlerSender;
 import it.polimi.ingsw.Server.RequestsElaborator;
 
 import java.beans.PropertyChangeEvent;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

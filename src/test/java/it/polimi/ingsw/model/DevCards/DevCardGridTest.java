@@ -20,13 +20,13 @@ public class DevCardGridTest extends TestCase {
         HashMap<Resource, Integer> resources2= new HashMap<>();
         resources1.put(Resource.SHIELD,2);
         //create a DevCard with 2 SHIelDS, level 1, green, 3 points
-        DevCard card2= new DevCard(resources1,1, CardColor.GREEN,3,new ProductionPower());
+        DevCard card2= new DevCard(resources2,1, CardColor.GREEN,3,new ProductionPower());
 
         //create infos for DevCard3
         HashMap<Resource, Integer> resources3= new HashMap<>();
         resources1.put(Resource.SERVANT,2);
         //create a DevCard with 2 servants, level 1, green, 3 points
-        DevCard card3= new DevCard(resources1,2, CardColor.GREEN,3,new ProductionPower());
+        DevCard card3= new DevCard(resources3,2, CardColor.GREEN,3,new ProductionPower());
 
         //create ArrayList of Cards
         ArrayList<DevCard> cards= new ArrayList<>();
@@ -35,11 +35,8 @@ public class DevCardGridTest extends TestCase {
         cards.add(card3);
 
         DevCardGrid grid =new DevCardGrid(cards);
-        assertEquals(3, grid.getColumnsNumber());
-        assertEquals(4, grid.getRowsNumber());
-
-
-
+        assertEquals(4, grid.getColumnsNumber());
+        assertEquals(3, grid.getRowsNumber());
     }
 
 }

@@ -61,6 +61,8 @@ public class NetworkAdapter {
         }
     }
 
+
+
     @SuppressWarnings("unused")
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
