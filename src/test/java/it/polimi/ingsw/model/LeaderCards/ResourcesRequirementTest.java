@@ -89,13 +89,13 @@ public class ResourcesRequirementTest {
         DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
 
         try {
-            dashBoard.getWarehouse().get(1).addResources(1, Resource.SERVANT);
+            dashBoard.addResourcesToWarehouse(Resource.SERVANT, 1);
         } catch (Exception e) {
             fail();
         }
 
         try {
-            dashBoard.getWarehouse().get(2).addResources(3, Resource.SHIELD);
+            dashBoard.addResourcesToWarehouse(Resource.SHIELD, 3);
         } catch (Exception e) {
             fail();
         }
@@ -149,13 +149,13 @@ public class ResourcesRequirementTest {
         DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
 
         try {
-            dashBoard.getWarehouse().get(1).addResources(1, Resource.SERVANT);
+            dashBoard.addResourcesToWarehouse(Resource.SERVANT, 1);
         } catch (Exception e) {
             fail();
         }
 
         try {
-            dashBoard.getWarehouse().get(2).addResources(3, Resource.SHIELD);
+            dashBoard.addResourcesToWarehouse(Resource.SHIELD, 3);
         } catch (Exception e) {
             fail();
         }

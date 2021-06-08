@@ -47,12 +47,12 @@ public class Depot{
 
     /**
      *
-     * @param quantity  to add
      * @param type of resource to add
+     * @param quantity  to add
      * @throws ResourcesLimitsException when the maximum number of resources is exceeded
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
-    public void addResources(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
+    protected void addResources(Resource type, int quantity) throws ResourcesLimitsException, DepotResourceException {
         if(currentQuantity==0) resourceType = type;
         if (!(type==resourceType)) throw new DepotResourceException();
         if((quantity+ currentQuantity)>maxQuantity) throw new ResourcesLimitsException();
@@ -61,12 +61,12 @@ public class Depot{
 
     /**
      *
-     * @param quantity  to subtract
      * @param type of resource to subtract
+     * @param quantity  to subtract
      * @throws ResourcesLimitsException when the minimum number of resources is exceeded
      * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
      */
-    public void subResources(int quantity, Resource type) throws ResourcesLimitsException, DepotResourceException {
+    protected void subResources(Resource type, int quantity) throws ResourcesLimitsException, DepotResourceException {
         if (!(type==resourceType)) throw new DepotResourceException();
         if((currentQuantity-quantity)<0) throw new ResourcesLimitsException();
         currentQuantity-=quantity;
@@ -76,7 +76,7 @@ public class Depot{
      * Swithes the content of two deposits.
      * @param depot is the deposit
      */
-    public void switchDepot( Depot depot)throws ResourcesLimitsException {
+    protected void switchDepot( Depot depot)throws ResourcesLimitsException {
         if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) throw new ResourcesLimitsException();
         Resource tempResourceType = this.resourceType;
         this.resourceType=depot.getResourceType();

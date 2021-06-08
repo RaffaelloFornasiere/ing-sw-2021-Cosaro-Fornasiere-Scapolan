@@ -13,7 +13,7 @@ public class DepotTest extends TestCase {
      @Test
     public void testAddResourcesSuccessful() {
         Depot testDepot= new Depot(4);
-        try{testDepot.addResources(3, Resource.COIN); }
+        try{testDepot.addResources(Resource.COIN, 3); }
         catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){fail();}
         assertEquals(3, testDepot.getCurrentQuantity());
@@ -26,7 +26,7 @@ public class DepotTest extends TestCase {
     @Test
     public void testAddResourcesResourcesExcess() {
         Depot testDepot= new Depot(4);
-        try{testDepot.addResources(5, Resource.COIN); fail(); }
+        try{testDepot.addResources(Resource.COIN, 5); fail(); }
         catch ( ResourcesLimitsException e){}
         catch ( DepotResourceException e){fail();}
 
@@ -38,11 +38,11 @@ public class DepotTest extends TestCase {
     public void testAddResourcesResourceNotPresent() {
         Depot testDepot= new Depot(4);
         try {
-            testDepot.addResources(2, Resource.SHIELD);
+            testDepot.addResources(Resource.SHIELD, 2);
         } catch (Exception e) {
             fail();
         }
-        try{testDepot.addResources(1, Resource.ROCK); fail(); }
+        try{testDepot.addResources(Resource.ROCK, 1); fail(); }
         catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){}
 
@@ -54,11 +54,11 @@ public class DepotTest extends TestCase {
     public void testSubResourcesSuccessful() {
         Depot testDepot= new Depot(4);
         try {
-            testDepot.addResources(2, Resource.COIN);
+            testDepot.addResources(Resource.COIN, 2);
         } catch (Exception e) {
             fail();
         }
-        try{testDepot.subResources(1, Resource.COIN); }
+        try{testDepot.subResources(Resource.COIN, 1); }
         catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){fail();}
         assertEquals(1, testDepot.getCurrentQuantity());
@@ -70,11 +70,11 @@ public class DepotTest extends TestCase {
     public void testSubResourcesResourcesExcess() {
         Depot testDepot= new Depot(4);
         try {
-            testDepot.addResources(2, Resource.COIN);
+            testDepot.addResources(Resource.COIN, 2);
         } catch (Exception e) {
             fail();
         }
-        try{testDepot.subResources(3, Resource.COIN); fail(); }
+        try{testDepot.subResources(Resource.COIN, 3); fail(); }
         catch ( ResourcesLimitsException e){}
         catch ( DepotResourceException e){fail();}
 
@@ -86,11 +86,11 @@ public class DepotTest extends TestCase {
     public void testSubResourcesResourceNotPresent() {
         Depot testDepot= new Depot(4);
         try {
-            testDepot.addResources(2, Resource.SHIELD);
+            testDepot.addResources(Resource.SHIELD, 2);
         } catch (Exception e) {
             fail();
         }
-        try{testDepot.subResources(1, Resource.ROCK); fail(); }
+        try{testDepot.subResources(Resource.ROCK, 1); fail(); }
         catch ( ResourcesLimitsException e){fail();}
         catch ( DepotResourceException e){}
 
@@ -102,13 +102,13 @@ public class DepotTest extends TestCase {
     public void testSwitchDepotSuccessful() {
         Depot testDepot1= new Depot(4);
         try {
-            testDepot1.addResources(2, Resource.SHIELD);
+            testDepot1.addResources(Resource.SHIELD, 2);
         } catch (Exception e) {
             fail();
         }
         Depot testDepot2= new Depot(4);
         try {
-            testDepot2.addResources(3, Resource.COIN);
+            testDepot2.addResources(Resource.COIN, 3);
         } catch (Exception e) {
             fail();
         }
@@ -126,13 +126,13 @@ public class DepotTest extends TestCase {
     public void testSwitchDepotUnsuccessfulCase1() {
         Depot testDepot1= new Depot(4);
         try {
-            testDepot1.addResources(2, Resource.SHIELD);
+            testDepot1.addResources(Resource.SHIELD, 2);
         } catch (Exception e) {
             fail();
         }
         Depot testDepot2= new Depot(6);
         try {
-            testDepot2.addResources(5, Resource.COIN);
+            testDepot2.addResources(Resource.COIN, 5);
         } catch (Exception e) {
             fail();
         }
@@ -149,13 +149,13 @@ public class DepotTest extends TestCase {
     public void testSwitchDepotUnsuccessfulCase2() {
         Depot testDepot1= new Depot(6);
         try {
-            testDepot1.addResources(5, Resource.SHIELD);
+            testDepot1.addResources(Resource.SHIELD, 5);
         } catch (Exception e) {
             fail();
         }
         Depot testDepot2= new Depot(4);
         try {
-            testDepot2.addResources(2, Resource.COIN);
+            testDepot2.addResources(Resource.COIN, 2);
         } catch (Exception e) {
             fail();
         }

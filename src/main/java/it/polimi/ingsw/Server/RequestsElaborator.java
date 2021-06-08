@@ -23,6 +23,8 @@ public class RequestsElaborator {
     private EventRegistry mainEventHandlerRegistry;
     private EventRegistry matchEventHandlerRegistry;
     private String ownerUserID;
+    private Event event;
+    private final Object eventLock = new Object();
 
     public RequestsElaborator(Socket socket, EventRegistry mainEventHandlerRegistry) {
         try {
@@ -41,27 +43,39 @@ public class RequestsElaborator {
 
         while(socket!=null) {
             try {
-                Event event = requestsQueue.take();
-                if(socket!=null) {
-                    System.out.println("Elaborating: " + event.getEventName());
-                    if (event.getClass() == NewPlayerEvent.class)
-                        event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
-                    else if (!ownerUserID.equals(event.getPlayerId()))
-                        mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
-                                "The userID given is wrong", event));
-
-                    if (MatchEvent.class.isAssignableFrom(event.getClass())) {
-                        if (matchEventHandlerRegistry == null)
-                            mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
-                                    "The match has not started yet", event));
-                        else
-                            matchEventHandlerRegistry.sendEvent(event);
-                    } else {
-                        mainEventHandlerRegistry.sendEvent(event);
-                    }
+                event = requestsQueue.take();
+                new Thread(this::elaborateEvent).start();
+                synchronized (eventLock){
+                    eventLock.wait();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void elaborateEvent(){
+        Event event;
+        synchronized (eventLock) {
+            event = this.event;
+            eventLock.notifyAll();
+        }
+        if (socket != null) {
+            System.out.println("Elaborating: " + event.getEventName());
+            if (event.getClass() == NewPlayerEvent.class)
+                event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
+            else if (!ownerUserID.equals(event.getPlayerId()))
+                mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
+                        "The userID given is wrong", event));
+
+            if (MatchEvent.class.isAssignableFrom(event.getClass())) {
+                if (matchEventHandlerRegistry == null)
+                    mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),
+                            "The match has not started yet", event));
+                else
+                    matchEventHandlerRegistry.sendEvent(event);
+            } else {
+                mainEventHandlerRegistry.sendEvent(event);
             }
         }
     }

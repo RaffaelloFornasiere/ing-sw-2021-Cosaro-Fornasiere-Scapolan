@@ -15,7 +15,7 @@ public class ClientAppLS2 {
         ui.setClient(networkAdapter);
 
         ui.setThisPlayer("Other");
-        networkAdapter.enterMatch("Other", "*");
+        networkAdapter.enterMatch("Other", "Leader");
     }
 
     private static NetworkAdapter connectToServer(UI ui) {

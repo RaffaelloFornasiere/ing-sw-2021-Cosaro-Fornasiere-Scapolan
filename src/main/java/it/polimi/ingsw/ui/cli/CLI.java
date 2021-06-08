@@ -1110,8 +1110,10 @@ public class CLI extends UI {
 
     @Override
     public void displayWaitingForPlayerToSetupState(String playerID) {
-        if(toSetupPlayers == null) toSetupPlayers = (ArrayList<String>) players.clone();
+        if(toSetupPlayers == null) toSetupPlayers = new ArrayList<>(players);
         toSetupPlayers.remove(playerID);
+
+        if(toSetupPlayers.isEmpty()) return;
 
         out.println("Waiting for");
         for(String p: toSetupPlayers) out.println(p);

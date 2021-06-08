@@ -3,7 +3,6 @@ package it.polimi.ingsw.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenMultipleExtraResourcePowerEvent;
 import it.polimi.ingsw.controller.modelChangeHandlers.DepositLeaderPowerHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;
 import it.polimi.ingsw.events.ClientEvents.*;
@@ -50,11 +49,8 @@ public class Controller {
     private final Object waitingForSimpleResourcesLock = new Object();
     private SimpleChosenResourcesEvent simpleChosenResourcesEvent;
 
-    //may be merged with chosenResourcesEvent
-    private final Object waitingForMultipleExtraResourceLeaderPowerLock = new Object();
-    private ChosenMultipleExtraResourcePowerEvent chosenMultipleExtraResourcePowerEvent;
-
     private final Object waitingForResourceOrganizationLock = new Object();
+    private String playerWaitingForResourceOrganization;
     private NewResourcesOrganizationEvent newResourcesOrganizationEvent;
 
 
@@ -154,7 +150,8 @@ public class Controller {
             organizeResources(event.getChosenResources(), player);
 
             setuppedPlayers.add(event.getPlayerId());
-            clientHandlerSenders.get(event.getPlayerId()).sendEvent(new SetupDoneEvent(event.getPlayerId()));
+            for(ClientHandlerSender clientHandlerSender: clientHandlerSenders.values())
+                clientHandlerSender.sendEvent(new SetupDoneEvent(event.getPlayerId()));
 
             if(setuppedPlayers.size() == matchState.getPlayers().size())
                 matchState.beginMatch();
@@ -166,7 +163,7 @@ public class Controller {
         }
     }
 
-    private synchronized boolean canActionBePerformed(Event event, Player player, TurnState turnState){
+    private boolean canActionBePerformed(Event event, Player player, TurnState turnState){
         if(matchState.getTurnState() != turnState){
             clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "The action can't be performed now", event));
             return false;
@@ -222,9 +219,20 @@ public class Controller {
                 boolean goodChoice = false;
                 while(!goodChoice) {
                     clientHandlerSenders.get(player.getPlayerId()).sendEvent(new ChoseMultipleExtraResourcePowerEvent(event.getPlayerId(), resourceTypes, whiteMarbles));
-                    waitForEvent(waitingForMultipleExtraResourceLeaderPowerLock);
+                    synchronized (waitingForSimpleResourcesLock){
+                        try {
+                            TurnState oldTurnState = matchState.getTurnState();
+                            matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                            waitingForSimpleResourcesLock.wait();
+                            matchState.setTurnState(oldTurnState);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(simpleChosenResourcesEvent == null) return;
+
                     int chosenResourcesNum = 0;
-                    HashMap<Resource, Integer> chosenResources = chosenMultipleExtraResourcePowerEvent.getChosenResources();
+                    HashMap<Resource, Integer> chosenResources = simpleChosenResourcesEvent.getAllResourcesChosen();
                     for (Resource r : chosenResources.keySet()) {
                         if (chosenResources.get(r) <= 0)
                             chosenResources.remove(r);
@@ -232,11 +240,11 @@ public class Controller {
                             chosenResourcesNum += chosenResources.get(r);
                     }
                     if (!resourceTypes.containsAll(chosenResources.keySet())){
-                        clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "Some of the selected resource type are not allowed", chosenMultipleExtraResourcePowerEvent));
+                        clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "Some of the selected resource type are not allowed", simpleChosenResourcesEvent));
                     } else if(chosenResourcesNum > whiteMarbles) {
-                        clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "Too many resources selected", chosenMultipleExtraResourcePowerEvent));
+                        clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "Too many resources selected", simpleChosenResourcesEvent));
                     } else if(chosenResourcesNum < whiteMarbles) {
-                        clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "Too few resources selected", chosenMultipleExtraResourcePowerEvent));
+                        clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "Too few resources selected", simpleChosenResourcesEvent));
                     }else {
                         for (Resource r : chosenResources.keySet()) {
                             resources.put(r, resources.getOrDefault(r, 0) + chosenResources.get(r));
@@ -259,53 +267,59 @@ public class Controller {
         }
     }
 
-    public void ChosenMultipleExtraResourcePowerEventHandler(PropertyChangeEvent evt){
-        ChosenMultipleExtraResourcePowerEvent event = (ChosenMultipleExtraResourcePowerEvent) evt.getNewValue();
-        synchronized (waitingForMultipleExtraResourceLeaderPowerLock){
-            try {
-                if(canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING)) return;
-            } catch (NotPresentException notPresentException) {
-                //impossible
-                notPresentException.printStackTrace();
-            }
-            chosenMultipleExtraResourcePowerEvent = event;
-            waitingForMultipleExtraResourceLeaderPowerLock.notifyAll();
-        }
-    }
-
     private synchronized void organizeResources(HashMap<Resource, Integer> resources, Player player) {
+        boolean empty = true;
+        for(Resource r: resources.keySet()){
+            if(resources.get(r) > 0){
+                empty = false;
+                break;
+            }
+        }
+        if(empty) return;
+
         boolean goodChoice = false;
         while(!goodChoice) {
-            clientHandlerSenders.get(player.getPlayerId()).sendEvent(new OrganizeResourcesEvent(player.getPlayerId(), resources));
-            waitForEvent(waitingForResourceOrganizationLock);
+            try {
+                clientHandlerSenders.get(player.getPlayerId()).sendEvent(new OrganizeResourcesEvent(player.getPlayerId(), resources));
+                synchronized (waitingForResourceOrganizationLock) {
+                    try {
+                        TurnState oldTurnState = matchState.getTurnState();
+                        matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                        playerWaitingForResourceOrganization = player.getPlayerId();
+                        waitingForResourceOrganizationLock.wait();
+                        matchState.setTurnState(oldTurnState);
+                        System.out.println("newResourcesOrganizationEvent received, starting to use it in organizeResources");
+                    }catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            HashMap<Resource, Integer> totalStoredResources = new HashMap<>();
-            HashMap<Resource, Integer> discardedResources = newResourcesOrganizationEvent.getDiscardedResources();
-            //validate deposit state
-            ArrayList<DepotState> eventDepotStates = newResourcesOrganizationEvent.getDepotStates();
-            ArrayList<DepotState> orderedDepotStates = new ArrayList<>();
-            boolean isNewDepotStateOK = true;
-            for (Depot depot : player.getDashBoard().getWarehouse()) {
-                if (isNewDepotStateOK) {
-                    isNewDepotStateOK = false;
-                    for (DepotState depotState : eventDepotStates) {
-                        if (!isNewDepotStateOK && depot.getMaxQuantity() == depotState.getMaxQuantity()) {
-                            isNewDepotStateOK = true;
-                            orderedDepotStates.add(depotState);
-                            eventDepotStates.remove(depotState);
+                if (newResourcesOrganizationEvent == null) return;
+                HashMap<Resource, Integer> totalStoredResources = new HashMap<>();
+                HashMap<Resource, Integer> discardedResources = newResourcesOrganizationEvent.getDiscardedResources();
+                //validate deposit state
+                ArrayList<DepotState> eventDepotStates = newResourcesOrganizationEvent.getDepotStates();
+                ArrayList<DepotState> orderedDepotStates = new ArrayList<>();
+                boolean isNewDepotStateOK = true;
+                for (Depot depot : player.getDashBoard().getWarehouse()) {
+                    if (isNewDepotStateOK) {
+                        isNewDepotStateOK = false;
+                        for (DepotState depotState : eventDepotStates) {
+                            if (!isNewDepotStateOK && depot.getMaxQuantity() == depotState.getMaxQuantity()) {
+                                isNewDepotStateOK = true;
+                                orderedDepotStates.add(depotState);
+                            }
                         }
                     }
                 }
-            }
 
-            for (DepotState depotState : eventDepotStates) {
-                Resource type = depotState.getResourceType();
-                totalStoredResources.put(type, totalStoredResources.getOrDefault(type, 0) + depotState.getCurrentQuantity());
-            }
+                for (DepotState depotState : eventDepotStates) {
+                    Resource type = depotState.getResourceType();
+                    totalStoredResources.put(type, totalStoredResources.getOrDefault(type, 0) + depotState.getCurrentQuantity());
+                }
 
-            //validate leader power state
-            try {
-                if (!isNewDepotStateOK || !eventDepotStates.isEmpty()) {
+                //validate leader power state
+                if (!isNewDepotStateOK || eventDepotStates.size()!=orderedDepotStates.size()) {
                     throw new HandlerCheckException(new BadRequestEvent(player.getPlayerId(), "The structure of the warehouse sent is incompatible with the one of the match", newResourcesOrganizationEvent));
                 }
 
@@ -334,47 +348,36 @@ public class Controller {
 
                 goodChoice = true;
 
+                player.getDashBoard().setWarehouseResources(orderedDepotStates);
+
+                for (DepositLeaderPowerStateEvent e : newResourcesOrganizationEvent.getLeaderPowersState()) {
+                    HashMap<Resource, Integer> storedResource = e.getStoredResources();
+                    try {
+                        LeaderCard lc = player.getLeaderCardFromID(e.getLeaderCardID());
+                        DepositLeaderPower lp = (DepositLeaderPower) lc.getLeaderPowers().get(e.getLeaderPowerIndex());
+                        lp.removeResources(lp.getCurrentResources());
+                        lp.addResources(storedResource);
+                    } catch (ResourcesLimitsException | NotPresentException exception) {
+                        //impossible
+                        exception.printStackTrace();
+                    }
+                }
+
+                int numDiscardedResources = 0;
+                for (Resource r : discardedResources.keySet()) {
+                    numDiscardedResources += discardedResources.get(r);
+                }
+                for (Player p : matchState.getPlayers()) {
+                    if (p != player)
+                        faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources);
+                }
             } catch (NotPresentException notPresentException) {
                 goodChoice = false;
                 clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "One of the leader cards does not belong to this player", newResourcesOrganizationEvent));
             } catch (HandlerCheckException e) {
                 goodChoice = false;
-                clientHandlerSenders.get(player.getPlayerId()).sendEvent(e.getEventToSend());
-            }
-
-            ArrayList<Depot> warehouse = player.getDashBoard().getWarehouse();
-            for (int i = 0; i < orderedDepotStates.size(); i++) {
-                Depot depot = warehouse.get(i);
-                DepotState depotState = orderedDepotStates.get(i);
-                try {
-                    depot.subResources(depot.getCurrentQuantity(), depot.getResourceType());
-                    depot.addResources(depotState.getCurrentQuantity(), depotState.getResourceType());
-                } catch (ResourcesLimitsException | DepotResourceException e) {
-                    //impossible
-                    e.printStackTrace();
-                }
-            }
-
-            for (DepositLeaderPowerStateEvent e : newResourcesOrganizationEvent.getLeaderPowersState()) {
-                HashMap<Resource, Integer> storedResource = e.getStoredResources();
-                try {
-                    LeaderCard lc = player.getLeaderCardFromID(e.getLeaderCardID());
-                    DepositLeaderPower lp = (DepositLeaderPower) lc.getLeaderPowers().get(e.getLeaderPowerIndex());
-                    lp.removeResources(lp.getCurrentResources());
-                    lp.addResources(storedResource);
-                } catch (ResourcesLimitsException | NotPresentException exception) {
-                    //impossible
-                    exception.printStackTrace();
-                }
-            }
-
-            int numDiscardedResources = 0;
-            for (Resource r : discardedResources.keySet()) {
-                numDiscardedResources += discardedResources.get(r);
-            }
-            for (Player p : matchState.getPlayers()) {
-                if (p != player)
-                    faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources);
+                Event eventToSend = e.getEventToSend();
+                if(eventToSend != null) clientHandlerSenders.get(player.getPlayerId()).sendEvent(eventToSend);
             }
         }
     }
@@ -382,14 +385,30 @@ public class Controller {
     public void NewResourcesOrganizationEventHandler(PropertyChangeEvent evt){
         NewResourcesOrganizationEvent event = (NewResourcesOrganizationEvent) evt.getNewValue();
         synchronized (waitingForResourceOrganizationLock){
+            System.out.println("waitingForResourceOrganizationLock acquired");
             try {
-                if(canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING)) return;
+                if(setuppedPlayers.contains(event.getPlayerId())) {
+                    if (canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING))
+                        return;
+                }
+                else {
+                    if(matchState.getTurnState() != TurnState.WAITING_FOR_SOMETHING){
+                        clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "The action can't be performed now", event));
+                        return;
+                    }
+                    else if(!event.getPlayerId().equals(playerWaitingForResourceOrganization)) {
+                        clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "It is not the player turn", event));
+                        return;
+                    }
+                }
             } catch (NotPresentException notPresentException) {
                 //impossible
                 notPresentException.printStackTrace();
             }
             newResourcesOrganizationEvent = event;
+            System.out.println("waitingForResourceOrganizationLock before notify");
             waitingForResourceOrganizationLock.notifyAll();
+            System.out.println("waitingForResourceOrganizationLock after notify");
         }
     }
 
@@ -476,7 +495,17 @@ public class Controller {
                 try {
                     clientHandlerSenders.get(event.getPlayerId()).sendEvent(new ChoseResourcesEvent(event.getPlayerId(), cardCost, 0));
 
-                    waitForEvent(waitingForResourcesLock);
+                    synchronized (waitingForResourcesLock){
+                        try {
+                            TurnState oldTurnState = matchState.getTurnState();
+                            matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                            waitingForResourcesLock.wait();
+                            matchState.setTurnState(oldTurnState);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(chosenResourcesEvent==null) return;
 
                     selectedResourcesFromLeaderPower = chosenResourcesEvent.getSelectedResourcesFromLeaderPowers();
                     selectedResourcesFromWarehouse = chosenResourcesEvent.getSelectedResourcesFromWarehouse();
@@ -506,7 +535,8 @@ public class Controller {
                     goodChoice = true;
                 } catch (HandlerCheckException e){
                     goodChoice = false;
-                    clientHandlerSenders.get(player.getPlayerId()).sendEvent(e.getEventToSend());
+                    Event eventToSend = e.getEventToSend();
+                    if(eventToSend != null) clientHandlerSenders.get(player.getPlayerId()).sendEvent(eventToSend);
                 }
             }
             player.getDashBoard().subResourcesToWarehouse(selectedResourcesFromWarehouse);
@@ -531,19 +561,6 @@ public class Controller {
         } catch (EmptyStrongboxException | IndexSlotException | LevelCardException e) {
             //impossible
             e.printStackTrace();
-        }
-    }
-
-    private synchronized void waitForEvent(Object lock) {
-        synchronized (lock){
-            try {
-                TurnState oldTurnState = matchState.getTurnState();
-                matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
-                lock.wait();
-                matchState.setTurnState(oldTurnState);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -644,7 +661,17 @@ public class Controller {
                     try {
                         clientHandlerSenders.get(event.getPlayerId()).sendEvent(new ChoseResourcesEvent(event.getPlayerId(), consumedResources, requiredResourceOfChoice));
 
-                        waitForEvent(waitingForResourcesLock);
+                        synchronized (waitingForResourcesLock){
+                            try {
+                                TurnState oldTurnState = matchState.getTurnState();
+                                matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                                waitingForResourcesLock.wait();
+                                matchState.setTurnState(oldTurnState);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if(chosenResourcesEvent==null) return;
 
                         //check resources chosen to produce
                         selectedResourcesFromLeaderPowers = chosenResourcesEvent.getSelectedResourcesFromLeaderPowers();
@@ -686,7 +713,8 @@ public class Controller {
                         goodChoice = true;
                     } catch(HandlerCheckException e){
                         goodChoice = false;
-                        clientHandlerSenders.get(player.getPlayerId()).sendEvent(e.getEventToSend());
+                        Event eventToSend = e.getEventToSend();
+                        if(eventToSend != null) clientHandlerSenders.get(player.getPlayerId()).sendEvent(e.getEventToSend());
                     }
 
                 }
@@ -697,7 +725,19 @@ public class Controller {
                 goodChoice = false;
                 while(!goodChoice) {
                     clientHandlerSenders.get(event.getPlayerId()).sendEvent(new SimpleChoseResourcesEvent(event.getPlayerId(), producedResourceOfChoice));
-                    waitForEvent(waitingForSimpleResourcesLock);
+
+                    synchronized (waitingForSimpleResourcesLock){
+                        try {
+                            TurnState oldTurnState = matchState.getTurnState();
+                            matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                            waitingForSimpleResourcesLock.wait();
+                            matchState.setTurnState(oldTurnState);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(simpleChosenResourcesEvent==null) return;
 
                     //check produced resource of choice
                     chosenResources = simpleChosenResourcesEvent.getAllResourcesChosen();
@@ -886,11 +926,6 @@ public class Controller {
 
     public synchronized void QuitGameEventHandler(PropertyChangeEvent evt){
         QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
-
-        synchronized (waitingForMultipleExtraResourceLeaderPowerLock){
-            chosenMultipleExtraResourcePowerEvent = null;
-            waitingForMultipleExtraResourceLeaderPowerLock.notifyAll();
-        }
 
         synchronized (waitingForSimpleResourcesLock){
             simpleChosenResourcesEvent = null;
