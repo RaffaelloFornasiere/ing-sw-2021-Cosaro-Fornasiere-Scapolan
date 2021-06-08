@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.stream.IntStream;
@@ -86,12 +87,13 @@ public class DashBoard extends Observable {
         if(depot == null) {
             depot = warehouse
                     .stream()
-                    .filter(x -> x.getCurrentQuantity()==0 && x.getMaxQuantity()<=quantity)
-                    .findFirst().orElse(null);
+                    .filter(x -> x.getCurrentQuantity() == 0 && x.getMaxQuantity() >= quantity)
+                    .min(Comparator.comparingInt(Depot::getMaxQuantity))
+                    .orElse(null);
         }
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResources(resource, quantity);
+        try{depot.addResources(resource, quantity);
             notifyObservers();}
         catch (DepotResourceException e){}
     }
