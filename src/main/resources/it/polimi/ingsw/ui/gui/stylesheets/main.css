@@ -1,0 +1,102 @@
+.root {
+    -fx-background-image: url(../images/backGroundC.jpg);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+
+}
+
+
+.Coin {
+    -fx-image: url(../images/coin.png);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
+
+}
+
+.Servant {
+    -fx-image: url(../images/servant.png);
+
+}
+
+.Rock {
+    -fx-image: url(../images/stone.png);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
+
+}
+
+.Shield {
+    -fx-image: url(../images/shield.png);
+}
+
+
+.StrongBox {
+    -fx-image: url(../images/strongbox.png);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
+    -fx-scale-shape: 1;
+
+}
+
+
+
+
+.PlayerSlot {
+    -fx-border-color: #cd853f;
+    -fx-border-width: 2;
+    -fx-border-radius: 60 60 60 60;
+    /*-fx-background-color: linear-gradient(from 0px 0px to 0px 11px, #78786C, #C0C0B1),*/
+    /*linear-gradient(from 0px 70px to 0px 90px, #C0C0B100, #78786C);*/
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 20, 0, 0, 0);
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+    /*linear-gradient(from 10px 0px to 13px 0px, #78786C, #C0C0B100);*/
+    /*linear-gradient(from 0px 70px to 0px 71px, #C0C0B100, #78786C);*/
+
+
+    -fx-background-radius: 22 22 22 22;
+}
+
+@font-face {
+    font-family: Elliot;
+    src: url(../fonts/Elliot.otf);
+}
+
+.PlayerLabel {
+    -fx-font-family: Elliot;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+
+}
+
+
+.Card {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 15, 0, 00, 0);
+}
+
+
+.Warehouse {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;
+
+}
+
+
+.Cell {
+
+    -fx-image: url(../images/void_cell.jpg);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+.VictoryPoint{
+    -fx-image: url(../images/VictoryPoint.png);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+    -fx-scale-x: 0.4;
+    -fx-scale-y: 0.4;
+}
+
+
+.DevCardCounter{
+    -fx-image: url(../images/back.png);
+}
+
+
