@@ -17,7 +17,7 @@ public class DevCardGrid extends Observable {
 
     public DevCardGrid(ArrayList<DevCard> cards)
     {
-        int levels = cards.stream().mapToInt(DevCard::getLevel).max().getAsInt() + 1;
+        int levels = cards.stream().mapToInt(DevCard::getLevel).max().getAsInt();
         decks = new DevDeck[levels][CardColor.values().length];
 
         IntStream.range(1, levels+1).forEach(i -> {
