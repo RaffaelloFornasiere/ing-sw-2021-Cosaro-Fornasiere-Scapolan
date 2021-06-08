@@ -6,10 +6,8 @@
 .label{
     -fx-text-fill: #848484;
 }
-.ErrorLabel{
-    -fx-text-fill: #c20000;
-    -fx-opacity: 0;
-}
+
+
 
 .text-field{
     -fx-background-color: #393939;
@@ -20,24 +18,25 @@
     -fx-prompt-text-fill: #848484;
 }
 
-.check-box {
-    -fx-text-fill: #848484;
+
+
+.GridPlayer{
+    -fx-background-color: #80808054;
+    -fx-background-radius: 30px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
 
-.check-box .box {
-    -fx-background-color: transparent;
-    -fx-border-color:grey;
-    -fx-border-radius:3px;
+#Owner {
+    -fx-border-radius: 30px;
+}
+.PlayerLabel{
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
 }
 
-.check-box:selected .mark {
-    -fx-background-color: white;
+.list-view{
+    -fx-background-color: #ffffff10;
 }
-
-.check-box:selected .box {
-    -fx-background-color: #28a3f4;
-}
-
 
 .button{
     -fx-background-radius: 20 20 20 20;

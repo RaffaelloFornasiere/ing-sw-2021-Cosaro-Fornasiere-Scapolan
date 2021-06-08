@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
@@ -11,12 +12,38 @@ import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
+import javafx.application.Application;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GUI extends UI {
+    String leaderID;
+    String playerID;
+
+
+
+
+    GUI() {
+        MainApplication.setGui(this);
+        try {
+            MainApplication.setScene("splashscreen");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Application.launch(MainApplication.class);
+
+    }
+
+    public void setLoginData(String playerID, String leaderID) {
+        this.playerID = playerID;
+        this.leaderID = leaderID;
+    }
+
     public InetAddress getServerAddress() {
         return serverAddress;
     }
@@ -33,18 +60,8 @@ public class GUI extends UI {
         this.serverPort = serverPort;
     }
 
-
     private InetAddress serverAddress;
     private int serverPort;
-
-
-
-
-
-
-
-
-
 
 
 //   #######  ##     ## ######## ########  ########  #### #######   ########  ######
@@ -57,38 +74,42 @@ public class GUI extends UI {
 
 
     @Override
+    // this gets what's wrong
     public void printMessage(String message) {
-
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.showAndWait();
     }
 
     @Override
     public void printError(String error) {
-
+        Alert alert = new Alert(Alert.AlertType.ERROR, error, ButtonType.OK);
+        alert.showAndWait();
     }
 
     @Override
     public void printWarning(String warning) {
-
+        Alert alert = new Alert(Alert.AlertType.WARNING, warning, ButtonType.OK);
+        alert.showAndWait();
     }
 
     @Override
     public InetAddress askIP() {
-        return null;
+        return serverAddress;
     }
 
     @Override
     public boolean askIfNewLobby() {
-        return false;
+        return leaderID==null;
     }
 
     @Override
     public String askUserID() {
-        return null;
+        return playerID;
     }
 
     @Override
     public String askLeaderID() {
-        return null;
+        return leaderID;
     }
 
     @Override

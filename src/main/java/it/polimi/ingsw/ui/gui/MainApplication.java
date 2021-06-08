@@ -22,9 +22,14 @@ import java.util.*;
 
 public class MainApplication extends Application {
 
+    public static void setGui(GUI gui) {
+        if (MainApplication.gui == null)
+            MainApplication.gui = gui;
+    }
+
     static private GUI gui;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         gui = new GUI();
         Application.launch(MainApplication.class, args);
     }
@@ -38,15 +43,15 @@ public class MainApplication extends Application {
     }
 
 
-
     private static Scene scene;
     static Stack<String> scenes;
+    static Stack<Controller> controllers;
     static boolean firstSplashScreen = false;
 
     @Override
     public void start(Stage stage) throws IOException {
-        System.out.println("start");
-        scenes.add("splashscreen");
+        //System.out.println("start");
+        //scenes.add("splashscreen");
         scene = new Scene(loadFXML(scenes.peek()));
         stage.setScene(scene);
         stage.show();
@@ -54,13 +59,36 @@ public class MainApplication extends Application {
     }
 
     static void setScene(String fxml) throws IOException {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
+        Parent parent = fxmlLoader.load();
+        Controller controller = fxmlLoader.getController();
+        controller.setGUI(gui);
+
         scenes.add(fxml);
-        scene.setRoot(loadFXML(scenes.peek()));
+        controllers.add(controller);
+        scene.setRoot(parent);
+
+        setScene(fxml);
+    }
+
+    static FXMLLoader getFxmlLoader(String fxml){
+        return new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
+    }
+
+    static void setScene(String fxml, Controller controller) {
+
     }
 
     static void setPreviousScene() throws IOException {
         scenes.pop();
         scene.setRoot(loadFXML(scenes.peek()));
+    }
+
+    private static Parent loadFXML(String fxml, Controller controller) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
+        fxmlLoader.setController(controller);
+        return fxmlLoader.load();
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

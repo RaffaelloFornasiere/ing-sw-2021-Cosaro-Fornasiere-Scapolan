@@ -226,6 +226,7 @@ public class NetworkAdapter {
         LobbyError event = (LobbyError) evt.getNewValue();
         System.out.println("Received" + event.getEventName());
 
+
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);
     }
