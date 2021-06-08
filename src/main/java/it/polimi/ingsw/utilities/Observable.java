@@ -3,7 +3,7 @@ package it.polimi.ingsw.utilities;
 import java.util.ArrayList;
 
 public abstract class Observable {
-    private ArrayList<Observer> observers;
+    private final ArrayList<Observer> observers;
 
     public Observable(){
         observers = new ArrayList<>();
@@ -21,5 +21,9 @@ public abstract class Observable {
 
     public void removeObserver(Observer observer){
         observers.remove(observer);
+    }
+
+    public ArrayList<Observer> getObservers(){
+        return new ArrayList<>(observers);
     }
 }

@@ -57,8 +57,8 @@ public class DepotState {
     }
 
     public DepotResultMessage tryAddResource(Resource r) {
-        if(resourceType!=null) {
-            if (currentQuantity>0 && r != resourceType) return DepotResultMessage.INVALID_RES_DEPOT;
+        if(currentQuantity>0) {
+            if (r != resourceType) return DepotResultMessage.INVALID_RES_DEPOT;
             if (currentQuantity + 1 > maxQuantity) return DepotResultMessage.REACH_MAX_CAP_DEPOT;
 
         } else resourceType=r;

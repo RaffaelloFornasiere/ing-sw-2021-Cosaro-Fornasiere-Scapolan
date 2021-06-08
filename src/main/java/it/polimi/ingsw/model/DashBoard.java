@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +77,7 @@ public class DashBoard extends Observable {
      * @param quantity quantity to add
      */
 
-    public void addResourcesToWarehouse( Resource resource, int quantity) throws IllegalArgumentException,
+    public void addResourcesToWarehouse(Resource resource, int quantity) throws IllegalArgumentException,
             ResourcesLimitsException {
         var depot = warehouse
                 .stream()
@@ -88,10 +88,10 @@ public class DashBoard extends Observable {
                     .stream()
                     .filter(x -> x.getCurrentQuantity()==0 && x.getMaxQuantity()<=quantity)
                     .findFirst().orElse(null);
-            if(depot == null)
-                throw new IllegalArgumentException("Incompatible resource type");
         }
-        try{depot.subResources(quantity, resource);
+        if(depot == null)
+            throw new IllegalArgumentException("Incompatible resource type");
+        try{depot.subResources(resource, quantity);
             notifyObservers();}
         catch (DepotResourceException e){}
     }
@@ -108,7 +108,7 @@ public class DashBoard extends Observable {
                 .findFirst().orElse(null);
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResources(quantity, resource);
+        try{depot.subResources(resource, quantity);
             notifyObservers();}
             catch (DepotResourceException e){}
     }
@@ -127,6 +127,26 @@ public class DashBoard extends Observable {
             }
             throw e;
         }
+    }
+
+    public void setWarehouseResources(ArrayList<DepotState> newWarehouseResources){
+        if(newWarehouseResources.size()!=warehouse.size())
+            throw new IllegalArgumentException("New warehouse structure incompatible");
+        for(int i=0; i<warehouse.size(); i++){
+            if(newWarehouseResources.get(i).getMaxQuantity()!=warehouse.get(i).getMaxQuantity())
+                throw new IllegalArgumentException("New warehouse structure incompatible");
+        }
+        for(int i=0; i<warehouse.size(); i++){
+            Depot depot = warehouse.get(i);
+            DepotState depotState = newWarehouseResources.get(i);
+            try {
+                depot.subResources(depot.getResourceType(), depot.getCurrentQuantity());
+                depot.addResources(depotState.getResourceType(), depotState.getCurrentQuantity());
+            } catch (ResourcesLimitsException | DepotResourceException e) {
+                e.printStackTrace();
+            }
+        }
+        notifyObservers();
     }
 
 
