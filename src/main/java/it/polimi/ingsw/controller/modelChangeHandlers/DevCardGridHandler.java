@@ -17,9 +17,9 @@ public class DevCardGridHandler extends MatchObserver{
     public void update(Object o) {
         DevCardGrid devCardGrid = (DevCardGrid) o;
 
-        String[][] topCardIDs = new String[devCardGrid.getColumnsNumber()][devCardGrid.getRowsNumber()];
-        for(int i=0; i<devCardGrid.getColumnsNumber(); i++) {
-            for(int j=0; j<devCardGrid.getRowsNumber(); j++) {
+        String[][] topCardIDs = new String[devCardGrid.getRowsNumber()][devCardGrid.getColumnsNumber()];
+        for(int i=0; i<devCardGrid.getRowsNumber(); i++) {
+            for(int j=0; j<devCardGrid.getColumnsNumber(); j++) {
                 try {
                     topCardIDs[i][j] = devCardGrid.topCard(i, j).getCardID();
                 } catch (NotPresentException notPresentException) {
