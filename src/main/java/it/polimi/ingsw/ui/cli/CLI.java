@@ -1113,7 +1113,7 @@ public class CLI extends UI {
         if(toSetupPlayers == null) toSetupPlayers = new ArrayList<>(players);
         toSetupPlayers.remove(playerID);
 
-        if(toSetupPlayers.isEmpty()) return;
+        if(toSetupPlayers.isEmpty() || toSetupPlayers.contains(thisPlayer)) return;
 
         out.println("Waiting for");
         for(String p: toSetupPlayers) out.println(p);
