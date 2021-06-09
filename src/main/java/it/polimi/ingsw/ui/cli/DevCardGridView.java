@@ -1,6 +1,10 @@
 package it.polimi.ingsw.ui.cli;
 
 public class DevCardGridView {
+    public String[][] getTopDevCardIDs() {
+        return topDevCardIDs;
+    }
+
     private String[][] topDevCardIDs;
 
     public DevCardGridView(String[][] topDevCardIDs){

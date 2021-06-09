@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class DashBoardView {
+
     private ArrayList<String> topDevCards;
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<DepotState> warehouse;
@@ -22,7 +23,7 @@ public class DashBoardView {
         this.topDevCards = (ArrayList<String>) topDevCards.clone();
         this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
         this.warehouse = new ArrayList<>();
-        for(DepotState d: warehouse){
+        for (DepotState d : warehouse) {
             this.warehouse.add(new DepotState(d.getResourceType(), d.getMaxQuantity(), d.getCurrentQuantity()));
         }
         this.player = player;
@@ -38,6 +39,9 @@ public class DashBoardView {
         return warehouse;
     }
 
+    public ArrayList<String> getTopDevCards() {
+        return topDevCards;
+    }
 
     public void updateTopDevCards(ArrayList<String> topDevCards) {
         this.topDevCards = (ArrayList<String>) topDevCards.clone();
@@ -49,12 +53,13 @@ public class DashBoardView {
 
     public void updateWarehouse(ArrayList<DepotState> warehouse) {
         this.warehouse = new ArrayList<>();
-        for(DepotState d: warehouse){
+        for (DepotState d : warehouse) {
             this.warehouse.add(new DepotState(d.getResourceType(), d.getMaxQuantity(), d.getCurrentQuantity()));
         }
     }
-    public DepotResultMessage switchDepots(int depot1, int depot2){
-        DepotResultMessage result=warehouse.get(depot1).switchDepot(warehouse.get(depot2));
+
+    public DepotResultMessage switchDepots(int depot1, int depot2) {
+        DepotResultMessage result = warehouse.get(depot1).switchDepot(warehouse.get(depot2));
         return result;
     }
 
@@ -91,7 +96,7 @@ public class DashBoardView {
             String color = CLI.colorResource(l.getResourceType());
             String shape = CLI.shapeResource(l.getResourceType());
 
-            warehouseBuilder.append(color +"   " +l.getResourceType().toString() + "\n   ");
+            warehouseBuilder.append(color + "   " + l.getResourceType().toString() + "\n   ");
             IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╔═══╗" + " "));
             warehouseBuilder.append(Color.reset() + "\n" + "." + m + " ");
             IntStream.range(0, l.getCurrentQuantity()).forEach(n -> warehouseBuilder.append(color + "║ " + shape + " ║" + " "));

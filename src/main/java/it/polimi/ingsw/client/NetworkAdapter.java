@@ -244,12 +244,16 @@ public class NetworkAdapter {
 
     public void MatchStateEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
+       MatchStateEvent event=(MatchStateEvent)evt.getNewValue();
+        Event ev= view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
+        send(ev);
+        System.out.println("event sent");
     }
 
     public void OrganizeResourcesEventHandler(PropertyChangeEvent evt) {
         OrganizeResourcesEvent event = (OrganizeResourcesEvent) evt.getNewValue();
-        NewResourcesOrganizationEvent newOrganisation= view.getWarehouseDisplacement(event.getResourcesToOrganize());
-        send(newOrganisation);
+        NewResourcesOrganizationEvent newOrganization= view.getWarehouseDisplacement(event.getResourcesToOrganize());
+        send(newOrganization);
     }
 
     public void PersonalProductionPowerStateEventHandler(PropertyChangeEvent evt) {
