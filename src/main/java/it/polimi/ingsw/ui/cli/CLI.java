@@ -6,6 +6,7 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
@@ -26,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class CLI extends UI {
     private static PrintWriter out = new PrintWriter(System.out, true);
@@ -36,8 +38,6 @@ public class CLI extends UI {
     private ArrayList<String> players;
     private DevCardGridView devCardGridView;
     private MarketView market;
-
-    private Thread activeRequest;
 
     public CLI() {
         players = new ArrayList<>();
@@ -1327,5 +1327,35 @@ public class CLI extends UI {
     @Override
     public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
         return null;
+    }
+
+    public String askForLeaderCardToDiscard() throws NotPresentException {
+        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
+
+        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be discarded");
+
+        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
+                .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
+
+        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to discard").get(0);
+
+        return choices.get(choice).getKey();
+    }
+
+    public String askForLeaderCardToActivate() throws NotPresentException {
+        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
+
+        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be activated");
+
+        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
+                .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
+
+        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to activate").get(0);
+
+        return choices.get(choice).getKey();
     }
 }
