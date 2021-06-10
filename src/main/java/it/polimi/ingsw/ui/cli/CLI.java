@@ -2,19 +2,14 @@ package it.polimi.ingsw.ui.cli;
 
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
-import it.polimi.ingsw.model.Marble;
-import it.polimi.ingsw.model.ProductionPower;
-import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
 
@@ -140,7 +135,7 @@ public class CLI extends UI {
         });
         builder.append("\n");
 
-        DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
+        DrawableObject obj = new DrawableObject(builder.toString(), 0, 0);
         Panel panel = new Panel(1000, (int) obj.getHeight() + 3, out);
         panel.addItem(obj);
         panel.show();
@@ -1431,22 +1426,42 @@ public class CLI extends UI {
     }
 
     @Override
-    public String askForLeaderCardToDiscard() {
-        return null;
+    public String askForLeaderCardToDiscard() throws NotPresentException {
+        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
+
+        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be discarded");
+
+        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
+                .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
+
+        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to discard").get(0);
+
+        return choices.get(choice).getKey();
     }
 
     @Override
-    public String askForLeaderCardToActivate() {
-        return null;
+    public String askForLeaderCardToActivate() throws NotPresentException {
+        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
+
+        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be activated");
+
+        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
+                .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
+
+        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to activate").get(0);
+
+        return choices.get(choice).getKey();
     }
 
 
     @Override
     public Event askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
         Event event = null;
-        int c = turnState.getStateCode();
-
-        if (c == 2) {//start
+        if (turnState==TurnState.START) {//start
             if (thisPlayer.equals(playerID)) {
                 out.println(playerID + " " + turnState.getDescription());
             } else {
@@ -1481,17 +1496,27 @@ public class CLI extends UI {
                     options.add(new Pair<String, String>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
                     int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
                     if (chosenAction == 0) {
-                        String leaderCardToDiscard = askForLeaderCardToDiscard();
+                        String leaderCardToDiscard = null;
+                        try {
+                            leaderCardToDiscard = askForLeaderCardToDiscard();
+                        } catch (NotPresentException e) {
+                            e.printStackTrace();
+                        }
                         event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
                     } else {
-                        String leaderCardToActivate = askForLeaderCardToActivate();
+                        String leaderCardToActivate = null;
+                        try {
+                            leaderCardToActivate = askForLeaderCardToActivate();
+                        } catch (NotPresentException e) {
+                            e.printStackTrace();
+                        }
                         event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
                     }
 
                 }
             }
 
-        } else if (c == 3) {//AFTER_LEADER_CARD_ACTION
+        } else if (turnState==TurnState.AFTER_LEADER_CARD_ACTION) {//AFTER_LEADER_CARD_ACTION
             if (thisPlayer.equals(playerID)) {
                 out.println(playerID + " " + turnState.getDescription());
             } else {
@@ -1521,7 +1546,7 @@ public class CLI extends UI {
                 }
 
             }
-        } else if (c == 4) { //AFTER_MAIN_ACTION
+        } else if (turnState==TurnState.AFTER_MAIN_ACTION) { //AFTER_MAIN_ACTION
             if (thisPlayer.equals(playerID)) {
                 out.println(playerID + " " + turnState.getDescription());
             } else {
@@ -1534,10 +1559,20 @@ public class CLI extends UI {
                     options.add(new Pair<String, String>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
                     int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
                     if (chosenAction == 0) {
-                        String leaderCardToDiscard = askForLeaderCardToDiscard();
+                        String leaderCardToDiscard = null;
+                        try {
+                            leaderCardToDiscard = askForLeaderCardToDiscard();
+                        } catch (NotPresentException e) {
+                            e.printStackTrace();
+                        }
                         event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
                     } else {
-                        String leaderCardToActivate = askForLeaderCardToActivate();
+                        String leaderCardToActivate = null;
+                        try {
+                            leaderCardToActivate = askForLeaderCardToActivate();
+                        } catch (NotPresentException e) {
+                            e.printStackTrace();
+                        }
                         event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
                     }
                 } else {
@@ -1545,16 +1580,16 @@ public class CLI extends UI {
                 }
 
             }
-        } else if (c == 5) {//END_OF_TURN
+        } else if (turnState==TurnState.END_OF_TURN) {//END_OF_TURN
             if (thisPlayer.equals(playerID)) {
                 out.println(playerID + " " + turnState.getDescription());
             } else {
                 out.println("YOUR TURN HAS ENDED");
                 event = new EndTurnEvent(thisPlayer);
             }
-        } else if (c == 6) {//WAITING_FOR_SOMETHING
+        } else if (turnState==TurnState.WAITING_FOR_SOMETHING) {//WAITING_FOR_SOMETHING
 
-        } else if (c == 7) {//MATCH_ENDED
+        } else if (turnState==TurnState.MATCH_ENDED) {//MATCH_ENDED
             out.println("MATCH HAS ENDED");
 
         }
@@ -1581,33 +1616,5 @@ public class CLI extends UI {
         return null;
     }
 
-    public String askForLeaderCardToDiscard() throws NotPresentException {
-        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
 
-        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be discarded");
-
-        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
-
-        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
-                .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
-
-        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to discard").get(0);
-
-        return choices.get(choice).getKey();
-    }
-
-    public String askForLeaderCardToActivate() throws NotPresentException {
-        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
-
-        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be activated");
-
-        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
-
-        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
-                .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
-
-        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to activate").get(0);
-
-        return choices.get(choice).getKey();
-    }
 }

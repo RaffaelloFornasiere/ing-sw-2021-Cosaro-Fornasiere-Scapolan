@@ -7,6 +7,7 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
@@ -87,11 +88,11 @@ public abstract class UI {
 
     public abstract ActivateProductionEvent askForDevCardToProduce();
 
-    public abstract String askForLeaderCardToDiscard();
+    public abstract String askForLeaderCardToDiscard() throws NotPresentException;
 
-    public abstract String askForLeaderCardToActivate();
+    public abstract String askForLeaderCardToActivate() throws NotPresentException;
 
-    public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
+    public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) ;
 
 
     /**
