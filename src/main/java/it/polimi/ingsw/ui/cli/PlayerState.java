@@ -15,4 +15,11 @@ public class PlayerState {
 
     public HashMap<String, LeaderCardView> leaderCards = new HashMap<>();
 
+    public PlayerState(DashBoardView dashBoard, HashMap<String, LeaderCardView> leaderCards){
+        this.dashBoard=dashBoard;
+        this.leaderCards= leaderCards;
+    }
+    public PlayerState(){
+    }
+
 }

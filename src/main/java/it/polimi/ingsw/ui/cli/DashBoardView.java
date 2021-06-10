@@ -123,15 +123,21 @@ public class DashBoardView {
     }
 
     public void displayDevCardSlots() {
-        Panel panel = new Panel(500, 30, System.out);
+        String color= Color.WHITE.getAnsiCode();
+        Panel panel = new Panel(500, 26, System.out);
         DrawableObject devCards = new DrawableObject("\033[31;1;4mDEVCARD SLOTS\033[0m \n", 1, 1);
         panel.addItem(devCards);
+       // AtomicInteger height= new AtomicInteger();
         AtomicInteger gap = new AtomicInteger(0);
+        AtomicInteger slotIndex = new AtomicInteger(1);
         topDevCards.stream().forEach(x -> {
-            DrawableObject obj = new DrawableObject(new DevCardView(x).toString(), gap.get() * 40, 3);
+            DrawableObject obj = new DrawableObject( color+ "   "+color +"SLOT "+ slotIndex + color+"  " + Color.reset() + "\n"+ new DevCardView(x).toString(), gap.get() * 40, 3);
             gap.getAndIncrement();
+            slotIndex.getAndIncrement();
+           // height.set(Integer.max(height.get(), (int)obj.getHeight()));
             panel.addItem(obj);
         });
+      //  panel.setHeight(height.get()+5);
         panel.show();
     }
 

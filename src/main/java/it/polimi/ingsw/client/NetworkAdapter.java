@@ -246,7 +246,8 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
        MatchStateEvent event=(MatchStateEvent)evt.getNewValue();
         Event ev= view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
-        send(ev);
+        if(ev instanceof BuyDevCardsEvent) send((BuyDevCardsEvent)ev);
+        else if(ev instanceof BuyResourcesEvent) send((BuyResourcesEvent)ev);
         System.out.println("event sent");
     }
 
