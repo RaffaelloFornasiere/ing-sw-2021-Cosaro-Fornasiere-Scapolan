@@ -86,7 +86,7 @@ public class DevCardGrid extends Observable {
         return topCard(indexes.getKey(), indexes.getValue());
     }
 
-    public Pair<Integer, Integer> getColRowOfCardFromID(String devCardID) throws NotPresentException {
+    public Pair<Integer, Integer> getRowColOfCardFromID(String devCardID) throws NotPresentException {
         for (int i = 0; i < getRowsNumber(); i++) {
             for (int j = 0; j < getColumnsNumber(); j++) {
                 if(decks[i][j].topCard().getCardID().equals(devCardID))

@@ -3,8 +3,8 @@ package it.polimi.ingsw.ui.cli;
 public class DrawableObject {
     private int x;
     private int y;
-    private long width;
-    private long height;
+    private int width;
+    private int height;
     private String textObject;
 
 
@@ -12,7 +12,7 @@ public class DrawableObject {
     public DrawableObject(String to, int x, int y) {
         this.x = x;
         this.y = y;
-        height = to.chars().filter(c -> c == '\n').count();
+        height = to.chars().filter(c -> c == '\n').map(c->1).sum();
         width = 0;
 
         for (int i = 0, j = 0; i < to.length(); i++) {
@@ -39,11 +39,11 @@ public class DrawableObject {
         return y;
     }
 
-    public long getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    public long getHeight() {
+    public int getHeight() {
         return height;
     }
 

@@ -481,7 +481,7 @@ public class Controller {
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
             if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
-            Pair<Integer, Integer> devDeckIndexes = devCardGrid.getColRowOfCardFromID(event.getDevCardID());
+            Pair<Integer, Integer> devDeckIndexes = devCardGrid.getRowColOfCardFromID(event.getDevCardID());
             DevCard devCard = devCardGrid.topCard(devDeckIndexes);
             HashMap<Resource, Integer> cardCost = devCard.getCost();
 
