@@ -20,7 +20,12 @@ public class DashBoardView {
 
 
     public DashBoardView(ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse, String player) {
-        this.topDevCards = (ArrayList<String>) topDevCards.clone();
+       this.topDevCards= new ArrayList<>();
+        for(String s: topDevCards){
+           if(s!=null) this.topDevCards.add(s);
+           else this.topDevCards.add(null);
+       }
+
         this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
         this.warehouse = new ArrayList<>();
         for (DepotState d : warehouse) {
@@ -93,10 +98,19 @@ public class DashBoardView {
         warehouseBuilder.append("\033[31;1;4mWAREHOUSE\033[0m \n");
         int m = 1;
         for (DepotState l : warehouse) {
-            String color = CLI.colorResource(l.getResourceType());
+            String color;
+            if (l.getCurrentQuantity() == 0) {
+                color = Color.WHITE.getAnsiCode();
+            } else {
+                color = CLI.colorResource(l.getResourceType());
+            }
             String shape = CLI.shapeResource(l.getResourceType());
+            if (l.getCurrentQuantity() == 0) {
+                warehouseBuilder.append(color + "   " +"EMPTY"+ "\n   ");
+            } else {
+                warehouseBuilder.append(color + "   " + l.getResourceType().toString() + "\n   ");
+            }
 
-            warehouseBuilder.append(color + "   " + l.getResourceType().toString() + "\n   ");
             IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╔═══╗" + " "));
             warehouseBuilder.append(Color.reset() + "\n" + "." + m + " ");
             IntStream.range(0, l.getCurrentQuantity()).forEach(n -> warehouseBuilder.append(color + "║ " + shape + " ║" + " "));
@@ -105,7 +119,9 @@ public class DashBoardView {
             IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╚═══╝" + " "));
             warehouseBuilder.append(Color.reset() + "\n");
             m++;
+
         }
+
         return warehouseBuilder.toString();
     }
 
@@ -123,21 +139,36 @@ public class DashBoardView {
     }
 
     public void displayDevCardSlots() {
-        String color= Color.WHITE.getAnsiCode();
-        Panel panel = new Panel(500, 26, System.out);
+        String color = Color.WHITE.getAnsiCode();
+
         DrawableObject devCards = new DrawableObject("\033[31;1;4mDEVCARD SLOTS\033[0m \n", 1, 1);
-        panel.addItem(devCards);
-       // AtomicInteger height= new AtomicInteger();
+
+        // AtomicInteger height= new AtomicInteger();
         AtomicInteger gap = new AtomicInteger(0);
         AtomicInteger slotIndex = new AtomicInteger(1);
+        ArrayList<DrawableObject> objs = new ArrayList<>();
+        AtomicInteger height = new AtomicInteger(0);
         topDevCards.stream().forEach(x -> {
-            DrawableObject obj = new DrawableObject( color+ "   "+color +"SLOT "+ slotIndex + color+"  " + Color.reset() + "\n"+ new DevCardView(x).toString(), gap.get() * 40, 3);
+            if (x != null) {
+                DrawableObject obj = new DrawableObject(color + "   " + color + "SLOT " + slotIndex + color + "  " + Color.reset() + "\n" + new DevCardView(x).toString(), gap.get() * 40, 3);
+
+                height.set(Integer.max(height.get(), obj.getHeight() + 1));
+                objs.add(obj);
+            } else {
+                DrawableObject obj = new DrawableObject(color + "   " + color + "SLOT " + slotIndex + color + "  " + Color.reset() + "\n" + DevCardView.emptySlot(14), gap.get() * 40, 3);
+                height.set(Integer.max(height.get(), obj.getHeight() + 1));
+                objs.add(obj);
+            }
             gap.getAndIncrement();
             slotIndex.getAndIncrement();
-           // height.set(Integer.max(height.get(), (int)obj.getHeight()));
-            panel.addItem(obj);
         });
-      //  panel.setHeight(height.get()+5);
+
+        int totalHeight = height.get() + devCards.getHeight() + 1;
+        Panel panel = new Panel(500, totalHeight+5, System.out);
+        panel.addItem(devCards);
+        for (DrawableObject obj : objs) {
+            panel.addItem(obj);
+        }
         panel.show();
     }
 
@@ -161,7 +192,7 @@ public class DashBoardView {
 
 
     public static void main(String[] args) {
-        DepotState depot = new DepotState(Resource.COIN, 3, 2);
+        DepotState depot = new DepotState(Resource.COIN, 3, 0);
         DepotState depot2 = new DepotState(Resource.SERVANT, 4, 2);
         DepotState depot3 = new DepotState(Resource.SHIELD, 6, 4);
         ArrayList<DepotState> totalLevels = new ArrayList();
@@ -173,10 +204,11 @@ public class DashBoardView {
         str.put(Resource.COIN, 6);
         str.put(Resource.ROCK, 7);
 
-        ArrayList<String> cards = new ArrayList<>();
+        ArrayList<String> cards = new ArrayList<>(3);
+
         cards.add("DevCard10");
         cards.add("DevCard40");
-        cards.add("DevCard16");
+        cards.add(null);
 
         String player = "PAOLO";
 

@@ -1324,7 +1324,6 @@ public class CLI extends UI {
 
         playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
         ArrayList<Pair<String, String>> selectionArray = new ArrayList<>();
-        playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
         AtomicInteger slotIndex= new AtomicInteger(1);
         playerStates.get(thisPlayer).getDashBoard().getTopDevCards().stream().forEach(n -> {
             selectionArray.add(new Pair<String, String>("SLOT "+ slotIndex, Color.WHITE.getAnsiCode()));
