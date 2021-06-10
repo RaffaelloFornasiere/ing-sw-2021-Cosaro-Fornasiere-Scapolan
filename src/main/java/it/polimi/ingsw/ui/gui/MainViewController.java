@@ -1,16 +1,17 @@
 package it.polimi.ingsw.ui.gui;
 
+import com.sun.tools.javac.Main;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LobbyController extends Controller implements Initializable {
-
-    public LobbyController(GUI gui){super(gui);}
-
+public class MainViewController extends Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        
+
     }
+
+    public MainViewController(GUI gui){super(gui);}
+
 }

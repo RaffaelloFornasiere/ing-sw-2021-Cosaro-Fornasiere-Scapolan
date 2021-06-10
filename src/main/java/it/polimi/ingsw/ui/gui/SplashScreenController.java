@@ -24,11 +24,16 @@ public class SplashScreenController extends Controller implements Initializable 
     @FXML
     Group ButtonsGroup;
 
+    static boolean firstTime = true;
+
+    public SplashScreenController(GUI gui) {
+        super(gui);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (!MainApplication.getFirstSplashScreen()) {
-            MainApplication.setFirstSplashScreen();
+        if (firstTime) {
+            firstTime = false;
             TranslateTransition transition = new TranslateTransition();
             transition.setNode(TitleGroup);
             transition.setDuration(Duration.millis(500));
@@ -49,9 +54,6 @@ public class SplashScreenController extends Controller implements Initializable 
             transitions.play();
 
         }
-        else{
-
-        }
     }
 
 
@@ -61,11 +63,11 @@ public class SplashScreenController extends Controller implements Initializable 
 
 
     public void switchToLogin() throws IOException {
-        MainApplication.setScene("login");
+        MainApplication.setScene("login", super.gui.loginController);
     }
 
     public void switchToServerSettings() throws IOException {
-        MainApplication.setScene("serversettings");
+        MainApplication.setScene("serversettings", gui.serverSettingsController);
     }
 
 

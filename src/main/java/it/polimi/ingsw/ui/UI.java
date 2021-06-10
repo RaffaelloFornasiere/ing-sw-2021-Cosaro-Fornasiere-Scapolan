@@ -55,6 +55,9 @@ public abstract class UI {
 
     //game related
 
+
+    public void invalidateUsername(){}
+
     public abstract ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose);
 
     public abstract HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources);

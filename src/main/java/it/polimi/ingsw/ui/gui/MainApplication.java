@@ -20,6 +20,8 @@ import java.net.URL;
 import java.sql.SQLOutput;
 import java.util.*;
 
+
+
 public class MainApplication extends Application {
 
     public static void setGui(GUI gui) {
@@ -29,60 +31,66 @@ public class MainApplication extends Application {
 
     static private GUI gui;
 
-    public static void main(String[] args) throws IOException {
-        gui = new GUI();
-        Application.launch(MainApplication.class, args);
-    }
-
 
     @Override
     public void init() throws Exception {
         super.init();
-        scenes = new Stack<>();
-        System.out.println("init");
+//        if (scenes == null || controllers == null)
+//            throw new Exception("Main App not initialized");
+    }
+
+    static void setFirstScene(String fxml) {
+        setFirstScene(fxml, null);
+    }
+
+    static void setFirstScene(String fxml, Controller controller) {
+        if (scenes == null) {
+            scenes = new Stack<>();
+            controllers = new Stack<>();
+            scenes.add(fxml);
+            controllers.add(controller);
+        }
     }
 
 
     private static Scene scene;
     static Stack<String> scenes;
     static Stack<Controller> controllers;
-    static boolean firstSplashScreen = false;
 
     @Override
     public void start(Stage stage) throws IOException {
-        //System.out.println("start");
-        //scenes.add("splashscreen");
-        scene = new Scene(loadFXML(scenes.peek()));
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(scenes.peek() + ".fxml"));
+        loader.setController(controllers.peek());
+        Parent parent = loader.load();
+        scene = new Scene(parent);
         stage.setScene(scene);
         stage.show();
-
     }
 
     static void setScene(String fxml) throws IOException {
+        setScene(fxml, null);
+    }
 
+    static void setScene(String fxml, Controller controller) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
+
+        if (controller != null)
+            fxmlLoader.setController(controller);
         Parent parent = fxmlLoader.load();
-        Controller controller = fxmlLoader.getController();
-        controller.setGUI(gui);
+        if (controller == null) {
+            controller = fxmlLoader.getController();
+            controller.setGUI(gui);
+        }
 
         scenes.add(fxml);
         controllers.add(controller);
         scene.setRoot(parent);
-
-        setScene(fxml);
-    }
-
-    static FXMLLoader getFxmlLoader(String fxml){
-        return new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
-    }
-
-    static void setScene(String fxml, Controller controller) {
-
     }
 
     static void setPreviousScene() throws IOException {
         scenes.pop();
-        scene.setRoot(loadFXML(scenes.peek()));
+        controllers.pop();
+        scene.setRoot(loadFXML(scenes.peek(), controllers.peek()));
     }
 
     private static Parent loadFXML(String fxml, Controller controller) throws IOException {
@@ -94,8 +102,6 @@ public class MainApplication extends Application {
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
         Parent parent = fxmlLoader.load();
-        Controller controller = fxmlLoader.getController();
-        controller.setGUI(gui);
         return parent;
     }
 
@@ -103,14 +109,6 @@ public class MainApplication extends Application {
     public void stop() throws Exception {
         super.stop();
         System.out.println("stop");
-    }
-
-    static public boolean getFirstSplashScreen() {
-        return firstSplashScreen;
-    }
-
-    static public void setFirstSplashScreen() {
-        firstSplashScreen = true;
     }
 
 

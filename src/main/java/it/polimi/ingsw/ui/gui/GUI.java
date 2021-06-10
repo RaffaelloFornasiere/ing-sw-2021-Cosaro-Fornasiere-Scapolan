@@ -1,7 +1,5 @@
 package it.polimi.ingsw.ui.gui;
 
-import com.sun.tools.javac.Main;
-import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
@@ -21,47 +19,91 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GUI extends UI {
-    String leaderID;
-    String playerID;
 
+class LockWrap<T> {
+    private T item;
 
+    LockWrap(T item) {
+        this.item = item;
+    }
 
-
-    GUI() {
-        MainApplication.setGui(this);
-        try {
-            MainApplication.setScene("splashscreen");
-        } catch (IOException e) {
-            e.printStackTrace();
+    public T getWaitIfNull() throws InterruptedException {
+        T res;
+        synchronized (this) {
+            while (item == null)
+                this.wait();
+            res = item;
         }
-        Application.launch(MainApplication.class);
+        return res;
+    }
 
+    public T getItem(){
+        return item;
+    }
+
+    public void setItem(T item) {
+        synchronized (this) {
+            this.item = item;
+            notifyAll();
+        }
+    }
+}
+
+public class GUI extends UI {
+
+    private LockWrap<String> leaderID = new LockWrap<>(null);
+    private LockWrap<String> playerID = new LockWrap<>(null);
+    private LockWrap<InetAddress> serverAddress = new LockWrap(null);
+    private LockWrap<Integer> serverPort;
+
+
+    ServerSettingsController serverSettingsController;
+    LoginController loginController;
+    SplashScreenController splashScreenController;
+    LobbyController lobbyController;
+    MainViewController mainViewController;
+
+
+    public GUI() {
+
+        serverSettingsController = new ServerSettingsController(this);
+        loginController = new LoginController(this);
+        splashScreenController = new SplashScreenController(this);
+        lobbyController = new LobbyController(this);
+        mainViewController = new MainViewController(this);
+
+        MainApplication.setGui(this);
+        MainApplication.setFirstScene("splashscreen", splashScreenController);
+        Application.launch(MainApplication.class);
     }
 
     public void setLoginData(String playerID, String leaderID) {
-        this.playerID = playerID;
-        this.leaderID = leaderID;
+        this.playerID.setItem(playerID);
+        this.leaderID.setItem(leaderID);
     }
 
     public InetAddress getServerAddress() {
-        return serverAddress;
+        InetAddress res = null;
+        try {
+            res = serverAddress.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     public void setServerAddress(InetAddress serverAddress) {
-        this.serverAddress = serverAddress;
+        this.serverAddress.setItem(serverAddress);
     }
 
-    public int getServerPort() {
-        return serverPort;
+
+    public int getServerPort() throws InterruptedException {
+        return serverPort.getWaitIfNull();
     }
 
     public void setServerPort(int serverPort) {
-        this.serverPort = serverPort;
+        this.serverPort.setItem(serverPort);
     }
-
-    private InetAddress serverAddress;
-    private int serverPort;
 
 
 //   #######  ##     ## ######## ########  ########  #### #######   ########  ######
@@ -94,27 +136,54 @@ public class GUI extends UI {
 
     @Override
     public InetAddress askIP() {
-        return serverAddress;
+        InetAddress res = null;
+        try {
+            res = serverAddress.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override
     public boolean askIfNewLobby() {
-        return leaderID==null;
+        return leaderID.getItem() == null;
     }
 
     @Override
     public String askUserID() {
-        return playerID;
+        String res = null;
+        try {
+            res = playerID.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override
     public String askLeaderID() {
-        return leaderID;
+        String res = null;
+        try {
+            res = leaderID.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @Override
+    public void invalidateUsername() {
+        playerID.setItem(null);
     }
 
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
-
+        try {
+            MainApplication.setScene("lobby", lobbyController);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -124,7 +193,11 @@ public class GUI extends UI {
 
     @Override
     public void beginGame() {
-
+        try {
+            MainApplication.setScene("mainview", mainViewController);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -136,6 +209,7 @@ public class GUI extends UI {
     public void ack() {
 
     }
+
 
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {

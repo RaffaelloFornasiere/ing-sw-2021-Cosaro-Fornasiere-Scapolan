@@ -292,6 +292,7 @@ public class NetworkAdapter {
         UsernameError event = (UsernameError) evt.getNewValue();
         System.out.println("Received" + event.getEventName());
 
+        view.invalidateUsername();
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);
     }

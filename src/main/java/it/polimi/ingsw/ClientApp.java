@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.ui.cli.CLI;
+import it.polimi.ingsw.ui.gui.GUI;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -15,7 +16,7 @@ public class ClientApp
 {
     public static void main( String[] args )
     {
-        UI ui = new CLI();
+        UI ui = new GUI();
         NetworkAdapter networkAdapter = connectToServer(ui);
         ui.setClient(networkAdapter);
 

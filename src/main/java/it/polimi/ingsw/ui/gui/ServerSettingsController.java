@@ -29,6 +29,8 @@ public class ServerSettingsController extends Controller implements Initializabl
     @FXML
     TextField hostnameTextField;
 
+    public ServerSettingsController(GUI gui){super(gui);}
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         portText.textProperty().addListener(new ChangeListener<String>() {
@@ -72,7 +74,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onNext() throws IOException {
-        MainApplication.setScene("login");
+        MainApplication.setScene("login", gui.loginController);
     }
 
     public void onServerChanged(ActionEvent event) {

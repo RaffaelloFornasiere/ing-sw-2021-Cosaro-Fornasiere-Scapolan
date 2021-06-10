@@ -11,7 +11,10 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@stylesheets/ServerSettings.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.ui.gui.ServerSettingsController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0"
+            stylesheets="@stylesheets/ServerSettings.css"
+            xmlns="http://javafx.com/javafx/16"
+            xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="130.0" layoutY="14.0" text="Game server settings">
          <font>

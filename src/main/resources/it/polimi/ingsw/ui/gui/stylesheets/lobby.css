@@ -20,7 +20,7 @@
 
 
 
-.GridPlayer{
+.PanePlayer{
     -fx-background-color: #80808054;
     -fx-background-radius: 30px;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
@@ -29,6 +29,7 @@
 #Owner {
     -fx-border-radius: 30px;
 }
+
 .PlayerLabel{
     -fx-font-size: 11pt;
     -fx-font-weight: bold;
@@ -53,3 +54,6 @@
     -fx-background-color: #848484;
     -fx-text-fill: #393939;
 }
+
+
+
