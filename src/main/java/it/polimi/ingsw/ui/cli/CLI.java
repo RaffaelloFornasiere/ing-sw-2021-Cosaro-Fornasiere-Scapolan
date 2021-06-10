@@ -6,6 +6,7 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
@@ -102,45 +103,14 @@ public class CLI extends UI {
             displayPanel.show();
         }
 
-        AtomicInteger n = new AtomicInteger(1);
-        option_itsColor.stream().forEach(option -> {
-
-            builder.append("╔═" + resetColor);
-            IntStream.range(0, option.getKey().length()).forEach(letter -> builder.append("═"));
-            builder.append(resetColor + "═╗  ");
-        });
-        builder.append("\n");
-
-        option_itsColor.stream().forEach(option -> {
-            String color = option.getValue();
-            builder.append("║ " + color);
-            builder.append(option.getKey());
-            builder.append(resetColor + " ║  ");
-        });
-        builder.append("\n");
-
-        option_itsColor.stream().forEach(option -> {
-            builder.append("╚═" + resetColor);
-            IntStream.range(0, option.getKey().length()).forEach(letter -> builder.append("═"));
-            builder.append(resetColor + "═╝  ");
-        });
-        builder.append("\n");
-
-        option_itsColor.stream().forEach(option -> {
-            builder.append("  " + resetColor);
-            builder.append(n.get());
-            IntStream.range(0, option.getKey().length() - 1).forEach(letter -> builder.append(" "));
-            builder.append(resetColor + "    ");
-            n.getAndIncrement();
-        });
-        builder.append("\n");
+        builder.append(generateForm(option_itsColor, resetColor));
 
         DrawableObject obj = new DrawableObject(builder.toString(), 0, 0);
         Panel panel = new Panel(1000, (int) obj.getHeight() + 3, out);
         panel.addItem(obj);
         panel.show();
 
-        int size = n.intValue() - 1;
+        int size = option_itsColor.size();
         int m = numberOfOptionsToChose;
         out.println("ENTER THE NUMBER OF THE SELECTED ITEMS");
         String inputString;
@@ -177,10 +147,169 @@ public class CLI extends UI {
         if (response.equals("YES") || response.equals("Y")) {
             return inputs;
         } else {
-            return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, "");
+            return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
         }
 
     }
+
+    /*private static String generateFormORIGINAL(ArrayList<Pair<String, String>> option_itsColor, String resetColor) {
+        StringBuilder builder = new StringBuilder();
+        AtomicInteger n = new AtomicInteger(1);
+        option_itsColor.stream().forEach(option -> {
+
+            builder.append("╔═" + resetColor);
+            IntStream.range(0, option.getKey().length()).forEach(letter -> builder.append("═"));
+            builder.append(resetColor + "═╗  ");
+        });
+        builder.append("\n");
+
+        option_itsColor.stream().forEach(option -> {
+            String color = option.getValue();
+            builder.append("║ " + color);
+            builder.append(option.getKey());
+            builder.append(resetColor + " ║  ");
+        });
+        builder.append("\n");
+
+        option_itsColor.stream().forEach(option -> {
+            builder.append("╚═" + resetColor);
+            IntStream.range(0, option.getKey().length()).forEach(letter -> builder.append("═"));
+            builder.append(resetColor + "═╝  ");
+        });
+        builder.append("\n");
+
+        option_itsColor.stream().forEach(option -> {
+            builder.append("  " + resetColor);
+            builder.append(n.get());
+            IntStream.range(0, option.getKey().length() - 1).forEach(letter -> builder.append(" "));
+            builder.append(resetColor + "    ");
+            n.getAndIncrement();
+        });
+        builder.append("\n");
+
+        return builder.toString();
+    }*/
+
+    private static String generateForm(ArrayList<Pair<String, String>> option_itsColor, String resetColor) {
+        StringBuilder builderTop = new StringBuilder();
+        StringBuilder builderBot = new StringBuilder();
+        StringBuilder builderEnd = new StringBuilder();
+
+        int maxLines = option_itsColor.stream().map(Pair::getKey).map(s->s.chars().filter(ch -> ch == '\n').map(ch->1).sum()).max(Integer::compareTo).orElse(-1) + 1;
+        ArrayList<StringBuilder> buildersMid = new ArrayList<>();
+        for(int i=0; i<maxLines; i++){
+            buildersMid.add(new StringBuilder());
+        }
+
+        AtomicInteger n = new AtomicInteger(1);
+        option_itsColor.forEach(option -> {
+            String[] rows = option.getKey().split("\n");
+            int maxLength = Arrays.stream(rows).map(String::length).max(Integer::compare).orElse(0);
+
+            builderTop.append("╔═" + resetColor);
+            IntStream.range(0, maxLength).forEach(letter -> builderTop.append("═"));
+            builderTop.append(resetColor + "═╗  ");
+
+            String color = option.getValue();
+            for(int i=0; i<maxLines; i++) {
+                buildersMid.get(i).append("║ " + color);
+                if(i<rows.length) {
+                    buildersMid.get(i).append(rows[i]);
+                    for(int j=0; j<maxLength-rows[i].length(); j++){
+                        buildersMid.get(i).append(" ");
+                    }
+                }
+                else {
+                    for(int j=0; j<maxLength; j++){
+                        buildersMid.get(i).append(" ");
+                    }
+                }
+                buildersMid.get(i).append(resetColor + " ║  ");
+            }
+
+            builderBot.append("╚═" + resetColor);
+            IntStream.range(0, maxLength).forEach(letter -> builderBot.append("═"));
+            builderBot.append(resetColor + "═╝  ");
+
+            builderEnd.append("  " + resetColor);
+            builderEnd.append(n.get());
+            IntStream.range(0, maxLength-2).forEach(letter -> builderEnd.append(" "));
+            builderEnd.append(resetColor + "    ");
+            n.getAndIncrement();
+        });
+        builderTop.append('\n');
+        for(StringBuilder stringBuilder: buildersMid){
+            builderTop.append(stringBuilder).append('\n');
+        }
+        builderTop.append(builderBot).append('\n');
+        builderTop.append(builderEnd);
+
+        return builderTop.toString();
+    }
+
+    public static ArrayList<Integer> displaySelectionFormVariableChoices(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int maxNumberOfOptionsToChose, String message) {
+        String resetColor = Color.reset();
+        StringBuilder builder = new StringBuilder();
+        builder.append(message);
+        builder.append("YOU HAVE TO CHOOSE AT MOST " + maxNumberOfOptionsToChose +
+                " OF THE FOLLOWING OPTIONS \n");
+
+        if (displayPanel != null) {
+            displayPanel.show();
+        }
+
+        builder.append(generateForm(option_itsColor, resetColor));
+
+        DrawableObject obj = new DrawableObject(builder.toString(), 0, 0);
+        Panel panel = new Panel(1000, (int) obj.getHeight() + 3, out);
+        panel.addItem(obj);
+        panel.show();
+
+        int size = option_itsColor.size();
+        int m = maxNumberOfOptionsToChose;
+        out.println("ENTER THE NUMBER OF THE SELECTED ITEMS. ENTER '0' OR 'STOP' TO STOP ");
+        String inputString;
+        ArrayList<Integer> inputs = new ArrayList<>();
+        while (m > 0) {
+            inputString = in.next();
+            if (inputString.matches("-?\\d+")) {
+                int input = Integer.parseInt(inputString);
+                if (inputs.contains(input)) {
+                    out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
+                } else if (input < 0 || input > size) {
+                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                } else if(input==0){
+                    m=0;
+                } else {
+                    inputs.add(input);
+                    m--;
+                }
+            } else {
+                if(inputString.toUpperCase().equals("STOP")) m=0;
+                else out.println("PLEASE INSERT A NUMBER");
+            }
+        }
+
+        out.println("YOU HAVE CHOSEN: \n");
+        StringBuilder builder2 = new StringBuilder();
+        inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
+
+        inputs.forEach(index -> {
+            builder2.append(index + 1 + " -> " + option_itsColor.get(index).getValue() + option_itsColor.get(index).getKey() + Color.reset() + "\n");
+        });
+        out.println(builder2.toString());
+
+        out.println("DO YOU AGREE? yes/no");
+        String response = in.next().toUpperCase();
+        in.nextLine();
+        if (response.equals("YES") || response.equals("Y")) {
+            return inputs;
+        } else {
+            return displaySelectionFormVariableChoices(option_itsColor, displayPanel, maxNumberOfOptionsToChose, message);
+        }
+
+    }
+
 // test of displaySelectionForm()
 
    /* public static void main(String[] args) {
@@ -436,11 +565,6 @@ public class CLI extends UI {
 
       }
   */
-    public void updateDepositLeaderPowerState(String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
-        out.println(thisPlayer + " , THE DEPOSIT LEADER POWER OF " + leaderCardID.toUpperCase() + "\n HAS BEEN UPDATED! CHECK IT OUT!");
-        playerStates.get(thisPlayer).leaderCards.get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
-        out.println(playerStates.get(thisPlayer).leaderCards.get(leaderCardID).toString());
-    }
 
     public void displayDevCardSlotError(String devCardID, int cardSlot) {
         out.println("SORRY, " + devCardID + " CANNOT BE ADDED TO THE SELECTED SLOT, SINCE IT \n  DOES NOT FULFILL THE SPECIFIED LEVEL REQUIREMENTS");
@@ -598,6 +722,29 @@ public class CLI extends UI {
 
     public void displaySimpleChoseResourcesForm() {
 
+    }
+
+    public static String productionPowerToString(ProductionPower productionPower, String color){
+        StringBuilder build= new StringBuilder();
+        build.append(color+ "╔════"+color+color+"═════════╗" + Color.reset() + "\n");
+        for (Resource resource : productionPower.getConsumedResources().keySet()) {
+            build.append(color + "║     " + CLI.colorResource(resource) + productionPower.getConsumedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+        }
+        if(productionPower.getRequiredResourceOfChoice()!=0){
+            build.append(color + "║     "+color+ + productionPower.getRequiredResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
+        }
+        build.append(color+ "║   "+color+"--->>> "+color+ "   ║ " + Color.reset() + "\n");
+        for (Resource resource : productionPower.getProducedResources().keySet()) {
+            build.append(color + "║     " + CLI.colorResource(resource) + productionPower.getProducedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+        }
+        if(productionPower.getFaithPointsProduced()!=0){
+            build.append(color + "║     "+color+ + productionPower.getFaithPointsProduced() + " " +"+"  + color + "     ║" + Color.reset() + "\n" );
+        }
+        if(productionPower.getProducedResourceOfChoice()!=0){
+            build.append(color + "║     "+color+ + productionPower.getProducedResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
+        }
+        build.append(color+ "╚════"+color+color+"═════════╝" + Color.reset() + "\n");
+        return build.toString();
     }
 
     @Override
@@ -1338,7 +1485,7 @@ public class CLI extends UI {
         return event;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         HashMap<String, DashBoardView> dashboards = new HashMap<>();
         DepotState depot = new DepotState(Resource.COIN, 3, 3);
         DepotState depot2 = new DepotState(Resource.SERVANT, 4, 2);
@@ -1418,11 +1565,21 @@ public class CLI extends UI {
         out.println("event sent");
 
 
-    }
+    }*/
 
     @Override
-    public ActivateProductionEvent askForDevCardToProduce() {
-        return null;
+    public ActivateProductionEvent askForProductionPowersToUse() {
+        playerStates.get(thisPlayer).getDashBoard().displayPersonalProductionPower(out);
+        playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
+
+        ArrayList<Pair<String, String>> opt = new ArrayList<>();
+        opt.add(new Pair<>("Personal production power", Color.reset()));
+        for(String devCardID: playerStates.get(thisPlayer).getDashBoard().getTopDevCards()){
+            opt.add(new Pair<>(devCardID, Color.reset()));
+        }
+        ArrayList<Integer> powerChosen = displaySelectionFormVariableChoices(opt, null, opt.size(), "Choose which production power to activate");
+
+        return new ActivateProductionEvent(thisPlayer, powerChosen.stream().filter(x->x!=0).map(i->opt.get(i).getKey()).collect(Collectors.toCollection(ArrayList::new)), powerChosen.contains(0));
     }
 
     @Override
@@ -1486,7 +1643,7 @@ public class CLI extends UI {
                     event = ev;
                 } else if (b == 3) {//PRODUCE
                     out.println(selectedAction.getDescription());
-                    ActivateProductionEvent ev = askForDevCardToProduce();
+                    ActivateProductionEvent ev = askForProductionPowersToUse();
                     event = ev;
                 } else if (b == 4) {//LEADER_ACTION
 
@@ -1541,7 +1698,7 @@ public class CLI extends UI {
                     event = ev;
                 } else if (b == 3) {//PRODUCE
                     out.println(selectedAction.getDescription());
-                    ActivateProductionEvent ev = askForDevCardToProduce();
+                    ActivateProductionEvent ev = askForProductionPowersToUse();
                     event = ev;
                 }
 
@@ -1599,6 +1756,17 @@ public class CLI extends UI {
 
         return event;
     }
+
+    @Override
+    public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
+        playerStates.get(playerID).getLeaderCards().get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
+    }
+
+    /*public void updateDepositLeaderPowerState(String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
+        out.println(thisPlayer + " , THE DEPOSIT LEADER POWER OF " + leaderCardID.toUpperCase() + "\n HAS BEEN UPDATED! CHECK IT OUT!");
+        playerStates.get(thisPlayer).leaderCards.get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
+        out.println(playerStates.get(thisPlayer).leaderCards.get(leaderCardID).toString());
+    }*/
 
     @Override
     public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching

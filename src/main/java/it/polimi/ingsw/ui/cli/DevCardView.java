@@ -23,6 +23,11 @@ public class DevCardView {
             e.printStackTrace();
         }
     }
+
+    public DevCard getCard() {
+        return card;
+    }
+
     private String translateColor(CardColor c){
         if (c==CardColor.BLUE) return Color.BLUE.getAnsiCode();
         if (c==CardColor.VIOLET) return Color.RED.getAnsiCode();

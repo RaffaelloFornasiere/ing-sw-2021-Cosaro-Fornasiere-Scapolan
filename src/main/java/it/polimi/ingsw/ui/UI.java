@@ -86,13 +86,15 @@ public abstract class UI {
 
     public abstract BuyDevCardsEvent askForDevCard();
 
-    public abstract ActivateProductionEvent askForDevCardToProduce();
+    public abstract ActivateProductionEvent askForProductionPowersToUse();
 
     public abstract String askForLeaderCardToDiscard() throws NotPresentException;
 
     public abstract String askForLeaderCardToActivate() throws NotPresentException;
 
-    public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) ;
+    public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
+
+    public abstract void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources);
 
 
     /**
