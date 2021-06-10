@@ -179,7 +179,8 @@ public class NetworkAdapter {
     }
 
     public void DepositLeaderPowerStateEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        DepositLeaderPowerStateEvent event = (DepositLeaderPowerStateEvent) evt.getNewValue();
+        view.updateLeaderCardDepositState(event.getPlayerId(), event.getLeaderCardID(), event.getLeaderPowerIndex(), event.getStoredResources());
     }
 
     public void DevCardGridStateEventHandler(PropertyChangeEvent evt) {

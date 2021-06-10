@@ -4,6 +4,7 @@ import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -138,6 +139,18 @@ public class DashBoardView {
         return strongBoxBuilder.toString();
     }
 
+    public String personalProductionToString(){
+        return CLI.productionPowerToString(personalProductionPower, Color.reset());
+    }
+
+    public void displayPersonalProductionPower(PrintWriter out){
+        String personalProductionPowerString = personalProductionToString();
+        ArrayList<DrawableObject> drawableObjects = new ArrayList<>();
+        drawableObjects.add(new DrawableObject("PERSONAL PRODUCTION POWER", 0, 0));
+        drawableObjects.add(new DrawableObject(personalProductionPowerString, 0, 2));
+        new Panel(drawableObjects, out).show();
+    }
+
     public void displayDevCardSlots() {
         String color = Color.WHITE.getAnsiCode();
 
@@ -178,13 +191,16 @@ public class DashBoardView {
 
         String warehouseString = warehouseToString();
         String strongBoxString = strongBoxToString();
+        String personalProductionPowerString = personalProductionToString();
 
         DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
-        DrawableObject strongBox = new DrawableObject(strongBoxString, 0, (int) warehouse.getHeight() + 2);
-        Panel panel = new Panel(400, (int) warehouse.getHeight() + (int) strongBox.getHeight() + 3, System.out);
+        DrawableObject strongBox = new DrawableObject(strongBoxString, 0, warehouse.getHeight() + 2);
+        DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight()+strongBox.getHeight());
+        Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight() + personalProductionPower.getHeight() + 4, System.out);
 
         panel.addItem(warehouse);
         panel.addItem(strongBox);
+        panel.addItem(personalProductionPower);
         panel.show();
         displayDevCardSlots();
 
@@ -195,7 +211,7 @@ public class DashBoardView {
         DepotState depot = new DepotState(Resource.COIN, 3, 0);
         DepotState depot2 = new DepotState(Resource.SERVANT, 4, 2);
         DepotState depot3 = new DepotState(Resource.SHIELD, 6, 4);
-        ArrayList<DepotState> totalLevels = new ArrayList();
+        ArrayList<DepotState> totalLevels = new ArrayList<>();
         totalLevels.add(depot);
         totalLevels.add(depot2);
         totalLevels.add(depot3);

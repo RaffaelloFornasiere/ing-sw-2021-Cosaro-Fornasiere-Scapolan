@@ -169,7 +169,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public ActivateProductionEvent askForDevCardToProduce() {
+    public ActivateProductionEvent askForProductionPowersToUse() {
         return null;
     }
 
@@ -186,6 +186,11 @@ public class GUI extends UI {
     @Override
     public Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
         return null;
+    }
+
+    @Override
+    public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
+
     }
 
     @Override
