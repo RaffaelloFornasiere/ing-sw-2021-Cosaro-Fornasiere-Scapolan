@@ -29,9 +29,9 @@ public class DevCardGrid extends Observable {
     }
 
     public DevDeck[][] getDecks() {
-        DevDeck[][] returns =  new DevDeck[getColumnsNumber()][getRowsNumber()];
-        for(int i=0; i<getColumnsNumber(); i++)
-            if (getRowsNumber() >= 0) System.arraycopy(decks[i], 0, returns[i], 0, getRowsNumber());
+        DevDeck[][] returns =  new DevDeck[getRowsNumber()][getColumnsNumber()];
+        for(int i=0; i<getRowsNumber(); i++)
+            if (getColumnsNumber() >= 0) System.arraycopy(decks[i], 0, returns[i], 0, getColumnsNumber());
 
         return returns;
     }
@@ -44,13 +44,13 @@ public class DevCardGrid extends Observable {
         return decks.length;
     }
 
-    public void push(DevCard card, int column, int row) {
-        if (column<0 || column>=getColumnsNumber())
-            throw new IllegalArgumentException("Column index out of bounds");
+    public void push(DevCard card, int row, int column) {
         if (row<0 || row>getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
+        if (column<0 || column>=getColumnsNumber())
+            throw new IllegalArgumentException("Column index out of bounds");
 
-        decks[column][row].push(card);
+        decks[row][column].push(card);
         notifyObservers();
     }
 
@@ -58,13 +58,13 @@ public class DevCardGrid extends Observable {
         push(card, indexes.getKey(), indexes.getValue());
     }
 
-    public DevCard pop(int column, int row) throws NotPresentException {
-        if (column<0 || column>=getColumnsNumber())
-            throw new IllegalArgumentException("Column index out of bounds");
+    public DevCard pop(int row, int column) throws NotPresentException {
         if (row<0 || row>getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
+        if (column<0 || column>=getColumnsNumber())
+            throw new IllegalArgumentException("Column index out of bounds");
 
-        DevCard ret = decks[column][row].pop();
+        DevCard ret = decks[row][column].pop();
         notifyObservers();
         return ret;
     }
@@ -73,21 +73,21 @@ public class DevCardGrid extends Observable {
         return pop(indexes.getKey(), indexes.getValue());
     }
 
-    public DevCard topCard(int column, int row) throws NotPresentException {
-        if (column<0 || column>=getColumnsNumber())
-            throw new IllegalArgumentException("Column index out of bounds");
+    public DevCard topCard(int row, int column) throws NotPresentException {
         if (row<0 || row>getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
+        if (column<0 || column>=getColumnsNumber())
+            throw new IllegalArgumentException("Column index out of bounds");
 
-        return decks[column][row].topCard();
+        return decks[row][column].topCard();
     }
 
     public DevCard topCard(Pair<Integer, Integer> indexes) throws NotPresentException {
         return topCard(indexes.getKey(), indexes.getValue());
     }
 
-    public Pair<Integer, Integer> getColRowOfCardFromID(String devCardID) throws NotPresentException {
-        for (int i = 0; i < getColumnsNumber(); i++) {
+    public Pair<Integer, Integer> getRowColOfCardFromID(String devCardID) throws NotPresentException {
+        for (int i = 0; i < getRowsNumber(); i++) {
             for (int j = 0; j < getColumnsNumber(); j++) {
                 if(decks[i][j].topCard().getCardID().equals(devCardID))
                     return new Pair<>(i,j);

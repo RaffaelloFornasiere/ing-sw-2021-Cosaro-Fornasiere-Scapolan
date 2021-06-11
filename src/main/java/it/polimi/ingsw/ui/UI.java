@@ -2,14 +2,18 @@ package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.TurnState;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ public abstract class UI {
     protected NetworkAdapter client;
     protected String thisPlayer;
 
-    public void setClient(NetworkAdapter networkAdapter){
+    public void setClient(NetworkAdapter networkAdapter) {
         this.client = networkAdapter;
     }
 
@@ -37,12 +41,17 @@ public abstract class UI {
 
     //generics
     abstract public void printMessage(String message);
+
     abstract public void printError(String error);
+
     abstract public void printWarning(String warning);
+
     public abstract InetAddress askIP();
 
     public abstract boolean askIfNewLobby();
+
     public abstract String askUserID();
+
     public abstract String askLeaderID();
 
     public abstract void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID);
@@ -50,7 +59,9 @@ public abstract class UI {
     public abstract void displayWaitingForPlayerToSetupState(String playerID);
 
     abstract public void beginGame();
+
     abstract public void setUserTurnActive(boolean active);
+
     abstract public void ack();
 
     //game related
@@ -78,11 +89,21 @@ public abstract class UI {
 
     public abstract BuyDevCardsEvent askForDevCard();
 
+    public abstract ActivateProductionEvent askForProductionPowersToUse();
+
+    public abstract String askForLeaderCardToDiscard() throws NotPresentException;
+
+    public abstract String askForLeaderCardToActivate() throws NotPresentException;
+
+    public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
+
+    public abstract void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources);
 
 
     /**
      * Asks the user to select which leader powers use with which marbles
-     * @param marbles white marbles obtained from market
+     *
+     * @param marbles       white marbles obtained from market
      * @param leaderCardIDs active leader cards
      * @return a hash with the required matching
      */
@@ -90,18 +111,19 @@ public abstract class UI {
 
     /**
      * Asks the user to give the displacement of marbles
+     *
      * @param resources resources to put in whareouse
      * @return 3 arraylist with the marbles
      */
-    abstract public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource,Integer> resources);
+    abstract public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources);
 
     /**
      * ask which active leader cards use
+     *
      * @param leaderCards active leader cards
      * @return the array containing the leader cards that the user wants to use
      */
     abstract public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards);
-
 
 
     abstract public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required);

@@ -1,15 +1,18 @@
 package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
@@ -249,6 +252,31 @@ public class GUI extends UI {
     @Override
     public BuyDevCardsEvent askForDevCard() {
         return null;
+    }
+
+    @Override
+    public ActivateProductionEvent askForProductionPowersToUse() {
+        return null;
+    }
+
+    @Override
+    public String askForLeaderCardToDiscard() {
+        return null;
+    }
+
+    @Override
+    public String askForLeaderCardToActivate() {
+        return null;
+    }
+
+    @Override
+    public Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+        return null;
+    }
+
+    @Override
+    public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
+
     }
 
     @Override

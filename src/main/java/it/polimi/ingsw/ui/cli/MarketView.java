@@ -1,6 +1,5 @@
 package it.polimi.ingsw.ui.cli;
 
-import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.Marble;
 
 import java.util.Arrays;
@@ -9,7 +8,17 @@ import java.util.stream.IntStream;
 public class MarketView {
     private Marble marbleLeft;
     private Marble[][] grid;
+
+    public int getRows() {
+        return rows;
+    }
+
     private int rows;
+
+    public int getCols() {
+        return cols;
+    }
+
     private int cols;
 
     MarketView(Marble left, Marble[][] grid, int rows, int cols) {
@@ -23,12 +32,6 @@ public class MarketView {
         this.cols = cols;
     }
 
-    private String translateColor(CardColor c) {
-        if (c == CardColor.BLUE) return Color.BLUE.getAnsiCode();
-        if (c == CardColor.VIOLET) return Color.RED.getAnsiCode();
-        if (c == CardColor.GREEN) return Color.GREEN.getAnsiCode();
-        else return Color.YELLOW.getAnsiCode();
-    }
 
     private String colorMarble(Marble marble) {
         if (marble == Marble.BLUE) return Color.BLUE.getAnsiCode();
@@ -47,10 +50,14 @@ public class MarketView {
             IntStream.range(0, cols).forEach(col -> {
                 builder.append(colorMarble(grid[row][col]) + "●" + "   " + Color.reset());
             });
-            builder.append("\uD83E\uDC44" + "\n\n");
+            builder.append("\uD83E\uDC44"+" "+ (row+1) + "\n\n");
         });
         IntStream.range(0, cols).forEach(col -> {
             builder.append(Color.reset() + "🡅" + "  " + Color.reset());
+        });
+        builder.append("\n");
+        IntStream.range(0, cols).forEach(col -> {
+            builder.append(Color.reset() + (col+1) + "   " + Color.reset());
         });
         return builder.toString();
     }
