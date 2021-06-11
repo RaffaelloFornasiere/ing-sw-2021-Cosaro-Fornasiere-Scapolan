@@ -87,6 +87,17 @@ public class MatchState extends Observable {
         notifyObservers();
     }
 
+    public void setWaitingForSomething(){
+        savedTurnState = turnState;
+        this.turnState = TurnState.WAITING_FOR_SOMETHING;
+    }
+
+    private TurnState savedTurnState = TurnState.WAITING_FOR_PLAYER;
+
+    public void somethingArrived(){
+        turnState = savedTurnState;
+    }
+
     public void setLastRound(){
         this.lastRound = true;
     }

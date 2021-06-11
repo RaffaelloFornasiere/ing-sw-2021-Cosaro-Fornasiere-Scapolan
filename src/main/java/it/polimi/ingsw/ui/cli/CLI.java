@@ -43,7 +43,6 @@ public class CLI extends UI {
         playerStates = new HashMap<>();
     }
 
-
     public void displayBadRequest(String playerID, String description, Event cause) {
         out.println(" Player" + playerID + ", your request, caused by event:" + cause.getEventName() + " cannot be satisfied:"
                 + description);
@@ -1750,7 +1749,7 @@ public class CLI extends UI {
         Event event = null;
         switch (turnState) {
             case START -> {
-                if (thisPlayer.equals(playerID)) {
+                if (!thisPlayer.equals(playerID)) {
                     out.println(playerID + " " + turnState.getDescription());
                     displayOthers();
                 } else {
@@ -1817,7 +1816,7 @@ public class CLI extends UI {
 
 
             case AFTER_LEADER_CARD_ACTION -> {
-                if (thisPlayer.equals(playerID)) {
+                if (!thisPlayer.equals(playerID)) {
                     out.println(playerID + " " + turnState.getDescription());
                     displayOthers();
                 } else {
@@ -1858,7 +1857,7 @@ public class CLI extends UI {
 
 
             case AFTER_MAIN_ACTION -> {
-                if (thisPlayer.equals(playerID)) {
+                if (!thisPlayer.equals(playerID)) {
                     out.println(playerID + " " + turnState.getDescription());
                     displayOthers();
                 } else {
@@ -1906,7 +1905,7 @@ public class CLI extends UI {
                 break;
             }
             case END_OF_TURN -> {
-                if (thisPlayer.equals(playerID)) {
+                if (!thisPlayer.equals(playerID)) {
                     out.println(playerID + " " + turnState.getDescription());
                     displayOthers();
                 } else {

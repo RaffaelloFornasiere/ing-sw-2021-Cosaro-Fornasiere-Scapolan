@@ -37,18 +37,13 @@ public class Panel {
     }
 
     public Panel(ArrayList<DrawableObject> drawableObjects, OutputStream os) {
-        Stream<DrawableObject> drawableObjectStream = drawableObjects.stream();
-        height = drawableObjectStream.map(drawableObject -> drawableObject.getY() + drawableObject.getHeight()).max(Integer::compareTo).orElse(0);
-        width = drawableObjectStream.map(drawableObject -> drawableObject.getX() + drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
-        drawableObjectStream.forEach(this::addItem);
-        this.writer = new PrintWriter(os);
+        this(drawableObjects, new PrintWriter(os));
     }
 
     public Panel(ArrayList<DrawableObject> drawableObjects, PrintWriter printWriter) {
-        Stream<DrawableObject> drawableObjectStream = drawableObjects.stream();
-        height = drawableObjectStream.map(drawableObject -> drawableObject.getY() + drawableObject.getHeight()).max(Integer::compareTo).orElse(0);
-        width = drawableObjectStream.map(drawableObject -> drawableObject.getX() + drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
-        drawableObjectStream.forEach(this::addItem);
+        height = drawableObjects.stream().map(drawableObject -> drawableObject.getY() + drawableObject.getHeight()).max(Integer::compareTo).orElse(0);
+        width = drawableObjects.stream().map(drawableObject -> drawableObject.getX() + drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
+        drawableObjects.forEach(this::addItem);
         this.writer = printWriter;
     }
 

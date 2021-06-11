@@ -223,7 +223,6 @@ public class NetworkAdapter {
 
     public void LobbyErrorHandler(PropertyChangeEvent evt) {
         LobbyError event = (LobbyError) evt.getNewValue();
-        System.out.println("Received" + event.getEventName());
 
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);
@@ -231,7 +230,6 @@ public class NetworkAdapter {
 
     public void LobbyStateEventHandler(PropertyChangeEvent evt) {
         LobbyStateEvent event = (LobbyStateEvent) evt.getNewValue();
-        System.out.println("Received" + event.getEventName());
 
         view.displayLobbyState(event.getLeaderID(), event.getOtherPLayersID());
     }
@@ -242,11 +240,9 @@ public class NetworkAdapter {
     }
 
     public void MatchStateEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
         MatchStateEvent event = (MatchStateEvent) evt.getNewValue();
         Event ev = view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
-        send(ev);
-        System.out.println("event sent");
+        if(ev!=null) send(ev);
     }
 
     public void OrganizeResourcesEventHandler(PropertyChangeEvent evt) {
@@ -270,7 +266,6 @@ public class NetworkAdapter {
     }
 
     public void ResourceSelectionEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
         ResourceSelectionEvent event = (ResourceSelectionEvent) evt.getNewValue();
         var selection = view.getResourcesSelection(event.getRequired());
         send(new ResourceSelectionEvent(playerID, null, selection.get(0), selection.get(1)));
