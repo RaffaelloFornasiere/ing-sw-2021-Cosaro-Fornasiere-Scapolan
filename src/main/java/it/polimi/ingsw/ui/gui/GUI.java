@@ -7,9 +7,11 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizat
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
+import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -20,35 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-class LockWrap<T> {
-    private T item;
-
-    LockWrap(T item) {
-        this.item = item;
-    }
-
-    public T getWaitIfNull() throws InterruptedException {
-        T res;
-        synchronized (this) {
-            while (item == null)
-                this.wait();
-            res = item;
-        }
-        return res;
-    }
-
-    public T getItem(){
-        return item;
-    }
-
-    public void setItem(T item) {
-        synchronized (this) {
-            this.item = item;
-            notifyAll();
-        }
-    }
-}
-
 public class GUI extends UI {
 
     private LockWrap<String> leaderID = new LockWrap<>(null);
@@ -56,6 +29,8 @@ public class GUI extends UI {
     private LockWrap<InetAddress> serverAddress = new LockWrap(null);
     private LockWrap<Integer> serverPort;
 
+
+    private String PlayerImage;
 
     ServerSettingsController serverSettingsController;
     LoginController loginController;
@@ -74,7 +49,22 @@ public class GUI extends UI {
 
         MainApplication.setGui(this);
         MainApplication.setFirstScene("splashscreen", splashScreenController);
-        Application.launch(MainApplication.class);
+        (new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                Application.launch(MainApplication.class);
+            }
+        }).start();
+    }
+
+
+    public String getPlayerImage() {
+        return PlayerImage;
+    }
+
+    public void setPlayerImage(String playerImage) {
+        PlayerImage = playerImage;
     }
 
     public void setLoginData(String playerID, String leaderID) {

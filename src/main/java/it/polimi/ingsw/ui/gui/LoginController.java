@@ -19,6 +19,8 @@ public class LoginController extends Controller implements Initializable {
 
     LinkedList<String> playerImages;
     ListIterator<String> currentImage;
+
+
     public LoginController(GUI gui) {
         super(gui);
         playerImages = new LinkedList<String>();
@@ -58,7 +60,10 @@ public class LoginController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        playerImage.setImage(new Image(currentImage.next()));
+        if(gui.getPlayerImage() == null)
+            playerImage.setImage(new Image(currentImage.next()));
+        else
+            playerImage.setImage(new Image(gui.getPlayerImage()));
     }
 
     public void nextImage() {
@@ -100,6 +105,7 @@ public class LoginController extends Controller implements Initializable {
         else {
             noPlayerIDLabel.setOpacity(0);
             gui.setLoginData(playerIdTextField.getText(), leaderIdTextField.getText());
+            gui.setPlayerImage(playerImage.getImage().getUrl());
         }
     }
 
