@@ -765,8 +765,9 @@ public class CLI extends UI {
         //Selects only DepositLeaderPowers active
         ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
 
+        //TODO here must be changed how selected is handled
         leaderCardViews.stream().forEach(cardView -> {
-            if (cardView.getSelected()) {
+            if (false/*cardView.getSelected()*/) {
                 IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
                     LeaderPower power = cardView.getLeaderPowersActive().get(index);
                     if (power instanceof DepositLeaderPower)
@@ -1584,13 +1585,13 @@ public class CLI extends UI {
 
     @Override
     public String askForLeaderCardToDiscard() throws NotPresentException {
-        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
+        ArrayList<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
 
-        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be discarded");
+        if(leaderCardViews.size()==0) throw new NotPresentException("No leader card can be discarded");
 
-        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Pair<String, String>> choices = leaderCardViews.stream().map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
 
-        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
                 .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
 
         int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to discard").get(0);
@@ -1600,18 +1601,50 @@ public class CLI extends UI {
 
     @Override
     public String askForLeaderCardToActivate() throws NotPresentException {
-        Stream<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive());
+        ArrayList<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
 
-        if(leaderCardViews.count()==0) throw new NotPresentException("No leader card can be activated");
+        if(leaderCardViews.size()==0) throw new NotPresentException("No leader card can be activated");
 
-        ArrayList<Pair<String, String>> choices = leaderCardViews.map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Pair<String, String>> choices = leaderCardViews.stream().map(LeaderCardView::getIdCard).map(s->new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
 
-        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.map(LeaderCardView::toString)
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
                 .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
 
         int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to activate").get(0);
 
         return choices.get(choice).getKey();
+    }
+
+    @Override
+    public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
+        ArrayList<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
+
+        if(leaderCardViews.size()==0) throw new NotPresentException("No leader card is active");
+
+        ArrayList<Pair<String, String>> options = new ArrayList<>();
+        ArrayList<String> leaderCardIDs = new ArrayList<>();
+        ArrayList<Integer> leaderPowerIndexes = new ArrayList<>();
+        ArrayList<Boolean> leaderPowersSelectedState = new ArrayList<>();
+
+        for(LeaderCardView leaderCardView: leaderCardViews){
+            for(int i: leaderCardView.getSelectablePowersIndexes()){
+                options.add(new Pair<>(leaderCardView.getIdCard()+"\nPower "+i, Color.reset()));
+                leaderCardIDs.add(leaderCardView.getIdCard());
+                leaderPowerIndexes.add(i);
+                leaderPowersSelectedState.add(leaderCardView.getSelected(i));
+            }
+        }
+
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
+                .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<Integer> choices = displaySelectionFormVariableChoices(options, new Panel(drawableLeaderCards, out), options.size(), "Choose the leader powers to select");
+
+        ArrayList<LeaderPowerSelectStateEvent> ret = new ArrayList<>();
+        for(int choice: choices){
+            ret.add(new LeaderPowerSelectStateEvent(thisPlayer, leaderCardIDs.get(choice), leaderPowerIndexes.get(choice), !leaderPowersSelectedState.get(choice)));
+        }
+        return ret;
     }
 
 
@@ -1750,9 +1783,6 @@ public class CLI extends UI {
             out.println("MATCH HAS ENDED");
 
         }
-
-        ;
-
 
         return event;
     }

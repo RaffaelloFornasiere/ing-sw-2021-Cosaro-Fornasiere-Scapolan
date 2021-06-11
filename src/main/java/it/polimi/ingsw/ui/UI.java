@@ -2,10 +2,7 @@ package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
@@ -91,6 +88,8 @@ public abstract class UI {
     public abstract String askForLeaderCardToDiscard() throws NotPresentException;
 
     public abstract String askForLeaderCardToActivate() throws NotPresentException;
+
+    public abstract ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException;
 
     public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
 
