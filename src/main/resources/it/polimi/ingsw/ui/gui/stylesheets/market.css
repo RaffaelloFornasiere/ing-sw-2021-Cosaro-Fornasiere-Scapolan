@@ -1,11 +1,13 @@
-.root{
-    -fx-background-color: #393939;
+.root {
+    -fx-background-image: url(../images/MarketBackground.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+
 
 }
 
-.label{
-    -fx-text-fill: #848484;
-}
+
 .ErrorLabel{
     -fx-text-fill: #c20000;
     -fx-opacity: 0;
@@ -65,6 +67,14 @@
 }
 
 
+@font-face {
+    src: url(../fonts/OldstyleItalic.ttf);
+}
+
+.label{
+    -fx-font-family: "Old English Text MT";
+}
+
 .button:hover{
     -fx-background-color: #848484;
     -fx-text-fill: #393939;
@@ -80,30 +90,29 @@
 
 
 .arrow-button{
+    -fx-border-color: #ba8a54;
     -fx-background-color: transparent;
-    -fx-border-width: 1.5px;
-    -fx-padding: 0.25em;
-    -fx-shape: "M 0 -3.5 v 7 l 4 -3.5 z";
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0,0, 0);
+    -fx-shape: "M300 0L600 350H450V700H150V350H0L300 0Z";
 }
 
-.previousButton{
-    -fx-rotate: 180;
-}
-
-
-.nextButton{
-
+.arrow-button-left{
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
 }
 
 .arrow-button:hover{
-    /* Example make the arrow yellow if buttos was hovered*/
-    -fx-background-color: #848484;
-
+    -fx-background-color: #ba8a54;
 }
 
 .arrow-button:pressed{
-    /* And red if it was pressed, you can apply different effect
-     * like shadow , padding etc inside this rules.
-     */
-    -fx-background-color: #949494;
+    -fx-background-color: #d7a062;
+}
+
+.marble{
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0,0, 0);
+}
+
+#leftMarble{
+    /*-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 2, 0, 1, 4);*/
 }

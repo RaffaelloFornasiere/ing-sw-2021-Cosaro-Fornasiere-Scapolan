@@ -7,7 +7,7 @@
     -fx-text-fill: #848484;
 }
 
-#PortError{
+.errorLabel{
     -fx-text-fill: #d20000;
     -fx-opacity: 0;
 }
@@ -18,7 +18,7 @@
     -fx-border-width: 1;
     -fx-border-radius: 20 20 20 20 ;
     -fx-text-fill: #848484;
-    -fx-prompt-text-fill: #848484;
+    -fx-prompt-text-fill: #84848480;
 }
 
 .accordion .titled-pane > *.content{

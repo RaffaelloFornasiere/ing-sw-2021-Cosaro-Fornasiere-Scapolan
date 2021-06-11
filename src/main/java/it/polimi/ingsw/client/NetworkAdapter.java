@@ -224,6 +224,7 @@ public class NetworkAdapter {
     public void LobbyErrorHandler(PropertyChangeEvent evt) {
         LobbyError event = (LobbyError) evt.getNewValue();
 
+
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);
     }
@@ -289,6 +290,7 @@ public class NetworkAdapter {
         UsernameError event = (UsernameError) evt.getNewValue();
         System.out.println("Received" + event.getEventName());
 
+        view.invalidateUsername();
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);
     }

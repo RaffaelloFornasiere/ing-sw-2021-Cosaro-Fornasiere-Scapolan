@@ -7,44 +7,94 @@ import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.ui.UI;
+import it.polimi.ingsw.utilities.LockWrap;
+import javafx.application.Application;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class GUI extends UI {
+
+    private LockWrap<String> leaderID = new LockWrap<>(null);
+    private LockWrap<String> playerID = new LockWrap<>(null);
+    private LockWrap<InetAddress> serverAddress = new LockWrap(null);
+    private LockWrap<Integer> serverPort;
+
+
+    private String PlayerImage;
+
+    ServerSettingsController serverSettingsController;
+    LoginController loginController;
+    SplashScreenController splashScreenController;
+    LobbyController lobbyController;
+    MainViewController mainViewController;
+
+
+    public GUI() {
+
+        serverSettingsController = new ServerSettingsController(this);
+        loginController = new LoginController(this);
+        splashScreenController = new SplashScreenController(this);
+        lobbyController = new LobbyController(this);
+        mainViewController = new MainViewController(this);
+
+        MainApplication.setGui(this);
+        MainApplication.setFirstScene("splashscreen", splashScreenController);
+        (new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                Application.launch(MainApplication.class);
+            }
+        }).start();
+    }
+
+
+    public String getPlayerImage() {
+        return PlayerImage;
+    }
+
+    public void setPlayerImage(String playerImage) {
+        PlayerImage = playerImage;
+    }
+
+    public void setLoginData(String playerID, String leaderID) {
+        this.playerID.setItem(playerID);
+        this.leaderID.setItem(leaderID);
+    }
+
     public InetAddress getServerAddress() {
-        return serverAddress;
+        InetAddress res = null;
+        try {
+            res = serverAddress.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     public void setServerAddress(InetAddress serverAddress) {
-        this.serverAddress = serverAddress;
+        this.serverAddress.setItem(serverAddress);
     }
 
-    public int getServerPort() {
-        return serverPort;
+
+    public int getServerPort() throws InterruptedException {
+        return serverPort.getWaitIfNull();
     }
 
     public void setServerPort(int serverPort) {
-        this.serverPort = serverPort;
+        this.serverPort.setItem(serverPort);
     }
-
-
-    private InetAddress serverAddress;
-    private int serverPort;
-
-
-
-
-
-
-
-
-
 
 
 //   #######  ##     ## ######## ########  ########  #### #######   ########  ######
@@ -57,43 +107,74 @@ public class GUI extends UI {
 
 
     @Override
+    // this gets what's wrong
     public void printMessage(String message) {
-
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.showAndWait();
     }
 
     @Override
     public void printError(String error) {
-
+        Alert alert = new Alert(Alert.AlertType.ERROR, error, ButtonType.OK);
+        alert.showAndWait();
     }
 
     @Override
     public void printWarning(String warning) {
-
+        Alert alert = new Alert(Alert.AlertType.WARNING, warning, ButtonType.OK);
+        alert.showAndWait();
     }
 
     @Override
     public InetAddress askIP() {
-        return null;
+        InetAddress res = null;
+        try {
+            res = serverAddress.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override
     public boolean askIfNewLobby() {
-        return false;
+        return leaderID.getItem() == null;
     }
 
     @Override
     public String askUserID() {
-        return null;
+        String res = null;
+        try {
+            res = playerID.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override
     public String askLeaderID() {
-        return null;
+        String res = null;
+        try {
+            res = leaderID.getWaitIfNull();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @Override
+    public void invalidateUsername() {
+        playerID.setItem(null);
     }
 
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
-
+        try {
+            MainApplication.setScene("lobby", lobbyController);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -103,7 +184,11 @@ public class GUI extends UI {
 
     @Override
     public void beginGame() {
-
+        try {
+            MainApplication.setScene("mainview", mainViewController);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -115,6 +200,7 @@ public class GUI extends UI {
     public void ack() {
 
     }
+
 
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {

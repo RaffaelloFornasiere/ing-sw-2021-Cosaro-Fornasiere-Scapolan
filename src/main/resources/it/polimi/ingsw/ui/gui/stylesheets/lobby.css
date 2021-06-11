@@ -1,0 +1,59 @@
+.root{
+    -fx-background-color: #393939;
+
+}
+
+.label{
+    -fx-text-fill: #848484;
+}
+
+
+
+.text-field{
+    -fx-background-color: #393939;
+    -fx-border-color: #848484;
+    -fx-border-width: 1;
+    -fx-border-radius: 20 20 20 20 ;
+    -fx-text-fill: #848484;
+    -fx-prompt-text-fill: #848484;
+}
+
+
+
+.PanePlayer{
+    -fx-background-color: #80808054;
+    -fx-background-radius: 30px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+}
+
+#Owner {
+    -fx-border-radius: 30px;
+}
+
+.PlayerLabel{
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+}
+
+.list-view{
+    -fx-background-color: #ffffff10;
+}
+
+.button{
+    -fx-background-radius: 20 20 20 20;
+    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-width: 1.5;
+    -fx-background-color: #393939;
+    -fx-border-color: #848484;
+    -fx-text-fill: #848484;
+    -fx-text-alignment: center;
+}
+
+
+.button:hover{
+    -fx-background-color: #848484;
+    -fx-text-fill: #393939;
+}
+
+
+
