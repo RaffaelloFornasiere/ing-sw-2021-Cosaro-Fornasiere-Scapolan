@@ -62,7 +62,6 @@ public class NetworkAdapter {
     }
 
 
-
     @SuppressWarnings("unused")
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
@@ -109,7 +108,7 @@ public class NetworkAdapter {
         send(event);
     }
 
-    public void startMatch(){
+    public void startMatch() {
         send(new StartMatchEvent(playerID));
     }
 
@@ -133,8 +132,7 @@ public class NetworkAdapter {
         send(event);
     }
 
-    public void sendSelectedResources(HashMap<Resource, Integer> resources)
-    {
+    public void sendSelectedResources(HashMap<Resource, Integer> resources) {
 
     }
 
@@ -245,15 +243,15 @@ public class NetworkAdapter {
 
     public void MatchStateEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
-       MatchStateEvent event=(MatchStateEvent)evt.getNewValue();
-        Event ev= view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
+        MatchStateEvent event = (MatchStateEvent) evt.getNewValue();
+        Event ev = view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
         send(ev);
         System.out.println("event sent");
     }
 
     public void OrganizeResourcesEventHandler(PropertyChangeEvent evt) {
         OrganizeResourcesEvent event = (OrganizeResourcesEvent) evt.getNewValue();
-        NewResourcesOrganizationEvent newOrganization= view.getWarehouseDisplacement(event.getResourcesToOrganize());
+        NewResourcesOrganizationEvent newOrganization = view.getWarehouseDisplacement(event.getResourcesToOrganize());
         send(newOrganization);
     }
 
@@ -273,7 +271,7 @@ public class NetworkAdapter {
 
     public void ResourceSelectionEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
-        ResourceSelectionEvent event = (ResourceSelectionEvent)evt.getNewValue();
+        ResourceSelectionEvent event = (ResourceSelectionEvent) evt.getNewValue();
         var selection = view.getResourcesSelection(event.getRequired());
         send(new ResourceSelectionEvent(playerID, null, selection.get(0), selection.get(1)));
     }

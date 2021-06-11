@@ -6,7 +6,6 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
@@ -142,9 +141,9 @@ public class CLI extends UI {
         out.println(builder2.toString());
 
         out.println("DO YOU AGREE? yes/no");
-        String response = in.next().toUpperCase();
+        String answer = in.next().toUpperCase();
         in.nextLine();
-        if (response.equals("YES") || response.equals("Y")) {
+        if (answer.equals("YES") || answer.equals("Y")) {
             return inputs;
         } else {
             return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
@@ -195,9 +194,9 @@ public class CLI extends UI {
         StringBuilder builderBot = new StringBuilder();
         StringBuilder builderEnd = new StringBuilder();
 
-        int maxLines = option_itsColor.stream().map(Pair::getKey).map(s->s.chars().filter(ch -> ch == '\n').map(ch->1).sum()).max(Integer::compareTo).orElse(-1) + 1;
+        int maxLines = option_itsColor.stream().map(Pair::getKey).map(s -> s.chars().filter(ch -> ch == '\n').map(ch -> 1).sum()).max(Integer::compareTo).orElse(-1) + 1;
         ArrayList<StringBuilder> buildersMid = new ArrayList<>();
-        for(int i=0; i<maxLines; i++){
+        for (int i = 0; i < maxLines; i++) {
             buildersMid.add(new StringBuilder());
         }
 
@@ -211,16 +210,15 @@ public class CLI extends UI {
             builderTop.append(resetColor + "═╗  ");
 
             String color = option.getValue();
-            for(int i=0; i<maxLines; i++) {
+            for (int i = 0; i < maxLines; i++) {
                 buildersMid.get(i).append("║ " + color);
-                if(i<rows.length) {
+                if (i < rows.length) {
                     buildersMid.get(i).append(rows[i]);
-                    for(int j=0; j<maxLength-rows[i].length(); j++){
+                    for (int j = 0; j < maxLength - rows[i].length(); j++) {
                         buildersMid.get(i).append(" ");
                     }
-                }
-                else {
-                    for(int j=0; j<maxLength; j++){
+                } else {
+                    for (int j = 0; j < maxLength; j++) {
                         buildersMid.get(i).append(" ");
                     }
                 }
@@ -233,12 +231,12 @@ public class CLI extends UI {
 
             builderEnd.append("  " + resetColor);
             builderEnd.append(n.get());
-            IntStream.range(0, maxLength-2).forEach(letter -> builderEnd.append(" "));
+            IntStream.range(0, maxLength - 1).forEach(letter -> builderEnd.append(" "));
             builderEnd.append(resetColor + "    ");
             n.getAndIncrement();
         });
         builderTop.append('\n');
-        for(StringBuilder stringBuilder: buildersMid){
+        for (StringBuilder stringBuilder : buildersMid) {
             builderTop.append(stringBuilder).append('\n');
         }
         builderTop.append(builderBot).append('\n');
@@ -278,14 +276,14 @@ public class CLI extends UI {
                     out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
                 } else if (input < 0 || input > size) {
                     out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
-                } else if(input==0){
-                    m=0;
+                } else if (input == 0) {
+                    m = 0;
                 } else {
                     inputs.add(input);
                     m--;
                 }
             } else {
-                if(inputString.toUpperCase().equals("STOP")) m=0;
+                if (inputString.toUpperCase().equals("STOP")) m = 0;
                 else out.println("PLEASE INSERT A NUMBER");
             }
         }
@@ -708,42 +706,26 @@ public class CLI extends UI {
 //    }
 
 
-    public void displayPlayerState() {
-
-    }
-
-    public void displayRequirementsNotMetError() {
-
-    }
-
-    public void displaySetupDone() {
-
-    }
-
-    public void displaySimpleChoseResourcesForm() {
-
-    }
-
-    public static String productionPowerToString(ProductionPower productionPower, String color){
-        StringBuilder build= new StringBuilder();
-        build.append(color+ "╔════"+color+color+"═════════╗" + Color.reset() + "\n");
+    public static String productionPowerToString(ProductionPower productionPower, String color) {
+        StringBuilder build = new StringBuilder();
+        build.append(color + "╔════" + color + color + "═════════╗" + Color.reset() + "\n");
         for (Resource resource : productionPower.getConsumedResources().keySet()) {
-            build.append(color + "║     " + CLI.colorResource(resource) + productionPower.getConsumedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+            build.append(color + "║     " + CLI.colorResource(resource) + productionPower.getConsumedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
         }
-        if(productionPower.getRequiredResourceOfChoice()!=0){
-            build.append(color + "║     "+color+ + productionPower.getRequiredResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
+        if (productionPower.getRequiredResourceOfChoice() != 0) {
+            build.append(color + "║     " + color + +productionPower.getRequiredResourceOfChoice() + " " + "?" + color + "     ║" + Color.reset() + "\n");
         }
-        build.append(color+ "║   "+color+"--->>> "+color+ "   ║ " + Color.reset() + "\n");
+        build.append(color + "║   " + color + "--->>> " + color + "   ║ " + Color.reset() + "\n");
         for (Resource resource : productionPower.getProducedResources().keySet()) {
-            build.append(color + "║     " + CLI.colorResource(resource) + productionPower.getProducedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n" );
+            build.append(color + "║     " + CLI.colorResource(resource) + productionPower.getProducedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
         }
-        if(productionPower.getFaithPointsProduced()!=0){
-            build.append(color + "║     "+color+ + productionPower.getFaithPointsProduced() + " " +"+"  + color + "     ║" + Color.reset() + "\n" );
+        if (productionPower.getFaithPointsProduced() != 0) {
+            build.append(color + "║     " + color + +productionPower.getFaithPointsProduced() + " " + "+" + color + "     ║" + Color.reset() + "\n");
         }
-        if(productionPower.getProducedResourceOfChoice()!=0){
-            build.append(color + "║     "+color+ + productionPower.getProducedResourceOfChoice() + " " +"?"  + color + "     ║" + Color.reset() + "\n" );
+        if (productionPower.getProducedResourceOfChoice() != 0) {
+            build.append(color + "║     " + color + +productionPower.getProducedResourceOfChoice() + " " + "?" + color + "     ║" + Color.reset() + "\n");
         }
-        build.append(color+ "╚════"+color+color+"═════════╝" + Color.reset() + "\n");
+        build.append(color + "╚════" + color + color + "═════════╝" + Color.reset() + "\n");
         return build.toString();
     }
 
@@ -779,17 +761,22 @@ public class CLI extends UI {
 
         //display the resources available for storing
         StringBuilder builder0 = new StringBuilder();
-        builder0.append(" YOU  CAN NOW STORE THE FOLLOWING RESOURCES \n\n");
-        resourcesToOrganize.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
-            builder0.append(color + resource.toString() + ": ");
-            IntStream.range(0, resourcesToOrganize.get(resource)).forEach(n -> builder0.append(color + shape + " "));
-            builder0.append(Color.WHITE.getAnsiCode() + " --> " + resourcesToOrganize.get(resource) + "\n");
-        });
-        out.println(builder0.toString());
-        System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE D FOR 'DONE' OTHERWISE TYPE C FOR 'CONTINUE'");
-        if (in.next().toUpperCase().equals("D")) {
+        int totalNumberOfResourcesToOrganize = resourcesToOrganize.values().stream().reduce(0, (prev, next) -> prev + next);
+        if (totalNumberOfResourcesToOrganize == 0) {
+            out.println("THERE ARE NO RESOURCES TO STORE");
+        } else {
+            builder0.append(" YOU  CAN NOW STORE THE FOLLOWING RESOURCES \n\n");
+            resourcesToOrganize.keySet().forEach(resource -> {
+                String color = colorResource(resource);
+                String shape = shapeResource(resource);
+                builder0.append(color + resource.toString() + ": ");
+                IntStream.range(0, resourcesToOrganize.get(resource)).forEach(n -> builder0.append(color + shape + " "));
+                builder0.append(Color.WHITE.getAnsiCode() + " --> " + resourcesToOrganize.get(resource) + "\n");
+            });
+            out.println(builder0.toString());
+            System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE D FOR 'DONE' OTHERWISE TYPE C FOR 'CONTINUE'");
+        }
+        if (totalNumberOfResourcesToOrganize == 0 || in.next().toUpperCase().equals("D")) {
             //GENERATE NEW NewResourcesOrganizationEvent
             out.println("Done");
 
@@ -811,35 +798,38 @@ public class CLI extends UI {
             panel.addItem(obj);
             panel.show();
             //this is the moment where the user is asked if they want to switch depot.
-            out.println("DO YOU WANT TO SWITCH SOME DEPOTS? Y/N");
-            String y_n = in.next();
-            while (y_n.toUpperCase().equals("Y")) {
-                int count = 2;
-                int[] indexes = {-1, -1};
-                DepotResultMessage done;
-
-                out.println("WHICH DEPOTS? INSERT TWO NUMBERS");
-                while (count > 0) {
-                    String inp = in.next();
-                    if (!inp.matches("-?\\d+")) {
-                        out.println("YOU HAVE TO INSERT NUMBERS");
-                        continue;
-                    }
-                    int chosenDepotIndex = Integer.parseInt(inp);
-                    if (chosenDepotIndex - 1 < 0 || chosenDepotIndex > depotStates.size()) {
-                        out.println("THIS DEPOT DOESN'T EXIST. INSERT A NUMBER BETWEEN 1 AND " + depotStates.size());
-                        continue;
-                    }
-                    indexes[2 - count] = chosenDepotIndex - 1;
-                    count--;
-
-                }
-                out.println(indexes[0] + " " + indexes[1]);
-                done = thisDashboard.switchDepots(indexes[0], indexes[1]);
-                out.println(done.getMessage());
-                out.println(thisDashboard.warehouseToString());
+            boolean allEmpty = depotStates.stream().map(depot -> depot.getCurrentQuantity() == 0).reduce(true, (prev, next) -> (prev && next));
+            if (!allEmpty) {
                 out.println("DO YOU WANT TO SWITCH SOME DEPOTS? Y/N");
-                y_n = in.next();
+                String y_n = in.next();
+                while (y_n.toUpperCase().equals("Y")) {
+                    int count = 2;
+                    int[] indexes = {-1, -1};
+                    DepotResultMessage done;
+
+                    out.println("WHICH DEPOTS? INSERT TWO NUMBERS");
+                    while (count > 0) {
+                        String inp = in.next();
+                        if (!inp.matches("-?\\d+")) {
+                            out.println("YOU HAVE TO INSERT NUMBERS");
+                            continue;
+                        }
+                        int chosenDepotIndex = Integer.parseInt(inp);
+                        if (chosenDepotIndex - 1 < 0 || chosenDepotIndex > depotStates.size()) {
+                            out.println("THIS DEPOT DOESN'T EXIST. INSERT A NUMBER BETWEEN 1 AND " + depotStates.size());
+                            continue;
+                        }
+                        indexes[2 - count] = chosenDepotIndex - 1;
+                        count--;
+
+                    }
+                    out.println(indexes[0] + " " + indexes[1]);
+                    done = thisDashboard.switchDepots(indexes[0], indexes[1]);
+                    out.println(done.getMessage());
+                    out.println(thisDashboard.warehouseToString());
+                    out.println("DO YOU WANT TO SWITCH SOME DEPOTS? Y/N");
+                    y_n = in.next();
+                }
             }
 
             // select one resource at a time among those available
@@ -852,15 +842,30 @@ public class CLI extends UI {
                     justResources.add(resType);
                 });
             });
-            String s = "THESE ARE THE RESOURCES AVAILABLE FOR STORING, LET'S STORE ONE AT A TIME\n";
-            // the chosen resource needs to be assigned to one of the deposits
-            int inputResource = displaySelectionForm(resourcesOptions, null, 1, s).get(0);
+            int inputResource;
+            if (totalNumberOfResourcesToOrganize == 1) {
+                String white = Color.WHITE.getAnsiCode();
+                out.println("YOU HAVE JUST ONE RESOURCE TO STORE: \n" +
+                        white + "╔" + white + "═══" + white + "╗\n" +
+                        white + "║ " + colorResource(justResources.get(0)) + shapeResource(justResources.get(0)) + white + " ║\n" +
+                        white + "╚" + white + "═══" + white + "╝");
+                inputResource = 0;
+                // the chosen resource needs to be assigned to one of the deposits
+            } else {
+                String s = "YOU HAVE " + totalNumberOfResourcesToOrganize + " AVAILABLE FOR STORING, LET'S STORE ONE AT A TIME\n";
+                // the chosen resource needs to be assigned to one of the deposits
+                inputResource = displaySelectionForm(resourcesOptions, null, 1, s).get(0);
+            }
             System.out.println("WHERE DO YOU WANT TO PUT THIS RESOURCE ( " + resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset() + " )?");
 
             // prepare the selection form for deposits.
             ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
-            IntStream.range(0, currentDepotStates.size()).forEach(n -> depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType()))));
-
+            IntStream.range(0, currentDepotStates.size()).forEach(n -> {
+                if (currentDepotStates.get(n).getCurrentQuantity() == 0)
+                    depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), Color.WHITE.getAnsiCode()));
+                else
+                    depositOptions.add(new Pair<String, String>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType())));
+            });
             IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> {
                 depositOptions.add(new Pair<String, String>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode()));
             });
@@ -874,6 +879,7 @@ public class CLI extends UI {
                 DepotResultMessage result = currentDepotStates.get(inputDeposit).tryAddResource(justResources.get(inputResource));
                 successfull.set(result.getSuccessfull());
                 out.println(result.getMessage());
+                out.println(thisDashboard.warehouseToString());
             }
             //or if it belongs to leader card extra depots...
             else {
@@ -881,12 +887,14 @@ public class CLI extends UI {
                 HashMap<Resource, Integer> resInput = new HashMap<>();
                 resInput.put(justResources.get(inputResource), 1);
 
-                String cardId = thisDepositLeaderPowers.get(index).getCardId();
+
+                int finalInputResource = inputResource;
                 leaderCardViews.stream().forEach(cardView -> {
-                    if (cardView.getIdCard() == thisDepositLeaderPowers.get(index).getCardId()) {
-                        DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), justResources.get(inputResource));
+                    if (cardView.getIdCard().equals(thisDepositLeaderPowers.get(index).getCardId())) {
+                        DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), justResources.get(finalInputResource));
                         successfull.set(result.getSuccessfull());
                         out.println(result.getMessage());
+                        out.println(cardView.toString());
                     }
                 });
             }
@@ -1199,10 +1207,10 @@ public class CLI extends UI {
 
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
-        if(!players.contains(leaderID)) players.add(leaderID);
+        if (!players.contains(leaderID)) players.add(leaderID);
         playerStates.putIfAbsent(leaderID, new PlayerState());
-        for(String playerID: otherPlayersID){
-            if(!players.contains(playerID)) players.add(playerID);
+        for (String playerID : otherPlayersID) {
+            if (!players.contains(playerID)) players.add(playerID);
             playerStates.putIfAbsent(playerID, new PlayerState());
         }
         faithTrack = new FaithTrackView(players);
@@ -1242,7 +1250,7 @@ public class CLI extends UI {
         });
 
         DrawableObject obj = new DrawableObject(builder.toString(), 50, 0);
-        Panel panel = new Panel(500, (int) obj.getHeight() + 3, out);
+        Panel panel = new Panel(500, obj.getHeight() + 3, out);
         panel.addItem(obj);
         panel.show();
 
@@ -1258,7 +1266,7 @@ public class CLI extends UI {
         if (toSetupPlayers == null) toSetupPlayers = (ArrayList<String>) players.clone();
         toSetupPlayers.remove(playerID);
 
-        if(toSetupPlayers.isEmpty() || toSetupPlayers.contains(thisPlayer)) return;
+        if (toSetupPlayers.isEmpty() || toSetupPlayers.contains(thisPlayer)) return;
 
         out.println("Waiting for");
         for (String p : toSetupPlayers) out.println(p);
@@ -1451,7 +1459,35 @@ public class CLI extends UI {
 
     @Override
     public BuyResourcesEvent askForMarketRow() {
-        return null;
+        Direction dir = null;
+        int index = 0;
+        String output = "YOU HAVE TO CHOOSE THE RESOURCES FROM ONE ROW OR ONE COLUMN OF THE MARKET\n " +
+                "WOULD YOU LIKE A ROW OR A COLUMN?\n";
+        ArrayList<Pair<String, String>> direction = new ArrayList<>();
+        direction.add(new Pair<String, String>(Direction.ROW.toString(), Color.WHITE.getAnsiCode()));
+        direction.add(new Pair<String, String>(Direction.COLUMN.toString(), Color.WHITE.getAnsiCode()));
+        out.println(market.toString());
+        int result = displaySelectionForm(direction, null, 1, output).get(0);
+        if (result == 0) {//ROW
+            dir = Direction.ROW;
+            ArrayList<Pair<String, String>> indexRow = new ArrayList<>();
+            for (int i = 0; i < market.getRows(); i++) {
+                indexRow.add(new Pair<String, String>("ROW " + (i + 1), Color.WHITE.getAnsiCode()));
+
+            }
+            index = displaySelectionForm(indexRow, null, 1, output).get(0);
+        }
+        if (result == 1) {//COLUMN
+            dir = Direction.COLUMN;
+            ArrayList<Pair<String, String>> indexColumn = new ArrayList<>();
+            for (int i = 0; i < market.getCols(); i++) {
+                indexColumn.add(new Pair<String, String>("COLUMN " + (i + 1), Color.WHITE.getAnsiCode()));
+
+            }
+            index = displaySelectionForm(indexColumn, null, 1, output).get(0);
+        }
+        out.println("YOU HAVE CHOSEN " + dir.toString() + (index + 1));
+        return new BuyResourcesEvent(thisPlayer, dir, index);
     }
 
     @Override
@@ -1460,26 +1496,25 @@ public class CLI extends UI {
         String devCard = "";
 
         devCardGridView.display();
-        ArrayList<Pair<String,String>> gridSelection= new ArrayList<>();
+        ArrayList<Pair<String, String>> gridSelection = new ArrayList<>();
         String[][] grid = devCardGridView.getTopDevCardIDs();
-        for(int i=0; i<grid.length; i++){
-            for (int j=0; j<grid[0].length;j++){
-                gridSelection.add(new Pair<String, String>(grid[i][j],Color.WHITE.getAnsiCode()));
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                gridSelection.add(new Pair<String, String>(grid[i][j], Color.WHITE.getAnsiCode()));
             }
         }
-        int input1= displaySelectionForm(gridSelection, null, 1, "  DEVELOPMENT CARDS AVAILABLE : \n").get(0);
+        int input1 = displaySelectionForm(gridSelection, null, 1, "DEVELOPMENT CARDS AVAILABLE : \n").get(0);
         devCard = gridSelection.get(input1).getKey();
 
         playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
         ArrayList<Pair<String, String>> selectionArray = new ArrayList<>();
-        playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
-        AtomicInteger slotIndex= new AtomicInteger(1);
+        AtomicInteger slotIndex = new AtomicInteger(1);
         playerStates.get(thisPlayer).getDashBoard().getTopDevCards().stream().forEach(n -> {
-            selectionArray.add(new Pair<String, String>("SLOT "+ slotIndex, Color.WHITE.getAnsiCode()));
+            selectionArray.add(new Pair<String, String>("SLOT " + slotIndex, Color.WHITE.getAnsiCode()));
             slotIndex.getAndIncrement();
         });
-        int input2 = displaySelectionForm(selectionArray, null, 1, " THESE ARE THE SLOTS TO WHICH YOU CAN ADD THE BOUGHT CARD : \n").get(0);
-        slot=input2;
+        int input2 = displaySelectionForm(selectionArray, null, 1, "THESE ARE THE SLOTS TO WHICH YOU CAN ADD THE BOUGHT CARD : \n").get(0);
+        slot = input2;
         BuyDevCardsEvent event = new BuyDevCardsEvent(thisPlayer, devCard, slot);
 
 
@@ -1518,51 +1553,51 @@ public class CLI extends UI {
         card2.setSelected(true);
         leaderCardsSet.put("LeaderCard6", card2);
 
-        HashMap<String, PlayerState> playerStates= new HashMap<>();
+        HashMap<String, PlayerState> playerStates = new HashMap<>();
 
-        PlayerState PL1= new PlayerState(d,leaderCardsSet );
-        PlayerState PL2= new PlayerState(d,leaderCardsSet );
-        PlayerState PL3= new PlayerState(d,leaderCardsSet);
+        PlayerState PL1 = new PlayerState(d, leaderCardsSet);
+        PlayerState PL2 = new PlayerState(d, leaderCardsSet);
+        PlayerState PL3 = new PlayerState(d, leaderCardsSet);
 
         playerStates.put("LISA", PL1);
         playerStates.put("PAOLO", PL2);
         playerStates.put("GIGI", PL3);
 
-        String[][] grid0={
+        String[][] grid0 = {
                 {"DevCard1", "DevCard2", "DevCard3", "DevCard10"},
                 {"DevCard4", "DevCard5", "DevCard6", "DevCard11"},
                 {"DevCard7", "DevCard8", "DevCard9", "DevCard12"},
                 {"DevCard13", "DevCard14", "DevCard15", "DevCard16"}
         };
-        DevCardGridView devCardGridView= new DevCardGridView(grid0);
+        DevCardGridView devCardGridView = new DevCardGridView(grid0);
 
 
         int slot = -1;
         String devCard = "";
 
         devCardGridView.display();
-        ArrayList<Pair<String,String>> gridSelection= new ArrayList<>();
+        ArrayList<Pair<String, String>> gridSelection = new ArrayList<>();
         String[][] grid = devCardGridView.getTopDevCardIDs();
-        for(int i=0; i<grid[0].length; i++){
-            for (int j=0; j<grid.length;j++){
-                gridSelection.add(new Pair<String, String>(grid[i][j],Color.WHITE.getAnsiCode()));
+        for (int i = 0; i < grid[0].length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                gridSelection.add(new Pair<String, String>(grid[i][j], Color.WHITE.getAnsiCode()));
             }
         }
-        int input1= displaySelectionForm(gridSelection, null, 1, "  DEVELOPMENT CARDS AVAILABLE : \n").get(0);
+        int input1 = displaySelectionForm(gridSelection, null, 1, "  DEVELOPMENT CARDS AVAILABLE : \n").get(0);
         devCard = gridSelection.get(input1).getKey();
 
         playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
         ArrayList<Pair<String, String>> selectionArray = new ArrayList<>();
         playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
-        AtomicInteger slotIndex= new AtomicInteger(1);
+        AtomicInteger slotIndex = new AtomicInteger(1);
         playerStates.get(thisPlayer).getDashBoard().getTopDevCards().stream().forEach(n -> {
-            selectionArray.add(new Pair<String, String>("SLOT "+ slotIndex, Color.WHITE.getAnsiCode()));
+            selectionArray.add(new Pair<String, String>("SLOT " + slotIndex, Color.WHITE.getAnsiCode()));
             slotIndex.getAndIncrement();
         });
         int input2 = displaySelectionForm(selectionArray, null, 1, " THESE ARE THE SLOTS TO WHICH YOU CAN ADD THE BOUGHT CARD : \n").get(0);
-        slot=input2;
+        slot = input2;
         BuyDevCardsEvent event = new BuyDevCardsEvent(thisPlayer, devCard, slot);
-        out.println(event.getPlayerId()+"\n"+event.getCardSlot()+"\n"+event.getDevCardID());
+        out.println(event.getPlayerId() + "\n" + event.getCardSlot() + "\n" + event.getDevCardID());
         out.println("event sent");
 
 
@@ -1575,12 +1610,12 @@ public class CLI extends UI {
 
         ArrayList<Pair<String, String>> opt = new ArrayList<>();
         opt.add(new Pair<>("Personal production power", Color.reset()));
-        for(String devCardID: playerStates.get(thisPlayer).getDashBoard().getTopDevCards()){
+        for (String devCardID : playerStates.get(thisPlayer).getDashBoard().getTopDevCards()) {
             opt.add(new Pair<>(devCardID, Color.reset()));
         }
         ArrayList<Integer> powerChosen = displaySelectionFormVariableChoices(opt, null, opt.size(), "Choose which production power to activate");
 
-        return new ActivateProductionEvent(thisPlayer, powerChosen.stream().filter(x->x!=0).map(i->opt.get(i).getKey()).collect(Collectors.toCollection(ArrayList::new)), powerChosen.contains(0));
+        return new ActivateProductionEvent(thisPlayer, powerChosen.stream().filter(x -> x != 0).map(i -> opt.get(i).getKey()).collect(Collectors.toCollection(ArrayList::new)), powerChosen.contains(0));
     }
 
     @Override
@@ -1647,148 +1682,260 @@ public class CLI extends UI {
         return ret;
     }
 
+    public void displayOthers() {
+        ArrayList<Pair<String, String>> options;
+        options = Arrays.stream(DisplayOptions.values()).map(option -> new Pair<String, String>(option.getTitle(), Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
+        int input = displaySelectionForm(options, null, 1, "MEANWHILE, WHAT WOULD YOU LIKE TO SEE ?\n").get(0);
+
+        out.println(DisplayOptions.values()[input].getMessage());
+        switch (DisplayOptions.values()[input]) {
+            case DISPLAY_MARKET -> {
+                out.println(market.toString());
+                break;
+            }
+            case DISPLAY_DASHBOARD -> {
+                ArrayList<Pair<String, String>> allPlayers;
+                allPlayers = players.stream().map(player -> {
+                    if (player.equals(thisPlayer)) return "YOURS";
+                    else return player;
+                }).map(player -> new Pair<String, String>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
+                int inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE DASHBORAD WOULD YOU LIKE TO SEE? \n").get(0);
+                playerStates.get(players.get(inputPlayer)).getDashBoard().displayAll(players.get(inputPlayer));
+                break;
+            }
+            case DISPLAY_FAITH_TRACK -> {
+                this.faithTrack.display("Check the incremented positions and \n acquired PopeFavorCards !", thisPlayer);
+                break;
+            }
+            case DISPLAY_LEADER_CARD -> {
+                ArrayList<Pair<String, String>> allPlayers;
+                allPlayers = players.stream().map(player -> {
+                    if (player.equals(thisPlayer)) return "YOURS";
+                    else return player;
+                }).map(player -> new Pair<String, String>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
+                int inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE LEADER CARDS WOULD YOU LIKE TO SEE? \n").get(0);
+
+                out.println("[31;1;4m" + players.get(inputPlayer) + "'S SET OF LEADER CARDS\n" + Color.reset());
+                ArrayList<DrawableObject> objs = new ArrayList<>();
+                AtomicInteger offSet = new AtomicInteger();
+                AtomicInteger height = new AtomicInteger();
+                playerStates.get(players.get(inputPlayer)).getLeaderCards().forEach((cardId, cardView) -> {
+                    DrawableObject obj = new DrawableObject(cardView.toString(), 0, 20 * offSet.get());
+                    objs.add(obj);
+                    offSet.getAndIncrement();
+                    height.set(Integer.max(height.get(), obj.getHeight()));
+                });
+                Panel cardPanel = new Panel(objs, out);
+                cardPanel.show();
+
+                break;
+            }
+            case DISPLAY_DEV_CARD_GRID -> {
+                devCardGridView.display();
+                break;
+            }
+        }
+
+        out.println("WOULD YOU LIKE TO SEE MORE? Y/N");
+        String answer = in.next().toUpperCase();
+        in.nextLine();
+        if (answer.equals("YES") || answer.equals("Y")) {
+            displayOthers();
+        }
+
+    }
 
     @Override
     public Event askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
         Event event = null;
-        if (turnState==TurnState.START) {//start
-            if (thisPlayer.equals(playerID)) {
-                out.println(playerID + " " + turnState.getDescription());
-            } else {
-                int inputIndex = -1;
-                ArrayList<Action> allActions = Arrays.stream(Action.values()).collect(Collectors.toCollection(ArrayList::new));
-                ArrayList<Pair<String, String>> possibleActions = new ArrayList<>();
-
-                for (Action a : allActions) {
-                    possibleActions.add(new Pair(a.getDescription(), Color.WHITE.getAnsiCode()));
-
-                }
-                inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
-                Action selectedAction = allActions.get(inputIndex);
-                int b = selectedAction.getActionCode();
-                if (b == 1) {//BUY_DEVCARD
-                    BuyDevCardsEvent ev = askForDevCard();
-                    event = ev;
-                    out.println(selectedAction.getDescription());
-                } else if (b == 2) {//TAKE_RESOURCES_FROM_MARKET
-                    out.println(selectedAction.getDescription());
-                    BuyResourcesEvent ev = askForMarketRow();
-                    event = ev;
-                } else if (b == 3) {//PRODUCE
-                    out.println(selectedAction.getDescription());
-                    ActivateProductionEvent ev = askForProductionPowersToUse();
-                    event = ev;
-                } else if (b == 4) {//LEADER_ACTION
-
-                    out.println(selectedAction.getDescription());
-                    ArrayList<Pair<String, String>> options = new ArrayList<>();
-                    options.add(new Pair<String, String>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
-                    options.add(new Pair<String, String>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
-                    int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
-                    if (chosenAction == 0) {
-                        String leaderCardToDiscard = null;
-                        try {
-                            leaderCardToDiscard = askForLeaderCardToDiscard();
-                        } catch (NotPresentException e) {
-                            e.printStackTrace();
-                        }
-                        event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
-                    } else {
-                        String leaderCardToActivate = null;
-                        try {
-                            leaderCardToActivate = askForLeaderCardToActivate();
-                        } catch (NotPresentException e) {
-                            e.printStackTrace();
-                        }
-                        event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
-                    }
-
-                }
-            }
-
-        } else if (turnState==TurnState.AFTER_LEADER_CARD_ACTION) {//AFTER_LEADER_CARD_ACTION
-            if (thisPlayer.equals(playerID)) {
-                out.println(playerID + " " + turnState.getDescription());
-            } else {
-                int inputIndex = -1;
-                ArrayList<Action> allActions = Arrays.stream(Action.values()).collect(Collectors.toCollection(ArrayList::new));
-                ArrayList<Pair<String, String>> possibleActions = new ArrayList<>();
-
-                for (Action a : allActions) {
-                    possibleActions.add(new Pair(a.getDescription(), Color.WHITE.getAnsiCode()));
-
-                }
-                inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
-                Action selectedAction = allActions.get(inputIndex);
-                int b = selectedAction.getActionCode();
-                if (b == 1) {//BUY_DEVCARD
-                    BuyDevCardsEvent ev = askForDevCard();
-                    event = ev;
-                    out.println(selectedAction.getDescription());
-                } else if (b == 2) {//TAKE_RESOURCES_FROM_MARKET
-                    out.println(selectedAction.getDescription());
-                    BuyResourcesEvent ev = askForMarketRow();
-                    event = ev;
-                } else if (b == 3) {//PRODUCE
-                    out.println(selectedAction.getDescription());
-                    ActivateProductionEvent ev = askForProductionPowersToUse();
-                    event = ev;
-                }
-
-            }
-        } else if (turnState==TurnState.AFTER_MAIN_ACTION) { //AFTER_MAIN_ACTION
-            if (thisPlayer.equals(playerID)) {
-                out.println(playerID + " " + turnState.getDescription());
-            } else {
-                out.println("WOULD YOU LIKE TO PLAY A LEADER ACTION?\n");
-                if (in.nextLine().toUpperCase().equals("yes")) {
-                    //LEADER_ACTION
-                    out.println(Action.LEADER_ACTION.getDescription());
-                    ArrayList<Pair<String, String>> options = new ArrayList<>();
-                    options.add(new Pair<String, String>("DISCARD LEADER CARD", Color.WHITE.getAnsiCode()));
-                    options.add(new Pair<String, String>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
-                    int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
-                    if (chosenAction == 0) {
-                        String leaderCardToDiscard = null;
-                        try {
-                            leaderCardToDiscard = askForLeaderCardToDiscard();
-                        } catch (NotPresentException e) {
-                            e.printStackTrace();
-                        }
-                        event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
-                    } else {
-                        String leaderCardToActivate = null;
-                        try {
-                            leaderCardToActivate = askForLeaderCardToActivate();
-                        } catch (NotPresentException e) {
-                            e.printStackTrace();
-                        }
-                        event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
-                    }
+        switch (turnState) {
+            case START -> {
+                if (thisPlayer.equals(playerID)) {
+                    out.println(playerID + " " + turnState.getDescription());
+                    displayOthers();
                 } else {
+                    int inputIndex;
+                    ArrayList<Action> allActions = Arrays.stream(Action.values()).collect(Collectors.toCollection(ArrayList::new));
+                    ArrayList<Pair<String, String>> possibleActions = new ArrayList<>();
+
+                    for (Action a : allActions) {
+                        possibleActions.add(new Pair(a.getDescription(), Color.WHITE.getAnsiCode()));
+
+                    }
+                    inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
+                    Action selectedAction = allActions.get(inputIndex);
+                    switch (selectedAction) {
+                        case BUY_DEVCARD -> {
+                            out.println(selectedAction.getDescription());
+                            event = askForDevCard();
+                            break;
+                        }
+                        case TAKE_RESOURCES_FROM_MARKET -> {
+                            out.println(selectedAction.getDescription());
+                            event = askForMarketRow();
+                            break;
+                        }
+                        case PRODUCE -> {
+                            out.println(selectedAction.getDescription());
+                            event = askForProductionPowersToUse();
+                            break;
+                        }
+                        case LEADER_ACTION -> {
+
+                            out.println(selectedAction.getDescription());
+                            ArrayList<Pair<String, String>> options = new ArrayList<>();
+                            options.add(new Pair<String, String>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
+                            options.add(new Pair<String, String>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
+                            int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
+                            if (chosenAction == 0) {
+                                String leaderCardToDiscard = null;
+                                try {
+                                    leaderCardToDiscard = askForLeaderCardToDiscard();
+                                } catch (NotPresentException e) {
+                                    e.printStackTrace();
+                                }
+                                event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
+                            } else {
+                                String leaderCardToActivate = null;
+                                try {
+                                    leaderCardToActivate = askForLeaderCardToActivate();
+                                } catch (NotPresentException e) {
+                                    e.printStackTrace();
+                                }
+                                event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
+                            }
+                            break;
+                        }
+                        case DISPLAY_SMTH -> {
+                            displayOthers();
+                        }
+                    }
+
+                }
+                break;
+            }
+
+
+            case AFTER_LEADER_CARD_ACTION -> {
+                if (thisPlayer.equals(playerID)) {
+                    out.println(playerID + " " + turnState.getDescription());
+                    displayOthers();
+                } else {
+                    int inputIndex = -1;
+                    ArrayList<Action> allActions = Arrays.stream(Action.values()).filter(action -> action != Action.LEADER_ACTION).collect(Collectors.toCollection(ArrayList::new));
+                    ArrayList<Pair<String, String>> possibleActions = new ArrayList<>();
+
+                    for (Action a : allActions) {
+                        possibleActions.add(new Pair(a.getDescription(), Color.WHITE.getAnsiCode()));
+
+                    }
+                    inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
+                    Action selectedAction = allActions.get(inputIndex);
+                    switch (selectedAction) {
+                        case BUY_DEVCARD -> {
+                            event = askForDevCard();
+                            out.println(selectedAction.getDescription());
+                            break;
+                        }
+                        case TAKE_RESOURCES_FROM_MARKET -> {
+                            out.println(selectedAction.getDescription());
+                            event = askForMarketRow();
+                            break;
+                        }
+                        case PRODUCE -> {
+                            out.println(selectedAction.getDescription());
+                            event = askForProductionPowersToUse();
+                            break;
+                        }
+                        case DISPLAY_SMTH -> {
+                            displayOthers();
+                        }
+
+                    }
+                }
+                break;
+            }
+
+
+            case AFTER_MAIN_ACTION -> {
+                if (thisPlayer.equals(playerID)) {
+                    out.println(playerID + " " + turnState.getDescription());
+                    displayOthers();
+                } else {
+                    int inputIndex = -1;
+                    ArrayList<Action> allActions = Arrays.stream(Action.values()).filter(action -> action == Action.LEADER_ACTION || action == Action.DISPLAY_SMTH).collect(Collectors.toCollection(ArrayList::new));
+                    ArrayList<Pair<String, String>> possibleActions = new ArrayList<>();
+
+                    for (Action a : allActions) {
+                        possibleActions.add(new Pair(a.getDescription(), Color.WHITE.getAnsiCode()));
+
+                    }
+                    inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
+                    Action selectedAction = allActions.get(inputIndex);
+                    switch (selectedAction) {
+                        case LEADER_ACTION -> {
+                            out.println(selectedAction.getDescription());
+                            ArrayList<Pair<String, String>> options = new ArrayList<>();
+                            options.add(new Pair<String, String>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
+                            options.add(new Pair<String, String>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
+                            int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
+                            if (chosenAction == 0) {
+                                String leaderCardToDiscard = null;
+                                try {
+                                    leaderCardToDiscard = askForLeaderCardToDiscard();
+                                } catch (NotPresentException e) {
+                                    e.printStackTrace();
+                                }
+                                event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
+                            } else {
+                                String leaderCardToActivate = null;
+                                try {
+                                    leaderCardToActivate = askForLeaderCardToActivate();
+                                } catch (NotPresentException e) {
+                                    e.printStackTrace();
+                                }
+                                event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
+                            }
+                            break;
+                        }
+                        case DISPLAY_SMTH -> {
+                            displayOthers();
+                        }
+                    }
+                }
+                break;
+            }
+            case END_OF_TURN -> {
+                if (thisPlayer.equals(playerID)) {
+                    out.println(playerID + " " + turnState.getDescription());
+                    displayOthers();
+                } else {
+                    out.println("WOULD YOU LIKE TO SEE SOME OTHER PLAYER'S/ YOUR STATE? Y/N");
+                    if (in.next().toUpperCase().equals("YES") || in.next().toUpperCase().equals("Y")) {
+                        displayOthers();
+                    }
+                    out.println("YOUR TURN HAS ENDED");
                     event = new EndTurnEvent(thisPlayer);
                 }
-
+                break;
             }
-        } else if (turnState==TurnState.END_OF_TURN) {//END_OF_TURN
-            if (thisPlayer.equals(playerID)) {
-                out.println(playerID + " " + turnState.getDescription());
-            } else {
-                out.println("YOUR TURN HAS ENDED");
-                event = new EndTurnEvent(thisPlayer);
+            case WAITING_FOR_SOMETHING -> {//WAITING_FOR_SOMETHING
+                break;
             }
-        } else if (turnState==TurnState.WAITING_FOR_SOMETHING) {//WAITING_FOR_SOMETHING
-
-        } else if (turnState==TurnState.MATCH_ENDED) {//MATCH_ENDED
-            out.println("MATCH HAS ENDED");
+            case MATCH_ENDED -> {
+                out.println("MATCH HAS ENDED");
+                break;
+            }
 
         }
+
 
         return event;
     }
 
     @Override
-    public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
+    public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<
+            Resource, Integer> storedResources) {
         playerStates.get(playerID).getLeaderCards().get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
     }
 
