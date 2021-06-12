@@ -55,10 +55,6 @@ public class Controller {
 
 
     public Controller(PropertyChangeSubject subject, MatchState matchState, HashMap<String, ClientHandlerSender> clientHandlerSenders) {
-        /*subject.addPropertyChangeListener(BuyResourcesEvent.class.getName(), this::BuyResourcesEventHandler);
-        subject.addPropertyChangeListener(SelectMultiLPowersEvent.class.getName(),
-                this::SelectMultipleLeaderPowersHandler);*/
-
         ArrayList<String> playerIDsInMatch = new ArrayList<>();
         for(Player p: matchState.getPlayers())
             playerIDsInMatch.add(p.getPlayerId());
@@ -125,12 +121,10 @@ public class Controller {
             DepositLeaderPowerHandler depositLeaderPowerHandler = new DepositLeaderPowerHandler(this.clientHandlerSenders, player);
             for(String leaderCardID: event.getChosenLeaderCardIDs()) {
                 String leaderCardJSON;
-                System.out.println("Loading leader card "+leaderCardID+" from default? "+Config.getInstance().isLeaderCardDefault());
                 if(Config.getInstance().isLeaderCardDefault())
                     leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\default\\" + leaderCardID + ".json"));
                 else
                     leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
-                System.out.println(leaderCardJSON);
                 LeaderCard lc = gson.fromJson(leaderCardJSON, LeaderCard.class);
                 lc.addObserver(leaderCardHandler);
                 for(LeaderPower lp: lc.getLeaderPowers()){
@@ -176,10 +170,13 @@ public class Controller {
     }
 
     public synchronized void BuyResourcesEventHandler(PropertyChangeEvent evt){
+        System.out.println("Entered into the handler of BuyResourcesEvent");
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
+            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)){
+                return;
+            }
 
             HashMap<Resource, Integer> resources = new HashMap<>();
             int faithPoints = 0;
@@ -204,6 +201,8 @@ public class Controller {
                 return;
             }
 
+            System.out.println("Marbles converted");
+
             var powers = leaderCardManager.getSelectedPowers(player, ExtraResourceLeaderPower.class)
                     .stream()
                     .map(x -> (ExtraResourceLeaderPower)x)
@@ -211,6 +210,7 @@ public class Controller {
 
             if(powers.size() > 1 && whiteMarbles>0)
             {
+                System.out.println("multiple leader powers");
                 ArrayList<Resource> resourceTypes= new ArrayList<>();
                 for(ExtraResourceLeaderPower lp: powers){
                     Resource r = lp.getResourceType();
@@ -221,15 +221,18 @@ public class Controller {
                     clientHandlerSenders.get(player.getPlayerId()).sendEvent(new ChoseMultipleExtraResourcePowerEvent(event.getPlayerId(), resourceTypes, whiteMarbles));
                     synchronized (waitingForSimpleResourcesLock){
                         try {
-                            TurnState oldTurnState = matchState.getTurnState();
-                            matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                            matchState.setWaitingForSomething();
                             waitingForSimpleResourcesLock.wait();
-                            matchState.setTurnState(oldTurnState);
+                            System.out.println("simpleChosenResourcesEvent passed to buyResources event");
+                            matchState.somethingArrived();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    if(simpleChosenResourcesEvent == null) return;
+                    if(simpleChosenResourcesEvent == null){
+                        System.err.println("The event is null");
+                        return;
+                    }
 
                     int chosenResourcesNum = 0;
                     HashMap<Resource, Integer> chosenResources = simpleChosenResourcesEvent.getAllResourcesChosen();
@@ -255,9 +258,11 @@ public class Controller {
             }
             else if (powers.size() == 1 && whiteMarbles>0)
             {
+                System.out.println("single leader power");
                 Resource type = powers.get(0).getResourceType();
                 resources.put(type, resources.getOrDefault(type, 0) + whiteMarbles);
             }
+            System.out.println("ending");
             faithTrackManager.incrementFaithTrackPosition(player, faithPoints);
             organizeResources(resources, player);
             matchState.setTurnState(TurnState.AFTER_MAIN_ACTION);
@@ -283,12 +288,10 @@ public class Controller {
                 clientHandlerSenders.get(player.getPlayerId()).sendEvent(new OrganizeResourcesEvent(player.getPlayerId(), resources));
                 synchronized (waitingForResourceOrganizationLock) {
                     try {
-                        TurnState oldTurnState = matchState.getTurnState();
-                        matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                        matchState.setWaitingForSomething();
                         playerWaitingForResourceOrganization = player.getPlayerId();
                         waitingForResourceOrganizationLock.wait();
-                        matchState.setTurnState(oldTurnState);
-                        System.out.println("newResourcesOrganizationEvent received, starting to use it in organizeResources");
+                        matchState.somethingArrived();
                     }catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -385,10 +388,9 @@ public class Controller {
     public void NewResourcesOrganizationEventHandler(PropertyChangeEvent evt){
         NewResourcesOrganizationEvent event = (NewResourcesOrganizationEvent) evt.getNewValue();
         synchronized (waitingForResourceOrganizationLock){
-            System.out.println("waitingForResourceOrganizationLock acquired");
             try {
                 if(setuppedPlayers.contains(event.getPlayerId())) {
-                    if (canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING))
+                    if (!canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING))
                         return;
                 }
                 else {
@@ -406,9 +408,7 @@ public class Controller {
                 notPresentException.printStackTrace();
             }
             newResourcesOrganizationEvent = event;
-            System.out.println("waitingForResourceOrganizationLock before notify");
             waitingForResourceOrganizationLock.notifyAll();
-            System.out.println("waitingForResourceOrganizationLock after notify");
         }
     }
 
@@ -416,7 +416,7 @@ public class Controller {
         LeaderPowerSelectStateEvent event = (LeaderPowerSelectStateEvent) evt.getNewValue();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
+            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
             LeaderCard leaderCard = player.getLeaderCardFromID(event.getLeaderCardID());
             if(event.getLeaderPowerIndex()>=leaderCard.getLeaderPowers().size()) {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader power index to big", event));
@@ -480,7 +480,7 @@ public class Controller {
         DevCardGrid devCardGrid = matchState.getDevCardGrid();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
+            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
             Pair<Integer, Integer> devDeckIndexes = devCardGrid.getRowColOfCardFromID(event.getDevCardID());
             DevCard devCard = devCardGrid.topCard(devDeckIndexes);
             HashMap<Resource, Integer> cardCost = devCard.getCost();
@@ -497,10 +497,9 @@ public class Controller {
 
                     synchronized (waitingForResourcesLock){
                         try {
-                            TurnState oldTurnState = matchState.getTurnState();
-                            matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                            matchState.setWaitingForSomething();
                             waitingForResourcesLock.wait();
-                            matchState.setTurnState(oldTurnState);
+                            matchState.somethingArrived();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -597,7 +596,7 @@ public class Controller {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "The player already executed a leader card action this turn", event));
                 return;
             }
-            if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION)) return;
+            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION)) return;
             leaderCardManager.removeLeaderCard(player, player.getLeaderCardFromID(event.getLeaderCardID()));
             for(Player p: matchState.getPlayers())
                 if(p!=player)
@@ -626,7 +625,7 @@ public class Controller {
 
             try {
                 Player player = matchState.getPlayerFromID(event.getPlayerId());
-                if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
+                if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
                 ArrayList<DevCard> topDevCards = player.getDashBoard().getTopCards();
                 for(String devCardID: event.getDevCards()){
                     int index = -1;
@@ -663,10 +662,9 @@ public class Controller {
 
                         synchronized (waitingForResourcesLock){
                             try {
-                                TurnState oldTurnState = matchState.getTurnState();
-                                matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                                matchState.setWaitingForSomething();
                                 waitingForResourcesLock.wait();
-                                matchState.setTurnState(oldTurnState);
+                                matchState.somethingArrived();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -728,10 +726,9 @@ public class Controller {
 
                     synchronized (waitingForSimpleResourcesLock){
                         try {
-                            TurnState oldTurnState = matchState.getTurnState();
-                            matchState.setTurnState(TurnState.WAITING_FOR_SOMETHING);
+                            matchState.setWaitingForSomething();
                             waitingForSimpleResourcesLock.wait();
-                            matchState.setTurnState(oldTurnState);
+                            matchState.somethingArrived();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -782,7 +779,7 @@ public class Controller {
 
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION) || canActionBePerformed(event, player, TurnState.END_OF_TURN)) return;
+            if(!canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION) && !canActionBePerformed(event, player, TurnState.END_OF_TURN)) return;
             if(matchState.getClass() != SinglePlayerMatchState.class)
                 nextTurn(player);
             else
@@ -900,7 +897,7 @@ public class Controller {
         ChosenResourcesEvent event = (ChosenResourcesEvent) evt.getNewValue();
         synchronized (waitingForResourcesLock){
             try {
-                if(canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING)) return;
+                if(!canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING)) return;
             } catch (NotPresentException notPresentException) {
                 //impossible
                 notPresentException.printStackTrace();
@@ -914,7 +911,7 @@ public class Controller {
         SimpleChosenResourcesEvent event = (SimpleChosenResourcesEvent) evt.getNewValue();
         synchronized (waitingForSimpleResourcesLock){
             try {
-                if(canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING)) return;
+                if(!canActionBePerformed(event, matchState.getPlayerFromID(event.getPlayerId()), TurnState.WAITING_FOR_SOMETHING)) return;
             } catch (NotPresentException notPresentException) {
                 //impossible
                 notPresentException.printStackTrace();

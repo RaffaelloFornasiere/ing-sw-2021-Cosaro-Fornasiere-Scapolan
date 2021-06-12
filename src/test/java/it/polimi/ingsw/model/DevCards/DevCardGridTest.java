@@ -14,19 +14,19 @@ public class DevCardGridTest extends TestCase {
         HashMap<Resource, Integer> resources1= new HashMap<>();
         resources1.put(Resource.ROCK,2);
         //create a DevCard with 2 Rock, level 1, green, 3 points
-        DevCard card1= new DevCard(resources1,1, CardColor.GREEN,3,new ProductionPower());
+        DevCard card1= new DevCard(resources1,1, CardColor.GREEN,3,new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0));
 
         //create infos for DevCard2
         HashMap<Resource, Integer> resources2= new HashMap<>();
         resources2.put(Resource.SHIELD,2);
         //create a DevCard with 2 SHIelDS, level 2, green, 3 points
-        DevCard card2= new DevCard(resources2,2, CardColor.GREEN,3,new ProductionPower());
+        DevCard card2= new DevCard(resources2,2, CardColor.GREEN,3,new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0));
 
         //create infos for DevCard3
         HashMap<Resource, Integer> resources3= new HashMap<>();
         resources3.put(Resource.SERVANT,2);
         //create a DevCard with 2 servants, level 3, green, 3 points
-        DevCard card3= new DevCard(resources3,3, CardColor.GREEN,3,new ProductionPower());
+        DevCard card3= new DevCard(resources3,3, CardColor.GREEN,3,new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0));
 
         //create ArrayList of Cards
         ArrayList<DevCard> cards= new ArrayList<>();

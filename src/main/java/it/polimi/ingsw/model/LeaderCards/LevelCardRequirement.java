@@ -13,9 +13,9 @@ import java.util.Stack;
  */
 public class LevelCardRequirement extends Requirement{
 
-    private CardColor type;
-    private int level;
-    private int quantity;
+    private final CardColor type;
+    private final int level;
+    private final int quantity;
 
     /**
      * Constructor for the class used when it is going to decorate another Requirement

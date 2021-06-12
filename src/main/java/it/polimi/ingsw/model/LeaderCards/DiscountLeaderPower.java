@@ -9,12 +9,15 @@ import java.util.HashMap;
  */
 public class DiscountLeaderPower extends LeaderPower{
 
-    private HashMap<Resource, Integer> discount;
+    private final HashMap<Resource, Integer> discount;
 
+    /**
+     * Constructor that initializes the power without any discount
+     */
     public DiscountLeaderPower(){
-        super();
         incompatiblePowers.add(ProductionLeaderPower.class);
         incompatiblePowers.add(ExtraResourceLeaderPower.class);
+        discount = new HashMap<>();
     }
 
     /**
@@ -23,7 +26,7 @@ public class DiscountLeaderPower extends LeaderPower{
      */
     public DiscountLeaderPower(HashMap<Resource, Integer> discount){
         this();
-        this.discount = (HashMap<Resource, Integer>)discount.clone();
+        this.discount.putAll(discount);
     }
 
     /**
@@ -31,6 +34,6 @@ public class DiscountLeaderPower extends LeaderPower{
      * @return the discount for each resource type
      */
     public HashMap<Resource, Integer> getDiscount() {
-        return (HashMap<Resource, Integer>)discount.clone();
+        return new HashMap<>(discount);
     }
 }

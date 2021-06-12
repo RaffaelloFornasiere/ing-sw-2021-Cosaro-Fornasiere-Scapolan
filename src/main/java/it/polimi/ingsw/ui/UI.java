@@ -63,6 +63,9 @@ public abstract class UI {
 
     //game related
 
+
+    public void invalidateUsername(){}
+
     public abstract ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose);
 
     public abstract HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources);
@@ -89,9 +92,13 @@ public abstract class UI {
 
     public abstract String askForLeaderCardToActivate() throws NotPresentException;
 
+    public abstract ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException;
+
     public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
 
     public abstract void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources);
+
+    public abstract void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates);
 
 
     /**

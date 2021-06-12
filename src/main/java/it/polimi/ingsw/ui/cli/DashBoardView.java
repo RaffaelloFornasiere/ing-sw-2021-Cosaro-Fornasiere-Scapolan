@@ -160,7 +160,7 @@ public class DashBoardView {
         ArrayList<DrawableObject> drawableObjects = new ArrayList<>();
         drawableObjects.add(new DrawableObject("PERSONAL PRODUCTION POWER", 0, 0));
         drawableObjects.add(new DrawableObject(personalProductionPowerString, 0, 2));
-        new Panel(drawableObjects, out).show();
+        new Panel(drawableObjects, out, false).show();
     }
 
     public void displayDevCardSlots() {

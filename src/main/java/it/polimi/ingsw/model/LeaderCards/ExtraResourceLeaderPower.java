@@ -9,6 +9,9 @@ public class ExtraResourceLeaderPower extends LeaderPower{
 
     private Resource resourceType;
 
+    /**
+     * Constructor that initializes the power without any resource type
+     */
     public ExtraResourceLeaderPower(){
         super();
         incompatiblePowers.add(DiscountLeaderPower.class);

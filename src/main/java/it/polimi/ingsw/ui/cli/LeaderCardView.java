@@ -2,6 +2,8 @@ package it.polimi.ingsw.ui.cli;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.exceptions.IllegalOperation;
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.LeaderCards.*;
@@ -9,6 +11,7 @@ import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.Pair;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +25,6 @@ import java.util.stream.IntStream;
 public class LeaderCardView {
     private LeaderCard card;
     boolean active;
-    boolean selected;
     String idCard;
 
 
@@ -39,7 +41,6 @@ public class LeaderCardView {
             e.printStackTrace();
         }
         active = false;
-        selected = false;
         idCard = card.getCardID();
     }
 
@@ -89,7 +90,8 @@ public class LeaderCardView {
     }
 
     public String depositPowersToString() {
-        if (selected) {
+        //TODO here must be changed how selected is handled
+        if (/*selected*/ true) {
             StringBuilder builder = new StringBuilder();
 
             card.getLeaderPowers().stream().forEach(power -> {
@@ -141,12 +143,8 @@ public class LeaderCardView {
         this.active = active;
     }
 
-    public void setSelected(boolean b) {
-        selected = b;
-    }
-
-    public boolean getSelected() {
-        return selected;
+    public boolean getSelected(int index) {
+        return card.getSelectedLeaderPowers().contains(card.getLeaderPowers().get(index));
     }
 
     public boolean isActive() {
@@ -157,18 +155,27 @@ public class LeaderCardView {
         return idCard;
     }
 
+    public ArrayList<Integer> getSelectablePowersIndexes(){
+        ArrayList<LeaderPower> leaderPowers = card.getLeaderPowers();
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for(int i = 0; i< leaderPowers.size(); i++){
+            if(!(leaderPowers.get(i) instanceof DepositLeaderPower))
+                indexes.add(i);
+        }
+        return indexes;
+    }
+
 
     public ArrayList<LeaderPower> getLeaderPowersActive() {
-        ArrayList<LeaderPower> a = new ArrayList<>();
-        card.getSelectedLeaderPowers().stream().forEach(power -> a.add(power));
-        return a;
+        return card.getSelectedLeaderPowers();
     }
 
     public String toString() {
         String color = Color.WHITE.getAnsiCode();
         StringBuilder build = new StringBuilder();
+        //TODO here must be changed how selected is handled
         build.append(
-                color + " " + color + card.getCardID() + " " + translateBoolean(selected) + " " + color + " " + Color.reset() + "\n" +
+                color + " " + color + card.getCardID() + " " + translateBoolean(/*selected*/true) + " " + color + " " + Color.reset() + "\n" +
                         color + "╔═" + color + "Requirements" + color + "═╗" + Color.reset() + "\n");
         for (Requirement req : card.getActivationRequirement()) {
             if (req instanceof ResourcesRequirement) {
@@ -240,10 +247,19 @@ public class LeaderCardView {
         panel.show();
         IntStream.range(1, 17).forEach(n -> {
             LeaderCardView card = new LeaderCardView("LeaderCard" + n);
-            card.setSelected(true);
+            //card.setSelected(true);
             System.out.println(card.depositPowersToString());
         });
     }
 
 
+    public void setPowerSelectionState(int index, Boolean newState) {
+        try {
+            if (newState)
+                card.selectLeaderPower(card.getLeaderPowers().get(index));
+            else
+                card.deselectLeaderPower(card.getLeaderPowers().get(index));
+        } catch (NotPresentException | IllegalOperation ignore) {
+        }
+    }
 }

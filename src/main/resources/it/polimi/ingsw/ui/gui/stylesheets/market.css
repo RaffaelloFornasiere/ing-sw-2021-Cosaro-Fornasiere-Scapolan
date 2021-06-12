@@ -1,0 +1,118 @@
+.root {
+    -fx-background-image: url(../images/MarketBackground.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+
+
+}
+
+
+.ErrorLabel{
+    -fx-text-fill: #c20000;
+    -fx-opacity: 0;
+}
+
+.text-field{
+    -fx-background-color: #393939;
+    -fx-border-color: #848484;
+    -fx-border-width: 1;
+    -fx-border-radius: 20 20 20 20 ;
+    -fx-text-fill: #848484;
+    -fx-prompt-text-fill: #848484;
+}
+
+.check-box {
+    -fx-text-fill: #848484;
+}
+
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-color:grey;
+    -fx-border-radius:3px;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #28a3f4;
+}
+
+
+.PanePlayer{
+    -fx-background-color: #80808054;
+    -fx-background-radius: 30px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+}
+
+#Owner {
+    -fx-border-radius: 30px;
+}
+
+.PlayerLabel{
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+}
+
+.button{
+    -fx-background-radius: 20 20 20 20;
+    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-width: 1.5;
+    -fx-background-color: #393939;
+    -fx-border-color: #848484;
+    -fx-text-fill: #848484;
+    -fx-text-alignment: center;
+}
+
+
+@font-face {
+    src: url(../fonts/OldstyleItalic.ttf);
+}
+
+.label{
+    -fx-font-family: "Old English Text MT";
+}
+
+.button:hover{
+    -fx-background-color: #848484;
+    -fx-text-fill: #393939;
+}
+.button:pressed{
+    -fx-background-color: #949494;
+}
+
+.movingButton{
+    -fx-border-color: transparent;
+    -fx-background-radius: 0px;
+}
+
+
+.arrow-button{
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0,0, 0);
+    -fx-shape: "M300 0L600 350H450V700H150V350H0L300 0Z";
+}
+
+.arrow-button-left{
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+}
+
+.arrow-button:hover{
+    -fx-background-color: #ba8a54;
+}
+
+.arrow-button:pressed{
+    -fx-background-color: #d7a062;
+}
+
+.marble{
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0,0, 0);
+}
+
+#leftMarble{
+    /*-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 2, 0, 1, 4);*/
+}

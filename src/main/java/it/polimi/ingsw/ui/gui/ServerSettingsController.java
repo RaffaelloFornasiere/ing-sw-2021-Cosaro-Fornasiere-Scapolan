@@ -22,15 +22,27 @@ import java.util.ResourceBundle;
 
 public class ServerSettingsController extends Controller implements Initializable {
 
+
+    private InetAddress serverAddress;
+    private Integer port = 50885;
+
     @FXML
     TextField portText;
     @FXML
     Label portErrorLabel;
     @FXML
+    Label invalidAddress;
+
+    @FXML
     TextField hostnameTextField;
+
+
+
+    public ServerSettingsController(GUI gui){super(gui);serverAddress =null;}
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        System.out.println("init");
         portText.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -40,6 +52,13 @@ public class ServerSettingsController extends Controller implements Initializabl
                 }
             }
         });
+        portText.setText("50885");
+        if(serverAddress != null) {
+            hostnameTextField.setText(serverAddress.getHostAddress());
+        }
+        else {
+            hostnameTextField.setPromptText("www.mastersofrenaissance.ns0.it");
+        }
 
 
     }
@@ -58,7 +77,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     public void onPortChanged() {
         int port = Integer.parseInt(portText.getText());
         System.out.println("port typed: " + Integer.toString(port));
-        if (port < 1024 || port > 49151) {
+        if (port < 1024 ) {
             portErrorLabel.setOpacity(1);
             System.out.println("error");
             return;
@@ -72,14 +91,24 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onNext() throws IOException {
-        MainApplication.setScene("login");
+        if(hostnameTextField.getText() != "")
+            onServerChanged(hostnameTextField.getText());
+        if(serverAddress == null)
+        {
+            invalidAddress.setOpacity(1);
+            return;
+        }
+        MainApplication.setScene("login", gui.loginController);
     }
 
     public void onServerChanged(ActionEvent event) {
-        String ip = ((TextField)event.getSource()).getText();
+        onServerChanged(((TextField)event.getSource()).getText());
+    }
+
+    public void onServerChanged(String ip) {
         System.out.println(ip);
         try {
-            gui.setServerAddress(InetAddress.getByName(ip));
+            serverAddress = InetAddress.getByName(ip);
         } catch (UnknownHostException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Hostname is unreachable ", ButtonType.OK);
             alert.showAndWait();
