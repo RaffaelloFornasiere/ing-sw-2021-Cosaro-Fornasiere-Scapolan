@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -72,6 +73,17 @@ public class LeaderCardView {
         return DepotResultMessage.SUCCESSFUL_LEADER;
     }
 
+    public HashMap<Resource, Integer> getTotalResourcesInDepositLeaderPowers() {
+        HashMap<Resource, Integer> totalRes = new HashMap<>();
+        Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
+        if (card.getSelectedLeaderPowers().contains(DepositLeaderPower.class)) {
+            card.getSelectedLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower).forEach(power -> {
+                ((DepositLeaderPower) power).getCurrentResources().forEach((key, value) -> totalRes.put(key, value + totalRes.get(key)));
+            });
+        }
+        return totalRes;
+    }
+
     public String getLeaderPowerName(int leaderPowerIndex) {
         return card.getLeaderPowers().get(leaderPowerIndex).getClass().getName().substring(34);
     }
@@ -118,8 +130,6 @@ public class LeaderCardView {
         if (c == CardColor.GREEN) return Color.GREEN.getAnsiCode();
         else return Color.YELLOW.getAnsiCode();
     }
-
-
 
 
     private String translateBoolean(Boolean b) {
