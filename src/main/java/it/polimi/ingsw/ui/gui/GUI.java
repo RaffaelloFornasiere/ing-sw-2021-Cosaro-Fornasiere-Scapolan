@@ -303,7 +303,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
+    public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources) {
         return null;
     }
+
 }

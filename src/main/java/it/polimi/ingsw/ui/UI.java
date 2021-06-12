@@ -127,5 +127,5 @@ public abstract class UI {
     abstract public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards);
 
 
-    abstract public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required);
+    abstract public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int  freeChoicesResources);
 }

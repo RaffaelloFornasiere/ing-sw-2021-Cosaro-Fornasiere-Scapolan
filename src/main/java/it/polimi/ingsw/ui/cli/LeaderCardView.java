@@ -11,12 +11,12 @@ import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.Pair;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -73,45 +73,58 @@ public class LeaderCardView {
         return DepotResultMessage.SUCCESSFUL_LEADER;
     }
 
+    public HashMap<Resource, Integer> getTotalResourcesInDepositLeaderPowers() {
+        HashMap<Resource, Integer> totalRes = new HashMap<>();
+        Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
+        if (card.getSelectedLeaderPowers().contains(DepositLeaderPower.class)) {
+            card.getSelectedLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower).forEach(power -> {
+                ((DepositLeaderPower) power).getCurrentResources().forEach((key, value) -> totalRes.put(key, value + totalRes.get(key)));
+            });
+        }
+        return totalRes;
+    }
+
     public String getLeaderPowerName(int leaderPowerIndex) {
         return card.getLeaderPowers().get(leaderPowerIndex).getClass().getName().substring(34);
     }
 
     public String depositPowersToString() {
         //TODO here must be changed how selected is handled
-        if (/*selected*/ true) {
-            StringBuilder builder = new StringBuilder();
-
-            card.getLeaderPowers().stream().forEach(power -> {
-                if (power instanceof DepositLeaderPower) {
-                    builder.append("\033[31;1;4mDEPOSIT OF " + card.getCardID().toUpperCase() + " \033[0m \n");
-                    int m = 1;
-
-                    AtomicInteger count = new AtomicInteger(1);
-                    ((DepositLeaderPower) power).getCurrentResources().keySet().forEach(resource -> {
-                        int current = ((DepositLeaderPower) power).getCurrentResources().get(resource);
-                        int max = ((DepositLeaderPower) power).getMaxResources().get(resource);
-                        String color = CLI.colorResource(resource);
-                        String shape = CLI.shapeResource(resource);
-                        builder.append(color + "   " + resource.toString() + "\n   ");
-                        IntStream.range(0, max).forEach(n -> builder.append(color + "╔═══╗" + " "));
-                        builder.append(Color.reset() + "\n" + "." + count.intValue() + " ");
-                        IntStream.range(0, current).forEach(n -> builder.append(color + "║ " + shape + " ║" + " "));
-                        IntStream.range(0, max - current).forEach(n -> builder.append(color + "║   ║" + " "));
-                        builder.append(Color.reset() + "\n   ");
-                        IntStream.range(0, max).forEach(n -> builder.append(color + "╚═══╝" + " "));
-                        builder.append(Color.reset() + "\n");
-                        count.getAndIncrement();
-                    });
-
+        StringBuilder builder = new StringBuilder();
+        IntStream.range(0, card.getLeaderPowers().size()).forEach(index -> {
+            LeaderPower power = card.getLeaderPowers().get(index);
+            if (power instanceof DepositLeaderPower) {
+                builder.append("\033[31;1;4mDEPOSIT OF " + card.getCardID().toUpperCase() + " \033[0m \n");
+                if (getSelected(index)) {
+                    builder.append("SELECTED");
+                } else {
+                    builder.append("NOT SELECTED");
                 }
+                int m = 1;
 
-            });
+                AtomicInteger count = new AtomicInteger(1);
+                ((DepositLeaderPower) power).getCurrentResources().keySet().forEach(resource -> {
+                    int current = ((DepositLeaderPower) power).getCurrentResources().get(resource);
+                    int max = ((DepositLeaderPower) power).getMaxResources().get(resource);
+                    String color = CLI.colorResource(resource);
+                    String shape = CLI.shapeResource(resource);
+                    builder.append(color + "   " + resource.toString() + "\n   ");
+                    IntStream.range(0, max).forEach(n -> builder.append(color + "╔═══╗" + " "));
+                    builder.append(Color.reset() + "\n" + "." + count.intValue() + " ");
+                    IntStream.range(0, current).forEach(n -> builder.append(color + "║ " + shape + " ║" + " "));
+                    IntStream.range(0, max - current).forEach(n -> builder.append(color + "║   ║" + " "));
+                    builder.append(Color.reset() + "\n   ");
+                    IntStream.range(0, max).forEach(n -> builder.append(color + "╚═══╝" + " "));
+                    builder.append(Color.reset() + "\n");
+                    count.getAndIncrement();
+                });
+
+            }
+
+    });
             return builder.toString();
-        }
-        return "";
 
-    }
+}
 
 
     public String translateColor(CardColor c) {
@@ -120,8 +133,6 @@ public class LeaderCardView {
         if (c == CardColor.GREEN) return Color.GREEN.getAnsiCode();
         else return Color.YELLOW.getAnsiCode();
     }
-
-
 
 
     private String translateBoolean(Boolean b) {
@@ -145,11 +156,11 @@ public class LeaderCardView {
         return idCard;
     }
 
-    public ArrayList<Integer> getSelectablePowersIndexes(){
+    public ArrayList<Integer> getSelectablePowersIndexes() {
         ArrayList<LeaderPower> leaderPowers = card.getLeaderPowers();
         ArrayList<Integer> indexes = new ArrayList<>();
-        for(int i = 0; i< leaderPowers.size(); i++){
-            if(!(leaderPowers.get(i) instanceof DepositLeaderPower))
+        for (int i = 0; i < leaderPowers.size(); i++) {
+            if (!(leaderPowers.get(i) instanceof DepositLeaderPower))
                 indexes.add(i);
         }
         return indexes;
@@ -252,4 +263,6 @@ public class LeaderCardView {
         } catch (NotPresentException | IllegalOperation ignore) {
         }
     }
+
+
 }

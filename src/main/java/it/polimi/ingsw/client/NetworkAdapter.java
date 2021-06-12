@@ -165,6 +165,8 @@ public class NetworkAdapter {
 
     public void ChoseResourcesEventHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
+        ChoseResourcesEvent event = (ChoseResourcesEvent) evt.getNewValue();
+        send(view.askWhereToTakeResourcesFrom(event.getRequiredResources(), event.getRequiredResourcesOFChoice()));
     }
 
     public void ClientEventHandler(PropertyChangeEvent evt) {
@@ -267,11 +269,6 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
-    public void ResourceSelectionEventHandler(PropertyChangeEvent evt) {
-        ResourceSelectionEvent event = (ResourceSelectionEvent) evt.getNewValue();
-        var selection = view.getResourcesSelection(event.getRequired());
-        send(new ResourceSelectionEvent(playerID, null, selection.get(0), selection.get(1)));
-    }
 
     public void SetupDoneEventHandler(PropertyChangeEvent evt) {
         SetupDoneEvent event = (SetupDoneEvent) evt.getNewValue();
