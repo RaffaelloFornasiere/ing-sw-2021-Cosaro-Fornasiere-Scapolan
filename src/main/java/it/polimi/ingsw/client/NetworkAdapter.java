@@ -289,73 +289,11 @@ public class NetworkAdapter {
 
     public void UsernameErrorHandler(PropertyChangeEvent evt) {
         UsernameError event = (UsernameError) evt.getNewValue();
-        System.out.println("Received" + event.getEventName());
 
         view.invalidateUsername();
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);
     }
-
-    /*
-    public void ControllerEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void MatchEventsHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void ActivateLeaderCardEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void ActivateProductionEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void AddedNewPopeFavorCardEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void BuyDevCardsEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void BuyResourcesEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void IncrementedFaithTrackPositionEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void MatchEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void OrganizeWarehouseResEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-        OrganizeWarehouseResEvent event = (OrganizeWarehouseResEvent) evt.getNewValue();
-        //var displacement = view.getWarehouseDisplacement(event.getResources());
-        //send(new OrganizeWarehouseResEvent(playerID, displacement));
-    }
-
-    public void SelectMultiLPowersEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void NewPlayerEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void NewPlayerEventWithNetworkDataHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
-    public void StartMatchEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-    */
 
     public static void main(String[] args) {
         ClientApp.main(args);

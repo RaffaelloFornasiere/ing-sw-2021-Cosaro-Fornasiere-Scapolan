@@ -21,59 +21,54 @@ import java.util.Scanner;
  */
 public class LeaderCard extends Observable {
 
-    private String cardID;
-    private int victoryPoints;
-    private ArrayList<Requirement> activationRequirements;
-    private ArrayList<Pair<LeaderPower, Boolean>> powers;
+    private final String cardID;
+    private final int victoryPoints;
+    private final ArrayList<Requirement> activationRequirements;
+    private final ArrayList<Pair<LeaderPower, Boolean>> powers;
 
     /**
      * Constructor for the class
-     *
      * @param cardID                 The Id of the card
-     * @param victoryPoints          amount of points awarded to the player at the end of the match if the card is active
-     * @param activationRequirements requirement that must be fulfilled to activate the card
-     * @param powers                 effects of the card
+     * @param victoryPoints          Amount of points awarded to the player at the end of the match if the card is active
+     * @param activationRequirements Requirement that must be fulfilled to activate the card
+     * @param powers                 Effects of the card
      */
     public LeaderCard(String cardID, int victoryPoints, ArrayList<Requirement> activationRequirements, ArrayList<LeaderPower> powers) {
         this.cardID = cardID;
         this.victoryPoints = victoryPoints;
-        this.activationRequirements = (ArrayList<Requirement>) activationRequirements.clone();
+        this.activationRequirements = new ArrayList<>(activationRequirements);
         this.powers = new ArrayList<>();
         for (LeaderPower lp : powers)
             this.powers.add(new Pair<>(lp, false));
     }
 
     /**
-     * getter for the ID of the card
-     *
-     * @return the ID of the card
+     * Getter for the ID of the card
+     * @return The ID of the card
      */
     public String getCardID() {
         return cardID;
     }
 
     /**
-     * getter for the victory points
-     *
-     * @return the value of victory points
+     * Getter for the victory points
+     * @return The value of victory points
      */
     public int getVictoryPoints() {
         return victoryPoints;
     }
 
     /**
-     * getter for the requirements
-     *
-     * @return the requirements
+     * Getter for the requirements
+     * @return The requirements
      */
     public ArrayList<Requirement> getActivationRequirement() {
-        return (ArrayList<Requirement>) activationRequirements.clone();
+        return new ArrayList<>(activationRequirements);
     }
 
     /**
-     * getter for all the powers
-     *
-     * @return the powers of this card
+     * Getter for all the powers
+     * @return The powers of this card
      */
     public ArrayList<LeaderPower> getLeaderPowers() {
         ArrayList<LeaderPower> ret = new ArrayList<>();
@@ -83,22 +78,17 @@ public class LeaderCard extends Observable {
     }
 
     /**
-     * getter for all the powers, with respective boolean
-     *
-     * @return the powers of this card with respective boolean
+     * Getter for all the powers, with respective selected state
+     * @return The powers of this card with respective selected state
      */
     public ArrayList<Pair<LeaderPower, Boolean>> getBooleanPowers() {
-        ArrayList<Pair<LeaderPower, Boolean>> ret = new ArrayList<>();
-        for (Pair<LeaderPower, Boolean> lpo : powers)
-            ret.add(new Pair<>(lpo.getKey(), lpo.getValue()));
-        return ret;
+        return new ArrayList<>(powers);
     }
 
 
     /**
-     * getter for all the selected powers
-     *
-     * @return the powers of this card
+     * Getter for all the selected powers
+     * @return The powers of this card
      */
     public ArrayList<LeaderPower> getSelectedLeaderPowers() {
         ArrayList<LeaderPower> ret = new ArrayList<>();
@@ -110,10 +100,9 @@ public class LeaderCard extends Observable {
 
     /**
      * Methods that selects a leader power
-     *
-     * @param leaderPower the leader power to select
-     * @throws NotPresentException if the leader power passed does not belong to the card
-     * @throws IllegalOperation    if the leader power was already selected
+     * @param leaderPower The leader power to select
+     * @throws NotPresentException If the leader power passed does not belong to the card
+     * @throws IllegalOperation    If the leader power was already selected
      */
     public void selectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
         for (int i = 0, powersSize = powers.size(); i < powersSize; i++) {
@@ -132,10 +121,9 @@ public class LeaderCard extends Observable {
 
     /**
      * Methods that deselects a leader power
-     *
-     * @param leaderPower the leader power to deselect
-     * @throws NotPresentException if the leader power passed does not belong to the card
-     * @throws IllegalOperation    if the leader power was not selected
+     * @param leaderPower The leader power to deselect
+     * @throws NotPresentException If the leader power passed does not belong to the card
+     * @throws IllegalOperation    If the leader power was not selected
      */
     public void deselectLeaderPower(LeaderPower leaderPower) throws NotPresentException, IllegalOperation {
         for (int i = 0, powersSize = powers.size(); i < powersSize; i++) {

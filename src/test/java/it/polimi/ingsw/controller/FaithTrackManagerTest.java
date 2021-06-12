@@ -51,7 +51,7 @@ public class FaithTrackManagerTest extends TestCase {
                 //Create Resources
                 HashMap<Resource, Integer> resources= new HashMap<>();
                 resources.put(Resource.SHIELD, 3);
-                DevCard devCard= new DevCard(resources, 1, CardColor.GREEN,4, new ProductionPower());
+                DevCard devCard= new DevCard(resources, 1, CardColor.GREEN,4, new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0));
                 ArrayList<DevCard> aDevCard= new ArrayList<>();
                 aDevCard.add(devCard);
                 assertEquals(1, aDevCard.size());

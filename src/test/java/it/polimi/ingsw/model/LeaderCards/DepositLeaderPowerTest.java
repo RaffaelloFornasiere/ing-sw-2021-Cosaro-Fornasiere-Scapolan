@@ -6,8 +6,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class DepositLeaderPowerTest {
 
@@ -189,5 +188,47 @@ public class DepositLeaderPowerTest {
         } catch (ResourcesLimitsException e) {
             //nothing
         }
+    }
+
+    @Test
+    public void testCanStoreTrue() {
+        HashMap<Resource, Integer> maxResources = new HashMap<>();
+        maxResources.put(Resource.SERVANT, 3);
+        maxResources.put(Resource.COIN, 7);
+
+        DepositLeaderPower dlp = new DepositLeaderPower(maxResources);
+
+        HashMap<Resource, Integer> testResources = new HashMap<>();
+        testResources.put(Resource.COIN, 4);
+
+        assertTrue(dlp.canStore(testResources));
+    }
+
+    @Test
+    public void testCanStoreFalseDifferentResourceType() {
+        HashMap<Resource, Integer> maxResources = new HashMap<>();
+        maxResources.put(Resource.SERVANT, 3);
+        maxResources.put(Resource.COIN, 7);
+
+        DepositLeaderPower dlp = new DepositLeaderPower(maxResources);
+
+        HashMap<Resource, Integer> testResources = new HashMap<>();
+        testResources.put(Resource.ROCK, 2);
+
+        assertFalse(dlp.canStore(testResources));
+    }
+
+    @Test
+    public void testCanStoreFalseTooManyResources() {
+        HashMap<Resource, Integer> maxResources = new HashMap<>();
+        maxResources.put(Resource.SERVANT, 3);
+        maxResources.put(Resource.COIN, 7);
+
+        DepositLeaderPower dlp = new DepositLeaderPower(maxResources);
+
+        HashMap<Resource, Integer> testResources = new HashMap<>();
+        testResources.put(Resource.COIN, 8);
+
+        assertFalse(dlp.canStore(testResources));
     }
 }

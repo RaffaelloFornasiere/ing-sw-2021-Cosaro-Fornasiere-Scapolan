@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.LeaderCards;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.Resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,21 +11,16 @@ import java.util.HashMap;
  */
 public class DepositLeaderPower extends LeaderPower{
 
-    private HashMap<Resource, Integer> maxResources;
-    private HashMap<Resource, Integer> currentResources;
+    private final HashMap<Resource, Integer> maxResources;
+    private final HashMap<Resource, Integer> currentResources;
 
-
-    public DepositLeaderPower(){
-        super();
-    }
 
     /**
      * Constructor for the class
      * @param maxResources the amount of extra resources that can be stored
      */
     public DepositLeaderPower(HashMap<Resource, Integer> maxResources) {
-        this();
-        this.maxResources = (HashMap<Resource, Integer>)maxResources.clone();
+        this.maxResources = new HashMap<>(maxResources);
 
         this.currentResources = new HashMap<>();
         for (Resource r: maxResources.keySet()) {
@@ -37,7 +33,7 @@ public class DepositLeaderPower extends LeaderPower{
      * @return the extra space for each resource
      */
     public HashMap<Resource, Integer> getMaxResources() {
-        return (HashMap<Resource, Integer>)maxResources.clone();
+        return new HashMap<>(maxResources);
     }
 
     /**
@@ -45,7 +41,7 @@ public class DepositLeaderPower extends LeaderPower{
      * @return resources currently stored
      */
     public HashMap<Resource, Integer> getCurrentResources() {
-        return (HashMap<Resource, Integer>)currentResources.clone();
+        return new HashMap<>(currentResources);
     }
 
     /**

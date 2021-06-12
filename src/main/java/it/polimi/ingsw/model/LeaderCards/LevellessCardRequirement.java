@@ -13,8 +13,8 @@ import java.util.Stack;
 */
 public class LevellessCardRequirement extends Requirement{
 
-    private CardColor type;
-    private int quantity;
+    private final CardColor type;
+    private final int quantity;
 
     /**
      * Constructor for the class
