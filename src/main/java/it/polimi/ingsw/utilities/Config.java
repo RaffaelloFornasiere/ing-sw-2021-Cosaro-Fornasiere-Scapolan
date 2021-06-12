@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.EffectOfCell;
+import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.AbstractCell;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
@@ -11,6 +12,10 @@ import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
+import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
+import it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard;
+import it.polimi.ingsw.model.singlePlayer.SoloActionTokenMove;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,7 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"FieldCanBeLocal", "UnstableApiUsage"})
 public class Config {
     private static transient Config instance = null;
 
@@ -46,6 +51,8 @@ public class Config {
     private ArrayList<ProductionPower> personalPowers;
     private ArrayList<Integer> faithPointHandicap;
     private ArrayList<Integer> resourcesHandicap;
+
+    private ArrayList<SoloActionToken> soloActionTokens;
 
     private transient static final int maxPlayersDefault = 4;
     private transient static final int devCardNumberDefault = 48;
@@ -96,17 +103,35 @@ public class Config {
         add(2);
     }};
 
+    private transient static final ArrayList<SoloActionToken> soloActionTokensDefault = new ArrayList<>(){{
+        add(new SoloActionTokenDiscard(new HashMap<>(){{put(CardColor.GREEN, 2);}}));
+        add(new SoloActionTokenDiscard(new HashMap<>(){{put(CardColor.VIOLET, 2);}}));
+        add(new SoloActionTokenDiscard(new HashMap<>(){{put(CardColor.YELLOW, 2);}}));
+        add(new SoloActionTokenDiscard(new HashMap<>(){{put(CardColor.BLUE, 2);}}));
+        add(new SoloActionTokenMove(2, false));
+        add(new SoloActionTokenMove(2, false));
+        add(new SoloActionTokenMove(1, true));
+    }};
+
     private Config(){
         loadDefault();
     }
 
     private static Config loadFromJSON(){
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(SoloActionToken.class, new GsonInheritanceAdapter<SoloActionToken>());
+        Gson gson = gsonBuilder.create();
         try {
             String configJSON = Files.readString(Paths.get("src\\main\\resources\\Config.json"));
             Config config = gson.fromJson(configJSON, Config.class);
 
-            config.faithTrack = loadFaithTrack(config);
+            if(config.soloActionTokens.stream().filter(x -> x.getClass() == SoloActionTokenMove.class).map(x -> (SoloActionTokenMove) x).noneMatch(SoloActionTokenMove::reshuffle)){
+                System.err.println("There must be at least one reshuffle token");
+                config.soloActionTokens = soloActionTokensDefault;
+            }
+
+
+            config.faithTrack = loadFaithTrack();
 
             config.devCards = loadDevCards(config);
 
@@ -165,7 +190,7 @@ public class Config {
         }
     }
 
-    private static ArrayList<AbstractCell> loadFaithTrack(Config config) {
+    private static ArrayList<AbstractCell> loadFaithTrack() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
         builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
@@ -186,7 +211,7 @@ public class Config {
         builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
         builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
         Gson gson = builder.create();
-        ArrayList<AbstractCell> arrayOfCells = new ArrayList<>();
+        ArrayList<AbstractCell> arrayOfCells;
         try {
             String faithTrackJSON = Files.readString(Paths.get("src\\main\\resources\\default\\CompleteFaithTrack.json"));
             arrayOfCells = gson.fromJson(faithTrackJSON, new TypeToken<ArrayList<AbstractCell>>(){}.getType());
@@ -268,9 +293,8 @@ public class Config {
         return instance;
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList<AbstractCell> getFaithTrack() {
-        return (ArrayList<AbstractCell>) faithTrack.clone();
+        return new ArrayList<>(faithTrack);
     }
 
     public int getMaxPlayers() {
@@ -285,9 +309,8 @@ public class Config {
         return devCardsToWin;
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList<DevCard> getDevCards(){
-        return (ArrayList<DevCard>) this.devCards.clone();
+        return new ArrayList<>(devCards);
     }
 
     public int getLeaderCardNumber() {
@@ -330,24 +353,24 @@ public class Config {
         return marketColumns;
     }
 
-    @SuppressWarnings("unchecked")
     public HashMap<Marble, Integer> getMarbles() {
-        return (HashMap<Marble, Integer>) marbles.clone();
+        return new HashMap<>(marbles);
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList<ProductionPower> getPersonalPowers() {
-        return (ArrayList<ProductionPower>) personalPowers.clone();
+        return new ArrayList<>(personalPowers);
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList<Integer> getFaithPointHandicap() {
-        return (ArrayList<Integer>) faithPointHandicap.clone();
+        return new ArrayList<>(faithPointHandicap);
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList<Integer> getResourcesHandicap() {
-        return (ArrayList<Integer>) resourcesHandicap.clone();
+        return new ArrayList<>(resourcesHandicap);
+    }
+
+    public ArrayList<SoloActionToken> getSoloActionTokens() {
+        return new ArrayList<>(soloActionTokens);
     }
 
     private void loadDefault(){
@@ -372,13 +395,22 @@ public class Config {
         personalPowers = personalPowersDefault;
         faithPointHandicap = faithPointHandicapDefault;
         resourcesHandicap =  resourcesHandicapDefault;
+
+        soloActionTokens = soloActionTokensDefault;
+    }
+
+    private static Config defaultConfig = null;
+
+    public static Config getDefaultConfig(){
+        if(defaultConfig==null) defaultConfig = new Config();
+        return defaultConfig;
     }
 
     public static void main(String[] args) {
         Config config = new Config();
         config.loadDefault();
         //Gson gson = new GsonBuilder().create();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(SoloActionToken.class, new GsonInheritanceAdapter<SoloActionToken>()).setPrettyPrinting().create();
         String s = gson.toJson(config);
 
         String path = "src\\main\\resources\\Config.json";

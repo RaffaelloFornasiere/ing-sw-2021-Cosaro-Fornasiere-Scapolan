@@ -16,12 +16,12 @@
   "marketRows": 4,
   "marketColumns": 3,
   "marbles": {
-    "PURPLE": 2,
-    "RED": 1,
-    "GRAY": 2,
-    "WHITE": 4,
     "BLUE": 2,
-    "YELLOW": 2
+    "RED": 1,
+    "WHITE": 4,
+    "YELLOW": 2,
+    "GRAY": 2,
+    "PURPLE": 2
   },
   "personalPowers": [
     {
@@ -64,5 +64,60 @@
     1,
     1,
     2
+  ],
+  "soloActionTokens": [
+    {
+      "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
+      "INSTANCE": {
+        "cardsDiscarded": {
+          "Green": 2
+        }
+      }
+    },
+    {
+      "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
+      "INSTANCE": {
+        "cardsDiscarded": {
+          "Violet": 2
+        }
+      }
+    },
+    {
+      "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
+      "INSTANCE": {
+        "cardsDiscarded": {
+          "Yellow": 2
+        }
+      }
+    },
+    {
+      "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
+      "INSTANCE": {
+        "cardsDiscarded": {
+          "Blue": 2
+        }
+      }
+    },
+    {
+      "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenMove",
+      "INSTANCE": {
+        "steps": 2,
+        "reshuffle": false
+      }
+    },
+    {
+      "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenMove",
+      "INSTANCE": {
+        "steps": 2,
+        "reshuffle": false
+      }
+    },
+    {
+      "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenMove",
+      "INSTANCE": {
+        "steps": 1,
+        "reshuffle": true
+      }
+    }
   ]
 }
