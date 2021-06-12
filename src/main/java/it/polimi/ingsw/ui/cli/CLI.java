@@ -1938,6 +1938,14 @@ public class CLI extends UI {
         playerStates.get(playerID).getLeaderCards().get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
     }
 
+    @Override
+    public void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates) {
+        LeaderCardView leaderCardView = playerStates.get(playerId).getLeaderCards().get(leaderCardID);
+        for(int i=0; i<powerSelectedStates.size(); i++){
+            leaderCardView.setPowerSelectionState(i, powerSelectedStates.get(i));
+        }
+    }
+
     /*public void updateDepositLeaderPowerState(String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
         out.println(thisPlayer + " , THE DEPOSIT LEADER POWER OF " + leaderCardID.toUpperCase() + "\n HAS BEEN UPDATED! CHECK IT OUT!");
         playerStates.get(thisPlayer).leaderCards.get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);

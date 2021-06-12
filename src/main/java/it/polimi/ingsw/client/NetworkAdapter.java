@@ -218,7 +218,8 @@ public class NetworkAdapter {
     }
 
     public void LeaderCardStateEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        LeaderCardStateEvent event = (LeaderCardStateEvent) evt.getNewValue();
+        view.updateLeaderPowersSelectedState(event.getPlayerId(), event.getLeaderCardID(), event.getPowerSelectedStates());
     }
 
     public void LobbyErrorHandler(PropertyChangeEvent evt) {

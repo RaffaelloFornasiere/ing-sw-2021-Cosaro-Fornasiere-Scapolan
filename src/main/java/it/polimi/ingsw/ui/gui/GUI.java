@@ -283,6 +283,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates) {
+
+    }
+
+    @Override
     public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
         return null;
     }

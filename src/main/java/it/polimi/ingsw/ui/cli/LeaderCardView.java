@@ -2,6 +2,8 @@ package it.polimi.ingsw.ui.cli;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.exceptions.IllegalOperation;
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.LeaderCards.*;
@@ -22,7 +24,6 @@ import java.util.stream.IntStream;
 public class LeaderCardView {
     private LeaderCard card;
     boolean active;
-    ArrayList<Boolean> selected;
     String idCard;
 
 
@@ -39,9 +40,6 @@ public class LeaderCardView {
             e.printStackTrace();
         }
         active = false;
-        selected = new ArrayList<>();
-        for(int i=0; i<card.getLeaderPowers().size(); i++)
-            selected.add(i, false);
         idCard = card.getCardID();
     }
 
@@ -135,12 +133,8 @@ public class LeaderCardView {
         this.active = active;
     }
 
-    public void togglePowerSelectionState(int index){
-        selected.set(index, !selected.get(index));
-    }
-
     public boolean getSelected(int index) {
-        return selected.get(index);
+        return card.getSelectedLeaderPowers().contains(card.getLeaderPowers().get(index));
     }
 
     public boolean isActive() {
@@ -163,9 +157,7 @@ public class LeaderCardView {
 
 
     public ArrayList<LeaderPower> getLeaderPowersActive() {
-        ArrayList<LeaderPower> a = new ArrayList<>();
-        card.getSelectedLeaderPowers().stream().forEach(power -> a.add(power));
-        return a;
+        return card.getSelectedLeaderPowers();
     }
 
     public String toString() {
@@ -251,4 +243,13 @@ public class LeaderCardView {
     }
 
 
+    public void setPowerSelectionState(int index, Boolean newState) {
+        try {
+            if (newState)
+                card.selectLeaderPower(card.getLeaderPowers().get(index));
+            else
+                card.deselectLeaderPower(card.getLeaderPowers().get(index));
+        } catch (NotPresentException | IllegalOperation ignore) {
+        }
+    }
 }

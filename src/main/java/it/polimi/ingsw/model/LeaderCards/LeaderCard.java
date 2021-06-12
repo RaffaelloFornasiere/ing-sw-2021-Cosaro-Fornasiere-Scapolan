@@ -152,7 +152,7 @@ public class LeaderCard extends Observable {
         throw new NotPresentException("The selected leader power does not belong to this card");
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
         builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
@@ -181,7 +181,7 @@ public class LeaderCard extends Observable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /*public static void main(String[] args) {
         GsonBuilder builder = new GsonBuilder();
@@ -271,7 +271,7 @@ public class LeaderCard extends Observable {
     }*/
 }
 
-class DummyLeaderCard {
+/*class DummyLeaderCard {
     public String cardID;
     public int victoryPoints;
     public ArrayList<Requirement> activationRequirements;
@@ -281,4 +281,4 @@ class DummyLeaderCard {
 class DummyLeaderPower {
     public LeaderPower power;
     public boolean selected;
-}
+}*/

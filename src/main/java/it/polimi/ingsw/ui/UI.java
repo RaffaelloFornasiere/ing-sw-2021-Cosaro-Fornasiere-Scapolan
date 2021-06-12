@@ -98,6 +98,8 @@ public abstract class UI {
 
     public abstract void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources);
 
+    public abstract void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates);
+
 
     /**
      * Asks the user to select which leader powers use with which marbles
