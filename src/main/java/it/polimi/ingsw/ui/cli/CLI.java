@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class CLI extends UI {
     private static PrintWriter out = new PrintWriter(System.out, true);
@@ -1998,7 +1997,7 @@ public class CLI extends UI {
         ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
 
         leaderCardViews.stream().forEach(cardView -> {
-            if (cardView.getSelected()) {
+            if (cardView.isActive()) {
                 IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
                     LeaderPower power = cardView.getLeaderPowersActive().get(index);
                     if (power instanceof DepositLeaderPower)
