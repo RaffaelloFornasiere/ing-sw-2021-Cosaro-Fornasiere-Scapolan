@@ -2064,7 +2064,7 @@ public class CLI extends UI {
                             displayResourcesInHashMap(warehouseHashMap);
                             break;
                         }
-                        case 2 -> {
+                        case 2 -> {//DPOSIT LEADER POWER
                             if (chosenNumber > leaderDepositsHashMap.get(justResources.get(index))) {
                                 out.println(DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getMessage());
                                 successful = DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getSuccessfull();
@@ -2080,7 +2080,7 @@ public class CLI extends UI {
 
                             break;
                         }
-                        case 3 -> {
+                        case 3 -> {//STRONGBOX
                             if (!thisDashboard.getStrongBox().containsKey(justResources.get(index))) {
                                 out.println(DepotResultMessage.INVALID_RES_STRONGBOX.getMessage());
                                 successful = DepotResultMessage.INVALID_RES_STRONGBOX.getSuccessfull();
