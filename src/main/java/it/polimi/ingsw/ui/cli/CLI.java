@@ -1628,7 +1628,7 @@ public class CLI extends UI {
         ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
                 .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
 
-        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to discard").get(0);
+        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out, true), 1, "Choose a leader card to discard").get(0);
 
         return choices.get(choice).getKey();
     }
@@ -1644,7 +1644,7 @@ public class CLI extends UI {
         ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
                 .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
 
-        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out), 1, "Choose a leader card to activate").get(0);
+        int choice = displaySelectionForm(choices, new Panel(drawableLeaderCards, out, true), 1, "Choose a leader card to activate").get(0);
 
         return choices.get(choice).getKey();
     }
@@ -1672,7 +1672,7 @@ public class CLI extends UI {
         ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
                 .map(s->new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
 
-        ArrayList<Integer> choices = displaySelectionFormVariableChoices(options, new Panel(drawableLeaderCards, out), options.size(), "Choose the leader powers to select");
+        ArrayList<Integer> choices = displaySelectionFormVariableChoices(options, new Panel(drawableLeaderCards, out, true), options.size(), "Choose the leader powers to select");
 
         ArrayList<LeaderPowerSelectStateEvent> ret = new ArrayList<>();
         for(int choice: choices){
@@ -1724,7 +1724,7 @@ public class CLI extends UI {
                     offSet.getAndIncrement();
                     height.set(Integer.max(height.get(), obj.getHeight()));
                 });
-                Panel cardPanel = new Panel(objs, out);
+                Panel cardPanel = new Panel(objs, out, false);
                 cardPanel.show();
 
                 break;
