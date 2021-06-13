@@ -169,12 +169,24 @@ public class Controller {
         return true;
     }
 
+    private boolean canActionBePerformed(Event event, Player player, ArrayList<TurnState> turnStates){
+        if(!turnStates.contains(matchState.getTurnState())){
+            clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "The action can't be performed now", event));
+            return false;
+        }
+        if(matchState.getPlayers().get(matchState.getCurrentPlayerIndex())!=player) {
+            clientHandlerSenders.get(player.getPlayerId()).sendEvent(new BadRequestEvent(player.getPlayerId(), "It is not the player turn", event));
+            return false;
+        }
+        return true;
+    }
+
     public synchronized void BuyResourcesEventHandler(PropertyChangeEvent evt){
         System.out.println("Entered into the handler of BuyResourcesEvent");
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)){
+            if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_LEADER_CARD_ACTION);}})){
                 return;
             }
 
@@ -416,7 +428,7 @@ public class Controller {
         LeaderPowerSelectStateEvent event = (LeaderPowerSelectStateEvent) evt.getNewValue();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
+            if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_LEADER_CARD_ACTION);}})) return;
             LeaderCard leaderCard = player.getLeaderCardFromID(event.getLeaderCardID());
             if(event.getLeaderPowerIndex()>=leaderCard.getLeaderPowers().size()) {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader power index to big", event));
@@ -453,7 +465,7 @@ public class Controller {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "The player already executed a leader card action this turn", event));
                 return;
             }
-            if(canActionBePerformed(event, player, TurnState.START) || canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION)) return;
+            if(canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_MAIN_ACTION);}})) return;
             LeaderCard leaderCard = player.getLeaderCardFromID(event.getLeaderCardID());
             try{
                 leaderCardManager.activateLeaderCard(player, leaderCard);
@@ -480,7 +492,7 @@ public class Controller {
         DevCardGrid devCardGrid = matchState.getDevCardGrid();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
+            if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_LEADER_CARD_ACTION);}})) return;
             Pair<Integer, Integer> devDeckIndexes = devCardGrid.getRowColOfCardFromID(event.getDevCardID());
             DevCard devCard = devCardGrid.topCard(devDeckIndexes);
             HashMap<Resource, Integer> cardCost = devCard.getCost();
@@ -596,7 +608,7 @@ public class Controller {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "The player already executed a leader card action this turn", event));
                 return;
             }
-            if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION)) return;
+            if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_MAIN_ACTION);}})) return;
             leaderCardManager.removeLeaderCard(player, player.getLeaderCardFromID(event.getLeaderCardID()));
             for(Player p: matchState.getPlayers())
                 if(p!=player)
@@ -625,7 +637,7 @@ public class Controller {
 
             try {
                 Player player = matchState.getPlayerFromID(event.getPlayerId());
-                if(!canActionBePerformed(event, player, TurnState.START) && !canActionBePerformed(event, player, TurnState.AFTER_LEADER_CARD_ACTION)) return;
+                if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_LEADER_CARD_ACTION);}})) return;
                 ArrayList<DevCard> topDevCards = player.getDashBoard().getTopCards();
                 for(String devCardID: event.getDevCards()){
                     int index = -1;
@@ -779,7 +791,7 @@ public class Controller {
 
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
-            if(!canActionBePerformed(event, player, TurnState.AFTER_MAIN_ACTION) && !canActionBePerformed(event, player, TurnState.END_OF_TURN)) return;
+            if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.AFTER_MAIN_ACTION); add(TurnState.END_OF_TURN);}})) return;
             if(matchState.getClass() != SinglePlayerMatchState.class)
                 nextTurn(player);
             else
