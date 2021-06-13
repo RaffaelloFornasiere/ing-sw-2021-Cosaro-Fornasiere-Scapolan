@@ -305,6 +305,64 @@ public class CLI extends UI {
 
     }
 
+    public static ArrayList<Integer> displaySelectionFormMultipleChoiches(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
+        String resetColor = Color.WHITE.getAnsiCode();
+        StringBuilder builder = new StringBuilder();
+        builder.append(message);
+        builder.append("YOU HAVE TO CHOOSE " + numberOfOptionsToChose +
+                " OF THE FOLLOWING OPTIONS \n(YOU CAN CHOOSE THE SAME OPTION MULTIPLE TIMES) \n");
+
+        if (displayPanel != null) {
+            displayPanel.show();
+        }
+
+        builder.append(generateForm(option_itsColor, resetColor));
+
+        DrawableObject obj = new DrawableObject(builder.toString(), 0, 0);
+        Panel panel = new Panel(1000, (int) obj.getHeight() + 3, out);
+        panel.addItem(obj);
+        panel.show();
+
+        int size = option_itsColor.size();
+        int m = numberOfOptionsToChose;
+        out.println("ENTER THE NUMBER OF THE SELECTED ITEMS");
+        String inputString;
+        ArrayList<Integer> inputs = new ArrayList<>();
+        while (m > 0) {
+            inputString = in.next();
+            if (inputString.matches("-?\\d+")) {
+                int input = Integer.parseInt(inputString);
+                if (input < 1 || input > size) {
+                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                } else {
+                    inputs.add(input);
+                    m--;
+                }
+            } else {
+                out.println("PLEASE INSERT A NUMBER");
+            }
+        }
+
+        out.println("YOU HAVE CHOSEN: \n");
+        StringBuilder builder2 = new StringBuilder();
+        inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
+
+        inputs.forEach(index -> {
+            builder2.append(index + 1 + " -> " + option_itsColor.get(index).getValue() + option_itsColor.get(index).getKey() + Color.reset() + "\n");
+        });
+        out.println(builder2.toString());
+
+        out.println("DO YOU AGREE? yes/no");
+        String answer = in.next().toUpperCase();
+        in.nextLine();
+        if (answer.equals("YES") || answer.equals("Y")) {
+            return inputs;
+        } else {
+            return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
+        }
+
+    }
+
 // test of displaySelectionForm()
 
    /* public static void main(String[] args) {
@@ -2166,6 +2224,25 @@ public class CLI extends UI {
             return askWhereToTakeResourcesFrom(clonedRequired, freeChoicesResources);
         } else
             return new ChosenResourcesEvent(thisPlayer, allChosen, chosenFromWarehouse, chosenFromLeaderPower);
+    }
+
+    @Override
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
+
+        Resource[] resources = Resource.values();
+        ArrayList<Pair<String, String>> options = new ArrayList<>();
+        for(Resource r: resources){
+            options.add(new Pair<>(shapeResource(r), colorResource(r)));
+        }
+
+        ArrayList<Integer> choices = displaySelectionFormMultipleChoiches(options, null, requiredResourcesOFChoice, "");
+
+        HashMap<Resource, Integer> ret = new HashMap<>();
+        for(Integer i: choices){
+            Resource r = resources[i];
+            ret.put(r, ret.getOrDefault(r, 0)+1);
+        }
+        return ret;
     }
 }
 

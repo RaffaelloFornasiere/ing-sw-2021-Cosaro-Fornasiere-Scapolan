@@ -307,4 +307,9 @@ public class GUI extends UI {
         return null;
     }
 
+    @Override
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
+        return null;
+    }
+
 }
