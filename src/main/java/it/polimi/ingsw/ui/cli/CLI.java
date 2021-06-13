@@ -41,6 +41,11 @@ public class CLI extends UI {
         playerStates = new HashMap<>();
     }
 
+    public static boolean isAffirmative(String s){
+        return s.equalsIgnoreCase("YES") ||
+                s.equalsIgnoreCase("Y");
+    }
+
     public void displayBadRequest(String playerID, String description, Event cause) {
         out.println(" Player" + playerID + ", your request, caused by event:" + cause.getEventName() + " cannot be satisfied:"
                 + description);
@@ -140,7 +145,7 @@ public class CLI extends UI {
         out.println("DO YOU AGREE? yes/no");
         String answer = in.next().toUpperCase();
         in.nextLine();
-        if (answer.equals("YES") || answer.equals("Y")) {
+        if (isAffirmative(answer)) {
             return inputs;
         } else {
             return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
@@ -297,7 +302,7 @@ public class CLI extends UI {
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
         in.nextLine();
-        if (response.equals("YES") || response.equals("Y")) {
+        if (isAffirmative(response)) {
             return inputs;
         } else {
             return displaySelectionFormVariableChoices(option_itsColor, displayPanel, maxNumberOfOptionsToChose, message);
@@ -355,7 +360,7 @@ public class CLI extends UI {
         out.println("DO YOU AGREE? yes/no");
         String answer = in.next().toUpperCase();
         in.nextLine();
-        if (answer.equals("YES") || answer.equals("Y")) {
+        if (isAffirmative(answer)) {
             return inputs;
         } else {
             return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
@@ -465,7 +470,7 @@ public class CLI extends UI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
             //generate response event
         }
 
@@ -557,7 +562,7 @@ public class CLI extends UI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
            System.out.println("good");
         } else  System.out.println("bad");
     }*/
@@ -611,7 +616,7 @@ public class CLI extends UI {
           out.println(builder.toString());
           out.println("DO YOU AGREE? yes/no");
           String response = in.next().toUpperCase();
-          if (response.equals("YES")) {
+          if (isAffirmative(response)) {
               //put in dashboard event
               out.println("resources put in dashboard");
           }
@@ -1413,7 +1418,7 @@ public class CLI extends UI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
             playerStates.get(thisPlayer).leaderCards.putAll(leaderCardsChosen);
             return new ArrayList<>(leaderCardsChosen.keySet());
         } else return choseInitialLeaderCards(leaderCardsIDs, numberOFLeaderCardsToChose);
@@ -1464,7 +1469,7 @@ public class CLI extends UI {
         out.println(builder.toString());
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
             //put in dashboard event
             out.println("resources put in dashboard");
             return initialResources;
@@ -1804,7 +1809,7 @@ public class CLI extends UI {
         out.println("WOULD YOU LIKE TO SEE MORE? Y/N");
         String answer = in.next().toUpperCase();
         in.nextLine();
-        if (answer.equals("YES") || answer.equals("Y")) {
+        if (isAffirmative(answer)) {
             displayOthers();
         }
 
@@ -1976,7 +1981,8 @@ public class CLI extends UI {
                     displayOthers();
                 } else {
                     out.println("WOULD YOU LIKE TO SEE SOME OTHER PLAYER'S/ YOUR STATE? Y/N");
-                    if (in.next().toUpperCase().equals("YES") || in.next().toUpperCase().equals("Y")) {
+                    String response = in.next().toUpperCase();
+                    if (isAffirmative(response)) {
                         displayOthers();
                     }
                     out.println("YOUR TURN HAS ENDED");
@@ -2220,7 +2226,7 @@ public class CLI extends UI {
         out.println("IF YOU'RE NOT SATISFIED WITH YOUR CHOICES, WOULD YOU LIKE TO REDO? Y/N\n");
         String answer = in.next().toUpperCase();
         in.nextLine();
-        if (answer.equals("YES") || answer.equals("Y")) {
+        if (isAffirmative(answer)) {
             return askWhereToTakeResourcesFrom(clonedRequired, freeChoicesResources);
         } else
             return new ChosenResourcesEvent(thisPlayer, allChosen, chosenFromWarehouse, chosenFromLeaderPower);
