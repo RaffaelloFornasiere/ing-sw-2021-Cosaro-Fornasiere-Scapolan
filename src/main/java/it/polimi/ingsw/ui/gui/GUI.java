@@ -10,35 +10,17 @@ import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 
 public class GUI extends UI {
@@ -49,12 +31,12 @@ public class GUI extends UI {
         PRODUCTION_ACTION
     }
 
-    private LockWrap<Action> actionPerformed = new LockWrap<>(null);
+    private final LockWrap<Action> actionPerformed = new LockWrap<>(null);
 
     private final LockWrap<String> leaderID = new LockWrap<>(null);
     private final LockWrap<String> playerID = new LockWrap<>(null);
-    private final LockWrap<InetAddress> serverAddress = new LockWrap(null);
-    private LockWrap<Integer> serverPort;
+    private final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
+    private final LockWrap<Integer> serverPort = new LockWrap<>(null);
 
     private PlayerInfo playerInfo;
 
@@ -356,9 +338,9 @@ public class GUI extends UI {
         return null;
     }
 
-    @Override
-    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
-    }
+//    @Override
+//    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
+//    }
 
     @Override
     public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources) {
@@ -369,5 +351,4 @@ public class GUI extends UI {
     public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
         return null;
     }
-
 }
