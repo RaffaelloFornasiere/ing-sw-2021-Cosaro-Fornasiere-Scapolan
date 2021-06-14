@@ -254,20 +254,23 @@ public class GUI extends UI {
     @Override
     public BuyResourcesEvent askForMarketRow() {
         //
-
-        return null;
+        Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
+        Integer index = playerInfo.getBoughtResourcesInfo().getValue();
+        return new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index);
     }
 
     @Override
     public BuyDevCardsEvent askForDevCard() {
-        //
-        return null;
+        String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
+        int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
+        return new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot);
     }
 
     @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
-        //
-        return null;
+        var devCards = playerInfo.getProdPowerDevCards();
+        var personalPower = playerInfo.isActivatePersonalPower();
+        return new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower);
     }
 
     @Override
@@ -292,21 +295,9 @@ public class GUI extends UI {
         Action a;
         a = actionPerformed.getWaitIfLocked();
         return switch (a) {
-            case MARKET_ACTION -> {
-                Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
-                Integer index = playerInfo.getBoughtResourcesInfo().getValue();
-                yield new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index);
-            }
-            case DEV_CARD_ACTION -> {
-                String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
-                int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
-                yield new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot);
-            }
-            case PRODUCTION_ACTION -> {
-                var devCards = playerInfo.getProdPowerDevCards();
-                var personalPower = playerInfo.isActivatePersonalPower();
-                yield new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower);
-            }
+            case MARKET_ACTION -> askForMarketRow();
+            case DEV_CARD_ACTION ->  askForDevCard();
+            case PRODUCTION_ACTION -> askForProductionPowersToUse();
         };
     }
 
