@@ -3,6 +3,7 @@ package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
 /**
  * Event sent to the server when a player wants to select or deselect a leader power
  * The client will receive a BadRequestEvent if this event was mal-posed
+ * The client will receive a PlayerActionError if the action represented by this event can't be done
  * The client will receive a LeaderCardNotActiveError if the leader card with the leader power is not active
  * The client will receive a IncompatiblePowersError if there's another power which is incompatible is already selected
  */

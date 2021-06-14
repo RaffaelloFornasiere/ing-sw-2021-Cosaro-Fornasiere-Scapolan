@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.Direction;
  * After that the client should expect to receive a OrganizeResourcesEvent, at which it must answer with
  *  a NewResourceOrganizationEvent
  * The client will receive a BadRequestEvent if this event was mal-posed
+ * The client will receive a PlayerActionError if the action represented by this event can't be done
  */
 public class BuyResourcesEvent extends MatchEvent {
     /**

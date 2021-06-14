@@ -10,6 +10,7 @@ import java.util.HashMap;
 /**
  * Event sent to the server when the player had to reorganize their resources
  * The client will receive a BadRequestEvent if this event was mal-posed
+ * The client will receive a PlayerActionError if the action represented by this event can't be done
  * The client will receive a LeaderCardNotActiveError if he tried to insert resources into the power of a non active
  *  leader card
  */
