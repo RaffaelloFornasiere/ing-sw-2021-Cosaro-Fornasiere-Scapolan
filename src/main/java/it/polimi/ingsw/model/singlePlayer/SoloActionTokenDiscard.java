@@ -9,16 +9,26 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Token representing the action to discard certain devCards from the grid
+ */
 public class SoloActionTokenDiscard extends SoloActionToken {
-    private HashMap<CardColor, Integer> cardsDiscarded;
+    private final HashMap<CardColor, Integer> cardsDiscarded;
 
-    public SoloActionTokenDiscard(HashMap<CardColor, Integer> cardsDiscarded)
-    {
-        this.cardsDiscarded = (HashMap<CardColor, Integer>) cardsDiscarded.clone();
+    /**
+     * Constructor for the class
+     * @param cardsDiscarded The cards that will get discarded when the token is drawn
+     */
+    public SoloActionTokenDiscard(HashMap<CardColor, Integer> cardsDiscarded) {
+        this.cardsDiscarded = new HashMap<>(cardsDiscarded);
     }
 
+    /**
+     * Getter for the cards that will get discarded when the token is drawn
+     * @return The cards that will get discarded when the token is drawn
+     */
     public HashMap<CardColor, Integer> getCardsDiscarded() {
-        return (HashMap<CardColor, Integer>) cardsDiscarded.clone();
+        return new HashMap<>(cardsDiscarded);
     }
 
     @Override
@@ -34,13 +44,13 @@ public class SoloActionTokenDiscard extends SoloActionToken {
 
             for(DevDeck devDeck: devDecks){
                 int size = devDeck.size();
-                if(toDiscard<=size) {
+                if(toDiscard<size) {
                     for (int i = 0; i < toDiscard; i++) {
                         try {
                             devDeck.pop();
                         } catch (NotPresentException ignore) { }
                     }
-                    return true;
+                    return false;
                 }
                 else{
                     for (int i = 0; i < size; i++) {
@@ -52,6 +62,6 @@ public class SoloActionTokenDiscard extends SoloActionToken {
                 }
             }
         }
-        return false;
+        return true;
     }
 }

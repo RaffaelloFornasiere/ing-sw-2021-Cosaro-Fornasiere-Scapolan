@@ -1,5 +1,7 @@
 package it.polimi.ingsw.ui.cli;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -36,19 +38,30 @@ public class Panel {
         this.writer = writer;
     }
 
-    public Panel(ArrayList<DrawableObject> drawableObjects, OutputStream os) {
-        Stream<DrawableObject> drawableObjectStream = drawableObjects.stream();
-        height = drawableObjectStream.map(drawableObject -> drawableObject.getY() + drawableObject.getHeight()).max(Integer::compareTo).orElse(0);
-        width = drawableObjectStream.map(drawableObject -> drawableObject.getX() + drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
-        drawableObjectStream.forEach(this::addItem);
-        this.writer = new PrintWriter(os);
+    public Panel(ArrayList<DrawableObject> drawableObjects, OutputStream os, boolean putInLine) {
+        this(drawableObjects, new PrintWriter(os), putInLine);
     }
 
-    public Panel(ArrayList<DrawableObject> drawableObjects, PrintWriter printWriter) {
-        Stream<DrawableObject> drawableObjectStream = drawableObjects.stream();
-        height = drawableObjectStream.map(drawableObject -> drawableObject.getY() + drawableObject.getHeight()).max(Integer::compareTo).orElse(0);
-        width = drawableObjectStream.map(drawableObject -> drawableObject.getX() + drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
-        drawableObjectStream.forEach(this::addItem);
+    public Panel(ArrayList<DrawableObject> drawableObjects, PrintWriter printWriter, boolean putInLine) {
+        if(putInLine){
+            ArrayList<DrawableObject> newDrawableObjects = new ArrayList<>();
+            width = 0;
+            height = 0;
+            for(DrawableObject drawableObject: drawableObjects){
+                DrawableObject newDrawableObject = new DrawableObject(drawableObject.getTextObject(), width, 0);
+                newDrawableObjects.add(newDrawableObject);
+                width = width + newDrawableObject.getWidth();
+                if(newDrawableObject.getHeight()>height)
+                    height= newDrawableObject.getHeight();
+            }
+            drawableObjects = newDrawableObjects;
+        }
+        else {
+            height = drawableObjects.stream().map(drawableObject -> drawableObject.getY() + drawableObject.getHeight()).max(Integer::compareTo).orElse(0);
+            width = drawableObjects.stream().map(drawableObject -> drawableObject.getX() + drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
+        }
+        objects = new ArrayList<>();
+        drawableObjects.forEach(this::addItem);
         this.writer = printWriter;
     }
 

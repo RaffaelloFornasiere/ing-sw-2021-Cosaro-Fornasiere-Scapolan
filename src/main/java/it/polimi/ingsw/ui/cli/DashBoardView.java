@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 public class DashBoardView {
 
     private ArrayList<String> topDevCards;
+
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<DepotState> warehouse;
     private ProductionPower personalProductionPower;
@@ -21,11 +22,11 @@ public class DashBoardView {
 
 
     public DashBoardView(ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse, String player) {
-       this.topDevCards= new ArrayList<>();
-        for(String s: topDevCards){
-           if(s!=null) this.topDevCards.add(s);
-           else this.topDevCards.add(null);
-       }
+        this.topDevCards = new ArrayList<>();
+        for (String s : topDevCards) {
+            if (s != null) this.topDevCards.add(s);
+            else this.topDevCards.add(null);
+        }
 
         this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
         this.warehouse = new ArrayList<>();
@@ -41,6 +42,10 @@ public class DashBoardView {
     }
 
 
+    public HashMap<Resource, Integer> getStrongBox() {
+        return strongBox;
+    }
+
     public ArrayList<DepotState> getWarehouse() {
         return warehouse;
     }
@@ -55,6 +60,13 @@ public class DashBoardView {
 
     public void updateStrongBox(HashMap<Resource, Integer> strongBox) {
         this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
+    }
+
+    public String trySubtractResourcesFromStrongbox(int quantity, Resource type) {
+        if (strongBox.containsKey(type)) {
+            if (strongBox.get(type) - quantity < 0) return "NOT ENOUGH " + type.toString() + " IN STRONGBOX!\n";
+        } else return "STRONGBOX DOESN'T CONTAIN ANY " + type.toString() + "\n";
+        return "";
     }
 
     public void updateWarehouse(ArrayList<DepotState> warehouse) {
@@ -107,7 +119,7 @@ public class DashBoardView {
             }
             String shape = CLI.shapeResource(l.getResourceType());
             if (l.getCurrentQuantity() == 0) {
-                warehouseBuilder.append(color + "   " +"EMPTY"+ "\n   ");
+                warehouseBuilder.append(color + "   " + "EMPTY" + "\n   ");
             } else {
                 warehouseBuilder.append(color + "   " + l.getResourceType().toString() + "\n   ");
             }
@@ -139,16 +151,16 @@ public class DashBoardView {
         return strongBoxBuilder.toString();
     }
 
-    public String personalProductionToString(){
+    public String personalProductionToString() {
         return CLI.productionPowerToString(personalProductionPower, Color.reset());
     }
 
-    public void displayPersonalProductionPower(PrintWriter out){
+    public void displayPersonalProductionPower(PrintWriter out) {
         String personalProductionPowerString = personalProductionToString();
         ArrayList<DrawableObject> drawableObjects = new ArrayList<>();
         drawableObjects.add(new DrawableObject("PERSONAL PRODUCTION POWER", 0, 0));
         drawableObjects.add(new DrawableObject(personalProductionPowerString, 0, 2));
-        new Panel(drawableObjects, out).show();
+        new Panel(drawableObjects, out, false).show();
     }
 
     public void displayDevCardSlots() {
@@ -177,13 +189,23 @@ public class DashBoardView {
         });
 
         int totalHeight = height.get() + devCards.getHeight() + 1;
-        Panel panel = new Panel(500, totalHeight+5, System.out);
+        Panel panel = new Panel(500, totalHeight + 5, System.out);
         panel.addItem(devCards);
         for (DrawableObject obj : objs) {
             panel.addItem(obj);
         }
         panel.show();
     }
+
+    public HashMap<Resource, Integer> totalResourcesInWarehouse() {
+        HashMap<Resource, Integer> totalRes = new HashMap<>();
+        Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
+        warehouse.stream().forEach(depotState -> {
+            totalRes.put(depotState.getResourceType(), totalRes.get(depotState.getResourceType()) + depotState.getCurrentQuantity());
+        });
+        return totalRes;
+    }
+
 
     public void displayAll(String playerID) {
 
@@ -195,7 +217,7 @@ public class DashBoardView {
 
         DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
         DrawableObject strongBox = new DrawableObject(strongBoxString, 0, warehouse.getHeight() + 2);
-        DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight()+strongBox.getHeight());
+        DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight() + strongBox.getHeight());
         Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight() + personalProductionPower.getHeight() + 4, System.out);
 
         panel.addItem(warehouse);
@@ -203,6 +225,7 @@ public class DashBoardView {
         panel.addItem(personalProductionPower);
         panel.show();
         displayDevCardSlots();
+
 
     }
 

@@ -2,6 +2,8 @@ package it.polimi.ingsw.ui.cli;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.exceptions.IllegalOperation;
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.LeaderCards.*;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -21,7 +24,6 @@ import java.util.stream.IntStream;
 public class LeaderCardView {
     private LeaderCard card;
     boolean active;
-    boolean selected;
     String idCard;
 
 
@@ -38,7 +40,6 @@ public class LeaderCardView {
             e.printStackTrace();
         }
         active = false;
-        selected = false;
         idCard = card.getCardID();
     }
 
@@ -72,44 +73,58 @@ public class LeaderCardView {
         return DepotResultMessage.SUCCESSFUL_LEADER;
     }
 
+    public HashMap<Resource, Integer> getTotalResourcesInDepositLeaderPowers() {
+        HashMap<Resource, Integer> totalRes = new HashMap<>();
+        Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
+        if (card.getSelectedLeaderPowers().contains(DepositLeaderPower.class)) {
+            card.getSelectedLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower).forEach(power -> {
+                ((DepositLeaderPower) power).getCurrentResources().forEach((key, value) -> totalRes.put(key, value + totalRes.get(key)));
+            });
+        }
+        return totalRes;
+    }
+
     public String getLeaderPowerName(int leaderPowerIndex) {
         return card.getLeaderPowers().get(leaderPowerIndex).getClass().getName().substring(34);
     }
 
     public String depositPowersToString() {
-        if (selected) {
-            StringBuilder builder = new StringBuilder();
-
-            card.getLeaderPowers().stream().forEach(power -> {
-                if (power instanceof DepositLeaderPower) {
-                    builder.append("\033[31;1;4mDEPOSIT OF " + card.getCardID().toUpperCase() + " \033[0m \n");
-                    int m = 1;
-
-                    AtomicInteger count = new AtomicInteger(1);
-                    ((DepositLeaderPower) power).getCurrentResources().keySet().forEach(resource -> {
-                        int current = ((DepositLeaderPower) power).getCurrentResources().get(resource);
-                        int max = ((DepositLeaderPower) power).getMaxResources().get(resource);
-                        String color = CLI.colorResource(resource);
-                        String shape = CLI.shapeResource(resource);
-                        builder.append(color + "   " + resource.toString() + "\n   ");
-                        IntStream.range(0, max).forEach(n -> builder.append(color + "╔═══╗" + " "));
-                        builder.append(Color.reset() + "\n" + "." + count.intValue() + " ");
-                        IntStream.range(0, current).forEach(n -> builder.append(color + "║ " + shape + " ║" + " "));
-                        IntStream.range(0, max - current).forEach(n -> builder.append(color + "║   ║" + " "));
-                        builder.append(Color.reset() + "\n   ");
-                        IntStream.range(0, max).forEach(n -> builder.append(color + "╚═══╝" + " "));
-                        builder.append(Color.reset() + "\n");
-                        count.getAndIncrement();
-                    });
-
+        //TODO here must be changed how selected is handled
+        StringBuilder builder = new StringBuilder();
+        IntStream.range(0, card.getLeaderPowers().size()).forEach(index -> {
+            LeaderPower power = card.getLeaderPowers().get(index);
+            if (power instanceof DepositLeaderPower) {
+                builder.append("\033[31;1;4mDEPOSIT OF " + card.getCardID().toUpperCase() + " \033[0m \n");
+                if (getSelected(index)) {
+                    builder.append("SELECTED");
+                } else {
+                    builder.append("NOT SELECTED");
                 }
+                int m = 1;
 
-            });
+                AtomicInteger count = new AtomicInteger(1);
+                ((DepositLeaderPower) power).getCurrentResources().keySet().forEach(resource -> {
+                    int current = ((DepositLeaderPower) power).getCurrentResources().get(resource);
+                    int max = ((DepositLeaderPower) power).getMaxResources().get(resource);
+                    String color = CLI.colorResource(resource);
+                    String shape = CLI.shapeResource(resource);
+                    builder.append(color + "   " + resource.toString() + "\n   ");
+                    IntStream.range(0, max).forEach(n -> builder.append(color + "╔═══╗" + " "));
+                    builder.append(Color.reset() + "\n" + "." + count.intValue() + " ");
+                    IntStream.range(0, current).forEach(n -> builder.append(color + "║ " + shape + " ║" + " "));
+                    IntStream.range(0, max - current).forEach(n -> builder.append(color + "║   ║" + " "));
+                    builder.append(Color.reset() + "\n   ");
+                    IntStream.range(0, max).forEach(n -> builder.append(color + "╚═══╝" + " "));
+                    builder.append(Color.reset() + "\n");
+                    count.getAndIncrement();
+                });
+
+            }
+
+    });
             return builder.toString();
-        }
-        return "";
 
-    }
+}
 
 
     public String translateColor(CardColor c) {
@@ -118,8 +133,6 @@ public class LeaderCardView {
         if (c == CardColor.GREEN) return Color.GREEN.getAnsiCode();
         else return Color.YELLOW.getAnsiCode();
     }
-
-
 
 
     private String translateBoolean(Boolean b) {
@@ -131,12 +144,8 @@ public class LeaderCardView {
         this.active = active;
     }
 
-    public void setSelected(boolean b) {
-        selected = b;
-    }
-
-    public boolean getSelected() {
-        return selected;
+    public boolean getSelected(int index) {
+        return card.getSelectedLeaderPowers().contains(card.getLeaderPowers().get(index));
     }
 
     public boolean isActive() {
@@ -147,18 +156,27 @@ public class LeaderCardView {
         return idCard;
     }
 
+    public ArrayList<Integer> getSelectablePowersIndexes() {
+        ArrayList<LeaderPower> leaderPowers = card.getLeaderPowers();
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < leaderPowers.size(); i++) {
+            if (!(leaderPowers.get(i) instanceof DepositLeaderPower))
+                indexes.add(i);
+        }
+        return indexes;
+    }
+
 
     public ArrayList<LeaderPower> getLeaderPowersActive() {
-        ArrayList<LeaderPower> a = new ArrayList<>();
-        card.getSelectedLeaderPowers().stream().forEach(power -> a.add(power));
-        return a;
+        return card.getSelectedLeaderPowers();
     }
 
     public String toString() {
         String color = Color.WHITE.getAnsiCode();
         StringBuilder build = new StringBuilder();
+        //TODO here must be changed how selected is handled
         build.append(
-                color + " " + color + card.getCardID() + " " + translateBoolean(selected) + " " + color + " " + Color.reset() + "\n" +
+                color + " " + color + card.getCardID() + " " + translateBoolean(/*selected*/true) + " " + color + " " + Color.reset() + "\n" +
                         color + "╔═" + color + "Requirements" + color + "═╗" + Color.reset() + "\n");
         for (Requirement req : card.getActivationRequirement()) {
             if (req instanceof ResourcesRequirement) {
@@ -230,9 +248,20 @@ public class LeaderCardView {
         panel.show();
         IntStream.range(1, 17).forEach(n -> {
             LeaderCardView card = new LeaderCardView("LeaderCard" + n);
-            card.setSelected(true);
+            //card.setSelected(true);
             System.out.println(card.depositPowersToString());
         });
+    }
+
+
+    public void setPowerSelectionState(int index, Boolean newState) {
+        try {
+            if (newState)
+                card.selectLeaderPower(card.getLeaderPowers().get(index));
+            else
+                card.deselectLeaderPower(card.getLeaderPowers().get(index));
+        } catch (NotPresentException | IllegalOperation ignore) {
+        }
     }
 
 

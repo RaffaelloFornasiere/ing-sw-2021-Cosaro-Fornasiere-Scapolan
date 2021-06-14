@@ -2,10 +2,7 @@ package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
@@ -95,9 +92,13 @@ public abstract class UI {
 
     public abstract String askForLeaderCardToActivate() throws NotPresentException;
 
+    public abstract ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException;
+
     public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
 
     public abstract void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources);
+
+    public abstract void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates);
 
 
     /**
@@ -126,5 +127,7 @@ public abstract class UI {
     abstract public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards);
 
 
-    abstract public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required);
+    abstract public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int  freeChoicesResources);
+
+    public abstract HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice);
 }

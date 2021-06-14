@@ -1,12 +1,10 @@
 package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.ui.UI;
@@ -303,6 +301,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
+        return null;
+    }
+
+    @Override
     public Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
         Action a;
         a = actionPerformed.getWaitIfLocked();
@@ -331,6 +334,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates) {
+
+    }
+
+    @Override
     public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
 
         return null;
@@ -350,7 +358,16 @@ public class GUI extends UI {
 
     @Override
     public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
+    }
 
+    @Override
+    public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources) {
         return null;
     }
+
+    @Override
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
+        return null;
+    }
+
 }

@@ -10,6 +10,9 @@ public class ProductionLeaderPower extends LeaderPower{
     private ProductionPower effectPower;
 
 
+    /**
+     * Constructor that initializes the power without any production power
+     */
     public ProductionLeaderPower(){
         super();
         incompatiblePowers.add(DiscountLeaderPower.class);

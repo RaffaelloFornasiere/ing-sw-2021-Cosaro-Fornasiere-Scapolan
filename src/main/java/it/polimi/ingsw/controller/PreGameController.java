@@ -216,6 +216,8 @@ public class PreGameController {
         }
 
         //Send to the players what they need to chose
+        HashMap<String, InitialChoicesEvent> initialChoices = new HashMap<>();
+        matchController.setInitialChoices(initialChoices);
         for (int i=0; i<playerOrder.size(); i++){
             ArrayList<String> cardsToChoseFrom = new ArrayList<>();
             for(int j = 0; j<Config.getInstance().getLeaderCardPerPlayerToChooseFrom(); j++) {
@@ -224,6 +226,7 @@ public class PreGameController {
             }
             InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom,
                     Config.getInstance().getLeaderCardPerPlayerToChoose(), Config.getInstance().getResourcesHandicap().get(i));
+            initialChoices.put(playerOrder.get(i), initialChoicesEvent);
             networkData.get(playerOrder.get(i)).getClientHandlerSender().sendEvent(initialChoicesEvent);
         }
 

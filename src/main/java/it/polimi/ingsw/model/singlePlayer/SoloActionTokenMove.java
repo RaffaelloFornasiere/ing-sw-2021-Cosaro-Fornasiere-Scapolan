@@ -4,20 +4,34 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 
 import java.util.stream.IntStream;
 
+/**
+ * Token representing Lorenzo il Magnifico moving along the FaithTrack
+ */
 public class SoloActionTokenMove extends SoloActionToken{
-    int steps;
-    boolean reshuffle;
+    private final int steps;
+    private final boolean reshuffle;
 
-    SoloActionTokenMove(int steps, boolean reshuffle)
-    {
+    /**
+     * Constructor for the class
+     * @param steps The amount Lorenzo il Magnifico will move after this token is drawn
+     * @param reshuffle Whether the stack of tokens should be reshuffled when this one is drawn
+     */
+    public SoloActionTokenMove(int steps, boolean reshuffle) {
         this.steps = steps;
         this.reshuffle = reshuffle;
     }
 
+    /**
+     * Getter for the amount Lorenzo il Magnifico will move after this token is drawn
+     * @return The amount Lorenzo il Magnifico will move after this token is drawn
+     */
     public int getSteps() {
         return steps;
     }
 
+    /**
+     * @return Whether the stack of tokens should be reshuffled when this one is drawn
+     */
     public boolean reshuffle() {
         return reshuffle;
     }
@@ -27,9 +41,7 @@ public class SoloActionTokenMove extends SoloActionToken{
         int beforePosition = singlePlayerMatchState.getLorenzoPosition();
         singlePlayerMatchState.incrementLorenzoPosition(steps);
         int afterPosition = singlePlayerMatchState.getLorenzoPosition();
-        IntStream.range(beforePosition, afterPosition+1).forEach(i -> {
-            FaithTrack.getArrayOfCells().get(i).activateEffect(singlePlayerMatchState);
-        });
+        IntStream.range(beforePosition, afterPosition+1).forEach(i -> FaithTrack.getArrayOfCells().get(i).activateEffect(singlePlayerMatchState));
         if(reshuffle) singlePlayerMatchState.shuffleToken();
         return singlePlayerMatchState.getLorenzoPosition() >= FaithTrack.getArrayOfCells().size()-1;
     }
