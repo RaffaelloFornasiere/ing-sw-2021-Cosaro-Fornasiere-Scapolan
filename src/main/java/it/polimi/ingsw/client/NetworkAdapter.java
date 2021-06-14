@@ -168,10 +168,6 @@ public class NetworkAdapter {
         send(view.askWhereToTakeResourcesFrom(event.getRequiredResources(), event.getRequiredResourcesOFChoice()));
     }
 
-    public void ClientEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
-    }
-
     public void DashBoardStateEventHandler(PropertyChangeEvent evt) {
         DashBoardStateEvent event = (DashBoardStateEvent) evt.getNewValue();
         view.updateDashboard(event.getPlayerId(), event.getTopDevCards(), event.getStrongBox(), event.getWarehouse());
@@ -264,7 +260,7 @@ public class NetworkAdapter {
         view.updateLeaderCardsState(event.getPlayerId(), event.getLeaderCards());
     }
 
-    public void PlayerActionMetErrorHandler(PropertyChangeEvent evt) {
+    public void PlayerActionErrorHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
@@ -280,7 +276,6 @@ public class NetworkAdapter {
     }
 
     public void SimpleChoseResourcesEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
         SimpleChoseResourcesEvent event = (SimpleChoseResourcesEvent) evt.getNewValue();
         HashMap<Resource, Integer> chosen = view.chooseResources(event.getRequiredResourcesOFChoice());
         send(new SimpleChosenResourcesEvent(event.getPlayerId(), chosen));
