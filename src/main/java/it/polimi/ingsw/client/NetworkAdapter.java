@@ -264,6 +264,10 @@ public class NetworkAdapter {
         view.updateLeaderCardsState(event.getPlayerId(), event.getLeaderCards());
     }
 
+    public void PlayerActionMetErrorHandler(PropertyChangeEvent evt) {
+        System.out.println("Received" + evt.getClass().getSimpleName());
+    }
+
     public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt) {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
