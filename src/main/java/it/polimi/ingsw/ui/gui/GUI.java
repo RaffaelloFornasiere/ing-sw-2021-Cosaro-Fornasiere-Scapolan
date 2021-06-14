@@ -310,6 +310,7 @@ public class GUI extends UI {
         };
     }
 
+
     @Override
     public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
 
