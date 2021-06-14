@@ -13,7 +13,7 @@ public class ClientApp
 {
     public static void main( String[] args )
     {
-        UI ui = new GUI();
+       UI ui = new GUI();
         //UI ui = selectUI();
         NetworkAdapter networkAdapter = connectToServer(ui);
         ui.setClient(networkAdapter);

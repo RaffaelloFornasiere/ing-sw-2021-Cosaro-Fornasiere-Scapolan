@@ -738,6 +738,12 @@ public class CLI extends UI {
         return builder0.toString();
     }
 
+    public static void main(String[] args) {
+        HashMap<Resource,Integer> hash= new HashMap<>();
+        Arrays.stream(Resource.values()).forEach(res->hash.put(res,0) );
+
+    }
+
     public void displayAvailableDeposits(DashBoardView thisDashboard) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n\n");
@@ -1748,7 +1754,7 @@ public class CLI extends UI {
         in.nextLine();
         if (answer.equals("YES") || answer.equals("Y")) {
             displayOthers();
-        }
+        }else {}
 
     }
 
@@ -1815,6 +1821,7 @@ public class CLI extends UI {
                         }
                         case DISPLAY_SMTH -> {
                             displayOthers();
+                            break;
                         }
                     }
 
@@ -2035,21 +2042,21 @@ public class CLI extends UI {
             if (thisDepositLeaderPowers.size() > 0)
                 depositCategory.add(new Pair<>("EXTRA DEPOSITS", Color.WHITE.getAnsiCode()));
             depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
-            ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, 3, "WHERE WOULD YOU LIKE TO TAKE THE RESOURCES FROM?\n ");
+            ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, depositCategory.size(), "WHERE WOULD YOU LIKE TO TAKE THE RESOURCES FROM?\n ");
             inputs.stream().forEach(input -> {
                 out.print("HAVE A LOOK AT THE CURRENT TOTAL QUANTITY OF RESOURCES IN THE " + depositCategory.get(input).getKey() + "\n");
 
                 switch (input) {
+                    case 0 -> {
+                        out.println(displayResourcesInHashMap(warehouseHashMap));
+                        break;
+                    }
                     case 1 -> {
-                        displayResourcesInHashMap(warehouseHashMap);
+                        out.println(displayResourcesInHashMap(leaderDepositsHashMap));
                         break;
                     }
                     case 2 -> {
-                        displayResourcesInHashMap(leaderDepositsHashMap);
-                        break;
-                    }
-                    case 3 -> {
-                        displayResourcesInHashMap(strongBoxHashMap);
+                        out.println(displayResourcesInHashMap(strongBoxHashMap));
                         break;
                     }
                 }
@@ -2065,8 +2072,8 @@ public class CLI extends UI {
                     boolean validInput = false;
                     int chosenNumber = -1;
                     String inp;
-                    while (validInput) {
-                        inp = in.next();
+                    while (!validInput) {
+                        inp = in.nextLine();
                         if (!inp.matches("-?\\d+")) {
                             out.println("YOU HAVE TO INSERT NUMBERS");
                             continue;
@@ -2080,7 +2087,7 @@ public class CLI extends UI {
                     }
 
                     switch (input) {
-                        case 1 -> {//WAREHOUSE
+                        case 0 -> {//WAREHOUSE
 
                             if (!currentDepotStates.stream().map(depot -> depot.getCurrentQuantity() != 0 && depot.getResourceType() == justResources.get(index)).reduce(false, (prev, foll) -> prev || foll)) {
                                 out.println(DepotResultMessage.INVALID_RES_WAREHOUSE.getMessage());
@@ -2103,7 +2110,7 @@ public class CLI extends UI {
                             displayResourcesInHashMap(warehouseHashMap);
                             break;
                         }
-                        case 2 -> {//DPOSIT LEADER POWER
+                        case 1 -> {//DPOSIT LEADER POWER
                             if (chosenNumber > leaderDepositsHashMap.get(justResources.get(index))) {
                                 out.println(DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getMessage());
                                 successful = DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getSuccessfull();
@@ -2119,7 +2126,7 @@ public class CLI extends UI {
 
                             break;
                         }
-                        case 3 -> {//STRONGBOX
+                        case 2 -> {//STRONGBOX
                             if (!thisDashboard.getStrongBox().containsKey(justResources.get(index))) {
                                 out.println(DepotResultMessage.INVALID_RES_STRONGBOX.getMessage());
                                 successful = DepotResultMessage.INVALID_RES_STRONGBOX.getSuccessfull();
@@ -2149,7 +2156,7 @@ public class CLI extends UI {
             if(required.keySet().stream().map(resource -> required.get(resource) == 0).reduce(true, (prev, foll) -> prev && foll)) out.println("YOU'RE DONE, ALL RESOURCES HAVE BEEN TAKEN\n");
             else {
                 out.println("YOU STILL HAVE SOME RESOURCES LEFT TO TAKE FROM DEPOSITS");
-                displayResourcesInHashMap(required);
+                out.println(displayResourcesInHashMap(required));
             }
         }
         out.println("THIS IS THE FINAL RESULT OF YOUR CHOICE :\n");

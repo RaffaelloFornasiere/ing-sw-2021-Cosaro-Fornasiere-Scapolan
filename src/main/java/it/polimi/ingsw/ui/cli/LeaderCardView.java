@@ -176,7 +176,7 @@ public class LeaderCardView {
         StringBuilder build = new StringBuilder();
         //TODO here must be changed how selected is handled
         build.append(
-                color + " " + color + card.getCardID() + " " + translateBoolean(/*selected*/true) + " " + color + " " + Color.reset() + "\n" +
+                color + " " + color + card.getCardID() + " " + translateBoolean(isActive()) + " " + color + " " + Color.reset() + "\n" +
                         color + "╔═" + color + "Requirements" + color + "═╗" + Color.reset() + "\n");
         for (Requirement req : card.getActivationRequirement()) {
             if (req instanceof ResourcesRequirement) {
