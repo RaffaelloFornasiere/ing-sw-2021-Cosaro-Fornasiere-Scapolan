@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.modelChangeHandlers.DepositLeaderPowerHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;
+import it.polimi.ingsw.controller.modelChangeHandlers.MatchStateHandler;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
@@ -42,6 +43,7 @@ public class Controller {
     PropertyChangeSubject eventsRegistry;
     HashMap<String, Boolean> disconnected;
     private final ArrayList<String> setuppedPlayers;
+    private HashMap<String, InitialChoicesEvent> initialChoices;
 
     private final Object waitingForResourcesLock = new Object();
     private ChosenResourcesEvent chosenResourcesEvent;
@@ -88,6 +90,7 @@ public class Controller {
         this.disconnected = new HashMap<>();
         for(String playerID: this.clientHandlerSenders.keySet())
             disconnected.put(playerID, false);
+        initialChoices = new HashMap<>();
 
         faithTrackManager = new FaithTrackManager(matchState);
         leaderCardManager = new LeaderCardManager();
@@ -96,61 +99,69 @@ public class Controller {
         setuppedPlayers = new ArrayList<>();
     }
 
+    public void setInitialChoices(HashMap<String, InitialChoicesEvent> initialChoices) {
+        //Important it is not a clone!!!
+        this.initialChoices = initialChoices;
+    }
+
     public synchronized void InitialDecisionsEventHandler(PropertyChangeEvent evt) {
         InitialDecisionsEvent event = (InitialDecisionsEvent) evt.getNewValue();
 
-        if(matchState.getTurnState()!=TurnState.WAITING_FOR_PLAYER || setuppedPlayers.contains(event.getPlayerId())){
-            clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Can't perform this action", event));
-            return;
-        }
-
-        if(event.getChosenLeaderCardIDs().size()!= Config.getInstance().getLeaderCardPerPlayerToChoose()){
-            clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Wrong number of leader cards chosen", event));
-            return;
-        }
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
-        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
-        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
-        Gson gson = builder.create();
-        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
-        try{
+        try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
+            if (matchState.getTurnState() != TurnState.WAITING_FOR_PLAYER || setuppedPlayers.contains(event.getPlayerId())) {
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Can't perform this action", event));
+                return;
+            }
+
+            if (event.getChosenLeaderCardIDs().size() != Config.getInstance().getLeaderCardPerPlayerToChoose()) {
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Wrong number of leader cards chosen", event));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(initialChoices.get(event.getPlayerId()));
+                return;
+            }
+
+            int chosenResources = event.getChosenResources().values().stream().reduce(0, Integer::sum);
+            if (chosenResources != Config.getInstance().getResourcesHandicap().get(matchState.getPlayerPosition(player))) {
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Wrong number of resources chosen", event));
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(initialChoices.get(event.getPlayerId()));
+                return;
+            }
+
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+            builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+            builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
+            Gson gson = builder.create();
+            ArrayList<LeaderCard> leaderCards = new ArrayList<>();
             LeaderCardHandler leaderCardHandler = new LeaderCardHandler(this.clientHandlerSenders, player);
             DepositLeaderPowerHandler depositLeaderPowerHandler = new DepositLeaderPowerHandler(this.clientHandlerSenders, player);
-            for(String leaderCardID: event.getChosenLeaderCardIDs()) {
+            for (String leaderCardID : event.getChosenLeaderCardIDs()) {
                 String leaderCardJSON;
-                if(Config.getInstance().isLeaderCardDefault())
+                if (Config.getInstance().isLeaderCardDefault())
                     leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\default\\" + leaderCardID + ".json"));
                 else
                     leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
                 LeaderCard lc = gson.fromJson(leaderCardJSON, LeaderCard.class);
                 lc.addObserver(leaderCardHandler);
-                for(LeaderPower lp: lc.getLeaderPowers()){
-                    if(lp.getClass() == DepositLeaderPower.class)
+                for (LeaderPower lp : lc.getLeaderPowers()) {
+                    if (lp.getClass() == DepositLeaderPower.class)
                         lp.addObserver(depositLeaderPowerHandler);
                 }
                 leaderCards.add(lc);
             }
             this.leaderCardManager.assignLeaderCards(player, leaderCards);
 
-            int chosenResources = event.getChosenResources().values().stream().reduce(0, Integer::sum);
-            if(chosenResources != Config.getInstance().getResourcesHandicap().get(matchState.getPlayerPosition(player))){
-                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Wrong number of resources chosen", event));
-                this.leaderCardManager.assignLeaderCards(player, new ArrayList<>());
-                return;
-            }
             organizeResources(event.getChosenResources(), player);
 
             setuppedPlayers.add(event.getPlayerId());
-            for(ClientHandlerSender clientHandlerSender: clientHandlerSenders.values())
+            for (ClientHandlerSender clientHandlerSender : clientHandlerSenders.values())
                 clientHandlerSender.sendEvent(new SetupDoneEvent(event.getPlayerId()));
 
-            if(setuppedPlayers.size() == matchState.getPlayers().size())
+            if (setuppedPlayers.size() == matchState.getPlayers().size())
                 matchState.beginMatch();
         } catch (IOException e) {
             clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Invalid leader card ID(s)", event));
+            clientHandlerSenders.get(event.getPlayerId()).sendEvent(initialChoices.get(event.getPlayerId()));
         } catch (NotPresentException notPresentException) {
             notPresentException.printStackTrace();
             //impossible
@@ -442,17 +453,20 @@ public class Controller {
                     leaderCardManager.deselectLeaderPower(player, leaderCard,
                             leaderCard.getLeaderPowers().get(event.getLeaderPowerIndex()));
             } catch (NotPresentException notPresentException) {
-                //impossible
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card not owned by this player", event));
                 System.out.println(notPresentException.getMessage());
             } catch (IllegalOperation illegalOperation) {
-                clientHandlerSenders.get(event.getPlayerId()).sendEvent(event);
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader power state already equal to the one passed", event));
+                new MatchStateHandler(clientHandlerSenders).update(matchState);
             } catch (LeaderCardNotActiveException e) {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new LeaderCardNotActiveError(event.getPlayerId(), event.getLeaderCardID()));
+                new MatchStateHandler(clientHandlerSenders).update(matchState);
             } catch (IncompatiblePowersException e) {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new IncompatiblePowersError(event.getPlayerId(), event.getLeaderCardID(), event.getLeaderPowerIndex()));
+                new MatchStateHandler(clientHandlerSenders).update(matchState);
             }
         } catch (NotPresentException e) {
-            clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card not owned by this player", event));
+            //impossible
             e.printStackTrace();
         }
     }
@@ -473,15 +487,17 @@ public class Controller {
                 if(matchState.getTurnState() == TurnState.START) matchState.setTurnState(TurnState.AFTER_LEADER_CARD_ACTION);
                 else matchState.setTurnState(TurnState.END_OF_TURN);
             } catch (IllegalOperation illegalOperation) {
-                clientHandlerSenders.get(event.getPlayerId()).sendEvent(event);
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader Card state already active", event));
+                new MatchStateHandler(clientHandlerSenders).update(matchState);
             } catch (RequirementsNotMetException requirementsNotMetException) {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new RequirementsNotMetError(event.getPlayerId(), event.getLeaderCardID()));
+                new MatchStateHandler(clientHandlerSenders).update(matchState);
             } catch (NotPresentException notPresentException) {
-                //impossible
+                clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card not owned by this player", event));
                 System.out.println(notPresentException.getMessage());
             }
         } catch (NotPresentException e) {
-            clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card not owned by this player", event));
+            //Impossible
             e.printStackTrace();
         }
     }
@@ -505,6 +521,10 @@ public class Controller {
             boolean goodChoice = false;
             while(!goodChoice) {
                 try {
+                    if (!devCard.checkCost(allPlayerResources)) {
+                        throw new HandlerCheckException(new CantAffordError(event.getPlayerId(), event.getDevCardID()));
+                    }
+
                     clientHandlerSenders.get(event.getPlayerId()).sendEvent(new ChoseResourcesEvent(event.getPlayerId(), cardCost, 0));
 
                     synchronized (waitingForResourcesLock){
@@ -533,24 +553,24 @@ public class Controller {
                         throw new HandlerCheckException(new DevCardSlotError(event.getPlayerId(), event.getDevCardID(), event.getCardSlot()));
                     }
 
-                    if (!devCard.checkCost(allPlayerResources)) {
-                        throw new HandlerCheckException(new CantAffordError(event.getPlayerId(), event.getDevCardID()));
-                    }
-
                     for (Resource r : selectedResourcesFromLeaderPower.keySet()) {
                         if (selectedResourcesFromLeaderPower.get(r) > leaderPowerResources.get(r)) {
                             throw new HandlerCheckException(new BadRequestEvent(event.getPlayerId(), "Selected resources from leader powers not present", event));
                         }
                     }
 
+                    player.getDashBoard().subResourcesToWarehouse(selectedResourcesFromWarehouse);
+
                     goodChoice = true;
                 } catch (HandlerCheckException e){
                     goodChoice = false;
                     Event eventToSend = e.getEventToSend();
                     if(eventToSend != null) clientHandlerSenders.get(player.getPlayerId()).sendEvent(eventToSend);
+                } catch (ResourcesLimitsException e) {
+                    goodChoice = false;
+                    clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Selected resources from warehouse not present", event));
                 }
             }
-            player.getDashBoard().subResourcesToWarehouse(selectedResourcesFromWarehouse);
             removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPower);
             for(Resource r: resourcesFromStrongBox.keySet())
                 player.getDashBoard().subResourcesToStrongBox(r, resourcesFromStrongBox.get(r));
@@ -567,9 +587,7 @@ public class Controller {
         } catch (NotPresentException notPresentException) {
             //The card is not at the top of any devDeck
             clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), notPresentException.getMessage(), event));
-        } catch (ResourcesLimitsException e) {
-            clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Selected resources from warehouse not present", event));
-        } catch (EmptyStrongboxException | IndexSlotException | LevelCardException e) {
+        }catch (EmptyStrongboxException | IndexSlotException | LevelCardException e) {
             //impossible
             e.printStackTrace();
         }
@@ -621,6 +639,7 @@ public class Controller {
             notPresentException.printStackTrace();
         } catch (IllegalOperation illegalOperation) {
             clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card already active", event));
+            new MatchStateHandler(clientHandlerSenders).update(matchState);
             illegalOperation.printStackTrace();
         }
     }
