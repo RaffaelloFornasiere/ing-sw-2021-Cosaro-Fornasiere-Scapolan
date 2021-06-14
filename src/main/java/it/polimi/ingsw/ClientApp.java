@@ -7,6 +7,8 @@ import it.polimi.ingsw.ui.gui.GUI;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Hello world!
@@ -17,6 +19,7 @@ public class ClientApp
     public static void main( String[] args )
     {
         UI ui = new GUI();
+
         NetworkAdapter networkAdapter = connectToServer(ui);
         ui.setClient(networkAdapter);
 

@@ -36,26 +36,6 @@
             <Label layoutX="7.0" text="Insert leader ID" />
          </children>
       </Group>
-      <HBox layoutX="440.0" layoutY="355.0">
-         <children>
-            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0" prefWidth="65.0" text="Cancel">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
-            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
-         </children>
-      </HBox>
       <Label layoutX="190.0" layoutY="26.0" text="Login Game">
          <font>
             <Font name="System Bold" size="39.0" />
@@ -90,6 +70,26 @@
                   <String fx:value="nextButton" />
                   <String fx:value="arrow-button" />
                </styleClass>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="440.0" layoutY="355.0">
+         <children>
+            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0" prefWidth="65.0" text="Cancel">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Button>
          </children>
       </HBox>
