@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.ClientApp;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
@@ -8,6 +9,8 @@ import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.Direction;
+import it.polimi.ingsw.model.LeaderCards.Requirement;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
 import org.reflections.Reflections;
@@ -152,15 +155,21 @@ public class NetworkAdapter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
     public void BadRequestEventHandler(PropertyChangeEvent evt) {
-        System.err.println(new Gson().toJson(evt.getNewValue()));
+        BadRequestEvent event = (BadRequestEvent) evt.getNewValue();
+        view.printError("Bad request");
+        view.printError(event.getDescription());
+        System.err.println("Cause: " + new GsonBuilder().setPrettyPrinting().create().toJson(event.getCause()));
     }
 
     public void CantAffordErrorHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        CantAffordError event = (CantAffordError) evt.getNewValue();
+        view.printWarning("You can't afford the development card you wanted to buy");
     }
 
     public void ChoseMultipleExtraResourcePowerEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        ChoseMultipleExtraResourcePowerEvent event = (ChoseMultipleExtraResourcePowerEvent) evt.getNewValue();
+        HashMap<Resource, Integer> chosen = view.chooseResources(event.getNumberOfResources(), event.getResourceTypes());
+        send(new SimpleChosenResourcesEvent(event.getPlayerId(), chosen));
     }
 
     public void ChoseResourcesEventHandler(PropertyChangeEvent evt) {
@@ -184,7 +193,8 @@ public class NetworkAdapter {
     }
 
     public void DevCardSlotErrorHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        DevCardSlotError event = (DevCardSlotError) evt.getNewValue();
+        view.printWarning("You can't insert the card "+event.getDevCardID()+" into slot number "+event.getCardSlot());
     }
 
     public void FaithTrackEventHandler(PropertyChangeEvent evt) {
@@ -197,7 +207,8 @@ public class NetworkAdapter {
     }
 
     public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        IncompatiblePowersError event = (IncompatiblePowersError) evt.getNewValue();
+        view.printWarning("The power number "+event.getLeaderPowerIndex()+" of "+event.getLeaderCardID()+" can't be selected because it's in conflict with another power already selected");
     }
 
     public void InitialChoicesEventHandler(PropertyChangeEvent evt) {
@@ -211,7 +222,8 @@ public class NetworkAdapter {
     }
 
     public void LeaderCardNotActiveErrorHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        LeaderCardNotActiveError event = (LeaderCardNotActiveError) evt.getNewValue();
+        view.printWarning(event.getLeaderCardID() + " is not active");
     }
 
     public void LeaderCardStateEventHandler(PropertyChangeEvent evt) {
@@ -262,11 +274,13 @@ public class NetworkAdapter {
     }
 
     public void PlayerActionErrorHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        PlayerActionError event = (PlayerActionError) evt.getNewValue();
+        view.printWarning(event.getDescription());
     }
 
     public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        RequirementsNotMetError event = (RequirementsNotMetError) evt.getNewValue();
+        view.printWarning(event.getLeaderCardID()+" can't be activated because you don't meet the requirements");
     }
 
 
@@ -278,7 +292,9 @@ public class NetworkAdapter {
 
     public void SimpleChoseResourcesEventHandler(PropertyChangeEvent evt) {
         SimpleChoseResourcesEvent event = (SimpleChoseResourcesEvent) evt.getNewValue();
-        HashMap<Resource, Integer> chosen = view.chooseResources(event.getRequiredResourcesOFChoice());
+        ArrayList<Resource> resources = new ArrayList<>();
+        Collections.addAll(resources, Resource.values());
+        HashMap<Resource, Integer> chosen = view.chooseResources(event.getRequiredResourcesOFChoice(), resources);
         send(new SimpleChosenResourcesEvent(event.getPlayerId(), chosen));
     }
 

@@ -2224,11 +2224,9 @@ public class CLI extends UI {
     }
 
     @Override
-    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
-
-        Resource[] resources = Resource.values();
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes) {
         ArrayList<Pair<String, String>> options = new ArrayList<>();
-        for(Resource r: resources){
+        for(Resource r: allowedResourcesTypes){
             options.add(new Pair<>(shapeResource(r), colorResource(r)));
         }
 
@@ -2236,7 +2234,7 @@ public class CLI extends UI {
 
         HashMap<Resource, Integer> ret = new HashMap<>();
         for(Integer i: choices){
-            Resource r = resources[i];
+            Resource r = allowedResourcesTypes.get(i);
             ret.put(r, ret.getOrDefault(r, 0)+1);
         }
         return ret;

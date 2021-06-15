@@ -22,7 +22,7 @@ public class LeaderCardNotActiveError extends ClientEvent{
      * Getter for the ID of the leader card that should be active
      * @return The ID of the leader card that should be active
      */
-    public String getLeaderCardIndex() {
+    public String getLeaderCardID() {
         return leaderCardID;
     }
 }

@@ -332,7 +332,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes) {
         return null;
     }
 }
