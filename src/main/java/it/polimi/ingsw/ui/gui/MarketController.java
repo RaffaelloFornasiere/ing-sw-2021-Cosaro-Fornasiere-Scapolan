@@ -70,7 +70,7 @@ public class MarketController extends Controller implements Initializable {
     }
 
     public void onNext(){
-        
+
     }
 
 
