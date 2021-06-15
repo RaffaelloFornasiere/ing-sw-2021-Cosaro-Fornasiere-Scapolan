@@ -8,8 +8,8 @@ import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.ui.PlayerState;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
 
@@ -310,7 +310,7 @@ public class CLI extends UI {
 
     }
 
-    public static ArrayList<Integer> displaySelectionFormMultipleChoiches(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
+    public static ArrayList<Integer> displaySelectionFormMultipleChoices(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
         String resetColor = Color.WHITE.getAnsiCode();
         StringBuilder builder = new StringBuilder();
         builder.append(message);
@@ -1667,8 +1667,9 @@ public class CLI extends UI {
         ArrayList<Pair<String, String>> opt = new ArrayList<>();
         opt.add(new Pair<>("Personal production power", Color.reset()));
         for (String devCardID : playerStates.get(thisPlayer).getDashBoard().getTopDevCards()) {
-            opt.add(new Pair<>(devCardID, Color.reset()));
+            if(devCardID!=null) opt.add(new Pair<>(devCardID, Color.reset()));
         }
+
         ArrayList<Integer> powerChosen = displaySelectionFormVariableChoices(opt, null, opt.size(), "Choose which production power to activate");
 
         return new ActivateProductionEvent(thisPlayer, powerChosen.stream().filter(x -> x != 0).map(i -> opt.get(i).getKey()).collect(Collectors.toCollection(ArrayList::new)), powerChosen.contains(0));
@@ -2230,7 +2231,7 @@ public class CLI extends UI {
             options.add(new Pair<>(shapeResource(r), colorResource(r)));
         }
 
-        ArrayList<Integer> choices = displaySelectionFormMultipleChoiches(options, null, requiredResourcesOFChoice, "");
+        ArrayList<Integer> choices = displaySelectionFormMultipleChoices(options, null, requiredResourcesOFChoice, "");
 
         HashMap<Resource, Integer> ret = new HashMap<>();
         for(Integer i: choices){

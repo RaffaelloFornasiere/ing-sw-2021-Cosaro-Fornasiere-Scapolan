@@ -7,10 +7,7 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class DashBoard extends Observable {
@@ -204,9 +201,11 @@ public class DashBoard extends Observable {
 
     public ArrayList<DevCard> getTopCards(){
         ArrayList<DevCard> ret = new ArrayList<>();
-        for(Stack<DevCard> stack: cardSlots)
-            ret.add(stack.peek());
-
+        for(Stack<DevCard> stack: cardSlots) {
+            try {
+                ret.add(stack.peek());
+            } catch (EmptyStackException ignore){}
+        }
         return ret;
     }
 
@@ -226,8 +225,10 @@ public class DashBoard extends Observable {
     public HashMap<Resource, Integer> getWarehouseResources(){
         HashMap<Resource, Integer> resources = new HashMap<>();
 
-        for(Depot d: warehouse)
-            resources.put(d.getResourceType(), d.getCurrentQuantity());
+        for(Depot d: warehouse) {
+            int n = d.getCurrentQuantity();
+            if(n>0) resources.put(d.getResourceType(), n);
+        }
 
         for(Resource r: Resource.values())
             if(!resources.containsKey(r))

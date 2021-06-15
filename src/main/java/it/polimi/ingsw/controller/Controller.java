@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.controller.modelChangeHandlers.DashBoardHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.DepositLeaderPowerHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.MatchStateHandler;
@@ -307,6 +308,7 @@ public class Controller {
         boolean goodChoice = false;
         while(!goodChoice) {
             try {
+                new DashBoardHandler(clientHandlerSenders, player).update(player.getDashBoard());
                 clientHandlerSenders.get(player.getPlayerId()).sendEvent(new OrganizeResourcesEvent(player.getPlayerId(), resources));
                 synchronized (waitingForResourceOrganizationLock) {
                     try {
@@ -370,6 +372,12 @@ public class Controller {
                 for(Resource r: oldWarehouseStoredResources.keySet()){
                     oldTotalStoredResources.put(r, oldTotalStoredResources.getOrDefault(r, 0) + oldWarehouseStoredResources.get(r));
                 }
+
+                System.out.println("RESOURCE BALANCE");
+                System.out.println(resources);
+                System.out.println(newTotalStoredResources);
+                System.out.println(discardedResources);
+                System.out.println(oldTotalStoredResources);
 
                 for (Resource r : resources.keySet()) {
                     if (resources.get(r) != newTotalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0) - oldTotalStoredResources.getOrDefault(r, 0))
@@ -599,10 +607,12 @@ public class Controller {
     }
 
     private synchronized void removeResourcesFromLeaderCards(Player player, HashMap<Resource, Integer> resources) throws NotPresentException {
-        resources = (HashMap<Resource, Integer>) resources.clone();
+        resources = new HashMap<>(resources);
         for(Resource r: resources.keySet())
             if(resources.get(r)<=0)
                 resources.remove(r);
+
+        if(resources.isEmpty()) return;
 
         for(LeaderCard lc: player.getActiveLeaderCards())
             for(LeaderPower lp: lc.getLeaderPowers()){
@@ -610,15 +620,16 @@ public class Controller {
                     DepositLeaderPower dlp = (DepositLeaderPower) lp;
                     HashMap<Resource, Integer> currentResources = dlp.getCurrentResources();
                     for(Resource r: currentResources.keySet()) {
-                        if(resources.isEmpty()) return;
                         int toRemove = Integer.min(resources.getOrDefault(r, 0), currentResources.get(r));
                         currentResources.put(r, currentResources.get(r)-toRemove);
                         resources.put(r, resources.get(r)-toRemove);
                         if(resources.get(r)<=0)
                             resources.remove(r);
+                        if(resources.isEmpty()) return;
                     }
                 }
             }
+        //WUT
         throw new NotPresentException("Not enough resources in the leaderCards");
     }
 
@@ -652,6 +663,13 @@ public class Controller {
     public synchronized void ActivateProductionEventHandler(PropertyChangeEvent evt){
         ActivateProductionEvent event = (ActivateProductionEvent) evt.getNewValue();
 
+        if(!event.isPersonalPowerActive() && event.getDevCards().size()==0){
+            clientHandlerSenders.get(event.getPlayerId()).sendEvent(new PlayerActionError(event.getPlayerId(), "You must select at least one production power", event));
+            new MatchStateHandler(clientHandlerSenders).update(matchState);
+            return;
+        }
+
+        //TODO Why?
         new Thread(()->{
             HashMap<Resource, Integer> consumedResources = new HashMap<>();
             HashMap<Resource, Integer> producedResources = new HashMap<>();
@@ -675,6 +693,20 @@ public class Controller {
 
                     //can probably be it's own function returning a cumulative production power
                     ProductionPower productionPower = topDevCards.get(index).getProductionPower();
+                    HashMap<Resource, Integer> cr = productionPower.getConsumedResources();
+                    for(Resource r: cr.keySet()){
+                        consumedResources.put(r, cr.get(r) + consumedResources.getOrDefault(r, 0));
+                    }
+                    HashMap<Resource, Integer> pr = productionPower.getConsumedResources();
+                    for(Resource r: pr.keySet()){
+                        producedResources.put(r, pr.get(r) + producedResources.getOrDefault(r, 0));
+                    }
+                    requiredResourceOfChoice+=productionPower.getRequiredResourceOfChoice();
+                    producedResourceOfChoice+=productionPower.getProducedResourceOfChoice();
+                    faithPointsProduced+= productionPower.getFaithPointsProduced();
+                }
+                if(event.isPersonalPowerActive()){
+                    ProductionPower productionPower = player.getDashBoard().getPersonalPower();
                     HashMap<Resource, Integer> cr = productionPower.getConsumedResources();
                     for(Resource r: cr.keySet()){
                         consumedResources.put(r, cr.get(r) + consumedResources.getOrDefault(r, 0));
@@ -753,7 +785,7 @@ public class Controller {
 
                 }
 
-                //chose produced resource of choice
+                //chose PRODUCED resource of choice
                 int numChosenResources = 0;
                 HashMap<Resource, Integer> chosenResources = new HashMap<>();
                 goodChoice = false;
