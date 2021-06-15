@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.cli;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
@@ -23,10 +24,7 @@ public class DashBoardView {
 
     public DashBoardView(ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse, String player) {
         this.topDevCards = new ArrayList<>();
-        for (String s : topDevCards) {
-            if (s != null) this.topDevCards.add(s);
-            else this.topDevCards.add(null);
-        }
+        this.topDevCards.addAll(topDevCards);
 
         this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
         this.warehouse = new ArrayList<>();
@@ -223,7 +221,7 @@ public class DashBoardView {
 
         DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
         DrawableObject strongBox = new DrawableObject(strongBoxString, 0, warehouse.getHeight() + 2);
-        DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight() + strongBox.getHeight());
+        DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight() + strongBox.getHeight() + 2);
         Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight()+ personalProductionPower.getHeight() + 4, System.out);
 
         panel.addItem(warehouse);
@@ -231,8 +229,6 @@ public class DashBoardView {
         panel.addItem(personalProductionPower);
         panel.show();
         displayDevCardSlots();
-
-
     }
 
 

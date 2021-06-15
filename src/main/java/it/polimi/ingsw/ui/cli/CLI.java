@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.cli;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
@@ -1482,7 +1483,6 @@ public class CLI extends UI {
             playerStates.get(playerId).dashBoard = new DashBoardView(new ArrayList<>(), new HashMap<>(), new ArrayList<>(), playerId);
         }
         playerStates.get(playerId).dashBoard.setPersonalProductionPower(personalProductionPower);
-
     }
 
     @Override

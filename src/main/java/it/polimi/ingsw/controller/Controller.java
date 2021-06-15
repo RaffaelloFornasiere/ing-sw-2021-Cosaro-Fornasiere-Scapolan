@@ -534,13 +534,15 @@ public class Controller {
             HashMap<Resource, Integer> selectedResourcesFromLeaderPower = new HashMap<>();
             HashMap<Resource, Integer> selectedResourcesFromWarehouse = new HashMap<>();
             HashMap<Resource, Integer> resourcesFromStrongBox = new HashMap<>();
+            if (!devCard.checkCost(allPlayerResources)) {
+                senders.get(event.getPlayerId()).sendObject(new CantAffordError(event.getPlayerId(), event.getDevCardID()));
+                new MatchStateHandler(senders).update(matchState);
+                return;
+            }
+
             boolean goodChoice = false;
             while(!goodChoice) {
                 try {
-                    if (!devCard.checkCost(allPlayerResources)) {
-                        throw new HandlerCheckException(new CantAffordError(event.getPlayerId(), event.getDevCardID()));
-                    }
-
                     senders.get(event.getPlayerId()).sendObject(new ChoseResourcesEvent(event.getPlayerId(), cardCost, 0));
 
                     synchronized (waitingForResourcesLock){
@@ -610,10 +612,13 @@ public class Controller {
     }
 
     private synchronized void removeResourcesFromLeaderCards(Player player, HashMap<Resource, Integer> resources) throws NotPresentException {
-        resources = new HashMap<>(resources);
-        for(Resource r: resources.keySet())
-            if(resources.get(r)<=0)
-                resources.remove(r);
+        HashMap<Resource, Integer> tempResources = new HashMap<>();
+        for(Resource r: resources.keySet()) {
+            int n = resources.get(r);
+            if (n > 0)
+                tempResources.put(r, n);
+        }
+        resources = tempResources;
 
         if(resources.isEmpty()) return;
 
