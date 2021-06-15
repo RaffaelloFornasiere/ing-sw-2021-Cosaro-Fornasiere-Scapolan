@@ -1356,21 +1356,6 @@ public class CLI extends UI {
     }
 
     @Override
-    public void beginGame() {
-
-    }
-
-    @Override
-    public void setUserTurnActive(boolean active) {
-
-    }
-
-    @Override
-    public void ack() {
-
-    }
-
-    @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
         ArrayList<Integer> indexes = leaderCardsIDs.stream().map(name -> Integer.parseInt(name.substring(10))).collect(Collectors.toCollection(ArrayList::new));
 
@@ -2016,23 +2001,6 @@ public class CLI extends UI {
         for(int i=0; i<powerSelectedStates.size(); i++){
             leaderCardView.setPowerSelectionState(i, powerSelectedStates.get(i));
         }
-    }
-
-    /*public void updateDepositLeaderPowerState(String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
-        out.println(thisPlayer + " , THE DEPOSIT LEADER POWER OF " + leaderCardID.toUpperCase() + "\n HAS BEEN UPDATED! CHECK IT OUT!");
-        playerStates.get(thisPlayer).leaderCards.get(leaderCardID).updateDepositLeaderPower(leaderPowerIndex, storedResources);
-        out.println(playerStates.get(thisPlayer).leaderCards.get(leaderCardID).toString());
-    }*/
-
-    @Override
-    public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching
-            (ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards) {
-        return null;
     }
 
     public HashMap<Resource, Integer> getDepositLeaderPowerTotalResources() {

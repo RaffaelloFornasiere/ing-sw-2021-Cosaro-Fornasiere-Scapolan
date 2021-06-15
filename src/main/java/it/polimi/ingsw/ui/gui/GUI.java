@@ -182,25 +182,15 @@ public class GUI extends UI {
 
     }
 
-    @Override
+    //TODO deleted from UI
+    /*@Override
     public void beginGame() {
         try {
             MainApplication.setScene("mainview", mainViewController);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void setUserTurnActive(boolean active) {
-
-    }
-
-    @Override
-    public void ack() {
-
-    }
-
+    }*/
 
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
@@ -288,17 +278,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
-        return null;
-    }
-
-    @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards) {
         return null;
     }
 

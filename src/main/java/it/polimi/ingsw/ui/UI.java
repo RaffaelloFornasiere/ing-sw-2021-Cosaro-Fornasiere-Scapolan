@@ -55,12 +55,6 @@ public abstract class UI {
 
     public abstract void displayWaitingForPlayerToSetupState(String playerID);
 
-    abstract public void beginGame();
-
-    abstract public void setUserTurnActive(boolean active);
-
-    abstract public void ack();
-
     //game related
 
 
@@ -102,29 +96,12 @@ public abstract class UI {
 
 
     /**
-     * Asks the user to select which leader powers use with which marbles
-     *
-     * @param marbles       white marbles obtained from market
-     * @param leaderCardIDs active leader cards
-     * @return a hash with the required matching
-     */
-    abstract public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs);
-
-    /**
-     * Asks the user to give the displacement of marbles
+     * Asks the user to give the displacement of marbles USED
      *
      * @param resources resources to put in whareouse
      * @return 3 arraylist with the marbles
      */
     abstract public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources);
-
-    /**
-     * ask which active leader cards use
-     *
-     * @param leaderCards active leader cards
-     * @return the array containing the leader cards that the user wants to use
-     */
-    abstract public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards);
 
 
     abstract public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int  freeChoicesResources);
