@@ -8,8 +8,8 @@ import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.ui.PlayerState;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
 
@@ -41,7 +41,7 @@ public class CLI extends UI {
         playerStates = new HashMap<>();
     }
 
-    public static boolean isAffirmative(String s){
+    public static boolean isAffirmative(String s) {
         return s.equalsIgnoreCase("YES") ||
                 s.equalsIgnoreCase("Y");
     }
@@ -1205,10 +1205,10 @@ public class CLI extends UI {
 
 
     public static String colorResource(Resource res) {
-        if (res == Resource.SERVANT) return Color.BLUE.getAnsiCode();
-        if (res == Resource.SHIELD) return Color.RED.getAnsiCode();
-        if (res == Resource.COIN) return Color.GREEN.getAnsiCode();
-        else return Color.YELLOW.getAnsiCode();
+        if (res == Resource.SERVANT) return Color.MAGENTA.getAnsiCode();
+        if (res == Resource.SHIELD) return Color.BLUE.getAnsiCode();
+        if (res == Resource.COIN) return Color.YELLOW.getAnsiCode();
+        else return Color.GREY.getAnsiCode();
     }
 
     public static String shapeResource(Resource res) {
@@ -1812,11 +1812,13 @@ public class CLI extends UI {
     @Override
     public Event askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
         Event event = null;
-        switch (turnState) {
-            case START -> {
-                if (!thisPlayer.equals(playerID)) {
-                    out.println(playerID + " " + turnState.getDescription());
-                } else {
+
+        if (!thisPlayer.equals(playerID)) {
+            out.println(playerID + " " + turnState.getDescription());
+            displayOthers();
+        } else {
+            switch (turnState) {
+                case START -> {
                     int inputIndex;
                     ArrayList<Action> allActions = Arrays.stream(Action.values()).collect(Collectors.toCollection(ArrayList::new));
                     ArrayList<Pair<String, String>> possibleActions = new ArrayList<>();
@@ -1875,16 +1877,11 @@ public class CLI extends UI {
 
                     }
 
+                    break;
                 }
-                break;
-            }
 
 
-            case AFTER_LEADER_CARD_ACTION -> {
-                if (!thisPlayer.equals(playerID)) {
-                    out.println(playerID + " " + turnState.getDescription());
-                    displayOthers();
-                } else {
+                case AFTER_LEADER_CARD_ACTION -> {
                     int inputIndex = -1;
                     ArrayList<Action> allActions = Arrays.stream(Action.values()).filter(action -> action != Action.LEADER_ACTION).collect(Collectors.toCollection(ArrayList::new));
                     ArrayList<Pair<String, String>> possibleActions = new ArrayList<>();
@@ -1917,16 +1914,11 @@ public class CLI extends UI {
                         }
 
                     }
+                    break;
                 }
-                break;
-            }
 
 
-            case AFTER_MAIN_ACTION -> {
-                if (!thisPlayer.equals(playerID)) {
-                    out.println(playerID + " " + turnState.getDescription());
-                    displayOthers();
-                } else {
+                case AFTER_MAIN_ACTION -> {
                     int inputIndex = -1;
                     ArrayList<Action> allActions = Arrays.stream(Action.values()).filter(action -> action == Action.LEADER_ACTION || action == Action.DISPLAY_SMTH).collect(Collectors.toCollection(ArrayList::new));
 
@@ -1977,14 +1969,11 @@ public class CLI extends UI {
                     } else {
                         event = new EndTurnEvent(thisPlayer);
                     }
+                    break;
                 }
-                break;
-            }
-            case END_OF_TURN -> {
-                if (!thisPlayer.equals(playerID)) {
-                    out.println(playerID + " " + turnState.getDescription());
-                    displayOthers();
-                } else {
+
+
+                case END_OF_TURN -> {
                     displayOthers();
                     out.println("WOULD YOU LIKE TO SEE SOME OTHER PLAYER'S/ YOUR STATE? Y/N");
                     String response = in.next().toUpperCase();
@@ -1993,19 +1982,21 @@ public class CLI extends UI {
                     }
                     out.println("YOUR TURN HAS ENDED");
                     event = new EndTurnEvent(thisPlayer);
+                    break;
                 }
-                break;
-            }
-            case WAITING_FOR_SOMETHING -> {
-                break;
-            }
-            case MATCH_ENDED -> {
-                out.println("MATCH HAS ENDED");
-                break;
+
+
+                case WAITING_FOR_SOMETHING -> {
+                    break;
+                }
+                case MATCH_ENDED -> {
+                    out.println("MATCH HAS ENDED");
+                    break;
+                }
+
             }
 
         }
-
         out.println("returned event");
         return event;
     }
@@ -2017,7 +2008,8 @@ public class CLI extends UI {
     }
 
     @Override
-    public void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates) {
+    public void updateLeaderPowersSelectedState(String playerId, String
+            leaderCardID, ArrayList<Boolean> powerSelectedStates) {
         LeaderCardView leaderCardView = playerStates.get(playerId).getLeaderCards().get(leaderCardID);
         for (int i = 0; i < powerSelectedStates.size(); i++) {
             leaderCardView.setPowerSelectionState(i, powerSelectedStates.get(i));
@@ -2032,13 +2024,17 @@ public class CLI extends UI {
     }
 
     @Override
-    public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources) {
+    public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required,
+                                                            int freeChoicesResources) {
         //clone required
         HashMap<Resource, Integer> clonedRequired = (HashMap<Resource, Integer>) required.clone();
+        HashMap<Resource, Integer> emptyHashmap = new HashMap<>();
+        Arrays.stream(Resource.values()).forEach(re -> emptyHashmap.put(re, 0));
         //prepare parameters to build event to return
-        HashMap<Resource, Integer> allChosen = new HashMap<>();
-        HashMap<Resource, Integer> chosenFromWarehouse = new HashMap<>();
-        HashMap<Resource, Integer> chosenFromLeaderPower = new HashMap<>();
+        HashMap<Resource, Integer> allChosen = new HashMap<>(emptyHashmap);
+        HashMap<Resource, Integer> chosenFromWarehouse = new HashMap<>(emptyHashmap);
+
+        HashMap<Resource, Integer> chosenFromLeaderPower = new HashMap<>(emptyHashmap);
 
         DashBoardView thisDashboard = playerStates.get(thisPlayer).getDashBoard();
         //Image of the current state of depots
@@ -2224,18 +2220,19 @@ public class CLI extends UI {
     }
 
     @Override
-    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes) {
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<
+            Resource> allowedResourcesTypes) {
         ArrayList<Pair<String, String>> options = new ArrayList<>();
-        for(Resource r: allowedResourcesTypes){
+        for (Resource r : allowedResourcesTypes) {
             options.add(new Pair<>(shapeResource(r), colorResource(r)));
         }
 
         ArrayList<Integer> choices = displaySelectionFormMultipleChoiches(options, null, requiredResourcesOFChoice, "");
 
         HashMap<Resource, Integer> ret = new HashMap<>();
-        for(Integer i: choices){
+        for (Integer i : choices) {
             Resource r = allowedResourcesTypes.get(i);
-            ret.put(r, ret.getOrDefault(r, 0)+1);
+            ret.put(r, ret.getOrDefault(r, 0) + 1);
         }
         return ret;
     }

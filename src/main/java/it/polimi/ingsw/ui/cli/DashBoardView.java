@@ -63,7 +63,7 @@ public class DashBoardView {
     }
 
     public DepotResultMessage tryAddResource(Resource r, DepotState depot) {
-        if (warehouse.stream().filter(dep -> dep != depot).map(dep -> (dep.getCurrentQuantity() != 0 && dep.getResourceType() != depot.getResourceType()) || dep.getCurrentQuantity() == 0).reduce(true, (prev, foll) -> prev && foll)) {
+        if (warehouse.stream().filter(dep -> dep != depot).map(dep->((dep.getCurrentQuantity()!=0) && (dep.getResourceType()!=r))||dep.getCurrentQuantity()==0).reduce(true, (prev, foll) -> prev && foll)) {
             return depot.tryAddResource(r);
         }
         return DepotResultMessage.INVALID_DEPOT;
@@ -260,9 +260,9 @@ public class DashBoardView {
         DashBoardView d = new DashBoardView(cards, str, totalLevels, player);
         System.out.println(d.tryAddResource(Resource.COIN, d.getWarehouse().get(1)).getMessage());
 
-//        DepotState depot1=d.getWarehouse().get(1);
-//        System.out.println(depot1.getResourceType());
-//        d.getWarehouse().stream().filter(dep-> dep!=depot1).map(dep->(dep.getCurrentQuantity()!=0 && dep.getResourceType()!=depot1.getResourceType())||dep.getCurrentQuantity()==0).forEach(bool-> System.out.println(bool));
+        DepotState depot1=d.getWarehouse().get(1);
+        System.out.println(depot1.getResourceType());
+        d.getWarehouse().stream().filter(dep-> dep!=depot1).map(dep->((dep.getCurrentQuantity()!=0) && (dep.getResourceType()!=depot1.getResourceType()))||dep.getCurrentQuantity()==0).forEach(bool-> System.out.println(bool));
 
 
         d.displayAll(player);
