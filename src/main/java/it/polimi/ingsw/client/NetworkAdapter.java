@@ -246,7 +246,8 @@ public class NetworkAdapter {
     public void MatchStateEventHandler(PropertyChangeEvent evt) {
         MatchStateEvent event = (MatchStateEvent) evt.getNewValue();
         Event ev = view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
-        if(ev!=null) send(ev);
+        if(ev!=null){ send(ev);
+        System.out.println("event sent");}
     }
 
     public void OrganizeResourcesEventHandler(PropertyChangeEvent evt) {
