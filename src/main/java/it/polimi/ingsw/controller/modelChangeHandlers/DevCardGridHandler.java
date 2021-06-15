@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
+import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.ClientEvents.DevCardGridStateEvent;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.DevCards.DevCardGrid;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 
 public class DevCardGridHandler extends MatchObserver{
 
-    public DevCardGridHandler(HashMap<String, ClientHandlerSender> networkData) {
+    public DevCardGridHandler(HashMap<String, Sender> networkData) {
         super(networkData);
     }
 

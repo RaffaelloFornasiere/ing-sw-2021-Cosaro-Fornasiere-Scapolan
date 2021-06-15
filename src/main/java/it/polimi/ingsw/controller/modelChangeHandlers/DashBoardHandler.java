@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
+import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.ClientEvents.DashBoardStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.model.DashBoard;
@@ -16,7 +17,7 @@ import java.util.Stack;
 public class DashBoardHandler extends MatchObserver{
     private Player dashBoardOwner;
 
-    public DashBoardHandler(HashMap<String, ClientHandlerSender> networkData, Player dashBoardOwner) {
+    public DashBoardHandler(HashMap<String, Sender> networkData, Player dashBoardOwner) {
         super(networkData);
         this.dashBoardOwner = dashBoardOwner;
     }

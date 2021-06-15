@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
+import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 public class DepositLeaderPowerHandler extends MatchObserver{
     private Player leaderCardOwner;
 
-    public DepositLeaderPowerHandler(HashMap<String, ClientHandlerSender> networkData, Player leaderCardOwner) {
+    public DepositLeaderPowerHandler(HashMap<String, Sender> networkData, Player leaderCardOwner) {
         super(networkData);
         this.leaderCardOwner = leaderCardOwner;
     }

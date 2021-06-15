@@ -42,6 +42,8 @@ public abstract class UI {
 
     abstract public void printWarning(String warning);
 
+    public abstract boolean askSingleplayer();
+
     public abstract InetAddress askIP();
 
     public abstract boolean askIfNewLobby();

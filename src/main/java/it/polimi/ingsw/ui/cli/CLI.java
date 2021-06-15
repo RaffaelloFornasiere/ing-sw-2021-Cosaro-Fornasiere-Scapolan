@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.cli;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
@@ -9,7 +10,6 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
-import it.polimi.ingsw.ui.PlayerState;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
 
@@ -1234,6 +1234,17 @@ public class CLI extends UI {
     }
 
     @Override
+    public boolean askSingleplayer() {
+        ArrayList<Pair<String, String>> options = new ArrayList<>();
+        options.add(new Pair<>("Multiplayer", Color.reset()));
+        options.add(new Pair<>("Singleplayer", Color.reset()));
+
+        Integer choice = displaySelectionForm(options, null, 1, "WHICH MODE WOULD YOU LIKE TO PLAY?").get(0);
+
+        return choice==1;
+    }
+
+    @Override
     public InetAddress askIP() {
         InetAddress inetAddress = null;
         while (inetAddress == null) {
@@ -1266,6 +1277,9 @@ public class CLI extends UI {
     public String askUserID() {
         out.println("Insert username");
         this.thisPlayer = in.nextLine();
+        players.add(this.thisPlayer);
+        playerStates.put(this.thisPlayer, new PlayerState());
+        faithTrack = new FaithTrackView(players);
         return this.thisPlayer;
     }
 
@@ -1467,7 +1481,6 @@ public class CLI extends UI {
             playerStates.get(playerId).dashBoard = new DashBoardView(new ArrayList<>(), new HashMap<>(), new ArrayList<>(), playerId);
         }
         playerStates.get(playerId).dashBoard.setPersonalProductionPower(personalProductionPower);
-
     }
 
     @Override

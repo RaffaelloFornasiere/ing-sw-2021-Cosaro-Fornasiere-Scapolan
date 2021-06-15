@@ -103,13 +103,14 @@ public class DashBoard extends Observable {
             ResourcesLimitsException {
         var depot = warehouse
                 .stream()
-                .filter(x -> x.getResourceType().equals(resource))
+                .filter(x -> x.getResourceType().equals(resource) && x.getCurrentQuantity()>0)
                 .findFirst().orElse(null);
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResources(resource, quantity);
-            notifyObservers();}
-            catch (DepotResourceException e){}
+        try{
+            depot.subResources(resource, quantity);
+            notifyObservers();
+        } catch (DepotResourceException ignore){}
     }
 
     public void subResourcesToWarehouse(HashMap<Resource, Integer> resources) throws
@@ -117,12 +118,15 @@ public class DashBoard extends Observable {
         HashMap<Resource, Integer> subbedResources = new HashMap<>();
         try {
             for (Resource r : resources.keySet()) {
-                subResourcesToWarehouse(r, resources.get(r));
-                subbedResources.put(r, resources.get(r));
+                int n = resources.get(r);
+                if(n!=0) {
+                    subResourcesToWarehouse(r, resources.get(r));
+                    subbedResources.put(r, resources.get(r));
+                }
             }
         } catch (Exception e){
             for (Resource r : subbedResources.keySet()) {
-                addResourcesToWarehouse(r, resources.get(r));
+                addResourcesToWarehouse(r, subbedResources.get(r));
             }
             throw e;
         }
