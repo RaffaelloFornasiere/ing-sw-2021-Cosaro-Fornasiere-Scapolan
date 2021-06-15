@@ -6,7 +6,6 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
@@ -88,7 +87,7 @@ public abstract class UI {
 
     public abstract ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException;
 
-    public abstract Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
+    public abstract ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
 
     public abstract void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources);
 

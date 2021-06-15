@@ -832,7 +832,7 @@ public class CLI extends UI {
 
         //TODO here must be changed how selected is handled
         leaderCardViews.stream().forEach(cardView -> {
-            if (false/*cardView.getSelected()*/) {
+            if (cardView.isActive()) {
                 IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
                     LeaderPower power = cardView.getLeaderPowersActive().get(index);
                     if (power instanceof DepositLeaderPower)
@@ -1810,8 +1810,9 @@ public class CLI extends UI {
     }
 
     @Override
-    public Event askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
-        Event event = null;
+    public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
+
+        ArrayList<Event> events = new ArrayList<>();
 
         if (!thisPlayer.equals(playerID)) {
             out.println(playerID + " " + turnState.getDescription());
@@ -1833,15 +1834,15 @@ public class CLI extends UI {
 
                     switch (selectedAction) {
                         case BUY_DEVCARD -> {
-                            event = askForDevCard();
+                            events.add(askForDevCard());
                             break;
                         }
                         case TAKE_RESOURCES_FROM_MARKET -> {
-                            event = askForMarketRow();
+                            events.add(askForMarketRow());
                             break;
                         }
                         case PRODUCE -> {
-                            event = askForProductionPowersToUse();
+                            events.add(askForProductionPowersToUse());
                             break;
                         }
                         case LEADER_ACTION -> {
@@ -1857,7 +1858,7 @@ public class CLI extends UI {
                                 } catch (NotPresentException e) {
                                     e.printStackTrace();
                                 }
-                                event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
+                                events.add(new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard));
                             } else {
                                 String leaderCardToActivate = null;
                                 try {
@@ -1865,13 +1866,21 @@ public class CLI extends UI {
                                 } catch (NotPresentException e) {
                                     e.printStackTrace();
                                 }
-                                event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
+                                events.add(new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate));
                             }
                             break;
                         }
                         case DISPLAY_SMTH -> {
                             displayOthers();
-                            event = askForNextAction(playerID, lastRound, turnState);
+                            events.add(askForNextAction(playerID, lastRound, turnState).get(0));
+                            break;
+                        }
+                        case SELECT_LEADER_CARD -> {
+                            try {
+                                askForLeaderCardToSelectOrDeselect().forEach(ev -> events.add(ev));
+                            } catch (NotPresentException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         }
 
@@ -1896,20 +1905,28 @@ public class CLI extends UI {
 
                     switch (selectedAction) {
                         case BUY_DEVCARD -> {
-                            event = askForDevCard();
+                            events.add(askForDevCard());
                             break;
                         }
                         case TAKE_RESOURCES_FROM_MARKET -> {
-                            event = askForMarketRow();
+                            events.add(askForMarketRow());
                             break;
                         }
                         case PRODUCE -> {
-                            event = askForProductionPowersToUse();
+                            events.add(askForProductionPowersToUse());
                             break;
                         }
                         case DISPLAY_SMTH -> {
                             displayOthers();
-                            event = askForNextAction(playerID, lastRound, turnState);
+                            events.add(askForNextAction(playerID, lastRound, turnState).get(0));
+                            break;
+                        }
+                        case SELECT_LEADER_CARD -> {
+                            try {
+                                askForLeaderCardToSelectOrDeselect().forEach(ev -> events.add(ev));
+                            } catch (NotPresentException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         }
 
@@ -1948,7 +1965,7 @@ public class CLI extends UI {
                                     } catch (NotPresentException e) {
                                         e.printStackTrace();
                                     }
-                                    event = new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard);
+                                    events.add(new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard));
                                 } else {
                                     String leaderCardToActivate = null;
                                     try {
@@ -1956,18 +1973,18 @@ public class CLI extends UI {
                                     } catch (NotPresentException e) {
                                         e.printStackTrace();
                                     }
-                                    event = new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate);
+                                    events.add(new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate));
                                 }
                                 break;
                             }
                             case DISPLAY_SMTH -> {
                                 displayOthers();
-                                event = askForNextAction(playerID, lastRound, turnState);
+                                events.add(askForNextAction(playerID, lastRound, turnState).get(0));
                                 break;
                             }
                         }
                     } else {
-                        event = new EndTurnEvent(thisPlayer);
+                        events.add(new EndTurnEvent(thisPlayer));
                     }
                     break;
                 }
@@ -1981,7 +1998,7 @@ public class CLI extends UI {
                         displayOthers();
                     }
                     out.println("YOUR TURN HAS ENDED");
-                    event = new EndTurnEvent(thisPlayer);
+                    events.add(new EndTurnEvent(thisPlayer));
                     break;
                 }
 
@@ -1998,7 +2015,7 @@ public class CLI extends UI {
 
         }
         out.println("returned event");
-        return event;
+        return events;
     }
 
     @Override
