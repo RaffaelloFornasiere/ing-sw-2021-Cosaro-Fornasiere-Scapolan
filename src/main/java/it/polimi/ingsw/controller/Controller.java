@@ -320,7 +320,7 @@ public class Controller {
                 }
 
                 if (newResourcesOrganizationEvent == null) return;
-                HashMap<Resource, Integer> totalStoredResources = new HashMap<>();
+                HashMap<Resource, Integer> newTotalStoredResources = new HashMap<>();
                 HashMap<Resource, Integer> discardedResources = newResourcesOrganizationEvent.getDiscardedResources();
                 //validate deposit state
                 ArrayList<DepotState> eventDepotStates = newResourcesOrganizationEvent.getDepotStates();
@@ -340,7 +340,7 @@ public class Controller {
 
                 for (DepotState depotState : eventDepotStates) {
                     Resource type = depotState.getResourceType();
-                    totalStoredResources.put(type, totalStoredResources.getOrDefault(type, 0) + depotState.getCurrentQuantity());
+                    newTotalStoredResources.put(type, newTotalStoredResources.getOrDefault(type, 0) + depotState.getCurrentQuantity());
                 }
 
                 //validate leader power state
@@ -360,13 +360,19 @@ public class Controller {
                     if (!new DepositLeaderPower(dlp.getMaxResources()).canStore(storedResource))
                         throw new HandlerCheckException(new PlayerActionError(player.getPlayerId(), "One of the selected leader powers can't store the resources indicated with it", newResourcesOrganizationEvent));
                     for (Resource r : storedResource.keySet()) {
-                        totalStoredResources.put(r, storedResource.get(r) + storedResource.getOrDefault(r, 0));
+                        newTotalStoredResources.put(r, storedResource.get(r) + storedResource.getOrDefault(r, 0));
                     }
                 }
 
                 //check resources chosen
+                HashMap<Resource, Integer> oldTotalStoredResources = player.getLeaderCardsResources();
+                HashMap<Resource, Integer> oldWarehouseStoredResources = player.getDashBoard().getWarehouseResources();
+                for(Resource r: oldWarehouseStoredResources.keySet()){
+                    oldTotalStoredResources.put(r, oldTotalStoredResources.getOrDefault(r, 0) + oldWarehouseStoredResources.get(r));
+                }
+
                 for (Resource r : resources.keySet()) {
-                    if (resources.get(r) != totalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0))
+                    if (resources.get(r) != newTotalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0) - oldTotalStoredResources.getOrDefault(r, 0))
                         throw new HandlerCheckException(new PlayerActionError(player.getPlayerId(), "Total number of each resource given back does not correspond to the number sent", newResourcesOrganizationEvent));
                 }
                 //TODO check if discarded resources have to be discarded
