@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.controller.modelChangeHandlers.*;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
@@ -36,14 +37,14 @@ public class PreGameController {
         System.out.println("Handling NewPlayerEvent");
 
         if(event.getPlayerId().equals("*")){
-            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new UsernameError(event.getPlayerId(),
+            event.getRequestsElaborator().getClientHandlerSender().sendObject(new UsernameError(event.getPlayerId(),
                     "Username cannot be \"*\""));
             return;
         }
 
         if(networkData.containsKey(event.getPlayerId())){
             System.out.println("Username already taken");
-            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new UsernameError(event.getPlayerId(),
+            event.getRequestsElaborator().getClientHandlerSender().sendObject(new UsernameError(event.getPlayerId(),
                     "Username already taken"));
             return;
         }
@@ -86,7 +87,7 @@ public class PreGameController {
 
         int lobbyIndex = searchLobbyByLeader(event.getLobbyLeaderID());
         if(lobbyIndex == -1)
-            event.getRequestsElaborator().getClientHandlerSender().sendEvent(new LobbyError(event.getPlayerId(),
+            event.getRequestsElaborator().getClientHandlerSender().sendObject(new LobbyError(event.getPlayerId(),
                     "No lobby with the given Leader"));
         else{
             try {
@@ -94,7 +95,7 @@ public class PreGameController {
                 lobbies.get(lobbyIndex).addPlayerID(event.getPlayerId());
                 event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
             } catch (IllegalOperation illegalOperation) {
-                event.getRequestsElaborator().getClientHandlerSender().sendEvent(new LobbyError(event.getPlayerId(),
+                event.getRequestsElaborator().getClientHandlerSender().sendObject(new LobbyError(event.getPlayerId(),
                         "The lobby is full"));
             }
         }
@@ -131,14 +132,14 @@ public class PreGameController {
         int lobbyIndex = searchLobbyByLeader(event.getPlayerId());
 
         if(lobbyIndex==-1 && re!=null){
-            re.getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
+            re.getClientHandlerSender().sendObject(new BadRequestEvent(event.getPlayerId(),
                     "The player is not a leader of any lobby", event));
             return;
         }
 
         Lobby lobby = lobbies.get(lobbyIndex);
         if(lobby.getOtherPLayersID().size()<=0 && re!=null) {
-            re.getClientHandlerSender().sendEvent(new BadRequestEvent(event.getPlayerId(),
+            re.getClientHandlerSender().sendObject(new BadRequestEvent(event.getPlayerId(),
                     "Not enough player to start", event));
             return;
         }
@@ -154,23 +155,33 @@ public class PreGameController {
         Collections.shuffle(playerOrder);
 
         //Get the involved players networkData
-        HashMap<String, ClientHandlerSender> involvedClientHandlerSenders = new HashMap<>();
+        HashMap<String, Sender> involvedClientHandlerSenders = new HashMap<>();
         for(String playerID: playerOrder)
             involvedClientHandlerSenders.put(playerID, networkData.get(playerID).getClientHandlerSender());
 
+        EventRegistry matchEventHandlerRegistry = new EventRegistry();
+        for (String playerID: playerOrder) {
+            RequestsElaborator requestsElaborator = networkData.get(playerID);
+            requestsElaborator.setMatchEventHandlerRegistry(matchEventHandlerRegistry);
+        }
+
+        setupMatch(playerOrder, involvedClientHandlerSenders, matchEventHandlerRegistry);
+    }
+
+    public static void setupMatch(ArrayList<String> playerOrder, HashMap<String, Sender> involvedplayersSenders, EventRegistry matchEventHandlerRegistry) {
         //Initialize faith track
         FaithTrack faithTrack = FaithTrack.initFaithTrack(Config.getInstance().getFaithTrack());
 
         //initialize the dashboards and each player
         //ArrayList<DashBoard> dashBoards = new ArrayList<>();
         ArrayList<Player> players= new ArrayList<>();
-        PlayerHandler playerHandler = new PlayerHandler(involvedClientHandlerSenders);
+        PlayerHandler playerHandler = new PlayerHandler(involvedplayersSenders);
         for (int i = 0, playerOrderSize = playerOrder.size(); i < playerOrderSize; i++) {
             String s = playerOrder.get(i);
             DashBoard dashBoard = new DashBoard(Config.getInstance().getNumberOfCardSlots(),
                     Config.getInstance().getDepotCapacities(), Config.getInstance().getPersonalPowers().get(i), faithTrack);
             Player player = new Player(s, dashBoard);
-            dashBoard.addObserver(new DashBoardHandler(involvedClientHandlerSenders, player));
+            dashBoard.addObserver(new DashBoardHandler(involvedplayersSenders, player));
             player.addObserver(playerHandler);
             //dashBoards.add(dashBoard);
             players.add(player);
@@ -180,19 +191,14 @@ public class PreGameController {
         ArrayList<DevCard> devCards = Config.getInstance().getDevCards();
         Collections.shuffle(devCards);
         MatchState matchState= new MatchState(players, devCards, Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
-        matchState.getMarket().addObserver(new MarketHandler(involvedClientHandlerSenders));
-        matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedClientHandlerSenders));
-        FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedClientHandlerSenders, matchState);
+        matchState.getMarket().addObserver(new MarketHandler(involvedplayersSenders));
+        matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedplayersSenders));
+        FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedplayersSenders, matchState);
         matchState.getPlayers().forEach(p -> p.getDashBoard().getFaithTrackData().addObserver(faithTrackDataHandler));
-        matchState.addObserver(new MatchStateHandler(involvedClientHandlerSenders));
+        matchState.addObserver(new MatchStateHandler(involvedplayersSenders));
 
         //Initialize the controller
-        EventRegistry matchEventHandlerRegistry = new EventRegistry();
-        for (String playerID: playerOrder) {
-            RequestsElaborator requestsElaborator = networkData.get(playerID);
-            requestsElaborator.setMatchEventHandlerRegistry(matchEventHandlerRegistry);
-        }
-        Controller matchController = new Controller(matchEventHandlerRegistry, matchState, involvedClientHandlerSenders);
+        Controller matchController = new Controller(matchEventHandlerRegistry, matchState, involvedplayersSenders);
 
         //Initialize the leader cards
         ArrayList<String> leaderCardsIDs = new ArrayList<>();
@@ -205,12 +211,12 @@ public class PreGameController {
         //Notify the clients on the initial state of the game
         matchState.getMarket().notifyObservers();
         matchState.getDevCardGrid().notifyObservers();
-        for (int i=0; i<playerOrder.size(); i++){
+        for (int i = 0; i< playerOrder.size(); i++){
             Player p = matchState.getPlayers().get(i);
             p.getDashBoard().notifyObservers();
             p.notifyObservers();
-            for(ClientHandlerSender c: involvedClientHandlerSenders.values())
-                c.sendEvent(new PersonalProductionPowerStateEvent(p.getPlayerId(), p.getDashBoard().getPersonalPower()));
+            for(Sender c: involvedplayersSenders.values())
+                c.sendObject(new PersonalProductionPowerStateEvent(p.getPlayerId(), p.getDashBoard().getPersonalPower()));
 
             faithTrackManager.incrementFaithTrackPosition(players.get(i), Config.getInstance().getFaithPointHandicap().get(i));
         }
@@ -218,7 +224,7 @@ public class PreGameController {
         //Send to the players what they need to chose
         HashMap<String, InitialChoicesEvent> initialChoices = new HashMap<>();
         matchController.setInitialChoices(initialChoices);
-        for (int i=0; i<playerOrder.size(); i++){
+        for (int i = 0; i< playerOrder.size(); i++){
             ArrayList<String> cardsToChoseFrom = new ArrayList<>();
             for(int j = 0; j<Config.getInstance().getLeaderCardPerPlayerToChooseFrom(); j++) {
                 cardsToChoseFrom.add(leaderCardsIDs.get(leaderCardsIDs.size()-1));
@@ -227,7 +233,7 @@ public class PreGameController {
             InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom,
                     Config.getInstance().getLeaderCardPerPlayerToChoose(), Config.getInstance().getResourcesHandicap().get(i));
             initialChoices.put(playerOrder.get(i), initialChoicesEvent);
-            networkData.get(playerOrder.get(i)).getClientHandlerSender().sendEvent(initialChoicesEvent);
+            involvedplayersSenders.get(playerOrder.get(i)).sendObject(initialChoicesEvent);
         }
 
         System.out.println("All initial choices sent");

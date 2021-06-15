@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
+import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.ClientEvents.LeaderCardStateEvent;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
@@ -13,7 +14,7 @@ public class LeaderCardHandler extends MatchObserver {
 
     private Player leaderCardOwner;
 
-    public LeaderCardHandler(HashMap<String, ClientHandlerSender> networkData, Player leaderCardOwner) {
+    public LeaderCardHandler(HashMap<String, Sender> networkData, Player leaderCardOwner) {
         super(networkData);
         this.leaderCardOwner = leaderCardOwner;
     }

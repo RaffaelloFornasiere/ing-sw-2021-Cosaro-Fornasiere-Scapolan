@@ -3,13 +3,13 @@ package it.polimi.ingsw.ui.gui;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeUnit;
 
 
@@ -157,6 +158,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public boolean askSingleplayer() {
+        return false;
+    }
+
+    @Override
     public InetAddress askIP() {
         return serverAddress.getWaitIfLocked();
     }
@@ -205,7 +211,8 @@ public class GUI extends UI {
 
     }
 
-    @Override
+    //TODO deleted from UI
+    /*@Override
     public void beginGame() {
         try {
             MainApplication.setScene("mainview", mainViewController);
@@ -217,13 +224,7 @@ public class GUI extends UI {
     @Override
     public void setUserTurnActive(boolean active) {
         actionPerformed.setItem(null);
-    }
-
-    @Override
-    public void ack() {
-
-    }
-
+    }*/
 
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
@@ -323,14 +324,35 @@ public class GUI extends UI {
     }
 
     @Override
-    public Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+    public ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+        ArrayList<Event> events= new ArrayList<>();
         Action a;
         a = actionPerformed.getWaitIfLocked();
-        return switch (a) {
-            case MARKET_ACTION -> askForMarketRow();
-            case DEV_CARD_ACTION -> askForDevCard();
-            case PRODUCTION_ACTION -> askForProductionPowersToUse();
-        };
+//        return switch (a) {
+//            case MARKET_ACTION -> askForMarketRow();
+//            case DEV_CARD_ACTION -> askForDevCard();
+//            case PRODUCTION_ACTION -> askForProductionPowersToUse();
+//        switch (a) {
+//            case MARKET_ACTION -> {
+//                Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
+//                Integer index = playerInfo.getBoughtResourcesInfo().getValue();
+//                events.add(new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index));
+//                break;
+//            }
+//            case DEV_CARD_ACTION -> {
+//                String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
+//                int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
+//                events.add( new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot));
+//                break;
+//            }
+//            case PRODUCTION_ACTION -> {
+//                var devCards = playerInfo.getProdPowerDevCards();
+//                var personalPower = playerInfo.isActivatePersonalPower();
+//                events.add( new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower));
+//                break;
+//            }
+//        };
+        return events;
     }
 
 
@@ -345,19 +367,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public HashMap<Marble, LeaderCard> getLeaderCardMarbleMatching(ArrayList<Marble> marbles, ArrayList<String> leaderCardIDs) {
-
-        return null;
-    }
-
-    @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources) {
-
-        return null;
-    }
-
-    @Override
-    public ArrayList<LeaderCard> useLeaderCardPowers(ArrayList<LeaderCard> leaderCards) {
 
         return null;
     }
@@ -368,7 +378,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes) {
         return null;
     }
 }

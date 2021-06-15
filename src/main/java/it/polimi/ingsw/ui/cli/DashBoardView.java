@@ -62,6 +62,13 @@ public class DashBoardView {
         this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
     }
 
+    public DepotResultMessage tryAddResource(Resource r, DepotState depot) {
+        if (warehouse.stream().filter(dep -> dep != depot).map(dep->((dep.getCurrentQuantity()!=0) && (dep.getResourceType()!=r))||dep.getCurrentQuantity()==0).reduce(true, (prev, foll) -> prev && foll)) {
+            return depot.tryAddResource(r);
+        }
+        return DepotResultMessage.INVALID_DEPOT;
+    }
+
     public String trySubtractResourcesFromStrongbox(int quantity, Resource type) {
         if (strongBox.containsKey(type)) {
             if (strongBox.get(type) - quantity < 0) return "NOT ENOUGH " + type.toString() + " IN STRONGBOX!\n";
@@ -168,7 +175,6 @@ public class DashBoardView {
 
         DrawableObject devCards = new DrawableObject("\033[31;1;4mDEVCARD SLOTS\033[0m \n", 1, 1);
 
-        // AtomicInteger height= new AtomicInteger();
         AtomicInteger gap = new AtomicInteger(0);
         AtomicInteger slotIndex = new AtomicInteger(1);
         ArrayList<DrawableObject> objs = new ArrayList<>();
@@ -218,7 +224,7 @@ public class DashBoardView {
         DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
         DrawableObject strongBox = new DrawableObject(strongBoxString, 0, warehouse.getHeight() + 2);
         DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight() + strongBox.getHeight());
-        Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight() + personalProductionPower.getHeight() + 4, System.out);
+        Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight()+ personalProductionPower.getHeight() + 4, System.out);
 
         panel.addItem(warehouse);
         panel.addItem(strongBox);
@@ -231,9 +237,9 @@ public class DashBoardView {
 
 
     public static void main(String[] args) {
-        DepotState depot = new DepotState(Resource.COIN, 3, 0);
-        DepotState depot2 = new DepotState(Resource.SERVANT, 4, 2);
-        DepotState depot3 = new DepotState(Resource.SHIELD, 6, 4);
+        DepotState depot = new DepotState(Resource.COIN, 3, 1);
+        DepotState depot2 = new DepotState(Resource.COIN, 4, 0);
+        DepotState depot3 = new DepotState(Resource.SHIELD, 6, 0);
         ArrayList<DepotState> totalLevels = new ArrayList<>();
         totalLevels.add(depot);
         totalLevels.add(depot2);
@@ -252,6 +258,15 @@ public class DashBoardView {
         String player = "PAOLO";
 
         DashBoardView d = new DashBoardView(cards, str, totalLevels, player);
+        System.out.println(d.tryAddResource(Resource.COIN, d.getWarehouse().get(1)).getMessage());
+
+        DepotState depot1=d.getWarehouse().get(1);
+        System.out.println(depot1.getResourceType());
+        d.getWarehouse().stream().filter(dep-> dep!=depot1).map(dep->((dep.getCurrentQuantity()!=0) && (dep.getResourceType()!=depot1.getResourceType()))||dep.getCurrentQuantity()==0).forEach(bool-> System.out.println(bool));
+
+
         d.displayAll(player);
     }
+
+
 }

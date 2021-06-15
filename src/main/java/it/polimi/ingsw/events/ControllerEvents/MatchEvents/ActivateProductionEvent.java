@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ActivateProductionEvent extends MatchEvent {
 
     private final ArrayList<String> devCards;
-    private boolean personalPower;
+    private final boolean personalPower;
 
     /**
      * Constructor for the class
@@ -25,6 +25,7 @@ public class ActivateProductionEvent extends MatchEvent {
     public ActivateProductionEvent(String playerID, ArrayList<String> devCards, boolean personalPower) {
         super(playerID);
         this.devCards = (ArrayList<String>) devCards.clone();
+        this.personalPower = personalPower;
     }
 
     /**
