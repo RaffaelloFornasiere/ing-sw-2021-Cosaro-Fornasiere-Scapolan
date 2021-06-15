@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.ClientApp;
 import it.polimi.ingsw.controller.EventRegistry;
@@ -10,8 +9,6 @@ import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.Direction;
-import it.polimi.ingsw.model.LeaderCards.Requirement;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
 import org.reflections.Reflections;
@@ -215,7 +212,7 @@ public class NetworkAdapter {
 
     public void DevCardSlotErrorHandler(PropertyChangeEvent evt) {
         DevCardSlotError event = (DevCardSlotError) evt.getNewValue();
-        view.printWarning("You can't insert the card "+event.getDevCardID()+" into slot number "+event.getCardSlot());
+        view.printWarning("You can't insert the card " + event.getDevCardID() + " into slot number " + event.getCardSlot());
     }
 
     public void FaithTrackEventHandler(PropertyChangeEvent evt) {
@@ -229,7 +226,7 @@ public class NetworkAdapter {
 
     public void IncompatiblePowersErrorHandler(PropertyChangeEvent evt) {
         IncompatiblePowersError event = (IncompatiblePowersError) evt.getNewValue();
-        view.printWarning("The power number "+event.getLeaderPowerIndex()+" of "+event.getLeaderCardID()+" can't be selected because it's in conflict with another power already selected");
+        view.printWarning("The power number " + event.getLeaderPowerIndex() + " of " + event.getLeaderCardID() + " can't be selected because it's in conflict with another power already selected");
     }
 
     public void InitialChoicesEventHandler(PropertyChangeEvent evt) {
@@ -273,9 +270,12 @@ public class NetworkAdapter {
 
     public void MatchStateEventHandler(PropertyChangeEvent evt) {
         MatchStateEvent event = (MatchStateEvent) evt.getNewValue();
-        Event ev = view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
-        if(ev!=null){ send(ev);
-        System.out.println("event sent");}
+        ArrayList<Event> evs = view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
+        evs.forEach(ev -> {
+                    send(ev);
+                    System.out.println("event sent");
+                }
+        );
     }
 
     public void OrganizeResourcesEventHandler(PropertyChangeEvent evt) {
@@ -301,7 +301,7 @@ public class NetworkAdapter {
 
     public void RequirementsNotMetErrorHandler(PropertyChangeEvent evt) {
         RequirementsNotMetError event = (RequirementsNotMetError) evt.getNewValue();
-        view.printWarning(event.getLeaderCardID()+" can't be activated because you don't meet the requirements");
+        view.printWarning(event.getLeaderCardID() + " can't be activated because you don't meet the requirements");
     }
 
 

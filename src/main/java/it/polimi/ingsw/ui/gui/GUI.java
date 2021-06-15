@@ -3,10 +3,9 @@ package it.polimi.ingsw.ui.gui;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
@@ -288,26 +287,31 @@ public class GUI extends UI {
     }
 
     @Override
-    public Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+    public ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+        ArrayList<Event> events= new ArrayList<>();
         Action a;
         a = actionPerformed.getWaitIfLocked();
-        return switch (a) {
+        switch (a) {
             case MARKET_ACTION -> {
                 Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
                 Integer index = playerInfo.getBoughtResourcesInfo().getValue();
-                yield new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index);
+                events.add(new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index));
+                break;
             }
             case DEV_CARD_ACTION -> {
                 String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
                 int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
-                yield new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot);
+                events.add( new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot));
+                break;
             }
             case PRODUCTION_ACTION -> {
                 var devCards = playerInfo.getProdPowerDevCards();
                 var personalPower = playerInfo.isActivatePersonalPower();
-                yield new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower);
+                events.add( new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower));
+                break;
             }
         };
+        return events;
     }
 
 
