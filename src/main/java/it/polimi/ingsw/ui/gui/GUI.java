@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -20,7 +21,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 
 public class GUI extends UI {
@@ -38,9 +41,7 @@ public class GUI extends UI {
     private final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
     private final LockWrap<Integer> serverPort = new LockWrap<>(null);
 
-    private PlayerInfo playerInfo;
-
-
+    private PlayerState playerInfo;
     private String PlayerImage;
 
     ServerSettingsController serverSettingsController;
@@ -55,7 +56,6 @@ public class GUI extends UI {
         serverSettingsController = new ServerSettingsController(this);
         loginController = new LoginController(this);
         splashScreenController = new SplashScreenController(this);
-        lobbyController = new LobbyController(this);
         mainViewController = new MainViewController(this);
 
         MainApplication.setGui(this);
@@ -69,10 +69,31 @@ public class GUI extends UI {
 
             }
         }.start();
-    }
+        var aux = this;
+        try {
+            TimeUnit.SECONDS.sleep(1);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    //playerID.setItem("beppe");
+                    //displayLobbyState("paolo", new ArrayList<>(Arrays.asList("martino", "paolo", "beppe", "ginevra")));
+                    Marble[][] marketStatus = new Marble[][]{
+                            {Marble.PURPLE, Marble.PURPLE, Marble.PURPLE, Marble.GRAY},
+                            {Marble.WHITE, Marble.RED, Marble.WHITE, Marble.WHITE},
+                            {Marble.WHITE, Marble.GRAY, Marble.YELLOW, Marble.YELLOW}
+                    };
+                    MarketController controller = new MarketController(aux, marketStatus, Marble.BLUE, actionPerformed);
+                    try {
+                        MainApplication.setScene("market", controller);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-
-    public void openMarketWindow() {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -90,11 +111,7 @@ public class GUI extends UI {
     }
 
     public InetAddress getServerAddress() {
-        InetAddress res = null;
-
-        res = serverAddress.getWaitIfLocked();
-
-        return res;
+        return serverAddress.getWaitIfLocked();
     }
 
     public void setServerAddress(InetAddress serverAddress) {
@@ -167,10 +184,20 @@ public class GUI extends UI {
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
         try {
-            MainApplication.setScene("lobby", lobbyController);
+            if (lobbyController != null)
+                lobbyController.updatePlayerList(leaderID, otherPLayersID);
+            else {
+                LobbyController lobbyController = new LobbyController(this, leaderID, otherPLayersID,
+                        this.playerID.getItem().equals(leaderID));
+                MainApplication.setScene("lobby", lobbyController);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void startGame(){
+        client.startMatch();
     }
 
     @Override
@@ -254,23 +281,28 @@ public class GUI extends UI {
     @Override
     public BuyResourcesEvent askForMarketRow() {
         //
-        Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
-        Integer index = playerInfo.getBoughtResourcesInfo().getValue();
-        return new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index);
+        //Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
+        //Integer index = playerInfo.getBoughtResourcesInfo().getValue();
+        //return new BuyResourcesEvent(playerID.getItem(), dir, index);
+
+        return  null;
     }
 
     @Override
     public BuyDevCardsEvent askForDevCard() {
-        String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
-        int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
-        return new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot);
+        //String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
+        //int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
+        //return new BuyDevCardsEvent(playerID.getItem(), devCardId, cardSlot);
+
+        return  null;
     }
 
     @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
-        var devCards = playerInfo.getProdPowerDevCards();
-        var personalPower = playerInfo.isActivatePersonalPower();
-        return new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower);
+        //var devCards = playerInfo.getProdPowerDevCards();
+        //var personalPower = playerInfo.isActivatePersonalPower();
+        //r/eturn new ActivateProductionEvent(playerID.getItem(), devCards, personalPower);
+        return  null;
     }
 
     @Override
@@ -296,7 +328,7 @@ public class GUI extends UI {
         a = actionPerformed.getWaitIfLocked();
         return switch (a) {
             case MARKET_ACTION -> askForMarketRow();
-            case DEV_CARD_ACTION ->  askForDevCard();
+            case DEV_CARD_ACTION -> askForDevCard();
             case PRODUCTION_ACTION -> askForProductionPowersToUse();
         };
     }
@@ -329,10 +361,6 @@ public class GUI extends UI {
 
         return null;
     }
-
-//    @Override
-//    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
-//    }
 
     @Override
     public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources) {
