@@ -465,6 +465,8 @@ public class Controller {
                 else
                     leaderCardManager.deselectLeaderPower(player, leaderCard,
                             leaderCard.getLeaderPowers().get(event.getLeaderPowerIndex()));
+
+                matchState.setTurnState(matchState.getTurnState());
             } catch (NotPresentException notPresentException) {
                 clientHandlerSenders.get(event.getPlayerId()).sendEvent(new BadRequestEvent(event.getPlayerId(), "Leader card not owned by this player", event));
                 System.out.println(notPresentException.getMessage());
