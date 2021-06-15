@@ -73,6 +73,17 @@
     -fx-font-family: "Old English Text MT";
 }
 
+.button{
+    -fx-background-radius: 20 20 20 20;
+    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-width: 1.5;
+    -fx-background-color: transparent;
+    -fx-border-color: #393939;
+    -fx-text-fill: #393939;
+    -fx-text-alignment: center;
+}
+
+
 .button:hover{
     -fx-background-color: #848484;
     -fx-text-fill: #393939;
@@ -81,10 +92,6 @@
     -fx-background-color: #949494;
 }
 
-.movingButton{
-    -fx-border-color: transparent;
-    -fx-background-radius: 0px;
-}
 
 
 .arrow-button{
@@ -113,4 +120,11 @@
 
 #leftMarble{
     /*-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 2, 0, 1, 4);*/
+}
+
+.Circle{
+    -fx-fill: transparent;
+    -fx-stroke: rgba(102, 136, 255, 1);
+    -fx-stroke-width: 5px;
+    -fx-opacity: 0;
 }

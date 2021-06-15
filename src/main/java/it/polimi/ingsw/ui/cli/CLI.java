@@ -10,7 +10,6 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
-import it.polimi.ingsw.ui.PlayerState;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
 

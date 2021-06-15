@@ -18,7 +18,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0" prefWidth="1418.0" stylesheets="@stylesheets/main.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="931.0" prefWidth="1418.0"
+            stylesheets="@stylesheets/main.css"
+            xmlns="http://javafx.com/javafx/16"
+            xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="178.0" stylesheets="@stylesheets/main.css" BorderPane.alignment="CENTER">
          <children>
