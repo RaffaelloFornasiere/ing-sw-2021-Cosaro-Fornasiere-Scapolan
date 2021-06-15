@@ -41,6 +41,11 @@ public class CLI extends UI {
         playerStates = new HashMap<>();
     }
 
+    public static boolean isAffirmative(String s){
+        return s.equalsIgnoreCase("YES") ||
+                s.equalsIgnoreCase("Y");
+    }
+
     public void displayBadRequest(String playerID, String description, Event cause) {
         out.println(" Player" + playerID + ", your request, caused by event:" + cause.getEventName() + " cannot be satisfied:"
                 + description);
@@ -140,7 +145,7 @@ public class CLI extends UI {
         out.println("DO YOU AGREE? yes/no");
         String answer = in.next().toUpperCase();
         in.nextLine();
-        if (answer.equals("YES") || answer.equals("Y")) {
+        if (isAffirmative(answer)) {
             return inputs;
         } else {
             return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
@@ -297,10 +302,68 @@ public class CLI extends UI {
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
         in.nextLine();
-        if (response.equals("YES") || response.equals("Y")) {
+        if (isAffirmative(response)) {
             return inputs;
         } else {
             return displaySelectionFormVariableChoices(option_itsColor, displayPanel, maxNumberOfOptionsToChose, message);
+        }
+
+    }
+
+    public static ArrayList<Integer> displaySelectionFormMultipleChoiches(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
+        String resetColor = Color.WHITE.getAnsiCode();
+        StringBuilder builder = new StringBuilder();
+        builder.append(message);
+        builder.append("YOU HAVE TO CHOOSE " + numberOfOptionsToChose +
+                " OF THE FOLLOWING OPTIONS \n(YOU CAN CHOOSE THE SAME OPTION MULTIPLE TIMES) \n");
+
+        if (displayPanel != null) {
+            displayPanel.show();
+        }
+
+        builder.append(generateForm(option_itsColor, resetColor));
+
+        DrawableObject obj = new DrawableObject(builder.toString(), 0, 0);
+        Panel panel = new Panel(1000, (int) obj.getHeight() + 3, out);
+        panel.addItem(obj);
+        panel.show();
+
+        int size = option_itsColor.size();
+        int m = numberOfOptionsToChose;
+        out.println("ENTER THE NUMBER OF THE SELECTED ITEMS");
+        String inputString;
+        ArrayList<Integer> inputs = new ArrayList<>();
+        while (m > 0) {
+            inputString = in.next();
+            if (inputString.matches("-?\\d+")) {
+                int input = Integer.parseInt(inputString);
+                if (input < 1 || input > size) {
+                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                } else {
+                    inputs.add(input);
+                    m--;
+                }
+            } else {
+                out.println("PLEASE INSERT A NUMBER");
+            }
+        }
+
+        out.println("YOU HAVE CHOSEN: \n");
+        StringBuilder builder2 = new StringBuilder();
+        inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
+
+        inputs.forEach(index -> {
+            builder2.append(index + 1 + " -> " + option_itsColor.get(index).getValue() + option_itsColor.get(index).getKey() + Color.reset() + "\n");
+        });
+        out.println(builder2.toString());
+
+        out.println("DO YOU AGREE? yes/no");
+        String answer = in.next().toUpperCase();
+        in.nextLine();
+        if (isAffirmative(answer)) {
+            return inputs;
+        } else {
+            return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
         }
 
     }
@@ -407,7 +470,7 @@ public class CLI extends UI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
             //generate response event
         }
 
@@ -499,7 +562,7 @@ public class CLI extends UI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
            System.out.println("good");
         } else  System.out.println("bad");
     }*/
@@ -553,7 +616,7 @@ public class CLI extends UI {
           out.println(builder.toString());
           out.println("DO YOU AGREE? yes/no");
           String response = in.next().toUpperCase();
-          if (response.equals("YES")) {
+          if (isAffirmative(response)) {
               //put in dashboard event
               out.println("resources put in dashboard");
           }
@@ -738,12 +801,6 @@ public class CLI extends UI {
         return builder0.toString();
     }
 
-    public static void main(String[] args) {
-        HashMap<Resource, Integer> hash = new HashMap<>();
-        Arrays.stream(Resource.values()).forEach(res -> hash.put(res, 0));
-
-    }
-
     public void displayAvailableDeposits(DashBoardView thisDashboard) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n\n");
@@ -754,7 +811,6 @@ public class CLI extends UI {
         panel.addItem(obj);
         panel.show();
     }
-
 
     @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resourcesToOrganize) {
@@ -1363,7 +1419,7 @@ public class CLI extends UI {
 
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
             playerStates.get(thisPlayer).leaderCards.putAll(leaderCardsChosen);
             return new ArrayList<>(leaderCardsChosen.keySet());
         } else return choseInitialLeaderCards(leaderCardsIDs, numberOFLeaderCardsToChose);
@@ -1414,7 +1470,7 @@ public class CLI extends UI {
         out.println(builder.toString());
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
-        if (response.equals("YES")) {
+        if (isAffirmative(response)) {
             //put in dashboard event
             out.println("resources put in dashboard");
             return initialResources;
@@ -1945,6 +2001,11 @@ public class CLI extends UI {
                     displayOthers();
                 } else {
                     displayOthers();
+                    out.println("WOULD YOU LIKE TO SEE SOME OTHER PLAYER'S/ YOUR STATE? Y/N");
+                    String response = in.next().toUpperCase();
+                    if (isAffirmative(response)) {
+                        displayOthers();
+                    }
                     out.println("YOUR TURN HAS ENDED");
                     event = new EndTurnEvent(thisPlayer);
                 }
@@ -2188,10 +2249,29 @@ public class CLI extends UI {
         out.println("IF YOU'RE NOT SATISFIED WITH YOUR CHOICES, WOULD YOU LIKE TO REDO? Y/N\n");
         String answer = in.next().toUpperCase();
         in.nextLine();
-        if (answer.equals("YES") || answer.equals("Y")) {
+        if (isAffirmative(answer)) {
             return askWhereToTakeResourcesFrom(clonedRequired, freeChoicesResources);
         } else
             return new ChosenResourcesEvent(thisPlayer, allChosen, chosenFromWarehouse, chosenFromLeaderPower);
+    }
+
+    @Override
+    public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
+
+        Resource[] resources = Resource.values();
+        ArrayList<Pair<String, String>> options = new ArrayList<>();
+        for(Resource r: resources){
+            options.add(new Pair<>(shapeResource(r), colorResource(r)));
+        }
+
+        ArrayList<Integer> choices = displaySelectionFormMultipleChoiches(options, null, requiredResourcesOFChoice, "");
+
+        HashMap<Resource, Integer> ret = new HashMap<>();
+        for(Integer i: choices){
+            Resource r = resources[i];
+            ret.put(r, ret.getOrDefault(r, 0)+1);
+        }
+        return ret;
     }
 }
 

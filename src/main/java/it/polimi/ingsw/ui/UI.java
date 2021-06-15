@@ -128,4 +128,6 @@ public abstract class UI {
 
 
     abstract public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int  freeChoicesResources);
+
+    public abstract HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice);
 }

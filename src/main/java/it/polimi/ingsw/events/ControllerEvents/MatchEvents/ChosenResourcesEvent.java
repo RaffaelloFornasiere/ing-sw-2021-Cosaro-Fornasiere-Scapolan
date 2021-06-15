@@ -7,6 +7,7 @@ import java.util.HashMap;
 /**
  * Event sent to the server when a player has to select from where to take it's resources to do something
  * The client will receive a BadRequestEvent if this event was mal-posed
+ * The client will receive a PlayerActionError if the action represented by this event can't be done
  */
 public class ChosenResourcesEvent extends SimpleChosenResourcesEvent{
 

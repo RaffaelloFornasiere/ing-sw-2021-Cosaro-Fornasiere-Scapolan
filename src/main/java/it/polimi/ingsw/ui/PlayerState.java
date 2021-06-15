@@ -1,4 +1,7 @@
-package it.polimi.ingsw.ui.cli;
+package it.polimi.ingsw.ui;
+
+import it.polimi.ingsw.ui.cli.DashBoardView;
+import it.polimi.ingsw.ui.cli.LeaderCardView;
 
 import java.util.HashMap;
 
@@ -21,5 +24,4 @@ public class PlayerState {
     }
     public PlayerState(){
     }
-
 }
