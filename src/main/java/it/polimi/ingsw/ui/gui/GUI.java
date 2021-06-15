@@ -140,6 +140,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public boolean askSingleplayer() {
+        return false;
+    }
+
+    @Override
     public InetAddress askIP() {
         return serverAddress.getWaitIfLocked();
     }

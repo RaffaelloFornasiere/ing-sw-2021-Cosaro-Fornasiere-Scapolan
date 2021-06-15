@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.ClientApp;
+import it.polimi.ingsw.controller.EventRegistry;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
@@ -27,9 +28,8 @@ import java.util.stream.Collectors;
 public class NetworkAdapter {
 
     public static final int SERVER_PORT = 50885;
-    Socket socket;
     NetworkHandlerReceiver receiver;
-    NetworkHandlerSender sender;
+    Sender sender;
     Socket server;
     String playerID;
     UI view;
@@ -49,7 +49,39 @@ public class NetworkAdapter {
             try {
                 Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
                         PropertyChangeEvent.class);
-                receiver.addPropertyChangeListener(event.getSimpleName(), x -> {
+                receiver.getEventRegistry().addPropertyChangeListener(event.getSimpleName(), x -> {
+                    try {
+                        method.invoke(this, x);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (NoSuchMethodException e) {
+                System.err.println("Missing handler for " + event.getSimpleName());
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public NetworkAdapter(UI ui, EventRegistry toController, EventRegistry toPlayer, String playerID){
+        sender = new LocalSender(toController);
+        server = null;
+        this.playerID = playerID;
+        view = ui;
+
+        // method-event binding
+        Reflections reflections = new Reflections("it.polimi.ingsw.events");
+
+        Set<Class<? extends Event>> events = new HashSet<>(reflections.getSubTypesOf(ClientEvent.class));
+        //events.addAll(reflections.getSubTypesOf(ControllerEvent.class));
+
+
+        for (var event : events) {
+            try {
+                Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
+                        PropertyChangeEvent.class);
+                toPlayer.addPropertyChangeListener(event.getSimpleName(), x -> {
                     try {
                         method.invoke(this, x);
                     } catch (IllegalAccessException | InvocationTargetException e) {
@@ -65,7 +97,6 @@ public class NetworkAdapter {
     }
 
 
-    @SuppressWarnings("unused")
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
         //server.setSoTimeout(3000);
@@ -77,13 +108,7 @@ public class NetworkAdapter {
         heartbeat = new TimerTask() {
             @Override
             public void run() {
-                try {
-                    sender.sendData("heartbeat");
-                    //System.out.println("heartbeat");
-                } catch (IOException e) {
-                    view.printError("connection with server error, please check connection");
-                    timer.cancel();
-                }
+                ((NetworkHandlerSender)sender).sendData("heartbeat");
             }
         };
         //timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
@@ -91,11 +116,7 @@ public class NetworkAdapter {
     }
 
     private void send(Event e) {
-        try {
-            sender.sendObject(e);
-        } catch (IOException err) {
-            view.printError("connection with server error, please check connection");
-        }
+        sender.sendObject(e);
     }
 
 

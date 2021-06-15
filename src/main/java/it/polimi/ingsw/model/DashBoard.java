@@ -107,9 +107,10 @@ public class DashBoard extends Observable {
                 .findFirst().orElse(null);
         if(depot == null)
             throw new IllegalArgumentException("Incompatible resource type");
-        try{depot.subResources(resource, quantity);
-            notifyObservers();}
-            catch (DepotResourceException e){}
+        try{
+            depot.subResources(resource, quantity);
+            notifyObservers();
+        } catch (DepotResourceException ignore){}
     }
 
     public void subResourcesToWarehouse(HashMap<Resource, Integer> resources) throws

@@ -1234,6 +1234,17 @@ public class CLI extends UI {
     }
 
     @Override
+    public boolean askSingleplayer() {
+        ArrayList<Pair<String, String>> options = new ArrayList<>();
+        options.add(new Pair<>("Multiplayer", Color.reset()));
+        options.add(new Pair<>("Singleplayer", Color.reset()));
+
+        Integer choice = displaySelectionForm(options, null, 1, "WHICH MODE WOULD YOU LIKE TO PLAY?").get(0);
+
+        return choice==1;
+    }
+
+    @Override
     public InetAddress askIP() {
         InetAddress inetAddress = null;
         while (inetAddress == null) {
@@ -1266,6 +1277,9 @@ public class CLI extends UI {
     public String askUserID() {
         out.println("Insert username");
         this.thisPlayer = in.nextLine();
+        players.add(this.thisPlayer);
+        playerStates.put(this.thisPlayer, new PlayerState());
+        faithTrack = new FaithTrackView(players);
         return this.thisPlayer;
     }
 

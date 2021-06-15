@@ -11,30 +11,27 @@ import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import java.io.*;
 import java.net.Socket;
 
-public class NetworkHandlerSender {
-    private BufferedWriter writer;
-    public static final String MESSAGE_START = "#-- BEGIN MESSAGE --#";
-    public static final String MESSAGE_END = "#-- END MESSAGE --#";
+public class NetworkHandlerSender implements Sender{
+    private PrintWriter writer;
 
     public NetworkHandlerSender(Socket server) {
             if (server == null)
                 throw new NullPointerException();
 
             try {
-                writer = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+                writer = new PrintWriter(new OutputStreamWriter(server.getOutputStream()));
             } catch (IOException ignore) {
 
         }
     }
 
-    public void sendData(String data) throws IOException {
-
-            writer.write(data + "\n");
-            writer.flush();
-
+    public void sendData(String data){
+        writer.println(data);
+        writer.flush();
     }
 
-    public synchronized void sendObject(Event e) throws IOException
+    @Override
+    public synchronized void sendObject(Event e)
     {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
@@ -44,4 +41,5 @@ public class NetworkHandlerSender {
         System.out.println(data);
         sendData(data);
     }
+
 }

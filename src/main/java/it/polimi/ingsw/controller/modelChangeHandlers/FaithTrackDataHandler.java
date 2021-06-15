@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
+import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.ClientEvents.FaithTrackEvent;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
@@ -13,7 +14,7 @@ public class FaithTrackDataHandler extends MatchObserver{
 
     private MatchState matchState;
 
-    public FaithTrackDataHandler(HashMap<String, ClientHandlerSender> networkData, MatchState matchState) {
+    public FaithTrackDataHandler(HashMap<String, Sender> networkData, MatchState matchState) {
         super(networkData);
         this.matchState = matchState;
     }

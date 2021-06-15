@@ -20,8 +20,8 @@ public class LobbyHandler implements Observer {
         Lobby lobby = (Lobby) o;
         LobbyStateEvent lobbyStateEvent = new LobbyStateEvent(lobby.getLeaderID(), lobby.getOtherPLayersID());
 
-        networkData.get(lobby.getLeaderID()).getClientHandlerSender().sendEvent(lobbyStateEvent);
+        networkData.get(lobby.getLeaderID()).getClientHandlerSender().sendObject(lobbyStateEvent);
         for(String playerID: lobby.getOtherPLayersID())
-            networkData.get(playerID).getClientHandlerSender().sendEvent(lobbyStateEvent);
+            networkData.get(playerID).getClientHandlerSender().sendObject(lobbyStateEvent);
     }
 }

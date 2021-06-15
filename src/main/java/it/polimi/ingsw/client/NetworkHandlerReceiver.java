@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import it.polimi.ingsw.controller.EventRegistry;
 import it.polimi.ingsw.events.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
@@ -17,9 +18,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class NetworkHandlerReceiver implements PropertyChangeSubject {
-    BufferedReader input;
-    PropertyChangeSupport support = new PropertyChangeSupport(this);
+public class NetworkHandlerReceiver{
+    EventRegistry eventRegistry = new EventRegistry();
     Scanner scanner;
 
     public NetworkHandlerReceiver(Socket server) {
@@ -45,12 +45,16 @@ public class NetworkHandlerReceiver implements PropertyChangeSubject {
                 json = scanner.nextLine();
                 System.out.println(json);
                 Event event = gson.fromJson(json, Event.class);
-                support.firePropertyChange(event.getEventName(), null, event);
+                eventRegistry.sendEvent(event);
             }
         }
     }
 
-    @Override
+    public EventRegistry getEventRegistry() {
+        return eventRegistry;
+    }
+
+    /*@Override
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (propertyName == null || propertyName.equals("")) {
             addPropertyChangeListener(listener);
@@ -82,4 +86,5 @@ public class NetworkHandlerReceiver implements PropertyChangeSubject {
     public PropertyChangeListener[] getAllPropertyChangeListener(){
         return support.getPropertyChangeListeners();
     }
+    */
 }
