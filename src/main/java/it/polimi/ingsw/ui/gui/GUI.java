@@ -3,19 +3,19 @@ package it.polimi.ingsw.ui.gui;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
-import it.polimi.ingsw.model.Marble;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.ProductionPower;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -25,10 +25,20 @@ import java.util.HashMap;
 
 public class GUI extends UI {
 
-    private LockWrap<String> leaderID = new LockWrap<>(null);
-    private LockWrap<String> playerID = new LockWrap<>(null);
-    private LockWrap<InetAddress> serverAddress = new LockWrap(null);
-    private LockWrap<Integer> serverPort;
+    public enum Action {
+        MARKET_ACTION,
+        DEV_CARD_ACTION,
+        PRODUCTION_ACTION
+    }
+
+    private final LockWrap<Action> actionPerformed = new LockWrap<>(null);
+
+    private final LockWrap<String> leaderID = new LockWrap<>(null);
+    private final LockWrap<String> playerID = new LockWrap<>(null);
+    private final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
+    private final LockWrap<Integer> serverPort = new LockWrap<>(null);
+
+    private PlayerInfo playerInfo;
 
 
     private String PlayerImage;
@@ -50,15 +60,21 @@ public class GUI extends UI {
 
         MainApplication.setGui(this);
         MainApplication.setFirstScene("splashscreen", splashScreenController);
-        (new Thread() {
+        new Thread() {
+
             @Override
             public void run() {
                 super.run();
                 Application.launch(MainApplication.class);
+
             }
-        }).start();
+        }.start();
     }
 
+
+    public void openMarketWindow() {
+
+    }
 
     public String getPlayerImage() {
         return PlayerImage;
@@ -75,11 +91,9 @@ public class GUI extends UI {
 
     public InetAddress getServerAddress() {
         InetAddress res = null;
-        try {
-            res = serverAddress.getWaitIfNull();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        res = serverAddress.getWaitIfLocked();
+
         return res;
     }
 
@@ -89,7 +103,7 @@ public class GUI extends UI {
 
 
     public int getServerPort() throws InterruptedException {
-        return serverPort.getWaitIfNull();
+        return serverPort.getWaitIfLocked();
     }
 
     public void setServerPort(int serverPort) {
@@ -127,13 +141,7 @@ public class GUI extends UI {
 
     @Override
     public InetAddress askIP() {
-        InetAddress res = null;
-        try {
-            res = serverAddress.getWaitIfNull();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return res;
+        return serverAddress.getWaitIfLocked();
     }
 
     @Override
@@ -143,24 +151,12 @@ public class GUI extends UI {
 
     @Override
     public String askUserID() {
-        String res = null;
-        try {
-            res = playerID.getWaitIfNull();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return res;
+        return playerID.getWaitIfLocked();
     }
 
     @Override
     public String askLeaderID() {
-        String res = null;
-        try {
-            res = leaderID.getWaitIfNull();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return res;
+        return leaderID.getWaitIfLocked();
     }
 
     @Override
@@ -190,11 +186,29 @@ public class GUI extends UI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setUserTurnActive(boolean active) {
+        actionPerformed.setItem(null);
     }*/
 
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
-        return null;
+        Stage popUp = new Stage();
+        ArrayList<String> res = new ArrayList<>();
+        SelectLeaderCardsController controller = new SelectLeaderCardsController(leaderCardsIDs, numberOFLeaderCardsToChose, res, popUp);
+        try {
+            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectleadercards.fxml"));
+            loader.setController(controller);
+            Scene scene = new Scene(loader.load());
+            popUp.initModality(Modality.APPLICATION_MODAL);
+            popUp.setScene(scene);
+            popUp.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override
@@ -234,26 +248,32 @@ public class GUI extends UI {
 
     @Override
     public BuyResourcesEvent askForMarketRow() {
+        //
+
         return null;
     }
 
     @Override
     public BuyDevCardsEvent askForDevCard() {
+        //
         return null;
     }
 
     @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
+        //
         return null;
     }
 
     @Override
     public String askForLeaderCardToDiscard() {
+
         return null;
     }
 
     @Override
     public String askForLeaderCardToActivate() {
+
         return null;
     }
 
@@ -264,8 +284,27 @@ public class GUI extends UI {
 
     @Override
     public Event askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
-        return null;
+        Action a;
+        a = actionPerformed.getWaitIfLocked();
+        return switch (a) {
+            case MARKET_ACTION -> {
+                Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
+                Integer index = playerInfo.getBoughtResourcesInfo().getValue();
+                yield new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index);
+            }
+            case DEV_CARD_ACTION -> {
+                String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
+                int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
+                yield new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot);
+            }
+            case PRODUCTION_ACTION -> {
+                var devCards = playerInfo.getProdPowerDevCards();
+                var personalPower = playerInfo.isActivatePersonalPower();
+                yield new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower);
+            }
+        };
     }
+
 
     @Override
     public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
@@ -279,8 +318,13 @@ public class GUI extends UI {
 
     @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources) {
+
         return null;
     }
+
+//    @Override
+//    public ArrayList<ArrayList<Resource>> getResourcesSelection(ArrayList<Resource> required) {
+//    }
 
     @Override
     public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources) {
@@ -291,5 +335,4 @@ public class GUI extends UI {
     public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice) {
         return null;
     }
-
 }

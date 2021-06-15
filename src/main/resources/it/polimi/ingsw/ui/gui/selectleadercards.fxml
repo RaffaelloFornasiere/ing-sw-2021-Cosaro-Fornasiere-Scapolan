@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="544.0" prefWidth="537.0" stylesheets="@stylesheets/selectleadercards.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane fx:id="gridPane" layoutX="105.0" layoutY="58.0" prefHeight="418.0" prefWidth="321.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Group id="p" fx:id="group1">
+               <children>
+                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                     <image>
+                        <Image url="@images/leaders/Leader_5.png" />
+                     </image>
+                  </ImageView>
+                  <Region id="region1" fx:id="selectableRegion1" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
+                  <CheckBox fx:id="checkBox" layoutX="131.0" layoutY="20.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="21.0" />
+               </children>
+            </Group>
+            <Group id="p" fx:id="group11" GridPane.columnIndex="1">
+               <children>
+                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                     <image>
+                        <Image url="@images/leaders/Leader_10.png" />
+                     </image>
+                  </ImageView>
+                  <Region id="region2" fx:id="selectableRegion2" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
+                  <CheckBox fx:id="checkBox1" layoutX="131.0" layoutY="20.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="21.0" />
+               </children>
+            </Group>
+            <Group id="p" fx:id="group111" GridPane.rowIndex="1">
+               <children>
+                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                     <image>
+                        <Image url="@images/leaders/Leader_6.png" />
+                     </image>
+                  </ImageView>
+                  <Region id="region3" fx:id="selectableRegion3" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
+                  <CheckBox fx:id="checkBox11" layoutX="131.0" layoutY="20.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="21.0" />
+               </children>
+            </Group>
+            <Group id="p" fx:id="group1111" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                     <image>
+                        <Image url="@images/leaders/Leader_16.png" />
+                     </image>
+                  </ImageView>
+                  <Region id="region4" fx:id="selectableRegion4" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
+                  <CheckBox fx:id="checkBox111" layoutX="131.0" layoutY="20.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="21.0" />
+               </children>
+            </Group>
+         </children>
+      </GridPane>
+      <HBox layoutX="372.0" layoutY="490.0">
+         <children>
+            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0" prefWidth="65.0" text="Cancel">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <Label layoutX="146.0" layoutY="14.0" text="Select 2 leader cards">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

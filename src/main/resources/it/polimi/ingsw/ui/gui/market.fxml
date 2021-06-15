@@ -109,22 +109,22 @@
               </GridPane>
             <HBox layoutX="21.0" layoutY="316.0" prefHeight="70.0" prefWidth="207.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
+                  <Button fx:id="col1" mnemonicParsing="false" onAction="#onButtonPressed" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
+                  <Button fx:id="col2" mnemonicParsing="false" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
+                  <Button fx:id="col3" mnemonicParsing="false" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
+                  <Button fx:id="col4" mnemonicParsing="false" prefHeight="62.0" prefWidth="50.0" styleClass="arrow-button">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -133,7 +133,7 @@
             </HBox>
             <VBox layoutX="241.0" layoutY="136.0" prefHeight="170.0" prefWidth="100.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="75.0" prefWidth="62.0">
+                  <Button fx:id="row1" mnemonicParsing="false" prefHeight="75.0" prefWidth="62.0">
                      <styleClass>
                         <String fx:value="arrow-button" />
                         <String fx:value="arrow-button-left" />
@@ -142,7 +142,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="75.0" prefWidth="62.0">
+                  <Button fx:id="row2" mnemonicParsing="false" prefHeight="75.0" prefWidth="62.0">
                      <styleClass>
                         <String fx:value="arrow-button" />
                         <String fx:value="arrow-button-left" />
@@ -151,7 +151,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="75.0" prefWidth="62.0">
+                  <Button fx:id="row3" mnemonicParsing="false" prefHeight="75.0" prefWidth="62.0">
                      <styleClass>
                         <String fx:value="arrow-button" />
                         <String fx:value="arrow-button-left" />
@@ -164,7 +164,7 @@
             </VBox>
          </children>
       </Group>
-      <Label layoutX="136.0" layoutY="-1.0" text="Marble balls market">
+      <Label layoutX="166.0" layoutY="14.0" text="Marble balls market">
          <font>
             <Font name="Yu Gothic Medium" size="33.0" />
          </font>
