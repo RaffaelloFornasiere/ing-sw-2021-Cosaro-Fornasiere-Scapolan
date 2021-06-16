@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class FaithTrackView {
     private HashMap<String, Integer> playersPositions;
     private HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
+    private int lorenzoPosition;
 
     public FaithTrackView(ArrayList<String> playersNames) {
         playersPositions = new HashMap<>();
@@ -129,6 +130,11 @@ public class FaithTrackView {
     public void updateFavorPopeCard(HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
         popeFavorCards.keySet().forEach(player ->
                 this.popeFavorCards.put(player, popeFavorCards.get(player)));
+    }
+
+    //TODO put lorenzo position into visualization
+    public void updateLorenzoPosition(int position) {
+        lorenzoPosition = position;
     }
 
     public static void main(String[] args) {

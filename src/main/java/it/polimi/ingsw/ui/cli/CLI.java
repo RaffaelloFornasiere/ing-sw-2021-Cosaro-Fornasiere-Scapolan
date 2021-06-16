@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.Pair;
 
@@ -830,7 +831,6 @@ public class CLI extends UI {
         //Selects only DepositLeaderPowers active
         ArrayList<InfoPower> thisDepositLeaderPowers = new ArrayList<>();
 
-        //TODO here must be changed how selected is handled
         leaderCardViews.stream().forEach(cardView -> {
             if (cardView.isActive()) {
                 IntStream.range(0, cardView.getLeaderPowersActive().size()).forEach(index -> {
@@ -2266,6 +2266,21 @@ public class CLI extends UI {
             ret.put(r, ret.getOrDefault(r, 0) + 1);
         }
         return ret;
+    }
+
+    @Override
+    public void displayIAAction(SoloActionToken action) {
+        out.println(action.description());
+    }
+
+    @Override
+    public void displaySinglePlayerLost() {
+        out.println(Color.RED.getAnsiCode() + "YOU LOST, LORENZO IL MAGNIFICO WON!" + Color.reset());
+    }
+
+    @Override
+    public void updateLorenzoPosition(int position) {
+        faithTrack.updateLorenzoPosition(position);
     }
 }
 

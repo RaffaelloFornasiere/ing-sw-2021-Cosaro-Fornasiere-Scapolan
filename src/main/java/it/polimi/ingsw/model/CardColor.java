@@ -21,11 +21,15 @@ public enum CardColor {
     @Override
     public String toString()
     {
-        return color;
+        return name();
     }
 
 
     public int getCode() {
         return code;
+    }
+
+    public String getColor() {
+        return color;
     }
 }

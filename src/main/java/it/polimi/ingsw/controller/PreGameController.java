@@ -10,6 +10,7 @@ import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
+import it.polimi.ingsw.model.singlePlayer.SinglePlayerMatchState;
 import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import it.polimi.ingsw.Server.ClientHandlerSender;
@@ -168,20 +169,20 @@ public class PreGameController {
         setupMatch(playerOrder, involvedClientHandlerSenders, matchEventHandlerRegistry);
     }
 
-    public static void setupMatch(ArrayList<String> playerOrder, HashMap<String, Sender> involvedplayersSenders, EventRegistry matchEventHandlerRegistry) {
+    public static void setupMatch(ArrayList<String> playerOrder, HashMap<String, Sender> involvedPlayersSenders, EventRegistry matchEventHandlerRegistry) {
         //Initialize faith track
         FaithTrack faithTrack = FaithTrack.initFaithTrack(Config.getInstance().getFaithTrack());
 
         //initialize the dashboards and each player
         //ArrayList<DashBoard> dashBoards = new ArrayList<>();
         ArrayList<Player> players= new ArrayList<>();
-        PlayerHandler playerHandler = new PlayerHandler(involvedplayersSenders);
+        PlayerHandler playerHandler = new PlayerHandler(involvedPlayersSenders);
         for (int i = 0, playerOrderSize = playerOrder.size(); i < playerOrderSize; i++) {
             String s = playerOrder.get(i);
             DashBoard dashBoard = new DashBoard(Config.getInstance().getNumberOfCardSlots(),
                     Config.getInstance().getDepotCapacities(), Config.getInstance().getPersonalPowers().get(i), faithTrack);
             Player player = new Player(s, dashBoard);
-            dashBoard.addObserver(new DashBoardHandler(involvedplayersSenders, player));
+            dashBoard.addObserver(new DashBoardHandler(involvedPlayersSenders, player));
             player.addObserver(playerHandler);
             //dashBoards.add(dashBoard);
             players.add(player);
@@ -190,15 +191,22 @@ public class PreGameController {
         //Initialize match state
         ArrayList<DevCard> devCards = Config.getInstance().getDevCards();
         Collections.shuffle(devCards);
-        MatchState matchState= new MatchState(players, devCards, Config.getInstance().getMarketRows(), Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
-        matchState.getMarket().addObserver(new MarketHandler(involvedplayersSenders));
-        matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedplayersSenders));
-        FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedplayersSenders, matchState);
+        MatchState matchState;
+        if(playerOrder.size() == 1)
+            matchState = new SinglePlayerMatchState(players.get(0), devCards, Config.getInstance().getMarketRows(),
+                    Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles(), Config.getInstance().getSoloActionTokens());
+        else
+            matchState = new MatchState(players, devCards, Config.getInstance().getMarketRows(),
+                    Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
+        matchState.getMarket().addObserver(new MarketHandler(involvedPlayersSenders));
+        matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedPlayersSenders));
+        FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedPlayersSenders, matchState);
         matchState.getPlayers().forEach(p -> p.getDashBoard().getFaithTrackData().addObserver(faithTrackDataHandler));
-        matchState.addObserver(new MatchStateHandler(involvedplayersSenders));
+        matchState.addObserver(new MatchStateHandler(involvedPlayersSenders));
+        if(playerOrder.size() == 1) matchState.addObserver(new LorenzoPositionHandler(involvedPlayersSenders));
 
         //Initialize the controller
-        Controller matchController = new Controller(matchEventHandlerRegistry, matchState, involvedplayersSenders);
+        Controller matchController = new Controller(matchEventHandlerRegistry, matchState, involvedPlayersSenders);
 
         //Initialize the leader cards
         ArrayList<String> leaderCardsIDs = new ArrayList<>();
@@ -215,7 +223,7 @@ public class PreGameController {
             Player p = matchState.getPlayers().get(i);
             p.getDashBoard().notifyObservers();
             p.notifyObservers();
-            for(Sender c: involvedplayersSenders.values())
+            for(Sender c: involvedPlayersSenders.values())
                 c.sendObject(new PersonalProductionPowerStateEvent(p.getPlayerId(), p.getDashBoard().getPersonalPower()));
 
             faithTrackManager.incrementFaithTrackPosition(players.get(i), Config.getInstance().getFaithPointHandicap().get(i));
@@ -233,7 +241,7 @@ public class PreGameController {
             InitialChoicesEvent initialChoicesEvent = new InitialChoicesEvent(playerOrder.get(i), cardsToChoseFrom,
                     Config.getInstance().getLeaderCardPerPlayerToChoose(), Config.getInstance().getResourcesHandicap().get(i));
             initialChoices.put(playerOrder.get(i), initialChoicesEvent);
-            involvedplayersSenders.get(playerOrder.get(i)).sendObject(initialChoicesEvent);
+            involvedPlayersSenders.get(playerOrder.get(i)).sendObject(initialChoicesEvent);
         }
 
         System.out.println("All initial choices sent");

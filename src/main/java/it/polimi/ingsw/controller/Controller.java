@@ -20,8 +20,8 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.LeaderCards.*;
 import it.polimi.ingsw.model.singlePlayer.SinglePlayerMatchState;
+import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.utilities.*;
-import it.polimi.ingsw.Server.ClientHandlerSender;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
@@ -870,14 +870,19 @@ public class Controller {
         SinglePlayerMatchState singlePlayerMatchState = (SinglePlayerMatchState) matchState;
         try {
             Player player =  singlePlayerMatchState.getPlayer();
-            boolean endGame = singlePlayerMatchState.popSoloActionTokens().doAction(singlePlayerMatchState);
+            SoloActionToken token = singlePlayerMatchState.popSoloActionTokens();
+            boolean endGame = token.doAction(singlePlayerMatchState);
+            senders.get(player.getPlayerId()).sendObject(new IAActionEvent(player.getPlayerId(), token));
             if(!endGame){
                 for (LeaderCard lc : player.getActiveLeaderCards()) {
                     for (LeaderPower lp : lc.getSelectedLeaderPowers()) {
                         leaderCardManager.deselectLeaderPower(player, lc, lp);
                     }
                 }
-                singlePlayerMatchState.nextTurn();
+                if(singlePlayerMatchState.isLastRound() && singlePlayerMatchState.getCurrentPlayerIndex() == singlePlayerMatchState.getPlayers().size() - 1)
+                    endGame();
+                else
+                    singlePlayerMatchState.nextTurn();
             }
             else{
                 senders.get(player.getPlayerId()).sendObject(new SinglePlayerLostEvent(player.getPlayerId()));

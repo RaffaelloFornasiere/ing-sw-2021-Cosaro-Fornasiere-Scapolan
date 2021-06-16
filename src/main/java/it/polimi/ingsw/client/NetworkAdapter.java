@@ -224,6 +224,11 @@ public class NetworkAdapter {
         System.out.println("Received" + evt.getClass().getSimpleName());
     }
 
+    public synchronized void IAActionEventHandler(PropertyChangeEvent evt){
+        IAActionEvent event = (IAActionEvent) evt.getNewValue();
+        view.displayIAAction(event.getAction());
+    }
+
     public synchronized void IncompatiblePowersErrorHandler(PropertyChangeEvent evt) {
         IncompatiblePowersError event = (IncompatiblePowersError) evt.getNewValue();
         view.printWarning("The power number " + event.getLeaderPowerIndex() + " of " + event.getLeaderCardID() + " can't be selected because it's in conflict with another power already selected");
@@ -261,6 +266,12 @@ public class NetworkAdapter {
         LobbyStateEvent event = (LobbyStateEvent) evt.getNewValue();
 
         view.displayLobbyState(event.getLeaderID(), event.getOtherPLayersID());
+    }
+
+    public synchronized void LorenzoPositionEventHandler(PropertyChangeEvent evt) {
+        LorenzoPositionEvent event = (LorenzoPositionEvent) evt.getNewValue();
+
+        view.updateLorenzoPosition(event.getPosition());
     }
 
     public synchronized void MarketStateEventHandler(PropertyChangeEvent evt) {
@@ -320,7 +331,7 @@ public class NetworkAdapter {
     }
 
     public synchronized void SinglePlayerLostEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        view.displaySinglePlayerLost();
     }
 
     public synchronized void UsernameErrorHandler(PropertyChangeEvent evt) {

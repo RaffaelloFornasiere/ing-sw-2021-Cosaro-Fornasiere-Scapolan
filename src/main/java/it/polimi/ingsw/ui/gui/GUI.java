@@ -6,6 +6,7 @@ import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
@@ -380,5 +381,20 @@ public class GUI extends UI {
     @Override
     public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes) {
         return null;
+    }
+
+    @Override
+    public void displayIAAction(SoloActionToken action) {
+
+    }
+
+    @Override
+    public void displaySinglePlayerLost() {
+
+    }
+
+    @Override
+    public void updateLorenzoPosition(int position) {
+
     }
 }

@@ -10,4 +10,9 @@ public abstract class SoloActionToken {
      * @return Whether the match should end after this action
      */
     public abstract boolean doAction(SinglePlayerMatchState singlePlayerMatchState);
+
+    /**
+     * @return A string describing the action
+     */
+    public abstract String description();
 }
