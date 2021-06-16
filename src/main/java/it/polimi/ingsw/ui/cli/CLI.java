@@ -1470,8 +1470,7 @@ public class CLI extends UI {
         out.println("DO YOU AGREE? yes/no");
         String response = in.next().toUpperCase();
         if (isAffirmative(response)) {
-            //put in dashboard event
-            out.println("resources put in dashboard");
+            out.println("resources chosen successfully");
             return initialResources;
         } else return choseResources(resourceType, numberOFResources);
     }
@@ -1680,7 +1679,7 @@ public class CLI extends UI {
         ArrayList<Pair<String, String>> opt = new ArrayList<>();
         opt.add(new Pair<>("Personal production power", Color.reset()));
         for (String devCardID : playerStates.get(thisPlayer).getDashBoard().getTopDevCards()) {
-            if(devCardID!=null) opt.add(new Pair<>(devCardID, Color.reset()));
+            if (devCardID != null) opt.add(new Pair<>(devCardID, Color.reset()));
         }
 
         ArrayList<Integer> powerChosen = displaySelectionFormVariableChoices(opt, null, opt.size(), "Choose which production power to activate");
@@ -1865,23 +1864,30 @@ public class CLI extends UI {
                             options.add(new Pair<String, String>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
 
                             int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
-                            if (chosenAction == 0) {
-                                String leaderCardToDiscard = null;
-                                try {
-                                    leaderCardToDiscard = askForLeaderCardToDiscard();
-                                } catch (NotPresentException e) {
-                                    e.printStackTrace();
+                            if (playerStates.get(thisPlayer).getLeaderCards().size() != 0) {
+                                if (chosenAction == 0) {
+                                    try {
+                                        String leaderCardToDiscard = askForLeaderCardToDiscard();
+                                        events.add(new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard));
+                                    } catch (NotPresentException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } else {
+                                    if (!playerStates.get(thisPlayer).getLeaderCards().entrySet().stream().map(pair -> {
+                                        return pair.getValue().isActive();
+                                    }).reduce(true, (a, b) -> a && b)) {
+                                        try {
+                                            String leaderCardToActivate = askForLeaderCardToActivate();
+                                            events.add(new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate));
+                                        } catch (NotPresentException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else {
+                                        out.println("ALL LEADER CARDS ARE ALREADY ACTIVE\n");
+                                    }
                                 }
-                                events.add(new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard));
-                            } else {
-                                String leaderCardToActivate = null;
-                                try {
-                                    leaderCardToActivate = askForLeaderCardToActivate();
-                                } catch (NotPresentException e) {
-                                    e.printStackTrace();
-                                }
-                                events.add(new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate));
-                            }
+                            } else out.println("THERE ARE NO ACTIVE LEADER CARDS\n ");
                             break;
                         }
                         case DISPLAY_SMTH -> {
@@ -2096,7 +2102,10 @@ public class CLI extends UI {
         builder.append(displayResourcesInHashMap(required) + "\n");
         if (freeChoicesResources != 0) {
             builder.append("ALSO, YOU HAVE " + freeChoicesResources + " OPTIONAL RESOURCES YOU CAN CHOOSE:\n");
-            choseResources(Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new)), freeChoicesResources).forEach((key, value) -> required.put(key, required.get(key) + value));
+            choseResources(Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new)), freeChoicesResources).forEach((key, value) -> {
+                if (required.containsKey(key)) required.put(key, required.get(key) + value);
+                else required.put(key, value);
+            });
             builder.append("SO NOW, THE RESOURCES YOU HAVE TO TAKE FROM THE DEPOSITS HAVE BECOME THE FOLLOWING: \n");
             builder.append(displayResourcesInHashMap(required));
         }
@@ -2137,7 +2146,7 @@ public class CLI extends UI {
                 out.println("WHICH KIND OF RESOURCES WOULD YOU LIKE TO REMOVE FROM " + depositCategory.get(input).getKey() + "?\n");
                 ArrayList<Resource> justResources = required.keySet().stream().collect(Collectors.toCollection(ArrayList::new));
                 ArrayList<Pair<String, String>> finalResourcesOptions = justResources.stream().map(res -> new Pair<>(res.toString() + " " + shapeResource(res), colorResource(res))).collect(Collectors.toCollection(ArrayList::new));
-                ArrayList<Integer> inputs2 = displaySelectionFormVariableChoices(finalResourcesOptions, null, 1, " ");
+                ArrayList<Integer> inputs2 = displaySelectionFormVariableChoices(finalResourcesOptions, null, finalResourcesOptions.size(), " ");
                 inputs2.stream().forEach(index -> {
                     out.println("HOW MANY " + justResources.get(index).toString() + " WOULD YOU LIKE TO REMOVE FROM THE " + depositCategory.get(input).getKey() + "?  INSERT A NUMBER\n");
                     int quantityToTake = required.get(justResources.get(index));
@@ -2181,7 +2190,7 @@ public class CLI extends UI {
                                 warehouseHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
 
                             }
-                            displayResourcesInHashMap(warehouseHashMap);
+                            out.println(displayResourcesInHashMap(warehouseHashMap));
                             break;
                         }
                         case 1 -> {//DPOSIT LEADER POWER
@@ -2196,7 +2205,7 @@ public class CLI extends UI {
                                 allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
                                 leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
                             }
-                            displayResourcesInHashMap(leaderDepositsHashMap);
+                            out.println(displayResourcesInHashMap(leaderDepositsHashMap));
 
                             break;
                         }
@@ -2216,7 +2225,7 @@ public class CLI extends UI {
                                 leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
 
                             }
-                            displayResourcesInHashMap(leaderDepositsHashMap);
+                            out.println(displayResourcesInHashMap(leaderDepositsHashMap));
                             break;
                         }
 
@@ -2236,18 +2245,17 @@ public class CLI extends UI {
         }
         out.println("THIS IS THE FINAL RESULT OF YOUR CHOICE :\n");
         out.println("Resources chosen from Warehouse: \n");
-        displayResourcesInHashMap(warehouseHashMap);
+        out.println(displayResourcesInHashMap(warehouseHashMap));
         out.println("Resources chosen from Leader deposits: \n");
-        displayResourcesInHashMap(leaderDepositsHashMap);
+        out.println(displayResourcesInHashMap(leaderDepositsHashMap));
         out.println("Resources chosen from Strongbox: \n");
-        displayResourcesInHashMap(strongBoxHashMap);
-        out.println("IF YOU'RE NOT SATISFIED WITH YOUR CHOICES, WOULD YOU LIKE TO REDO? Y/N\n");
+        out.println(displayResourcesInHashMap(strongBoxHashMap));
+        out.println("IF YOU'RE NOT SATISFIED WITH YOUR CHOICES AND WANT TO MOVE FORWARD? Y/N\n");
         String answer = in.next().toUpperCase();
         in.nextLine();
         if (isAffirmative(answer)) {
-            return askWhereToTakeResourcesFrom(clonedRequired, freeChoicesResources);
-        } else
             return new ChosenResourcesEvent(thisPlayer, allChosen, chosenFromWarehouse, chosenFromLeaderPower);
+        } else return askWhereToTakeResourcesFrom(clonedRequired, freeChoicesResources);
     }
 
     @Override
