@@ -11,23 +11,23 @@ public class Lobby extends Observable {
     private ArrayList<String> otherPLayersID;
 
     /**
-     * constructor for the class
+     * Constructor for the class
      */
     public Lobby(){
         otherPLayersID = new ArrayList<>();
     }
 
     /**
-     * getter for the ID of the player that is the leader of this lobby
-     * @return the ID of the player that is the leader of this lobby
+     * Getter for the ID of the player that is the leader of this lobby
+     * @return The ID of the player that is the leader of this lobby
      */
     public String getLeaderID() {
         return leaderID;
     }
 
     /**
-     * sets the leader of the lobby
-     * @param leaderID the ID of the leader
+     * Sets the leader of the lobby
+     * @param leaderID The ID of the leader
      */
     public void setLeaderID(String leaderID) {
         this.leaderID = leaderID;
@@ -35,25 +35,25 @@ public class Lobby extends Observable {
     }
 
     /**
-     * getter for the IDs of the players that are not the leaders of this lobby
-     * @return the IDs of the players that are not the leaders of this lobby
+     * Getter for the IDs of the players that are not the leaders of this lobby
+     * @return The IDs of the players that are not the leaders of this lobby
      */
     public ArrayList<String> getOtherPLayersID() {
         return (ArrayList<String>)otherPLayersID.clone();
     }
 
     /**
-     * returns whether this lobby is full
-     * @return whether this lobby is full
+     * Returns whether this lobby is full
+     * @return Whether this lobby is full
      */
     public boolean isFull(){
         return otherPLayersID.size() + 1 >= Config.getInstance().getMaxPlayers();
     }
 
     /**
-     * adds a player to this lobby
-     * @param playerID the ID of the player to add
-     * @throws IllegalOperation when the lobby is full
+     * Adds a player to this lobby
+     * @param playerID The ID of the player to add
+     * @throws IllegalOperation When the lobby is full
      */
     public void addPlayerID(String playerID) throws IllegalOperation {
         if(isFull()) throw new IllegalOperation("The lobby is full");
@@ -62,10 +62,9 @@ public class Lobby extends Observable {
     }
 
     /**
-     * Removes the player given from the lobby if present. If it is the leader, it also passes the leadership of the
-     * lobby to another player
-     * @param playerId the player to remove
-     * @return the number of players left in the lobby
+     * Removes the player given from the lobby if present. If it is the leader, it also passes the leadership of the lobby to another player
+     * @param playerId The player to remove
+     * @return The number of players left in the lobby
      */
     public int removePlayer(String playerId) {
         if(playerId.equals(leaderID)){

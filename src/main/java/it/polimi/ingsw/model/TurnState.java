@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 public enum TurnState {
-    WAITING_FOR_PLAYER(1, " is waiting for another player"),
+    WAITING_FOR_PLAYER(1, "is waiting for another player"),
     START(2, "is starting the turn "),
     AFTER_LEADER_CARD_ACTION(3, "has just performed a leader card action, but can still do a main action"),
     AFTER_MAIN_ACTION(4, " has just done its action, but can still do the leader action"),
@@ -14,12 +14,21 @@ public enum TurnState {
         this.description= description;
     }
 
-    private String description;
-    private int stateCode;
+    private final String description;
+    private final int stateCode;
 
+    /**
+     * Getter for the description of the turn state
+     * @return The description of the turn state
+     */
     public String getDescription(){
         return description;
     }
+
+    /**
+     * Getter for the code corresponding to the turn state
+     * @return The code corresponding to the turn state
+     */
     public int getStateCode(){
         return stateCode;
     }

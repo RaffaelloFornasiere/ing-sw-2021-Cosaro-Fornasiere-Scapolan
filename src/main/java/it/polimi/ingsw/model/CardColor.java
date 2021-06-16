@@ -7,13 +7,10 @@ public enum CardColor {
     VIOLET("Violet", 2),
     YELLOW("Yellow", 3);
 
-    private String color;
+    private final String color;
+    private final int code;
 
-
-
-    private int code;
-    CardColor(String color, int code)
-    {
+    CardColor(String color, int code) {
         this.color = color;
         this.code = code;
     }
@@ -24,11 +21,18 @@ public enum CardColor {
         return name();
     }
 
-
+    /**
+     * Getter for the code of the card color
+     * @return the code of the card color
+     */
     public int getCode() {
         return code;
     }
 
+    /**
+     * Getter for the card color as a human readable string
+     * @return The card color as a human readable string
+     */
     public String getColor() {
         return color;
     }

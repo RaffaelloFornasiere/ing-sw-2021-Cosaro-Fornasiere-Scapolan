@@ -5,14 +5,14 @@ import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 
 public class Depot{
     private Resource resourceType;
-    private int maxQuantity;
+    private final int maxQuantity;
     private int currentQuantity;
 
     /**
-     * constructor, takes as input the max quantity of resources for the depot.
-     * initializes to zero the current quantity
-     * initializes to ROCK the type of resource, which can be later on modified.
-     * @param maxQuantity
+     * Constructor, takes as input the max quantity of resources for the depot.
+     * Initializes to zero the current quantity
+     * Initializes to ROCK the type of resource, which can be later on modified.
+     * @param maxQuantity The maximum quantity of resources the depot can store
      */
     public Depot(int maxQuantity){
      this.maxQuantity= maxQuantity;
@@ -21,16 +21,16 @@ public class Depot{
     }
 
     /**
-     * Getter
-     * @return which type of Resouce is in this depot
+     * Getter for the type of resource is in this depot
+     * @return The type of resource is in this depot
      */
     public Resource getResourceType() {
         return resourceType;
     }
 
     /**
-     * Getter
-     * @return the max quantity this depot can hold
+     * Getter for the max quantity this depot can hold
+     * @return The max quantity this depot can hold
      */
     public int getMaxQuantity() {
         return maxQuantity;
@@ -38,19 +38,19 @@ public class Depot{
 
 
     /**
-     * Getter
-     * @return the current quantity that is in the depot
+     * Getter for the current quantity that is in the depot
+     * @return The current quantity that is in the depot
      */
     public int getCurrentQuantity() {
         return currentQuantity;
     }
 
     /**
-     *
-     * @param type of resource to add
-     * @param quantity  to add
-     * @throws ResourcesLimitsException when the maximum number of resources is exceeded
-     * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
+     * Methods that add resources to the depot
+     * @param type The type of resource to add
+     * @param quantity The quantity of resources to add
+     * @throws ResourcesLimitsException When the maximum number of resources is exceeded
+     * @throws DepotResourceException When the type of Resource doesn't match the type of resource required.
      */
     protected void addResources(Resource type, int quantity) throws ResourcesLimitsException, DepotResourceException {
         if(currentQuantity==0) resourceType = type;
@@ -60,11 +60,11 @@ public class Depot{
     }
 
     /**
-     *
-     * @param type of resource to subtract
-     * @param quantity  to subtract
-     * @throws ResourcesLimitsException when the minimum number of resources is exceeded
-     * @throws DepotResourceException when the type of Resource doesn't match the type of resource required.
+     *Methods that subtract resources to the depot
+     * @param type The type of resource to subtract
+     * @param quantity The quantity of resources to subtract
+     * @throws ResourcesLimitsException When the minimum number of resources is exceeded
+     * @throws DepotResourceException When the type of Resource doesn't match the type of resource required.
      */
     protected void subResources(Resource type, int quantity) throws ResourcesLimitsException, DepotResourceException {
         if (!(type==resourceType)) throw new DepotResourceException();
@@ -73,8 +73,9 @@ public class Depot{
     }
 
     /**
-     * Swithes the content of two deposits.
-     * @param depot is the deposit
+     * Switches the content of two deposits.
+     * @param depot The deposit to switch with
+     * @throws ResourcesLimitsException If any of the depot cannot contain the resources of the other
      */
     protected void switchDepot( Depot depot)throws ResourcesLimitsException {
         if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) throw new ResourcesLimitsException();
