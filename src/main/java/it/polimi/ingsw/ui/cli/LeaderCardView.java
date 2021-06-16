@@ -89,7 +89,6 @@ public class LeaderCardView {
     }
 
     public String depositPowersToString() {
-        //TODO here must be changed how selected is handled
         StringBuilder builder = new StringBuilder();
         IntStream.range(0, card.getLeaderPowers().size()).forEach(index -> {
             LeaderPower power = card.getLeaderPowers().get(index);
@@ -174,7 +173,6 @@ public class LeaderCardView {
     public String toString() {
         String color = Color.WHITE.getAnsiCode();
         StringBuilder build = new StringBuilder();
-        //TODO here must be changed how selected is handled
         build.append(
                 color + " " + color + card.getCardID() + " " + translateBoolean(isActive()) + " " + color + " " + Color.reset() + "\n" +
                         color + "╔═" + color + "Requirements" + color + "═╗" + Color.reset() + "\n");

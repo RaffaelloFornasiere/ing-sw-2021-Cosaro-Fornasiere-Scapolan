@@ -24,4 +24,5 @@ public class LobbyHandler implements Observer {
         for(String playerID: lobby.getOtherPLayersID())
             networkData.get(playerID).getClientHandlerSender().sendObject(lobbyStateEvent);
     }
+
 }

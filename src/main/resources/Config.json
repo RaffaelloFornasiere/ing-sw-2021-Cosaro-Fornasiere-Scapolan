@@ -70,7 +70,7 @@
       "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
       "INSTANCE": {
         "cardsDiscarded": {
-          "Green": 2
+          "GREEN": 2
         }
       }
     },
@@ -78,7 +78,7 @@
       "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
       "INSTANCE": {
         "cardsDiscarded": {
-          "Violet": 2
+          "VIOLET": 2
         }
       }
     },
@@ -86,7 +86,7 @@
       "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
       "INSTANCE": {
         "cardsDiscarded": {
-          "Yellow": 2
+          "YELLOW": 2
         }
       }
     },
@@ -94,7 +94,7 @@
       "CLASSNAME": "it.polimi.ingsw.model.singlePlayer.SoloActionTokenDiscard",
       "INSTANCE": {
         "cardsDiscarded": {
-          "Blue": 2
+          "BLUE": 2
         }
       }
     },

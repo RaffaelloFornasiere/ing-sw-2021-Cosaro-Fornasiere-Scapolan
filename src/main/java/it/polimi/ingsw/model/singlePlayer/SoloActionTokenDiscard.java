@@ -50,6 +50,7 @@ public class SoloActionTokenDiscard extends SoloActionToken {
                             devDeck.pop();
                         } catch (NotPresentException ignore) { }
                     }
+                    devCardGrid.notifyObservers();
                     return false;
                 }
                 else{
@@ -62,6 +63,27 @@ public class SoloActionTokenDiscard extends SoloActionToken {
                 }
             }
         }
+        devCardGrid.notifyObservers();
         return true;
+    }
+
+    @Override
+    public String description() {
+        if(cardsDiscarded.isEmpty()) return "No card will be discarded";
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("The following cards will be discarded:\n");
+        for(CardColor color: cardsDiscarded.keySet()){
+            int n = cardsDiscarded.get(color);
+            if(n>0){
+                builder.append(n);
+                builder.append(" ");
+                builder.append(color);
+                builder.append("\n");
+            }
+        }
+        builder.deleteCharAt(builder.lastIndexOf("\n"));
+
+        return builder.toString();
     }
 }

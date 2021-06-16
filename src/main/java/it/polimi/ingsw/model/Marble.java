@@ -14,8 +14,6 @@ public enum Marble{
         this.color = color;
     }
 
-    //purtroppo, json deserializza usando name() e serializza usando toString, quindi tooString deve per
-    //forza fare return name(). Per questi vi ho introotto getColorName() se voleet stampare il colore sexy e non tutto maiusc
     @Override
     public String toString()
     {

@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -108,4 +109,10 @@ public abstract class UI {
     abstract public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int  freeChoicesResources);
 
     public abstract HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes);
+
+    public abstract void displayIAAction(SoloActionToken action);
+
+    public abstract void displaySinglePlayerLost();
+
+    public abstract void updateLorenzoPosition(int position);
 }

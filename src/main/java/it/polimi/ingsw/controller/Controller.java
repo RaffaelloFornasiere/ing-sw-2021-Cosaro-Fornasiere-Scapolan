@@ -20,8 +20,8 @@ import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.model.LeaderCards.*;
 import it.polimi.ingsw.model.singlePlayer.SinglePlayerMatchState;
+import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.utilities.*;
-import it.polimi.ingsw.Server.ClientHandlerSender;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
@@ -495,7 +495,7 @@ public class Controller {
                 senders.get(event.getPlayerId()).sendObject(new BadRequestEvent(event.getPlayerId(), "The player already executed a leader card action this turn", event));
                 return;
             }
-            if(canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_MAIN_ACTION);}})) return;
+            if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_MAIN_ACTION);}})) return;
             LeaderCard leaderCard = player.getLeaderCardFromID(event.getLeaderCardID());
             try{
                 leaderCardManager.activateLeaderCard(player, leaderCard);
@@ -534,13 +534,15 @@ public class Controller {
             HashMap<Resource, Integer> selectedResourcesFromLeaderPower = new HashMap<>();
             HashMap<Resource, Integer> selectedResourcesFromWarehouse = new HashMap<>();
             HashMap<Resource, Integer> resourcesFromStrongBox = new HashMap<>();
+            if (!devCard.checkCost(allPlayerResources)) {
+                senders.get(event.getPlayerId()).sendObject(new CantAffordError(event.getPlayerId(), event.getDevCardID()));
+                new MatchStateHandler(senders).update(matchState);
+                return;
+            }
+
             boolean goodChoice = false;
             while(!goodChoice) {
                 try {
-                    if (!devCard.checkCost(allPlayerResources)) {
-                        throw new HandlerCheckException(new CantAffordError(event.getPlayerId(), event.getDevCardID()));
-                    }
-
                     senders.get(event.getPlayerId()).sendObject(new ChoseResourcesEvent(event.getPlayerId(), cardCost, 0));
 
                     synchronized (waitingForResourcesLock){
@@ -610,10 +612,13 @@ public class Controller {
     }
 
     private synchronized void removeResourcesFromLeaderCards(Player player, HashMap<Resource, Integer> resources) throws NotPresentException {
-        resources = new HashMap<>(resources);
-        for(Resource r: resources.keySet())
-            if(resources.get(r)<=0)
-                resources.remove(r);
+        HashMap<Resource, Integer> tempResources = new HashMap<>();
+        for(Resource r: resources.keySet()) {
+            int n = resources.get(r);
+            if (n > 0)
+                tempResources.put(r, n);
+        }
+        resources = tempResources;
 
         if(resources.isEmpty()) return;
 
@@ -865,14 +870,19 @@ public class Controller {
         SinglePlayerMatchState singlePlayerMatchState = (SinglePlayerMatchState) matchState;
         try {
             Player player =  singlePlayerMatchState.getPlayer();
-            boolean endGame = singlePlayerMatchState.popSoloActionTokens().doAction(singlePlayerMatchState);
+            SoloActionToken token = singlePlayerMatchState.popSoloActionTokens();
+            boolean endGame = token.doAction(singlePlayerMatchState);
+            senders.get(player.getPlayerId()).sendObject(new IAActionEvent(player.getPlayerId(), token));
             if(!endGame){
                 for (LeaderCard lc : player.getActiveLeaderCards()) {
                     for (LeaderPower lp : lc.getSelectedLeaderPowers()) {
                         leaderCardManager.deselectLeaderPower(player, lc, lp);
                     }
                 }
-                singlePlayerMatchState.nextTurn();
+                if(singlePlayerMatchState.isLastRound() && singlePlayerMatchState.getCurrentPlayerIndex() == singlePlayerMatchState.getPlayers().size() - 1)
+                    endGame();
+                else
+                    singlePlayerMatchState.nextTurn();
             }
             else{
                 senders.get(player.getPlayerId()).sendObject(new SinglePlayerLostEvent(player.getPlayerId()));

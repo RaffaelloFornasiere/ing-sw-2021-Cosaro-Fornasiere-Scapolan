@@ -45,4 +45,26 @@ public class SoloActionTokenMove extends SoloActionToken{
         if(reshuffle) singlePlayerMatchState.shuffleToken();
         return singlePlayerMatchState.getLorenzoPosition() >= FaithTrack.getArrayOfCells().size()-1;
     }
+
+    @Override
+    public String description() {
+        StringBuilder builder = new StringBuilder();
+        if(steps!=0){
+            builder.append("Lorenzo il Magnifico will move ");
+            if (steps == 1) {
+                builder.append(steps).append("step forward");
+            } else if (steps > 1) {
+                builder.append(steps).append("steps forward");
+            } else if (steps == -1){
+                builder.append(-steps).append("step backwards");
+            } else {
+                builder.append(-steps).append("steps backwards");
+            }
+        }
+        if(reshuffle){
+            if(!builder.isEmpty()) builder.append(". ");
+            builder.append("The token pile will be reshuffled");
+        }
+        return builder.toString();
+    }
 }
