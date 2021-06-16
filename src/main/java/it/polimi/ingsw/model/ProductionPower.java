@@ -7,13 +7,14 @@ import java.util.Map;
  * Immutable class
  */
 public class ProductionPower {
-    private HashMap<Resource, Integer> consumedResources;
-    private HashMap<Resource, Integer> producedResources;
+    private final HashMap<Resource, Integer> consumedResources;
+    private final HashMap<Resource, Integer> producedResources;
 
-    private int requiredResourceOfChoice;
-    private int producedResourceOfChoice;
-    private int faithPointsProduced;
+    private final int requiredResourceOfChoice;
+    private final int producedResourceOfChoice;
+    private final int faithPointsProduced;
 
+    @SuppressWarnings("unchecked")
     public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources,
                            int requiredResourceOfChoice, int producedResourceOfChoice, int faithPointsProduced) {
         this.consumedResources = (HashMap<Resource, Integer>) consumedResources.clone();
@@ -28,6 +29,7 @@ public class ProductionPower {
      *
      * @return the consumed resources
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getConsumedResources() {
         return (HashMap<Resource, Integer>) consumedResources.clone();
     }
@@ -37,6 +39,7 @@ public class ProductionPower {
      *
      * @return the produced resources
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getProducedResources() {
         return (HashMap<Resource, Integer>) producedResources.clone();
     }
