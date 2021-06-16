@@ -50,6 +50,7 @@ public class SoloActionTokenDiscard extends SoloActionToken {
                             devDeck.pop();
                         } catch (NotPresentException ignore) { }
                     }
+                    devCardGrid.notifyObservers();
                     return false;
                 }
                 else{
@@ -62,6 +63,7 @@ public class SoloActionTokenDiscard extends SoloActionToken {
                 }
             }
         }
+        devCardGrid.notifyObservers();
         return true;
     }
 
