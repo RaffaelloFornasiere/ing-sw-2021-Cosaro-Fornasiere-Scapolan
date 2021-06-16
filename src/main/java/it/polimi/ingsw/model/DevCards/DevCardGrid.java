@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model.DevCards;
+
 import com.google.gson.Gson;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
@@ -15,39 +16,40 @@ public class DevCardGrid extends Observable {
     private DevDeck[][] decks;
 
 
-    public DevCardGrid(ArrayList<DevCard> cards)
-    {
+    public DevCardGrid(ArrayList<DevCard> cards) throws IllegalArgumentException{
+        if(cards == null || cards.size() <= 0)
+            throw new IllegalArgumentException("can construct grid from a null or a void array");
         int levels = cards.stream().mapToInt(DevCard::getLevel).max().getAsInt();
         decks = new DevDeck[levels][CardColor.values().length];
 
-        IntStream.range(1, levels+1).forEach(i -> {
-            for(CardColor color:CardColor.values()){
-                decks[i-1][color.getCode()]=
-                        new DevDeck(cards.stream().filter(c->c.getLevel()==i && c.getColor()==color).collect(Collectors.toCollection(ArrayList::new)));
+        IntStream.range(1, levels + 1).forEach(i -> {
+            for (CardColor color : CardColor.values()) {
+                decks[i - 1][color.getCode()] =
+                        new DevDeck(cards.stream().filter(c -> c.getLevel() == i && c.getColor() == color).collect(Collectors.toCollection(ArrayList::new)));
             }
         });
     }
 
     public DevDeck[][] getDecks() {
-        DevDeck[][] returns =  new DevDeck[getRowsNumber()][getColumnsNumber()];
-        for(int i=0; i<getRowsNumber(); i++)
+        DevDeck[][] returns = new DevDeck[getRowsNumber()][getColumnsNumber()];
+        for (int i = 0; i < getRowsNumber(); i++)
             if (getColumnsNumber() >= 0) System.arraycopy(decks[i], 0, returns[i], 0, getColumnsNumber());
 
         return returns;
     }
 
-    public int getColumnsNumber(){
+    public int getColumnsNumber() {
         return decks[0].length;
     }
 
-    public int getRowsNumber(){
+    public int getRowsNumber() {
         return decks.length;
     }
 
     public void push(DevCard card, int row, int column) {
-        if (row<0 || row>getRowsNumber())
+        if (row < 0 || row > getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
-        if (column<0 || column>=getColumnsNumber())
+        if (column < 0 || column >= getColumnsNumber())
             throw new IllegalArgumentException("Column index out of bounds");
 
         decks[row][column].push(card);
@@ -59,9 +61,9 @@ public class DevCardGrid extends Observable {
     }
 
     public DevCard pop(int row, int column) throws NotPresentException {
-        if (row<0 || row>getRowsNumber())
+        if (row < 0 || row > getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
-        if (column<0 || column>=getColumnsNumber())
+        if (column < 0 || column >= getColumnsNumber())
             throw new IllegalArgumentException("Column index out of bounds");
 
         DevCard ret = decks[row][column].pop();
@@ -74,9 +76,9 @@ public class DevCardGrid extends Observable {
     }
 
     public DevCard topCard(int row, int column) throws NotPresentException {
-        if (row<0 || row>getRowsNumber())
+        if (row < 0 || row > getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
-        if (column<0 || column>=getColumnsNumber())
+        if (column < 0 || column >= getColumnsNumber())
             throw new IllegalArgumentException("Column index out of bounds");
 
         return decks[row][column].topCard();
@@ -89,8 +91,8 @@ public class DevCardGrid extends Observable {
     public Pair<Integer, Integer> getRowColOfCardFromID(String devCardID) throws NotPresentException {
         for (int i = 0; i < getRowsNumber(); i++) {
             for (int j = 0; j < getColumnsNumber(); j++) {
-                if(decks[i][j].topCard().getCardID().equals(devCardID))
-                    return new Pair<>(i,j);
+                if (decks[i][j].topCard().getCardID().equals(devCardID))
+                    return new Pair<>(i, j);
             }
         }
         throw new NotPresentException("There's no leader card at the top of any deck with the given ID");

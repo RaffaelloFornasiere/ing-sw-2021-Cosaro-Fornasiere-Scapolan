@@ -24,6 +24,23 @@ public class ProductionPower {
         this.faithPointsProduced = faithPointsProduced;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o.getClass() != getClass())
+            return false;
+        ProductionPower p = (ProductionPower) o;
+        int res = 1;
+        res *= (p.consumedResources.equals(consumedResources))?1:0;
+        res *= (p.faithPointsProduced == faithPointsProduced)?1:0;
+        res *= (p.producedResources.equals(producedResources))?1:0;
+        res *= (p.producedResourceOfChoice == producedResourceOfChoice)?1:0;
+        res *= (p.requiredResourceOfChoice == requiredResourceOfChoice)?1:0;
+        return res == 1;
+    }
+
+
     /**
      * getter
      *
@@ -54,6 +71,7 @@ public class ProductionPower {
 
     /**
      * getter of produced FaithPoints
+     *
      * @return faith points
      */
     public int getFaithPointsProduced() {
