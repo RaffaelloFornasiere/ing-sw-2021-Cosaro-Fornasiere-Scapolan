@@ -495,7 +495,7 @@ public class Controller {
                 senders.get(event.getPlayerId()).sendObject(new BadRequestEvent(event.getPlayerId(), "The player already executed a leader card action this turn", event));
                 return;
             }
-            if(canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_MAIN_ACTION);}})) return;
+            if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_MAIN_ACTION);}})) return;
             LeaderCard leaderCard = player.getLeaderCardFromID(event.getLeaderCardID());
             try{
                 leaderCardManager.activateLeaderCard(player, leaderCard);

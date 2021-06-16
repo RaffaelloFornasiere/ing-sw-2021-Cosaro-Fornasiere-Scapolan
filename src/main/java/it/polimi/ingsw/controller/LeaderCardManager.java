@@ -104,7 +104,7 @@ public class LeaderCardManager {
     private ArrayList<Requirement> cleanRequirements(ArrayList<Requirement> toClean){
         if(toClean == null || toClean.size()==0) return toClean;
 
-        ArrayList<Requirement> cleaned = (ArrayList<Requirement>)toClean.clone();
+        ArrayList<Requirement> cleaned = new ArrayList<Requirement>(toClean);
 
         int i = 0;
         int j;
@@ -128,6 +128,9 @@ public class LeaderCardManager {
                     }
                     else
                         j++;
+                }
+                else{
+                    j++;
                 }
             }
             if(merged){
