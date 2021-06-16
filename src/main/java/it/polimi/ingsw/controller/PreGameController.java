@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.singlePlayer.SinglePlayerMatchState;
+import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import it.polimi.ingsw.Server.ClientHandlerSender;
@@ -192,12 +193,16 @@ public class PreGameController {
         ArrayList<DevCard> devCards = Config.getInstance().getDevCards();
         Collections.shuffle(devCards);
         MatchState matchState;
-        if(playerOrder.size() == 1)
+        if(playerOrder.size() == 1){
+            ArrayList<SoloActionToken> soloActionTokens = Config.getInstance().getSoloActionTokens();
+            Collections.shuffle(soloActionTokens);
             matchState = new SinglePlayerMatchState(players.get(0), devCards, Config.getInstance().getMarketRows(),
-                    Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles(), Config.getInstance().getSoloActionTokens());
-        else
+                    Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles(), soloActionTokens);
+        }
+        else {
             matchState = new MatchState(players, devCards, Config.getInstance().getMarketRows(),
                     Config.getInstance().getMarketColumns(), Config.getInstance().getMarbles());
+        }
         matchState.getMarket().addObserver(new MarketHandler(involvedPlayersSenders));
         matchState.getDevCardGrid().addObserver(new DevCardGridHandler(involvedPlayersSenders));
         FaithTrackDataHandler faithTrackDataHandler = new FaithTrackDataHandler(involvedPlayersSenders, matchState);
