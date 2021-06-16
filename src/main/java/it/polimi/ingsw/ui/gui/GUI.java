@@ -302,7 +302,7 @@ public class GUI extends UI {
     public ActivateProductionEvent askForProductionPowersToUse() {
         //var devCards = playerInfo.getProdPowerDevCards();
         //var personalPower = playerInfo.isActivatePersonalPower();
-        //r/eturn new ActivateProductionEvent(playerID.getItem(), devCards, personalPower);
+        //return new ActivateProductionEvent(playerID.getItem(), devCards, personalPower);
         return  null;
     }
 
@@ -325,7 +325,10 @@ public class GUI extends UI {
 
     @Override
     public ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+
         ArrayList<Event> events= new ArrayList<>();
+        if(playerID.equals(this.playerID.getItem()))
+            return events;
         Action a;
         a = actionPerformed.getWaitIfLocked();
 //        return switch (a) {

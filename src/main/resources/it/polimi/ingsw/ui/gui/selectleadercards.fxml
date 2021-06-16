@@ -31,7 +31,7 @@
                <children>
                   <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/leaders/Leader_5.png" />
+                        <Image url="@images/leaders/Leader_1.png" />
                      </image>
                   </ImageView>
                   <Region id="region1" fx:id="selectableRegion1" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
