@@ -29,6 +29,7 @@ public enum TurnState {
      * Getter for the code corresponding to the turn state
      * @return The code corresponding to the turn state
      */
+    @SuppressWarnings("unused")
     public int getStateCode(){
         return stateCode;
     }

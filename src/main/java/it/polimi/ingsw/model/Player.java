@@ -6,15 +6,14 @@ import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.utilities.Observable;
-import it.polimi.ingsw.utilities.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player extends Observable {
-    private String playerId;
+    private final String playerId;
     private HashMap<LeaderCard, Boolean> leaderCards;
-    private DashBoard dashBoard;
+    private final DashBoard dashBoard;
 
     public Player(String name, DashBoard dashBoard) {
         this.playerId = name;

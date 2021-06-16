@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Lobby extends Observable {
     private String leaderID;
-    private ArrayList<String> otherPLayersID;
+    private final ArrayList<String> otherPLayersID;
 
     /**
      * Constructor for the class
@@ -39,7 +39,7 @@ public class Lobby extends Observable {
      * @return The IDs of the players that are not the leaders of this lobby
      */
     public ArrayList<String> getOtherPLayersID() {
-        return (ArrayList<String>)otherPLayersID.clone();
+        return new ArrayList<>(otherPLayersID);
     }
 
     /**

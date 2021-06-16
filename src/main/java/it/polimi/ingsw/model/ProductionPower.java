@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class ProductionPower {
     private final HashMap<Resource, Integer> consumedResources;
