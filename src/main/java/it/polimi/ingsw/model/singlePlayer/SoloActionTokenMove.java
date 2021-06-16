@@ -52,13 +52,13 @@ public class SoloActionTokenMove extends SoloActionToken{
         if(steps!=0){
             builder.append("Lorenzo il Magnifico will move ");
             if (steps == 1) {
-                builder.append(steps).append("step forward");
+                builder.append(steps).append(" step forward");
             } else if (steps > 1) {
-                builder.append(steps).append("steps forward");
+                builder.append(steps).append(" steps forward");
             } else if (steps == -1){
-                builder.append(-steps).append("step backwards");
+                builder.append(-steps).append(" step backwards");
             } else {
-                builder.append(-steps).append("steps backwards");
+                builder.append(-steps).append(" steps backwards");
             }
         }
         if(reshuffle){
