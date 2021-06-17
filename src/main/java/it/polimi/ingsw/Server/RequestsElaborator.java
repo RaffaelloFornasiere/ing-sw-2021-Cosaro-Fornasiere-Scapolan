@@ -26,6 +26,11 @@ public class RequestsElaborator {
     private Event event;
     private final Object eventLock = new Object();
 
+    /**
+     * Constructor for the class
+     * @param socket The socket fom where the requests will come from
+     * @param mainEventHandlerRegistry The EventRegistry responsible of all the events unrelated to any match
+     */
     public RequestsElaborator(Socket socket, EventRegistry mainEventHandlerRegistry) {
         try {
             this.socket = socket;
@@ -38,6 +43,9 @@ public class RequestsElaborator {
         }
     }
 
+    /**
+     * Methods that waits for events to be received and elaborates on them
+     */
     public void elaborateRequests(){
         new Thread(()->clientHandlerReceiver.waitForEvent()).start();
 
@@ -54,6 +62,9 @@ public class RequestsElaborator {
         }
     }
 
+    /**
+     * Method responsible for and that notifies the controller about the arrival of an event
+     */
     private void elaborateEvent(){
         Event event;
         synchronized (eventLock) {
@@ -80,23 +91,42 @@ public class RequestsElaborator {
         }
     }
 
+    /**
+     * Getter for the object responsible of sending the events through the socket this request elaborator is associated with
+     * @return The object responsible of sending the events through the socket this request elaborator is associated with
+     */
     public ClientHandlerSender getClientHandlerSender() {
         return clientHandlerSender;
     }
 
+    /**
+     * Getter for the event registry that is responsible of the events for the match that the client this request elaborator is associated with is taking part in
+     * @return The event registry that is responsible of the events for the match that the client this request elaborator is associated with is taking part in
+     */
     public EventRegistry getMatchEventHandlerRegistry() {
         return matchEventHandlerRegistry;
     }
 
+    /**
+     * Setter for the event registry that is responsible of the events for the match that the client this request elaborator is associated with is taking part in
+     * @param matchEventHandlerRegistry The event registry that is responsible of the events for the match that the client this request elaborator is associated with is taking part in
+     */
     public void setMatchEventHandlerRegistry(EventRegistry matchEventHandlerRegistry) {
         this.matchEventHandlerRegistry = matchEventHandlerRegistry;
     }
 
+    /**
+     * Setter for the userID of the client this request elaborator is associated with
+     * @param ownerUserID The userID of the client this request elaborator is associated with
+     */
     public void setOwnerUserID(String ownerUserID) {
         this.ownerUserID = ownerUserID;
         this.clientHandlerReceiver.setOwnerUserID(ownerUserID);
     }
 
+    /**
+     * Method responsible of closing the connection with the socket this request elaborator is associated with
+     */
     public void closeConnection() {
         clientHandlerSender.closeConnection();
         clientHandlerReceiver.closeConnection();
