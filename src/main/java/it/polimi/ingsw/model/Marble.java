@@ -20,5 +20,9 @@ public enum Marble{
         return name();
     }
 
+    /**
+     * Getter for the color of the marble as a human readable string
+     * @return The color of the marble as a human readable string
+     */
     public String getColor(){return color;}
 }

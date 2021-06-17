@@ -36,4 +36,19 @@ public class SoloActionTokenMoveTest {
         assertTrue(token.doAction(singlePlayerMatchState));
         assertEquals(24, singlePlayerMatchState.getLorenzoPosition());
     }
+
+    @Test
+    public void testDescription() {
+        SoloActionTokenMove token = new SoloActionTokenMove(3, true);
+        assertEquals("Lorenzo il Magnifico will move 3 steps forward. The token pile will be reshuffled", token.description());
+
+        token = new SoloActionTokenMove(-3, false);
+        assertEquals("Lorenzo il Magnifico will move 3 steps backwards", token.description());
+
+        token = new SoloActionTokenMove(1, false);
+        assertEquals("Lorenzo il Magnifico will move 1 step forward", token.description());
+
+        token = new SoloActionTokenMove(-1, true);
+        assertEquals("Lorenzo il Magnifico will move 1 step backwards. The token pile will be reshuffled", token.description());
+    }
 }

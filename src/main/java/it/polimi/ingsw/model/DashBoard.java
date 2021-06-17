@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
 
@@ -11,26 +12,26 @@ import java.util.stream.IntStream;
 
 public class DashBoard extends Observable {
 
-    private HashMap<Resource, Integer> strongBox;
-    private ArrayList<Stack<DevCard>> cardSlots;
-    private ArrayList<Depot> warehouse;
-    private ProductionPower personalPower;
-    private FaithTrackData faithTrack;
+    private final HashMap<Resource, Integer> strongBox;
+    private final ArrayList<Stack<DevCard>> cardSlots;
+    private final ArrayList<Depot> warehouse;
+    private final ProductionPower personalPower;
+    private final FaithTrackData faithTrack;
 
     /**
      * Constructor for the class
-     * @param numberOfSlots  is the number of development card slots we want our dashboard to have
-     * @param eachDepotCapacity is how many resources one depot can possibly have at most
-     * @param personalPower is the personal production power of the player
+     * @param numberOfSlots  Is the number of development card slots we want our dashboard to have
+     * @param eachDepotCapacity Is how many resources one depot can possibly have at most
+     * @param personalPower Is the personal production power of the player
+     * @param faithTrack  Is the faith track common to all players
      */
-
-    public DashBoard(int numberOfSlots, ArrayList<Integer> eachDepotCapacity, ProductionPower personalPower){
+    public DashBoard( int numberOfSlots, ArrayList<Integer> eachDepotCapacity, ProductionPower personalPower, FaithTrack faithTrack){
     strongBox = new HashMap<>();
     //initializes each resource in the strongbox to quantity zero
     for(Resource resource: Resource.values()){
         strongBox.put(resource, 0);
     }
-    //initializes a number of slots for the devcard. The number of slots is passed as parameter numberOfSlots
+    //initializes a number of slots for the dev card. The number of slots is passed as parameter numberOfSlots
     cardSlots= new ArrayList<>();
         IntStream.range(0,numberOfSlots).forEach(n -> cardSlots.add(new Stack<>()));
 
@@ -39,26 +40,27 @@ public class DashBoard extends Observable {
     for(Integer maxQuantity: eachDepotCapacity){
         warehouse.add(new Depot(maxQuantity));
         }
-    //initializes personalpower
+    //initializes personal power
     this.personalPower= personalPower;
     //initializes faithTrackData
-    this.faithTrack= new FaithTrackData();
+    this.faithTrack= new FaithTrackData(faithTrack);
 
     }
 
     /**
-     * modifier of the dashboard, it adds resources
-     * @param resource type of resource
-     * @param quantity quantity to add
+     * Modifier of the dashboard, it adds resources to the strongbox
+     * @param resource Type of resource
+     * @param quantity Quantity to add
      */
     public void addResourcesToStrongBox( Resource resource, int quantity){
         strongBox.put( resource, strongBox.get(resource) + quantity);
         notifyObservers();
     }
+
     /**
-     * modifier of the dashboard, it subtracts resources
-     * @param resource type of resource
-     * @param quantity quantity to subtract
+     * Modifier of the dashboard, it subtracts resources to the strongbox
+     * @param resource Type of resource
+     * @param quantity Quantity to subtract
      */
     public void subResourcesToStrongBox( Resource resource, int quantity)throws EmptyStrongboxException{
         if(strongBox.get(resource)- quantity<0) throw new EmptyStrongboxException();
@@ -68,13 +70,13 @@ public class DashBoard extends Observable {
     }
 
     /**
-     * modifier of the dashboard, it adds resources
-     * @param resource type of resource
-     * @param quantity quantity to add
+     * Modifier of the dashboard, it adds resources to the warehouse
+     * @param resource Type of resource
+     * @param quantity Quantity to add
+     * @throws IllegalArgumentException If there's no warehouse which can store the given resource type
+     * @throws ResourcesLimitsException If the depot containing the given type of resource does not have enough space
      */
-
-    public void addResourcesToWarehouse(Resource resource, int quantity) throws IllegalArgumentException,
-            ResourcesLimitsException {
+    public void addResourcesToWarehouse(Resource resource, int quantity) throws ResourcesLimitsException {
         var depot = warehouse
                 .stream()
                 .filter(x -> x.getResourceType().equals(resource))
@@ -90,15 +92,17 @@ public class DashBoard extends Observable {
             throw new IllegalArgumentException("Incompatible resource type");
         try{depot.addResources(resource, quantity);
             notifyObservers();}
-        catch (DepotResourceException e){}
+        catch (DepotResourceException ignore){}
     }
+
     /**
-     * modifier of the dashboard, it subtracts resources
-     * @param resource type of resource
-     * @param quantity quantity to subtract
+     * Modifier of the dashboard, it subtracts resources to the warehouse
+     * @param resource Type of resource
+     * @param quantity Quantity to subtract
+     * @throws IllegalArgumentException If there's no warehouse storing the given resource type
+     * @throws ResourcesLimitsException When there are not enough resources to remove
      */
-    public void subResourcesToWarehouse( Resource resource, int quantity) throws
-            ResourcesLimitsException {
+    public void subResourcesToWarehouse( Resource resource, int quantity) throws ResourcesLimitsException {
         var depot = warehouse
                 .stream()
                 .filter(x -> x.getResourceType().equals(resource) && x.getCurrentQuantity()>0)
@@ -111,8 +115,14 @@ public class DashBoard extends Observable {
         } catch (DepotResourceException ignore){}
     }
 
-    public void subResourcesToWarehouse(HashMap<Resource, Integer> resources) throws
-            ResourcesLimitsException {
+
+    /**
+     * Modifier of the dashboard, it subtracts resources to the warehouse
+     * @param resources HashMap containing how many resources to subtract of each type
+     * @throws IllegalArgumentException If there's no warehouse storing the given resource type
+     * @throws ResourcesLimitsException When there are not enough resources to remove
+     */
+    public void subResourcesToWarehouse(HashMap<Resource, Integer> resources) throws ResourcesLimitsException {
         HashMap<Resource, Integer> subbedResources = new HashMap<>();
         try {
             for (Resource r : resources.keySet()) {
@@ -130,6 +140,11 @@ public class DashBoard extends Observable {
         }
     }
 
+    /**
+     * Methods that sets the state of the warehouse to the one given
+     * @param newWarehouseResources The new state for the warehouse
+     * @throws IllegalArgumentException If the structure of the new warehouse state is incompatible
+     */
     public void setWarehouseResources(ArrayList<DepotState> newWarehouseResources){
         if(newWarehouseResources.size()!=warehouse.size())
             throw new IllegalArgumentException("New warehouse structure incompatible");
@@ -152,9 +167,11 @@ public class DashBoard extends Observable {
 
 
     /**
-     * modifier of the dashboard, it adds devCards to the cardSlots in the Dashboard, according to the level constraints
-     * @param slotIndex is the index of the slot to which I want to add the card. Indexes go from 0 to cardSlots.size()-1
-     * @param card is the card I want to add
+     * Modifier of the dashboard, it adds devCards to the cardSlots in the Dashboard, according to the level constraints
+     * @param slotIndex The index of the slot where the card will be added. Indexes go from 0 to cardSlots.size()-1
+     * @param card The card to add
+     * @throws IndexSlotException If the index slot is out of bounds
+     * @throws LevelCardException If the card can't go on the slot because of it's level
      */
     public void addCard(int slotIndex, DevCard card)throws IndexSlotException, LevelCardException {
         //if the parameter is an index which doesn't exist, gives exception.
@@ -176,6 +193,12 @@ public class DashBoard extends Observable {
         }
     }
 
+    /**
+     * Method that checks if a card can go in a certain slot
+     * @param devCard The card to check
+     * @param slotIndex The index to check
+     * @return whether the card can go in the given slot
+     */
     public boolean checkSlot(DevCard devCard, int slotIndex){
         if(cardSlots.get(slotIndex).isEmpty())
             return devCard.getLevel()==1;
@@ -185,22 +208,24 @@ public class DashBoard extends Observable {
 
     /**
      * Getter of StrongBox
-     * @return a copy of the strongbox
+     * @return A copy of the strongbox
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getStrongBox() {
-        return (HashMap<Resource, Integer>) strongBox.clone();
+        return new HashMap<>(strongBox);
     }
 
     /**
-     * getter of cardSlots
-     * @return a copy of the card slots
+     * Getter of cardSlots
+     * @return A copy of the card slots
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<Stack<DevCard>> getCardSlots() {
-        return (ArrayList<Stack<DevCard>>)cardSlots.clone();
+        return new ArrayList<>(cardSlots);
     }
 
+    /**
+     * Getter for the top cards
+     * @return An ArrayList containing all the cards at the top of each slot
+     */
     public ArrayList<DevCard> getTopCards(){
         ArrayList<DevCard> ret = new ArrayList<>();
         for(Stack<DevCard> stack: cardSlots) {
@@ -213,16 +238,16 @@ public class DashBoard extends Observable {
 
     /**
      * Getter for the warehouse
-     * @return the warehouse as an array of Depot
+     * @return tTe warehouse as an array of Depot
      */
     public ArrayList<Depot> getWarehouse() {
-        return (ArrayList<Depot>) warehouse.clone();
+        return new ArrayList<>(warehouse);
     }
 
     /**
-     * gets all the resources stored in the warehouse as an hashmap
-     * if a resource is not present, the map will have an entry for it anyway, with value 0
-     * @return all the resources in the warehouse
+     * Gets all the resources stored in the warehouse as an HashMap.
+     * If a resource is not present, the map will have an entry for it anyway, with value 0
+     * @return All the resources in the warehouse
      */
     public HashMap<Resource, Integer> getWarehouseResources(){
         HashMap<Resource, Integer> resources = new HashMap<>();
@@ -240,9 +265,9 @@ public class DashBoard extends Observable {
     }
 
     /**
-     * gets all the resources stored in the warehouse and the strongbox as an hashmap
-     * if a resource is not present, the map will have an entry for it anyway, with value 0
-     * @return all the resources in the warehouse and in the strongbox
+     * Gets all the resources stored in the warehouse and the strongbox as an HashMap.
+     * If a resource is not present, the map will have an entry for it anyway, with value 0
+     * @return All the resources in the warehouse and in the strongbox
      */
     public HashMap<Resource, Integer> getAllDashboardResources(){
         HashMap<Resource, Integer> resources = getWarehouseResources();
@@ -253,6 +278,10 @@ public class DashBoard extends Observable {
         return resources;
     }
 
+    /**
+     * Getter for the personal production power
+     * @return The personal production power
+     */
     public ProductionPower getPersonalPower() {
         return personalPower;
     }

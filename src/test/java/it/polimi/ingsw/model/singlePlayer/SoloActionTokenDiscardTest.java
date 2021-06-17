@@ -104,4 +104,16 @@ public class SoloActionTokenDiscardTest {
         assertTrue(topCards.containsAll(devCards));
         assertFalse(topCards.contains(removed));
     }
+
+    @Test
+    public void testDescription() {
+        HashMap<CardColor, Integer> discarded = new HashMap<>();
+        discarded.put(CardColor.BLUE, 2);
+        discarded.put(CardColor.YELLOW, 3);
+        discarded.put(CardColor.GREEN, -3);
+
+        SoloActionTokenDiscard token = new SoloActionTokenDiscard(discarded);
+
+        assertEquals("The following cards will be discarded:\n2 BLUE\n3 YELLOW", token.description());
+    }
 }

@@ -3,66 +3,95 @@ package it.polimi.ingsw.model;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Immutable class
- */
 public class ProductionPower {
-    private HashMap<Resource, Integer> consumedResources;
-    private HashMap<Resource, Integer> producedResources;
+    private final HashMap<Resource, Integer> consumedResources;
+    private final HashMap<Resource, Integer> producedResources;
 
-    private int requiredResourceOfChoice;
-    private int producedResourceOfChoice;
-    private int faithPointsProduced;
+    private final int requiredResourceOfChoice;
+    private final int producedResourceOfChoice;
+    private final int faithPointsProduced;
 
+    /**
+     * Constructor for the class
+     * @param consumedResources The quantity of each type of resource consumed by the production
+     * @param producedResources The quantity of each type of resource produced
+     * @param requiredResourceOfChoice The quantity of resources of choice consumed by the production
+     * @param producedResourceOfChoice The quantity of resources of choice produced
+     * @param faithPointsProduced The quantity of faith points produced
+     */
     public ProductionPower(HashMap<Resource, Integer> consumedResources, HashMap<Resource, Integer> producedResources,
                            int requiredResourceOfChoice, int producedResourceOfChoice, int faithPointsProduced) {
-        this.consumedResources = (HashMap<Resource, Integer>) consumedResources.clone();
-        this.producedResources = (HashMap<Resource, Integer>) producedResources.clone();
+        this.consumedResources = new HashMap<>(consumedResources);
+        this.producedResources = new HashMap<>(producedResources);
         this.requiredResourceOfChoice = requiredResourceOfChoice;
         this.producedResourceOfChoice = producedResourceOfChoice;
         this.faithPointsProduced = faithPointsProduced;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o.getClass() != getClass())
+            return false;
+        ProductionPower p = (ProductionPower) o;
+        int res = 1;
+        res *= (p.consumedResources.equals(consumedResources))?1:0;
+        res *= (p.faithPointsProduced == faithPointsProduced)?1:0;
+        res *= (p.producedResources.equals(producedResources))?1:0;
+        res *= (p.producedResourceOfChoice == producedResourceOfChoice)?1:0;
+        res *= (p.requiredResourceOfChoice == requiredResourceOfChoice)?1:0;
+        return res == 1;
+    }
+
+
     /**
-     * getter
-     *
-     * @return the consumed resources
+     * Getter for the quantity of each type of resource consumed by the production
+     * @return the quantity of each type of resource consumed by the production
      */
     public HashMap<Resource, Integer> getConsumedResources() {
-        return (HashMap<Resource, Integer>) consumedResources.clone();
+        return new HashMap<>(consumedResources);
     }
 
     /**
-     * getter
-     *
-     * @return the produced resources
+     * Getter for the quantity of each type of resource produced
+     * @return the quantity of each type of resource produced
      */
     public HashMap<Resource, Integer> getProducedResources() {
-        return (HashMap<Resource, Integer>) producedResources.clone();
+        return new HashMap<>(producedResources);
     }
 
+    /**
+     * Getter for the quantity of resources of choice consumed by the production
+     * @return the quantity of resources of choice consumed by the production
+     */
     public int getRequiredResourceOfChoice() {
         return requiredResourceOfChoice;
     }
 
+    /**
+     * Getter for the quantity of resources of choice produced
+     * @return the quantity of resources of choice produced
+     */
     public int getProducedResourceOfChoice() {
         return producedResourceOfChoice;
     }
 
     /**
-     * getter of produced FaithPoints
-     * @return faith points
+     * Getter for the quantity of faith points produced
+     * @return the quantity of faith points produced
      */
     public int getFaithPointsProduced() {
         return faithPointsProduced;
     }
 
-    /**
+    /*/**
      * tells if the given resource satisfyies the consumed ones
      *
      * @param resources given resoruces
      * @return true if are enough, false if not
      */
+    /*
     public boolean canProduce(HashMap<Resource, Integer> resources) {
         for (Map.Entry<Resource, Integer> i : consumedResources.entrySet()) {
             if (resources.containsKey(i.getKey()))
@@ -71,6 +100,5 @@ public class ProductionPower {
                 return false;
         }
         return true;
-    }
-
+    }*/
 }
