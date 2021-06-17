@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
 
@@ -23,9 +22,8 @@ public class DashBoard extends Observable {
      * @param numberOfSlots  Is the number of development card slots we want our dashboard to have
      * @param eachDepotCapacity Is how many resources one depot can possibly have at most
      * @param personalPower Is the personal production power of the player
-     * @param faithTrack  Is the faith track common to all players
      */
-    public DashBoard( int numberOfSlots, ArrayList<Integer> eachDepotCapacity, ProductionPower personalPower, FaithTrack faithTrack){
+    public DashBoard( int numberOfSlots, ArrayList<Integer> eachDepotCapacity, ProductionPower personalPower){
     strongBox = new HashMap<>();
     //initializes each resource in the strongbox to quantity zero
     for(Resource resource: Resource.values()){
@@ -43,7 +41,7 @@ public class DashBoard extends Observable {
     //initializes personal power
     this.personalPower= personalPower;
     //initializes faithTrackData
-    this.faithTrack= new FaithTrackData(faithTrack);
+    this.faithTrack= new FaithTrackData();
 
     }
 
