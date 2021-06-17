@@ -30,17 +30,14 @@ public class DevCard {
 
     @Override
     public boolean equals(Object o) {
-        if (o.getClass() != getClass())
-            return false;
-        if (this == o)
-            return true;
+        if (o.getClass() != getClass())return false;
+        if (this == o)return true;
 
         DevCard card = (DevCard) o;
 
 
         int res = 1;
         res *= card.cardID.equals(cardID) ? 1 : 0;
-
         res *= (card.level == level) ? 1 : 0;
         res *= (card.color.equals(color)) ? 1 : 0;
         res *= (card.cost.equals(cost)) ? 1 : 0;

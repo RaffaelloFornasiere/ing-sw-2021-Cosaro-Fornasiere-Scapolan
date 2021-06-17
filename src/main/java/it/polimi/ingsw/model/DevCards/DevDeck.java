@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.DevCards;
 
+import com.google.j2objc.annotations.ObjectiveCName;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.utilities.Observable;
@@ -11,6 +12,21 @@ public class DevDeck{
     int level;
     CardColor color;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != getClass())            return false;
+        if (this == o)            return true;
+
+        DevDeck devDeck = (DevDeck) o;
+
+        int res = 1;
+
+         res *= (devDeck.cards.equals(cards))?1:0;
+         res *= (devDeck.level == level)?1:0;
+         res *= (devDeck.color.equals(color))?1:0;
+        return res==1;
+    }
 
     /**
      * construct the deck from a list of cards. check the coherence of the cards
@@ -44,12 +60,12 @@ public class DevDeck{
         cards.add(card);
     }
 
-    /**
-     * @param card removes the card passed by argument
-     */
-    private void remove(DevCard card) {
-        cards.remove(card);
-    }
+//    /**
+//     * @param card removes the card passed by argument
+//     */
+//    private void remove(DevCard card) {
+//        cards.remove(card);
+//    }
 
     /**
      * @return pops the card on the deck's top
