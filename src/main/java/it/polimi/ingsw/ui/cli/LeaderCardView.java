@@ -23,8 +23,8 @@ import java.util.stream.IntStream;
 
 public class LeaderCardView {
     private LeaderCard card;
-    boolean active;
-    String idCard;
+    private boolean active;
+    private String idCard;
 
 
     public LeaderCardView(String leaderCardID) {

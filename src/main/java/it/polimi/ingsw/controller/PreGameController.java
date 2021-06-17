@@ -14,7 +14,6 @@ import it.polimi.ingsw.model.singlePlayer.SinglePlayerMatchState;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
-import it.polimi.ingsw.Server.ClientHandlerSender;
 import it.polimi.ingsw.Server.RequestsElaborator;
 
 import java.beans.PropertyChangeEvent;
@@ -181,7 +180,7 @@ public class PreGameController {
         for (int i = 0, playerOrderSize = playerOrder.size(); i < playerOrderSize; i++) {
             String s = playerOrder.get(i);
             DashBoard dashBoard = new DashBoard(Config.getInstance().getNumberOfCardSlots(),
-                    Config.getInstance().getDepotCapacities(), Config.getInstance().getPersonalPowers().get(i), faithTrack);
+                    Config.getInstance().getDepotCapacities(), Config.getInstance().getPersonalPowers().get(i));
             Player player = new Player(s, dashBoard);
             dashBoard.addObserver(new DashBoardHandler(involvedPlayersSenders, player));
             player.addObserver(playerHandler);

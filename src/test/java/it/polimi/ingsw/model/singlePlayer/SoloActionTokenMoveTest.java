@@ -1,15 +1,12 @@
 package it.polimi.ingsw.model.singlePlayer;
 
-import it.polimi.ingsw.model.CardColor;
 import it.polimi.ingsw.model.DashBoard;
-import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.utilities.Config;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +22,7 @@ public class SoloActionTokenMoveTest {
     @Test
     public void testDoAction() {
         FaithTrack faithTrack = FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
-        DashBoard dashBoard = new DashBoard(0, new ArrayList<>(), null, null);
+        DashBoard dashBoard = new DashBoard(0, new ArrayList<>(), null);
         Player player = new Player("Test", dashBoard);
 
         SinglePlayerMatchState singlePlayerMatchState = new SinglePlayerMatchState(player,

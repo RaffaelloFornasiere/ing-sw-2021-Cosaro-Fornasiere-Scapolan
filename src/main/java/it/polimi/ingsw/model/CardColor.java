@@ -7,11 +7,11 @@ public enum CardColor {
     VIOLET("Violet", 2),
     YELLOW("Yellow", 3);
 
-    private String color;
+    private final String color;
 
 
 
-    private int code;
+    private final int code;
     CardColor(String color, int code)
     {
         this.color = color;

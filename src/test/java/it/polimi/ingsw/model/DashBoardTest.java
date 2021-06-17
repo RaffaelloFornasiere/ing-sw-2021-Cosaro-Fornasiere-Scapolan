@@ -34,7 +34,7 @@ public class DashBoardTest extends TestCase {
         //creates production power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //create dashboard
-        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
+        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
         //checks
         assertEquals(4, (int) d.getStrongBox().get(Resource.ROCK));
@@ -68,7 +68,7 @@ public class DashBoardTest extends TestCase {
 
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(),0 ,0 ,0);
 
-        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
+        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
         assertEquals(4, (int) d.getStrongBox().get(Resource.ROCK));
         try{  d.subResourcesToStrongBox(Resource.ROCK, 2);}
@@ -95,7 +95,7 @@ public class DashBoardTest extends TestCase {
         //creates production power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0,0);
         //creates dashboard
-        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
+        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
         assertEquals(4, (int) d.getStrongBox().get(Resource.ROCK));
         //subtracts 5 ROCKS , but there are only 4
@@ -124,7 +124,7 @@ public class DashBoardTest extends TestCase {
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
+        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
@@ -164,7 +164,7 @@ public class DashBoardTest extends TestCase {
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
+        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
@@ -196,7 +196,7 @@ public class DashBoardTest extends TestCase {
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
+        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
@@ -236,7 +236,7 @@ public class DashBoardTest extends TestCase {
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p, ft);
+        DashBoard d = new DashBoard(dcapacity.size(), dcapacity, p);
         //creates devcard
         HashMap<Resource, Integer> resources =new HashMap<Resource,Integer>();
         resources.put(Resource.ROCK,2);
@@ -252,7 +252,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.getWarehouse().get(0).addResources(Resource.COIN, 1);
@@ -289,7 +289,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.getWarehouse().get(1).addResources(Resource.SERVANT, 1);

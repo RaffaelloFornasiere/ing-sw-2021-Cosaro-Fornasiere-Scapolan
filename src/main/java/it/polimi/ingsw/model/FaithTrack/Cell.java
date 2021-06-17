@@ -8,12 +8,18 @@ public class Cell extends AbstractCell implements Serializable {
     private final int index;
     private final int victoryPoints;
 
-
-    public Cell(int index, int victoryPoints){
-        this.index=index;
-        this.victoryPoints=victoryPoints;
+    /**
+     * Constructor
+     */
+    public Cell(int index, int victoryPoints) {
+        this.index = index;
+        this.victoryPoints = victoryPoints;
     }
 
+
+    /**
+     * activates the effect according to the type of cell.
+     */
     @Override
     public void activateEffect(MatchState matchState) {
 
@@ -21,6 +27,7 @@ public class Cell extends AbstractCell implements Serializable {
 
     /**
      * Getter of index of the Cell
+     *
      * @return index of the Cell
      */
     public int getIndex() {
@@ -28,18 +35,13 @@ public class Cell extends AbstractCell implements Serializable {
     }
 
 
-
     /**
-     *Getter of victoryPoints of one Cell
+     * Getter of victoryPoints of one Cell
+     *
      * @return victoryPoints of one Cell
      */
     public int getVictoryPoints() {
         return victoryPoints;
     }
-
-    /**
-     * must be overrided, activates the effect according to the type of cell.
-     */
-    public void activateEffect(){};
 
 }

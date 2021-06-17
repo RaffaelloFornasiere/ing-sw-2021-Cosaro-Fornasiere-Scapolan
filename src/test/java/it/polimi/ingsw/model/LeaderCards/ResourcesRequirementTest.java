@@ -86,7 +86,7 @@ public class ResourcesRequirementTest {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.addResourcesToWarehouse(Resource.SERVANT, 1);
@@ -146,7 +146,7 @@ public class ResourcesRequirementTest {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.addResourcesToWarehouse(Resource.SERVANT, 1);
