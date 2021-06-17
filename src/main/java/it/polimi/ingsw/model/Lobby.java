@@ -9,12 +9,18 @@ import java.util.ArrayList;
 public class Lobby extends Observable {
     private String leaderID;
     private final ArrayList<String> otherPLayersID;
+    private final int maxPlayers;
 
     /**
      * Constructor for the class
+     * @param maxPlayers The number of players the lobby can contain at most
+     * @throws IllegalArgumentException If the number of max players is smaller than 1
      */
-    public Lobby(){
+    public Lobby(int maxPlayers){
+        if(maxPlayers<1) throw new IllegalArgumentException("The lobby must at least contain one player");
+        this.leaderID = null;
         otherPLayersID = new ArrayList<>();
+        this.maxPlayers = maxPlayers;
     }
 
     /**
@@ -47,17 +53,18 @@ public class Lobby extends Observable {
      * @return Whether this lobby is full
      */
     public boolean isFull(){
-        return otherPLayersID.size() + 1 >= Config.getInstance().getMaxPlayers();
+        return otherPLayersID.size() + (leaderID == null ? 0 : 1) >= maxPlayers;
     }
 
     /**
-     * Adds a player to this lobby
+     * Adds a player to this lobby. If there's no leader, sets it also as the leader
      * @param playerID The ID of the player to add
      * @throws IllegalOperation When the lobby is full
      */
     public void addPlayerID(String playerID) throws IllegalOperation {
         if(isFull()) throw new IllegalOperation("The lobby is full");
-        this.otherPLayersID.add(playerID);
+        if(this.leaderID == null) leaderID = playerID;
+        else this.otherPLayersID.add(playerID);
         notifyObservers();
     }
 
@@ -74,13 +81,12 @@ public class Lobby extends Observable {
             }
             else{
                 leaderID = null;
-                return 0;
             }
         }
         else{
             otherPLayersID.remove(playerId);
         }
         notifyObservers();
-        return otherPLayersID.size() + 1;
+        return otherPLayersID.size() + (leaderID == null ? 0 : 1);
     }
 }

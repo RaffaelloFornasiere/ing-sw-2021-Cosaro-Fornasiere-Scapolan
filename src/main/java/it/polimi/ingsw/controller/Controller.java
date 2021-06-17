@@ -567,7 +567,7 @@ public class Controller {
                         resourcesFromStrongBox.put(r, resourceQuantity);
                     }
 
-                    if (!player.getDashBoard().checkSlot(devCard, event.getCardSlot())) {
+                    if (!player.getDashBoard().checkSlot(event.getCardSlot(), devCard)) {
                         throw new HandlerCheckException(new DevCardSlotError(event.getPlayerId(), event.getDevCardID(), event.getCardSlot()));
                     }
 

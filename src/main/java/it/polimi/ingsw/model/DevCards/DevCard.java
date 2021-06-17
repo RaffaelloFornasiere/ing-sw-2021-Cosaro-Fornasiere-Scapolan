@@ -17,10 +17,9 @@ public class DevCard {
     private final int victoryPoints;
     private final ProductionPower productionPower;
 
-    @SuppressWarnings("unchecked")
     public DevCard(HashMap<Resource, Integer> cost, int level, CardColor color, int victoryPoints, ProductionPower productionPower) {
         if (level < 0) throw new IllegalArgumentException("The card level cannot be negative");
-        this.cost = (HashMap<Resource, Integer>) cost.clone();
+        this.cost = new HashMap<>(cost);
         this.level = level;
         this.color = color;
         this.victoryPoints = victoryPoints;
@@ -37,11 +36,23 @@ public class DevCard {
 
 
         int res = 1;
-        res *= card.cardID.equals(cardID) ? 1 : 0;
+        try {
+            res *= card.cardID.equals(cardID) ? 1 : 0;
+        } catch (NullPointerException e){
+            res *= cardID==null ? 1 : 0;
+        }
         res *= (card.level == level) ? 1 : 0;
-        res *= (card.color.equals(color)) ? 1 : 0;
+        try {
+            res *= (card.color.equals(color)) ? 1 : 0;
+        } catch (NullPointerException e){
+            res *= color==null ? 1 : 0;
+        }
         res *= (card.cost.equals(cost)) ? 1 : 0;
-        res *= (card.productionPower.equals(productionPower)) ? 1 : 0;
+        try {
+            res *= (card.productionPower.equals(productionPower)) ? 1 : 0;
+        } catch (NullPointerException e){
+            res *= productionPower==null ? 1 : 0;
+        }
         res *= (card.victoryPoints == victoryPoints) ? 1 : 0;
         return res == 1;
     }
@@ -50,9 +61,8 @@ public class DevCard {
         return cardID;
     }
 
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getCost() {
-        return (HashMap<Resource, Integer>) cost.clone();
+        return new HashMap<>(cost);
     }
 
     public int getLevel() {
