@@ -20,13 +20,12 @@ public class DepositLeaderPowerStateEvent extends ClientEvent{
      * @param storedResources The resources that are now stored in the leader power
      * @throws IllegalArgumentException If the index of the leader power is negative
      */
-    @SuppressWarnings("unchecked")
     public DepositLeaderPowerStateEvent(String playerId, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) throws IllegalArgumentException{
         super(playerId);
         if(leaderPowerIndex<0) throw new IllegalArgumentException("Indexes must be positive");
         this.leaderCardID = leaderCardID;
         this.leaderPowerIndex = leaderPowerIndex;
-        this.storedResources = (HashMap<Resource, Integer>) storedResources.clone();
+        this.storedResources = new HashMap<>(storedResources);
     }
 
     /**
@@ -49,8 +48,7 @@ public class DepositLeaderPowerStateEvent extends ClientEvent{
      * Getter for the resources that are now stored in the leader power
      * @return The resources that are now stored in the leader power
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getStoredResources() {
-        return (HashMap<Resource, Integer>) storedResources.clone();
+        return new HashMap<>(storedResources);
     }
 }

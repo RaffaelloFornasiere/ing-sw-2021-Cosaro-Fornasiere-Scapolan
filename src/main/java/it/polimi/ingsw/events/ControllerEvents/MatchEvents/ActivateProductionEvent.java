@@ -21,10 +21,9 @@ public class ActivateProductionEvent extends MatchEvent {
      * @param devCards The IDs of the development card for which to activate the production
      * @param personalPower If the personal production power will be used too
      */
-    @SuppressWarnings("unchecked")
     public ActivateProductionEvent(String playerID, ArrayList<String> devCards, boolean personalPower) {
         super(playerID);
-        this.devCards = (ArrayList<String>) devCards.clone();
+        this.devCards = new ArrayList<>(devCards);
         this.personalPower = personalPower;
     }
 
@@ -32,8 +31,7 @@ public class ActivateProductionEvent extends MatchEvent {
      * Getter for the IDs of the development card for which to activate the production
      * @return The IDs of the development card for which to activate the production
      */
-    @SuppressWarnings("unchecked")
-    public ArrayList<String> getDevCards() {return (ArrayList<String>) devCards.clone();}
+    public ArrayList<String> getDevCards() {return new ArrayList<>(devCards);}
 
     /**
      * @return If the personal production power will be used too

@@ -23,28 +23,25 @@ public class InitialDecisionsEvent extends MatchEvent{
      * @param chosenLeaderCardIDs The IDs of the leader card that the player decided to keep
      * @param chosenResources The resources the player decided on
      */
-    @SuppressWarnings("unchecked")
     public InitialDecisionsEvent(String playerID, ArrayList<String> chosenLeaderCardIDs, HashMap<Resource, Integer> chosenResources) {
         super(playerID);
-        this.chosenLeaderCardIDs = (ArrayList<String>) chosenLeaderCardIDs.clone();
-        this.chosenResources = (HashMap<Resource, Integer>) chosenResources.clone();
+        this.chosenLeaderCardIDs = new ArrayList<>(chosenLeaderCardIDs);
+        this.chosenResources = new HashMap<>(chosenResources);
     }
 
     /**
      * Getter for the IDs of the leader card that the player decided to keep
      * @return The IDs of the leader card that the player decided to keep
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<String> getChosenLeaderCardIDs() {
-        return (ArrayList<String>) chosenLeaderCardIDs.clone();
+        return new ArrayList<>(chosenLeaderCardIDs);
     }
 
     /**
      * Getter for the resources the player decided on
      * @return The resources the player decided on
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getChosenResources() {
-        return (HashMap<Resource, Integer>) chosenResources.clone();
+        return new HashMap<>(chosenResources);
     }
 }

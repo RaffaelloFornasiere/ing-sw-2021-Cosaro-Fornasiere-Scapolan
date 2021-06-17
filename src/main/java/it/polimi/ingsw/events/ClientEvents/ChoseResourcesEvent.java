@@ -17,18 +17,16 @@ public class ChoseResourcesEvent extends SimpleChoseResourcesEvent {
      * @param requiredResources The required resources of each type
      * @param requiredResourcesOfChoice The required resources of any type
      */
-    @SuppressWarnings("unchecked")
     public ChoseResourcesEvent(String playerId, HashMap<Resource, Integer> requiredResources, int requiredResourcesOfChoice){
         super(playerId, requiredResourcesOfChoice);
-        this.requiredResources = (HashMap<Resource, Integer>) requiredResources.clone();
+        this.requiredResources = new HashMap<>(requiredResources);
     }
 
     /**
      * Getter for the required resources of each type
      * @return The required resources of each type
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getRequiredResources() {
-        return (HashMap<Resource, Integer>) requiredResources.clone();
+        return new HashMap<>(requiredResources);
     }
 }

@@ -14,18 +14,16 @@ public class GameEndedEvent extends ClientEvent {
      * @param finalPlayerStates The achievement of a player at the end of the match, in ascending order,
      *                          which means from last to first place
      */
-    @SuppressWarnings("unchecked")
     public GameEndedEvent(String playerID, ArrayList<FinalPlayerState> finalPlayerStates) {
         super(playerID);
-        this.finalPlayerStates = (ArrayList<FinalPlayerState>) finalPlayerStates.clone();
+        this.finalPlayerStates = new ArrayList<>(finalPlayerStates);
     }
 
     /**
      * Getter for the achievement of a player at the end of the match, in ascending order, which means from last to first place
      * @return The achievement of a player at the end of the match, in ascending order, which means from last to first place
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<FinalPlayerState> getFinalPlayerStates() {
-        return (ArrayList<FinalPlayerState>) finalPlayerStates.clone();
+        return new ArrayList<>(finalPlayerStates);
     }
 }

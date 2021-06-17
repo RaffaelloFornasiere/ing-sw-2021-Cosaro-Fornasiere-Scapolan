@@ -13,18 +13,16 @@ public class PlayerStateEvent extends ClientEvent{
      * @param playerId The ID of the player
      * @param leaderCards The IDs of the leader cards that the player owns, together with their state
      */
-    @SuppressWarnings("unchecked")
     public PlayerStateEvent(String playerId, HashMap<String, Boolean> leaderCards) {
         super(playerId);
-        this.leaderCards = (HashMap<String, Boolean>) leaderCards.clone();
+        this.leaderCards = new HashMap<>(leaderCards);
     }
 
     /**
      * Getter for the IDs of the leader cards that the player owns, together with their state
      * @return The IDs of the leader cards that the player owns, together with their state
      */
-    @SuppressWarnings("unchecked")
     public HashMap<String, Boolean> getLeaderCards() {
-        return (HashMap<String, Boolean>) leaderCards.clone();
+        return new HashMap<>(leaderCards);
     }
 }

@@ -21,32 +21,29 @@ public class ChosenResourcesEvent extends SimpleChosenResourcesEvent{
      * @param selectedResourcesFromWarehouse The resources chosen from the warehouse
      * @param selectedResourcesFromLeaderPowers The resources chosen from the powers of leader cards
      */
-    @SuppressWarnings("unchecked")
     public ChosenResourcesEvent(String playerID, HashMap<Resource, Integer> allResourcesChosen, HashMap<Resource, Integer> selectedResourcesFromWarehouse, HashMap<Resource, Integer> selectedResourcesFromLeaderPowers) {
         super(playerID, allResourcesChosen);
         for(Resource r: Resource.values()){
             if(allResourcesChosen.getOrDefault(r, 0) < selectedResourcesFromWarehouse.getOrDefault(r, 0)+selectedResourcesFromLeaderPowers.getOrDefault(r, 0))
                 throw new IllegalArgumentException("Too few resources in allResourcesChosen");
         }
-        this.selectedResourcesFromWarehouse = (HashMap<Resource, Integer>) selectedResourcesFromWarehouse.clone();
-        this.selectedResourcesFromLeaderPowers = (HashMap<Resource, Integer>) selectedResourcesFromLeaderPowers.clone();
+        this.selectedResourcesFromWarehouse = new HashMap<>(selectedResourcesFromWarehouse);
+        this.selectedResourcesFromLeaderPowers = new HashMap<>(selectedResourcesFromLeaderPowers);
     }
 
     /**
      * Getter for the resources chosen from the warehouse
      * @return The resources chosen from the warehouse
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getSelectedResourcesFromLeaderPowers() {
-        return (HashMap<Resource, Integer>) selectedResourcesFromLeaderPowers.clone();
+        return new HashMap<>(selectedResourcesFromLeaderPowers);
     }
 
     /**
      * Getter for the resources chosen from the powers of leader cards
      * @return The resources chosen from the powers of leader cards
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getSelectedResourcesFromWarehouse() {
-        return (HashMap<Resource, Integer>) selectedResourcesFromWarehouse.clone();
+        return new HashMap<>(selectedResourcesFromWarehouse);
     }
 }

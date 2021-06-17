@@ -7,7 +7,7 @@ package it.polimi.ingsw.events.ControllerEvents.MatchEvents;
  * The client will receive a RequirementsNotMetError if it does not satisfy the requirements for the leader card
  */
 public class ActivateLeaderCardEvent extends MatchEvent {
-    private String leaderCardID;
+    private final String leaderCardID;
 
     /**
      * Constructor for the class

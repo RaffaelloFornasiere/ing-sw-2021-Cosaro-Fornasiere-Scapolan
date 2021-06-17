@@ -26,38 +26,34 @@ public class NewResourcesOrganizationEvent extends MatchEvent{
      * @param leaderPowersState The new way the resources are arranged between the leader powers
      * @param discardedResources The resources that will be discarded
      */
-    @SuppressWarnings("unchecked")
     public NewResourcesOrganizationEvent(String playerID, ArrayList<DepotState> depotStates, ArrayList<DepositLeaderPowerStateEvent> leaderPowersState, HashMap<Resource, Integer> discardedResources) {
         super(playerID);
-        this.depotStates = (ArrayList<DepotState>) depotStates.clone();
-        this.leaderPowersState = (ArrayList<DepositLeaderPowerStateEvent>) leaderPowersState.clone();
-        this.discardedResources = (HashMap<Resource, Integer>) discardedResources.clone();
+        this.depotStates = new ArrayList<>(depotStates);
+        this.leaderPowersState = new ArrayList<>(leaderPowersState);
+        this.discardedResources = new HashMap<>(discardedResources);
     }
 
     /**
      * Getter for the new way the resources are arranged in the depot
      * @return The new way the resources are arranged in the depot
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<DepotState> getDepotStates() {
-        return (ArrayList<DepotState>) depotStates.clone();
+        return new ArrayList<>(depotStates);
     }
 
     /**
      * Getter for the new way the resources are arranged between the leader powers
      * @return The new way the resources are arranged between the leader powers
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<DepositLeaderPowerStateEvent> getLeaderPowersState() {
-        return (ArrayList<DepositLeaderPowerStateEvent>) leaderPowersState.clone();
+        return new ArrayList<>(leaderPowersState);
     }
 
     /**
      * Getter for the resources that will be discarded
      * @return The resources that will be discarded
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getDiscardedResources() {
-        return (HashMap<Resource, Integer>) discardedResources.clone();
+        return new HashMap<>(discardedResources);
     }
 }
