@@ -110,6 +110,8 @@ public class MatchState extends Observable {
      */
     public void beginMatch(){
         turnState = TurnState.START;
+        currentPlayerIndex = 0;
+        leaderActionExecuted = false;
         notifyObservers();
     }
 
