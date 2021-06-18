@@ -6,20 +6,20 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class MarketView {
-    private Marble marbleLeft;
-    private Marble[][] grid;
+    private final Marble marbleLeft;
+    private final Marble[][] grid;
 
     public int getRows() {
         return rows;
     }
 
-    private int rows;
+    private final int rows;
 
     public int getCols() {
         return cols;
     }
 
-    private int cols;
+    private final int cols;
 
     MarketView(Marble left, Marble[][] grid, int rows, int cols) {
         if(grid.length!=rows || !Arrays.stream(grid).allMatch(a -> a.length==cols)) throw new IllegalArgumentException(
@@ -45,20 +45,14 @@ public class MarketView {
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("MARBLE LEFT: "+colorMarble(marbleLeft) + "●"+ Color.reset()+"\n");
+        builder.append("MARBLE LEFT: ").append(colorMarble(marbleLeft)).append("●").append(Color.reset()).append("\n");
         IntStream.range(0, rows).forEach(row -> {
-            IntStream.range(0, cols).forEach(col -> {
-                builder.append(colorMarble(grid[row][col]) + "●" + "   " + Color.reset());
-            });
-            builder.append("\uD83E\uDC44"+" "+ (row+1) + "\n\n");
+            IntStream.range(0, cols).forEach(col -> builder.append(colorMarble(grid[row][col])).append("●").append("   ").append(Color.reset()));
+            builder.append("\uD83E\uDC44" + " ").append(row + 1).append("\n\n");
         });
-        IntStream.range(0, cols).forEach(col -> {
-            builder.append(Color.reset() + "🡅" + "  " + Color.reset());
-        });
+        IntStream.range(0, cols).forEach(col -> builder.append(Color.reset()).append("🡅").append("  ").append(Color.reset()));
         builder.append("\n");
-        IntStream.range(0, cols).forEach(col -> {
-            builder.append(Color.reset() + (col+1) + "   " + Color.reset());
-        });
+        IntStream.range(0, cols).forEach(col -> builder.append(Color.reset()).append(col + 1).append("   ").append(Color.reset()));
         return builder.toString();
     }
 
@@ -71,7 +65,7 @@ public class MarketView {
         Marble left= Marble.BLUE;
         MarketView view= new MarketView(left, grid, grid.length, grid[0].length);
         DrawableObject obj= new DrawableObject(view.toString(), 10, 2);
-        Panel panel= new Panel(1000, (int)obj.getHeight()+10, System.out );
+        Panel panel= new Panel(1000, obj.getHeight() +10, System.out );
         panel.addItem(obj);
         panel.show();
 

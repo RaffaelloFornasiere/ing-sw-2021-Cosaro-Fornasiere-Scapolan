@@ -7,7 +7,7 @@ public class DevCardGridView {
         return topDevCardIDs;
     }
 
-    private String[][] topDevCardIDs;
+    private final String[][] topDevCardIDs;
 
     public DevCardGridView(String[][] topDevCardIDs) {
         this.topDevCardIDs = topDevCardIDs;
@@ -23,7 +23,7 @@ public class DevCardGridView {
             for (int y = 0; y < topDevCardIDs[0].length; y++) {
                 DrawableObject obj= new DrawableObject((new DevCardView(topDevCardIDs[x][y])).toString(), 40 * y, 20 * x);
                 objs.add(obj);
-                height= Integer.max(height,(int)obj.getHeight()+1);
+                height= Integer.max(height, obj.getHeight() +1);
             }
             totalHeight+=height;
         }
