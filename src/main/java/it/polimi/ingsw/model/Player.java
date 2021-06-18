@@ -24,30 +24,30 @@ public class Player extends Observable {
     }
 
     /**
-     * getter for the id of the player
-     * @return the id of the player
+     * Getter for the id of the player
+     * @return The id of the player
      */
     public String getPlayerId() {
         return playerId;
     }
 
     /**
-     * getter for the dashboard of the player
-     * @return the dashboard of the player
+     * Getter for the dashboard of the player
+     * @return The dashboard of the player
      */
     public DashBoard getDashBoard(){return dashBoard;}
 
     /**
-     * getter for all leader cards
-     * @return all leader cards
+     * Getter for all leader cards
+     * @return All leader cards
      */
     public ArrayList<LeaderCard> getLeaderCards() {
         return new ArrayList<>(leaderCards.keySet());
     }
 
     /**
-     * getter for active leader cards
-     * @return active leader cards
+     * Getter for active leader cards
+     * @return Active leader cards
      */
     public ArrayList<LeaderCard> getActiveLeaderCards(){
         ArrayList<LeaderCard> alc = new ArrayList<>();
@@ -58,8 +58,8 @@ public class Player extends Observable {
     }
 
     /**
-     * method to give the player some leader cards
-     * @param leaderCards the leader cards to give the player
+     * Method to give the player some leader cards
+     * @param leaderCards The leader cards to give the player
      */
     public void setLeaderCards(ArrayList<LeaderCard> leaderCards) {
         this.leaderCards = new HashMap<>();
@@ -69,6 +69,12 @@ public class Player extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Method that returns the leader card with the given ID if it is owned by this player
+     * @param leaderCardID The ID of the leader card
+     * @return The leader card with the given ID
+     * @throws NotPresentException If the player does not own the leader card with the given ID
+     */
     public LeaderCard getLeaderCardFromID(String leaderCardID) throws NotPresentException{
         for(LeaderCard lc: leaderCards.keySet())
             if(lc.getCardID().equals(leaderCardID))
@@ -79,27 +85,32 @@ public class Player extends Observable {
 
     /**
      * Methods that activates a leader card
-     * @param leaderCard the leader card to activate
-     * @throws NotPresentException if the leader card does not belong to this player
-     * @throws IllegalOperation if the leader card is already active
+     * @param leaderCard The leader card to activate
+     * @throws NotPresentException If the leader card does not belong to this player
+     * @throws IllegalOperation If the leader card is already active
      */
     public void activateLeaderCard(LeaderCard leaderCard) throws NotPresentException, IllegalOperation {
-        boolean active = leaderCards.get(leaderCard);
-        if (leaderCard == null) throw new NotPresentException("The selected leader card is not owned by this player");
+        Boolean active = leaderCards.get(leaderCard);
+        if (active == null || leaderCard == null) throw new NotPresentException("The selected leader card is not owned by this player");
         if (active) throw new IllegalOperation("Leader card already Active");
         this.leaderCards.put(leaderCard, true);
         notifyObservers();
     }
 
+    /**
+     * Methods that removes the leader card from this player
+     * @param leaderCard The card to remove
+     * @throws NotPresentException If the card does not belong to this player
+     */
     public void removeLeaderCard(LeaderCard leaderCard) throws NotPresentException {
         if(leaderCards.remove(leaderCard) == null)
             throw new NotPresentException("Leader card not present");
     }
 
     /**
-     * gets all the resources stored in the dashboard, as well as in a leader power as an hashmap
-     * if a resource is not present, the map will have an entry for it anyway, with value 0
-     * @return all the resources in the warehouse and in the strongbox
+     * Gets all the resources stored in the dashboard, as well as in a leader power as an hashmap.
+     * If a resource is not present, the map will have an entry for it anyway, with value 0
+     * @return All the resources in the warehouse and in the strongbox
      */
     public HashMap<Resource, Integer> getAllPayerResources(){
         HashMap<Resource, Integer> dashboardResources = dashBoard.getAllDashboardResources();
@@ -110,6 +121,11 @@ public class Player extends Observable {
         return resources;
     }
 
+    /**
+     * Gets all the resources stored in the leader powers as an hashmap
+     * If a resource is not present, the map will have an entry for it anyway, with value 0
+     * @return All the resources in the warehouse and in the strongbox
+     */
     public HashMap<Resource, Integer> getLeaderCardsResources(){
         HashMap<Resource, Integer> resources = new HashMap<>();
         for(Resource r: Resource.values())

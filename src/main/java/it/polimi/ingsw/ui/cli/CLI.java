@@ -2,6 +2,7 @@ package it.polimi.ingsw.ui.cli;
 
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
@@ -1884,18 +1885,22 @@ public class CLI extends UI {
                                         }
                                     } else {
                                         out.println("ALL LEADER CARDS ARE ALREADY ACTIVE\n");
+                                        events.addAll(askForNextAction(playerID, lastRound, turnState));
                                     }
                                 }
-                            } else out.println("THERE ARE NO ACTIVE LEADER CARDS\n ");
+                            } else {
+                                out.println("THERE ARE NO ACTIVE LEADER CARDS\n ");
+                                events.addAll(askForNextAction(playerID, lastRound, turnState));
+                            }
                             break;
                         }
                         case DISPLAY_SMTH -> {
                             displayOthers();
-                            events.add(askForNextAction(playerID, lastRound, turnState).get(0));
+                            events.addAll(askForNextAction(playerID, lastRound, turnState));
                             break;
                         }
                         case SELECT_LEADER_CARD -> {
-                            ArrayList<LeaderCardView> leaderCardActive= playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
+                            ArrayList<LeaderCardView> leaderCardActive = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
 
                             if (leaderCardActive.size() != 0) {
                                 try {
@@ -1903,7 +1908,10 @@ public class CLI extends UI {
                                 } catch (NotPresentException e) {
                                     e.printStackTrace();
                                 }
-                            } else {out.println("THERE ARE NO LEADER CARDS ACTIVE, THEREFORE NO LEADER POWERS TO SELECT OR DESELECT");}
+                            } else {
+                                out.println("THERE ARE NO LEADER CARDS ACTIVE, THEREFORE NO LEADER POWERS TO SELECT OR DESELECT");
+                                events.addAll(askForNextAction(playerID, lastRound, turnState));
+                            }
                             break;
                         }
 
@@ -1941,19 +1949,22 @@ public class CLI extends UI {
                         }
                         case DISPLAY_SMTH -> {
                             displayOthers();
-                            events.add(askForNextAction(playerID, lastRound, turnState).get(0));
+                            events.addAll(askForNextAction(playerID, lastRound, turnState));
                             break;
                         }
                         case SELECT_LEADER_CARD -> {
-                            ArrayList<LeaderCardView> leaderCardActive= playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
+                            ArrayList<LeaderCardView> leaderCardActive = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
 
                             if (leaderCardActive.size() != 0) {
                                 try {
-                                    askForLeaderCardToSelectOrDeselect().forEach(ev -> events.add(ev));
+                                    events.addAll(askForLeaderCardToSelectOrDeselect());
                                 } catch (NotPresentException e) {
                                     e.printStackTrace();
                                 }
-                            } else {out.println("THERE ARE NO LEADER CARDS ACTIVE, THEREFORE NO LEADER POWERS TO SELECT OR DESELECT");}
+                            } else {
+                                out.println("THERE ARE NO LEADER CARDS ACTIVE, THEREFORE NO LEADER POWERS TO SELECT OR DESELECT");
+                                events.addAll(askForNextAction(playerID, lastRound, turnState));
+                            }
                             break;
                         }
 
@@ -2008,15 +2019,19 @@ public class CLI extends UI {
                                             }
                                         } else {
                                             out.println("ALL LEADER CARDS ARE ALREADY ACTIVE\n");
+                                            events.addAll(askForNextAction(playerID, lastRound, turnState));
                                         }
                                     }
-                                } else out.println("THERE ARE NO ACTIVE LEADER CARDS\n ");
+                                } else {
+                                    out.println("THERE ARE NO ACTIVE LEADER CARDS\n ");
+                                    events.addAll(askForNextAction(playerID, lastRound, turnState));
+                                }
                                 break;
                             }
 
                             case DISPLAY_SMTH -> {
                                 displayOthers();
-                                events.add(askForNextAction(playerID, lastRound, turnState).get(0));
+                                events.addAll(askForNextAction(playerID, lastRound, turnState));
                                 break;
                             }
                         }
@@ -2070,11 +2085,88 @@ public class CLI extends UI {
         }
     }
 
+
+    public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
+        int maxNameLength = finalPlayerStates.stream().map(finalPS -> {
+            return finalPS.getPlayerID().length();
+        }).reduce(0, (a, b) -> Integer.max(a, b));
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("\033[31;1;4mFINAL SCORES\033[0m \n");
+        builder.append(buildBorderOfLength(maxNameLength + 2, "╔", "╦"));
+        builder.append(buildBorderOfLength("Total Scores".length() + 1, "═", "╦"));
+        builder.append(buildBorderOfLength("Total Resources".length() + 1, "═", "╗\n"));
+        for (int i = 0; i < finalPlayerStates.size() - 1; i++) {
+            FinalPlayerState FPstate = finalPlayerStates.get(i);
+            builder.append("║ " +buildContent(maxNameLength,FPstate.getPlayerID()) );
+            if (FPstate.getVictoryPoints() < 10 && FPstate.getTotalResources() < 10)
+                builder.append(" ║      " + FPstate.getVictoryPoints() + "       ║        " + FPstate.getTotalResources() + "        ║\n");
+            else if (FPstate.getVictoryPoints() >= 10 && FPstate.getTotalResources() < 10)
+                builder.append(" ║      " + FPstate.getVictoryPoints() + "      ║        " + FPstate.getTotalResources() + "        ║\n");
+            else if (FPstate.getVictoryPoints() < 10 && FPstate.getTotalResources() >= 10)
+                builder.append(" ║      " + FPstate.getVictoryPoints() + "       ║        " + FPstate.getTotalResources() + "       ║\n");
+            else
+                builder.append(" ║      " + FPstate.getVictoryPoints() + "      ║        " + FPstate.getTotalResources() + "       ║\n");
+            builder.append(buildBorderOfLength(maxNameLength + 2, "╠", "╬"));
+            builder.append(buildBorderOfLength("Total Scores".length() + 1, "═", "╬"));
+            builder.append(buildBorderOfLength("Total Resources".length() + 1, "═", "╣\n"));
+        }
+        FinalPlayerState lastFPstate= finalPlayerStates.get(finalPlayerStates.size()-1);
+        builder.append("║ " +buildContent(maxNameLength,lastFPstate.getPlayerID()) );
+        if (lastFPstate.getVictoryPoints() < 10 && lastFPstate.getTotalResources() < 10)
+            builder.append(" ║      " + lastFPstate.getVictoryPoints() + "       ║        " + lastFPstate.getTotalResources() + "        ║\n");
+        else if (lastFPstate.getVictoryPoints() >= 10 && lastFPstate.getTotalResources() < 10)
+            builder.append(" ║      " + lastFPstate.getVictoryPoints() + "      ║        " + lastFPstate.getTotalResources() + "        ║\n");
+        else if (lastFPstate.getVictoryPoints() < 10 && lastFPstate.getTotalResources() >= 10)
+            builder.append(" ║      " + lastFPstate.getVictoryPoints() + "       ║        " + lastFPstate.getTotalResources() + "       ║\n");
+        else
+            builder.append(" ║      " + lastFPstate.getVictoryPoints() + "      ║        " + lastFPstate.getTotalResources() + "       ║\n");
+        builder.append(buildBorderOfLength(maxNameLength + 2, "╚", "╩"));
+        builder.append(buildBorderOfLength("Total Scores".length() + 1, "═", "╩"));
+        builder.append(buildBorderOfLength("Total Resources".length() + 1, "═", "╝\n"));
+        out.println(builder.toString());
+    }
+
+//    public static void main(String[] args) {
+//        ArrayList<FinalPlayerState> finals= new ArrayList<>();
+//        FinalPlayerState f1= new FinalPlayerState("Gigi", 2, 4);
+//        FinalPlayerState f2= new FinalPlayerState("Paolo", 4, 10);
+//        FinalPlayerState f3= new FinalPlayerState("Gigi123", 31, 4);
+//        FinalPlayerState f4= new FinalPlayerState("Giorgia", 22, 14);
+//        FinalPlayerState f5= new FinalPlayerState("Federico", 2, 4);
+//        finals.add(f1);
+//        finals.add(f2);
+//        finals.add(f3);
+//        finals.add(f4);
+//        finals.add(f5);
+//
+//        displayEndOfGameProva(finals);
+//
+//    }
+
     public HashMap<Resource, Integer> getDepositLeaderPowerTotalResources() {
         HashMap<Resource, Integer> totalRes = new HashMap<>();
         Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
         playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(cardView -> cardView.isActive()).map(card -> card.getTotalResourcesInDepositLeaderPowers()).forEach(hashMap -> hashMap.forEach((key, value) -> totalRes.put(key, totalRes.get(key) + value)));
         return totalRes;
+    }
+
+    public static String buildBorderOfLength(int length, String typeOfBorderInit, String typeOfBorderEnd) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(typeOfBorderInit);
+        for (int i = 0; i < length; i++) {
+            builder.append("═");
+        }
+        builder.append(typeOfBorderEnd);
+        return builder.toString();
+
+    }
+    public static String buildContent(int length, String content){
+        StringBuilder builder= new StringBuilder();
+        builder.append(content);
+        for(int i=0; i<length-content.length(); i++)
+        {builder.append(" ");}
+        return builder.toString();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.events.ClientEvents;
 
 import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.utilities.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,12 +20,11 @@ public class DashBoardStateEvent extends ClientEvent{
      * @param strongBox The resources stored into the player strongbox
      * @param warehouse The current state of each depot of the warehouse
      */
-    @SuppressWarnings("unchecked")
     public DashBoardStateEvent(String playerId, ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse) {
         super(playerId);
-        this.topDevCards = (ArrayList<String>) topDevCards.clone();
-        this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
-        this.warehouse = (ArrayList<DepotState>) warehouse.clone();
+        this.topDevCards = new ArrayList<>(topDevCards);
+        this.strongBox = new HashMap<>(strongBox);
+        this.warehouse = new ArrayList<>(warehouse);
     }
 
     /**
@@ -34,26 +32,23 @@ public class DashBoardStateEvent extends ClientEvent{
      * will be a null object in its position
      * @return The ID of the development cards at the top of each card slot
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<String> getTopDevCards() {
-        return (ArrayList<String>) topDevCards.clone();
+        return new ArrayList<>(topDevCards);
     }
 
     /**
      * Getter for the resources stored into the player strongbox
      * @return The resources stored into the player strongbox
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getStrongBox() {
-        return (HashMap<Resource, Integer>) strongBox.clone();
+        return new HashMap<>(strongBox);
     }
 
     /**
      * Getter for the current state of each depot of the warehouse
      * @return The current state of each depot of the warehouse
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<DepotState> getWarehouse() {
-        return (ArrayList<DepotState>) warehouse.clone();
+        return new ArrayList<>(warehouse);
     }
 }

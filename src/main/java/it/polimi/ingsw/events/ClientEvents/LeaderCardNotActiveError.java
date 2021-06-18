@@ -1,7 +1,5 @@
 package it.polimi.ingsw.events.ClientEvents;
 
-import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
-
 /**
  * Error sent to the client when he tried to use a non active leader card
  */

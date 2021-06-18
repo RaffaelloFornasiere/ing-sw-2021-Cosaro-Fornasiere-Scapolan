@@ -3,38 +3,33 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.DepotResourceException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import junit.framework.TestCase;
-import org.junit.Test;
 
 
 public class DepotTest extends TestCase {
     /**
      * This method tests a successful case of adding resources to a depot.
      */
-     @Test
     public void testAddResourcesSuccessful() {
         Depot testDepot= new Depot(4);
         try{testDepot.addResources(Resource.COIN, 3); }
-        catch ( ResourcesLimitsException e){fail();}
-        catch ( DepotResourceException e){fail();}
+        catch ( ResourcesLimitsException | DepotResourceException e){fail();}
         assertEquals(3, testDepot.getCurrentQuantity());
         assertEquals(Resource.COIN, testDepot.getResourceType());
     }
 
     /***
-     * this method deals with the case in which  more resources than the depot maximum capacity are added.
+     * this method deals with the case in which more resources than the depot maximum capacity are added.
      */
-    @Test
     public void testAddResourcesResourcesExcess() {
         Depot testDepot= new Depot(4);
         try{testDepot.addResources(Resource.COIN, 5); fail(); }
-        catch ( ResourcesLimitsException e){}
+        catch ( ResourcesLimitsException ignored){}
         catch ( DepotResourceException e){fail();}
 
     }
     /***
      * this method deals with the case in which resources which are not expected are added.
      */
-    @Test
     public void testAddResourcesResourceNotPresent() {
         Depot testDepot= new Depot(4);
         try {
@@ -44,13 +39,12 @@ public class DepotTest extends TestCase {
         }
         try{testDepot.addResources(Resource.ROCK, 1); fail(); }
         catch ( ResourcesLimitsException e){fail();}
-        catch ( DepotResourceException e){}
+        catch ( DepotResourceException ignored){}
 
     }
     /**
      * This method tests a successful case of subtracting resources from a depot.
      */
-    @Test
     public void testSubResourcesSuccessful() {
         Depot testDepot= new Depot(4);
         try {
@@ -59,14 +53,12 @@ public class DepotTest extends TestCase {
             fail();
         }
         try{testDepot.subResources(Resource.COIN, 1); }
-        catch ( ResourcesLimitsException e){fail();}
-        catch ( DepotResourceException e){fail();}
+        catch ( ResourcesLimitsException | DepotResourceException e){fail();}
         assertEquals(1, testDepot.getCurrentQuantity());
     }
     /***
      * this method deals with the case in which  more resources than the depot minimum capacity are subtracted.
      */
-    @Test
     public void testSubResourcesResourcesExcess() {
         Depot testDepot= new Depot(4);
         try {
@@ -75,14 +67,13 @@ public class DepotTest extends TestCase {
             fail();
         }
         try{testDepot.subResources(Resource.COIN, 3); fail(); }
-        catch ( ResourcesLimitsException e){}
+        catch ( ResourcesLimitsException ignored){}
         catch ( DepotResourceException e){fail();}
 
     }
     /***
      * this method deals with the case in which resources which are not expected are subtracted.
      */
-    @Test
     public void testSubResourcesResourceNotPresent() {
         Depot testDepot= new Depot(4);
         try {
@@ -92,13 +83,12 @@ public class DepotTest extends TestCase {
         }
         try{testDepot.subResources(Resource.ROCK, 1); fail(); }
         catch ( ResourcesLimitsException e){fail();}
-        catch ( DepotResourceException e){}
+        catch ( DepotResourceException ignored){}
 
     }
     /***
-     * this method deals with a successfull case of switching two depots.
+     * this method deals with a successful case of switching two depots.
      */
-    @Test
     public void testSwitchDepotSuccessful() {
         Depot testDepot1= new Depot(4);
         try {
@@ -122,7 +112,6 @@ public class DepotTest extends TestCase {
     /***
      * this method deals with the case in which the second depot has more resources than the first depot can possibly hold.
      */
-    @Test
     public void testSwitchDepotUnsuccessfulCase1() {
         Depot testDepot1= new Depot(4);
         try {
@@ -140,12 +129,11 @@ public class DepotTest extends TestCase {
             testDepot1.switchDepot(testDepot2);
             fail();
         }
-        catch ( ResourcesLimitsException e){}
+        catch ( ResourcesLimitsException ignored){}
     }
     /***
      * this method deals with the case in which the first depot has more resources than the second depot can possibly hold.
      */
-    @Test
     public void testSwitchDepotUnsuccessfulCase2() {
         Depot testDepot1= new Depot(6);
         try {
@@ -163,7 +151,6 @@ public class DepotTest extends TestCase {
             testDepot1.switchDepot(testDepot2);
             fail();
         }
-        catch ( ResourcesLimitsException e){}
+        catch ( ResourcesLimitsException ignored){}
     }
-
 }

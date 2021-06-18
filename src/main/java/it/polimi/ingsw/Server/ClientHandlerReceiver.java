@@ -18,16 +18,28 @@ public class ClientHandlerReceiver {
     private final BlockingQueue<Event> requestsQueue;
     private String ownerUserID;
 
+    /**
+     * Constructor class
+     * @param inputStream The stream from which to read the received messages
+     * @param requestsQueue The queue where to put the events received to be processed by a request elaborator
+     */
     public ClientHandlerReceiver(InputStream inputStream, BlockingQueue<Event> requestsQueue) {
         scanner = new Scanner(inputStream);
         this.requestsQueue = requestsQueue;
         ownerUserID = null;
     }
 
+    /**
+     * Sets the user ID of the user sending the messages to this receiver
+     * @param ownerUserID The user ID of the user sending the messages to this receiver
+     */
     public void setOwnerUserID(String ownerUserID) {
         this.ownerUserID = ownerUserID;
     }
 
+    /**
+     * Method that waits for a message to arrive and puts them in the queue if they are events
+     */
     public void waitForEvent(){
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
@@ -53,7 +65,7 @@ public class ClientHandlerReceiver {
                 System.err.println("Bad message received");
                 System.err.println(eventJSON);
             }catch (NoSuchElementException | IllegalStateException e){
-                if(ownerUserID ==null) {
+                if(ownerUserID == null) {
                     System.out.println("Client disconnected");
                 }
                 else{
@@ -69,6 +81,9 @@ public class ClientHandlerReceiver {
         }
     }
 
+    /**
+     * Method responsible for closing the stream
+     */
     public void closeConnection() {
         scanner.close();
     }

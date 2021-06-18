@@ -8,18 +8,32 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * The class containing the logic to start the server
+ */
 public class MainServer{
     public static final int SERVER_PORT = 50885;
-    private EventRegistry mainEventHandlerRegistry;
+    private final EventRegistry mainEventHandlerRegistry;
 
+    /**
+     * Constructor for the class
+     */
     public MainServer(){
         mainEventHandlerRegistry = new EventRegistry();
     }
 
+    /**
+     * Getter for the EventRegistry responsible of all the events unrelated to any match
+     * @return The EventRegistry responsible of all the events unrelated to any match
+     */
     public EventRegistry getMainEventHandlerRegistry() {
         return mainEventHandlerRegistry;
     }
 
+    /**
+     * Function to start the server
+     * @throws IOException if the server cannot start
+     */
     @SuppressWarnings("InfiniteLoopStatement")
     public void startServer() throws IOException{
         ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
@@ -27,7 +41,7 @@ public class MainServer{
         System.out.println("Beginning to accept clients on " + InetAddress.getLocalHost());
         while(true){
             Socket socket = serverSocket.accept();
-            System.out.println("new client");
+            System.out.println("New client");
             RequestsElaborator requestsElaborator = new RequestsElaborator(socket, mainEventHandlerRegistry);
 
             new Thread(requestsElaborator::elaborateRequests).start();
@@ -40,7 +54,9 @@ public class MainServer{
         try {
             ms.startServer();
         } catch (IOException e) {
+            System.err.println("Unable to start the server");
             e.printStackTrace();
+            System.err.println("Shutting down");
         }
     }
 

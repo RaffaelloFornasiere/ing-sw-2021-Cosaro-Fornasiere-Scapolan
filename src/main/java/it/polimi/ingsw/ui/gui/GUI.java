@@ -1,16 +1,19 @@
 package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.Marble;
+import it.polimi.ingsw.model.ProductionPower;
+import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,9 +25,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeUnit;
 
 
@@ -382,6 +383,11 @@ public class GUI extends UI {
 
     @Override
     public void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates) {
+
+    }
+
+    @Override
+    public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
 
     }
 

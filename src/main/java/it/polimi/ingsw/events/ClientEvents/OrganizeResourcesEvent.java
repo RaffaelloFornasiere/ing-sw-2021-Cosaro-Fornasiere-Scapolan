@@ -15,18 +15,16 @@ public class OrganizeResourcesEvent extends ClientEvent{
      * @param playerId The player that must organize the resources
      * @param resourcesToOrganize The resources to organize
      */
-    @SuppressWarnings("unchecked")
     public OrganizeResourcesEvent(String playerId, HashMap<Resource, Integer> resourcesToOrganize) {
         super(playerId);
-        this.resourcesToOrganize = (HashMap<Resource, Integer>) resourcesToOrganize.clone();
+        this.resourcesToOrganize = new HashMap<>(resourcesToOrganize);
     }
 
     /**
      * Getter for the resources to organize
      * @return The resources to organize
      */
-    @SuppressWarnings("unchecked")
     public HashMap<Resource, Integer> getResourcesToOrganize() {
-        return (HashMap<Resource, Integer>) resourcesToOrganize.clone();
+        return new HashMap<>(resourcesToOrganize);
     }
 }

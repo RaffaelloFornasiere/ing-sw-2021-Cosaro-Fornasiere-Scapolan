@@ -2,6 +2,7 @@ package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
@@ -60,7 +61,8 @@ public abstract class UI {
     //game related
 
 
-    public void invalidateUsername(){}
+    public void invalidateUsername() {
+    }
 
     public abstract ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose);
 
@@ -96,6 +98,7 @@ public abstract class UI {
 
     public abstract void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates);
 
+    public abstract void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates);
 
     /**
      * Asks the user to give the displacement of marbles USED
@@ -106,7 +109,7 @@ public abstract class UI {
     abstract public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources);
 
 
-    abstract public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int  freeChoicesResources);
+    abstract public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources);
 
     public abstract HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes);
 

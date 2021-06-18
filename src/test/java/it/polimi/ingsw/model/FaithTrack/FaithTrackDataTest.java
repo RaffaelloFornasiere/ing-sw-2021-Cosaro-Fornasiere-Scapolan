@@ -1,89 +1,149 @@
 package it.polimi.ingsw.model.FaithTrack;
 
 import it.polimi.ingsw.exceptions.OutOfBoundException;
-import junit.framework.TestCase;
+import it.polimi.ingsw.utilities.Config;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
-public class FaithTrackDataTest extends TestCase {
+public class FaithTrackDataTest {
     /**
      * This method tests the correctness of adding PopeFavorCard to the FaithTrackData
      */
 
     @Test
     public void testAddPopeFavorCard() {
-        ArrayList<CellWithEffect> effects = new ArrayList<>();
-        ArrayList<Integer> points = new ArrayList<>(3);
-        points.add(0, 1);
-        points.add(1, 2);
-        points.add(2, 3);
-        assertEquals(3, points.size());
-        FaithTrack faithTrack = FaithTrack.initFaithTrack(3, effects, points);
-        FaithTrackData ftd = new FaithTrackData(faithTrack);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
         PopeFavorCard card = new PopeFavorCard(3);
-        ftd.addPopeFavorCard(0, card);
-        assertEquals(3, ftd.getAcquiredPopeFavorCards().get(0).getVictoryPoints());
-        assertEquals(0, ftd.getPosition());
+        try {
+            ftd.addPopeFavorCard(8, card);
+            Assert.assertEquals(3, ftd.getFavorPopeCardPoints());
+            Assert.assertEquals(0, ftd.getPosition());
+        } catch (IllegalArgumentException e) {
+            Assert.fail();
+        }
     }
+
+    @Test
+    public void testAddPopeFavorCardUnsuccessful() {
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
+        PopeFavorCard card = new PopeFavorCard(3);
+        try {
+            ftd.addPopeFavorCard(2, card);
+            Assert.fail();
+
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
     /**
      * This method tests the correctness of computing the total amount of points from the PopeFavorCards
      */
     @Test
     public void testGetFavorPopeCardPoints() {
-        ArrayList<CellWithEffect> effects = new ArrayList<>();
-        ArrayList<Integer> points = new ArrayList<>(3);
-        points.add(0, 1);
-        points.add(1, 2);
-        points.add(2, 3);
-        assertEquals(3, points.size());
-        FaithTrack faithTrack = FaithTrack.initFaithTrack(3, effects, points);
-        FaithTrackData ftd = new FaithTrackData(faithTrack);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
         PopeFavorCard card1 = new PopeFavorCard(3);
         PopeFavorCard card2 = new PopeFavorCard(1);
         PopeFavorCard card3 = new PopeFavorCard(2);
-        ftd.addPopeFavorCard(1,card1);
-        ftd.addPopeFavorCard(2, card2);
-        ftd.addPopeFavorCard(3,card3);
+        try {
+            ftd.addPopeFavorCard(8, card1);
+            ftd.addPopeFavorCard(16, card2);
+            ftd.addPopeFavorCard(24, card3);
+            Assert.assertEquals(6, ftd.getFavorPopeCardPoints());
 
-        assertEquals(6, ftd.getFavorPopeCardPoints());
+        }catch (IllegalArgumentException e){Assert.fail();}
+
     }
+
     /**
      * This method tests the correctness of incrementing  the position in the FaithTrackData
      */
     @Test
     public void testIncrementPositionSuccessful() {
-        ArrayList<CellWithEffect>effects = new ArrayList<>();
-        ArrayList<Integer> points = new ArrayList<>(3);
-        points.add(0, 1);
-        points.add(1, 2);
-        points.add(2, 3);
-        assertEquals(3, points.size());
-        FaithTrack faithTrack = FaithTrack.initFaithTrack(3, effects, points);
-        FaithTrackData ftd = new FaithTrackData(faithTrack);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
         try {
-            ftd.incrementPosition(2);
+            ftd.incrementPosition(24);
+            Assert.assertEquals(24, ftd.getPosition());
+
+
         } catch (OutOfBoundException e) {
-            fail();
+            Assert.fail();
         }
-        assertEquals(2, ftd.getPosition());
     }
+
     /**
      * This method tests the correctness of incrementing  the position in the FaithTrackData, in case a wrong parameter is passed.
      */
     @Test
     public void testIncrementPositionUnsuccessful() {
-        ArrayList<CellWithEffect> effects = new ArrayList<>();
-        ArrayList<Integer> points = new ArrayList<>(3);
-        points.add(0, 1);
-        points.add(1, 2);
-        assertEquals(2, points.size());
-        FaithTrack faithTrack = FaithTrack.initFaithTrack(2, effects, points);
-        FaithTrackData ftd = new FaithTrackData(faithTrack);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
+        System.out.println(ftd.getPosition());
         try {
-            ftd.incrementPosition(6); fail();
+            ftd.incrementPosition(24);
+            Assert.assertEquals(24, ftd.getPosition());
+
         } catch (OutOfBoundException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testGetPosition() {
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
+        try {
+            ftd.setPosition(24);
+            Assert.assertEquals(24, ftd.getPosition());
+        } catch (OutOfBoundException e) {
+            Assert.fail();
         }
 
     }
+
+    @Test
+    public void testSetPosition() {
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        System.out.println(FaithTrack.size());
+        FaithTrackData ftd = new FaithTrackData();
+        try {
+            ftd.setPosition(24);
+            Assert.assertEquals(24, ftd.getPosition());
+        } catch (OutOfBoundException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testSetPositionUnsuccessful() {
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
+        try {
+            ftd.setPosition(25);
+            Assert.fail();
+        } catch (OutOfBoundException e) {
+        }
+    }
+
+
+    @Test
+    public void testGetAcquiredPopeFavorCards() {
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrackData ftd = new FaithTrackData();
+        PopeFavorCard card1 = new PopeFavorCard(3);
+        PopeFavorCard card2 = new PopeFavorCard(1);
+        PopeFavorCard card3 = new PopeFavorCard(2);
+        try {
+            ftd.addPopeFavorCard(8, card1);
+            ftd.addPopeFavorCard(16, card2);
+            ftd.addPopeFavorCard(24, card3);
+            Assert.assertEquals(card2, ftd.getAcquiredPopeFavorCards().get(16));
+        }catch(IllegalArgumentException e){ Assert.fail();}
+
+    }
+
 }

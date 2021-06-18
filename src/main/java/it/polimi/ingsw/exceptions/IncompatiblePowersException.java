@@ -1,6 +1,9 @@
 package it.polimi.ingsw.exceptions;
 
-public class IncompatiblePowersException extends Throwable {
+/**
+ * Checked exception thrown when multiple incompatible leader powers are used in some way
+ */
+public class IncompatiblePowersException extends Exception {
     public IncompatiblePowersException(String s) {
         super(s);
     }

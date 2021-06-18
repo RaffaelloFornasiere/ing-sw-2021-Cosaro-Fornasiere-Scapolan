@@ -1,7 +1,5 @@
 package it.polimi.ingsw.events.ControllerEvents;
 
-import it.polimi.ingsw.events.Event;
-
 /**
  * Event sent by a lobby leader to start the game
  * Each player in the lobby should expect to receive an InitialChoicesEvent
