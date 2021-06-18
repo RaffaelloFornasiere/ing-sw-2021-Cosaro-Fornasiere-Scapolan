@@ -51,8 +51,8 @@ public class ProductionPowerTest {
 
         assertEquals(consumed, productionPower.getConsumedResources());
         assertEquals(produced, productionPower.getProducedResources());
-        assertEquals(2, productionPower.getProducedResourceOfChoice());
+        assertEquals(2, productionPower.getRequiredResourceOfChoice());
         assertEquals(1, productionPower.getProducedResourceOfChoice());
-        assertEquals(4, productionPower.getProducedResourceOfChoice());
+        assertEquals(4, productionPower.getFaithPointsProduced());
     }
 }
