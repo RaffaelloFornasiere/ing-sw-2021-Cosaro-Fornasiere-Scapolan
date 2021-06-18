@@ -71,14 +71,12 @@ public class FaithTrackTest extends TestCase {
     public void testSize() {
         FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         Assert.assertEquals(25, FaithTrack.size());
-        FaithTrack.resetForTest();
 
     }
 
     public void testGetArrayOfCells() {
         FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         Assert.assertEquals(Config.getDefaultConfig().getFaithTrack(), FaithTrack.getArrayOfCells());
-        FaithTrack.resetForTest();
 
 
     }

@@ -1322,7 +1322,7 @@ public class CLI extends UI {
         ArrayList<Pair<String, String>> options;
         options = Arrays.stream(DisplayOptions.values()).map(option -> new Pair<>(option.getTitle(), Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
         options.add(new Pair<>("NOTHING", Color.WHITE.getAnsiCode()));
-        int input = displaySelectionForm(options, null, 1, "WOULD YOU LIKE TO SEE SOMETHING ABOUT THE GAME ? ?\n").get(0);
+        int input = displaySelectionForm(options, null, 1, "WOULD YOU LIKE TO SEE SOMETHING ABOUT THE GAME ?\n").get(0);
 
         if (input < DisplayOptions.values().length) {
             out.println(DisplayOptions.values()[input].getMessage());
@@ -1402,7 +1402,7 @@ public class CLI extends UI {
         ArrayList<Event> events = new ArrayList<>();
 
         if (!thisPlayer.equals(playerID)) {
-            out.println(playerID + " " + turnState.getDescription());
+            out.println("[31;1;4m"+playerID + " " + turnState.getDescription()+"\033[0m \n\n");
             displayOthers();
         } else {
             switch (turnState) {

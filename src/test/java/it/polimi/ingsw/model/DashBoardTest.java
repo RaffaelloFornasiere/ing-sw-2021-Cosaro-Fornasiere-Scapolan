@@ -40,14 +40,8 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(1);
         dCapacity.add(3);
         dCapacity.add(5);
-        //creates faith track
-        ArrayList<Integer> a = new ArrayList<>(4);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
-        //creates production power
+      //creates faith Track
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());        //creates production power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //create dashboard
         DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
@@ -74,12 +68,7 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        ArrayList<Integer> a = new ArrayList<>(4);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
 
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
 
@@ -104,12 +93,7 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        ArrayList<Integer> a = new ArrayList<>(4);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         //creates production power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0,0);
         //creates dashboard
