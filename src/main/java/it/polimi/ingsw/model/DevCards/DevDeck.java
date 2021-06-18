@@ -7,6 +7,10 @@ import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
 
+
+/**
+ * Represents the a single deck in the development card grid
+ */
 public class DevDeck{
     private ArrayList<DevCard> cards;
     int level;
@@ -29,6 +33,7 @@ public class DevDeck{
     }
 
     /**
+     *
      * construct the deck from a list of cards. check the coherence of the cards
      * @param cards cards to construct the deck
      */
@@ -60,14 +65,8 @@ public class DevDeck{
         cards.add(card);
     }
 
-//    /**
-//     * @param card removes the card passed by argument
-//     */
-//    private void remove(DevCard card) {
-//        cards.remove(card);
-//    }
-
     /**
+     *
      * @return pops the card on the deck's top
      */
     public DevCard pop() throws NotPresentException {
@@ -77,6 +76,7 @@ public class DevDeck{
     }
 
     /**
+     *
      * @return the card on the first position of the deck (
      * behaves as a LIFO stack)
      */
@@ -85,6 +85,11 @@ public class DevDeck{
         return cards.get(cards.size() - 1);
     }
 
+
+    /**
+     *
+     * @return the size of the deck
+     */
     public int size(){
         return cards.size();
     }

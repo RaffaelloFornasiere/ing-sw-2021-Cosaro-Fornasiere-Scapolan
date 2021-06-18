@@ -72,6 +72,14 @@ public class DevCardGrid extends Observable {
         return decks.length;
     }
 
+
+    /**
+     * pushes a card on top the deck specified by row and column
+     *
+     * @param card Card to be pushed
+     * @param row index of the row in the grid
+     * @param column index of the column in the gird
+     */
     public void push(DevCard card, int row, int column) {
         if (row < 0 || row > getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
@@ -82,10 +90,26 @@ public class DevCardGrid extends Observable {
         notifyObservers();
     }
 
+    /**
+     * pushes a card on top the deck specified by row and column
+     *
+     * @param card Card to be pushed
+     * @param indexes pair containing the indices of the position in the grid
+     */
     public void push(DevCard card, Pair<Integer, Integer> indexes) {
         push(card, indexes.getKey(), indexes.getValue());
     }
 
+    /**
+     * pops out the card on the top of the deck specified by row and column
+     * After popping notifies all observers.
+     *
+     * @param row row index in the grid
+     * @param column column index in the grid
+     * @return the card on top of the deck pointed
+     * @throws NotPresentException id row or column are out of bound or if there is no card
+     * in the deck pointed
+     */
     public DevCard pop(int row, int column) throws NotPresentException {
         if (row < 0 || row > getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
@@ -97,10 +121,28 @@ public class DevCardGrid extends Observable {
         return ret;
     }
 
+    /**
+     * pops out the card on the top of the deck specified by row and column
+     * After popping notifies all observers.
+     *
+     * @param indexes indexes pointing a deck in the grid
+     * @return the card on top of the deck pointed
+     * @throws NotPresentException id row or column are out of bound or if there is no card
+     * in the deck pointed
+     */
     public DevCard pop(Pair<Integer, Integer> indexes) throws NotPresentException {
         return pop(indexes.getKey(), indexes.getValue());
     }
 
+    /**
+     * Returns the card on the top of the deck specified by row and column
+     *
+     * @param row row index in the grid
+     * @param column column index in the grid
+     * @return the card on top of the deck pointed
+     * @throws NotPresentException id row or column are out of bound or if there is no card
+     * in the deck pointed
+     */
     public DevCard topCard(int row, int column) throws NotPresentException {
         if (row < 0 || row > getRowsNumber())
             throw new IllegalArgumentException("Row index out of bounds");
@@ -110,10 +152,26 @@ public class DevCardGrid extends Observable {
         return decks[row][column].topCard();
     }
 
+
+    /**
+     * Returns the card on the top of the deck specified by row and column
+     *
+     * @param indexes indexes pointing a deck in the grid
+     * @return the card on top of the deck pointed
+     * @throws NotPresentException id row or column are out of bound or if there is no card
+     * in the deck pointed
+     */
     public DevCard topCard(Pair<Integer, Integer> indexes) throws NotPresentException {
         return topCard(indexes.getKey(), indexes.getValue());
     }
 
+    /**
+     * Provides the row and the column indexes of the card identified by the string passed.
+     * Searches in all decks of the grid
+     * @param devCardID card string identifier
+     * @return  the row and the column indexes of the card identified by the string passed.
+     * @throws NotPresentException if there's no card at the top of any deck with the given ID
+     */
     public Pair<Integer, Integer> getRowColOfCardFromID(String devCardID) throws NotPresentException {
         for (int i = 0; i < getRowsNumber(); i++) {
             for (int j = 0; j < getColumnsNumber(); j++) {
@@ -121,7 +179,7 @@ public class DevCardGrid extends Observable {
                     return new Pair<>(i, j);
             }
         }
-        throw new NotPresentException("There's no leader card at the top of any deck with the given ID");
+        throw new NotPresentException("There's no card at the top of any deck with the given ID");
     }
 
     /*public static void main(String[] args) {
