@@ -30,7 +30,7 @@ public class LobbyStateEvent extends ClientEvent {
 
     /**
      * Getter for the IDs of all the other player in the lobby
-     * @return The IDs of all the other player in the lobbyy
+     * @return The IDs of all the other player in the lobby
      */
     public ArrayList<String> getOtherPLayersID() {
         return otherPLayersID;

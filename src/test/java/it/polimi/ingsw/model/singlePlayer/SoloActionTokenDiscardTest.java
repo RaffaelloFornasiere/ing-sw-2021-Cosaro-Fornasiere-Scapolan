@@ -114,6 +114,9 @@ public class SoloActionTokenDiscardTest {
 
         SoloActionTokenDiscard token = new SoloActionTokenDiscard(discarded);
 
-        assertEquals("The following cards will be discarded:\n2 BLUE\n3 YELLOW", token.description());
+        String description = token.description();
+
+        assertTrue(description.equals("The following cards will be discarded:\n2 BLUE\n3 YELLOW") ||
+                description.equals("The following cards will be discarded:\n3 YELLOW\n2 BLUE"));
     }
 }

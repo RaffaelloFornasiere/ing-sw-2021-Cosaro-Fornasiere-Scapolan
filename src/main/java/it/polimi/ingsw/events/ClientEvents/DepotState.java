@@ -72,6 +72,7 @@ public class DepotState {
         this.currentQuantity-=n;
         return DepotResultMessage.SUCCESSFUL_DEPOT_SUB;
     }
+
     public DepotResultMessage switchDepot( DepotState depot) {
         if( depot.getCurrentQuantity()>this.maxQuantity || this.currentQuantity>depot.getMaxQuantity()) return DepotResultMessage.UNSUCCESSFUL_SWITCH;
         Resource tempResourceType = this.resourceType;

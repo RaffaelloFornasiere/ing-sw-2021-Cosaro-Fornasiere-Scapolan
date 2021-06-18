@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
 
@@ -13,7 +14,7 @@ public class DashBoard extends Observable {
 
     private final HashMap<Resource, Integer> strongBox;
     private final ArrayList<Stack<DevCard>> cardSlots;
-    private final ArrayList<Depot> warehouse;
+    private ArrayList<Depot> warehouse;
     private final ProductionPower personalPower;
     private final FaithTrackData faithTrack;
 
@@ -23,7 +24,7 @@ public class DashBoard extends Observable {
      * @param eachDepotCapacity Is how many resources one depot can possibly have at most
      * @param personalPower Is the personal production power of the player
      */
-    public DashBoard( int numberOfSlots, ArrayList<Integer> eachDepotCapacity, ProductionPower personalPower){
+    public DashBoard(int numberOfSlots, ArrayList<Integer> eachDepotCapacity, ProductionPower personalPower){
     strongBox = new HashMap<>();
     //initializes each resource in the strongbox to quantity zero
     for(Resource resource: Resource.values()){
@@ -59,6 +60,7 @@ public class DashBoard extends Observable {
      * Modifier of the dashboard, it subtracts resources to the strongbox
      * @param resource Type of resource
      * @param quantity Quantity to subtract
+     * @throws EmptyStrongboxException if the strongbox does not have enough resources
      */
     public void subResourcesToStrongBox( Resource resource, int quantity)throws EmptyStrongboxException{
         if(strongBox.get(resource)- quantity<0) throw new EmptyStrongboxException();
@@ -121,19 +123,24 @@ public class DashBoard extends Observable {
      * @throws ResourcesLimitsException When there are not enough resources to remove
      */
     public void subResourcesToWarehouse(HashMap<Resource, Integer> resources) throws ResourcesLimitsException {
-        HashMap<Resource, Integer> subbedResources = new HashMap<>();
+        ArrayList<Depot> oldWarehouse = new ArrayList<>();
+        for(Depot d: warehouse){
+            Depot nd = new Depot(d.getMaxQuantity());
+            try {
+                nd.addResources(d.getResourceType(), d.getCurrentQuantity());
+            } catch (DepotResourceException ignore) { }
+            oldWarehouse.add(nd);
+        }
+
         try {
             for (Resource r : resources.keySet()) {
                 int n = resources.get(r);
                 if(n!=0) {
                     subResourcesToWarehouse(r, resources.get(r));
-                    subbedResources.put(r, resources.get(r));
                 }
             }
         } catch (Exception e){
-            for (Resource r : subbedResources.keySet()) {
-                addResourcesToWarehouse(r, subbedResources.get(r));
-            }
+            warehouse = oldWarehouse;
             throw e;
         }
     }
@@ -141,7 +148,7 @@ public class DashBoard extends Observable {
     /**
      * Methods that sets the state of the warehouse to the one given
      * @param newWarehouseResources The new state for the warehouse
-     * @throws IllegalArgumentException If the structure of the new warehouse state is incompatible
+     * @throws IllegalArgumentException If the structure of the new warehouse state is incompatible or there are multiple depots with the same resource stored
      */
     public void setWarehouseResources(ArrayList<DepotState> newWarehouseResources){
         if(newWarehouseResources.size()!=warehouse.size())
@@ -150,15 +157,22 @@ public class DashBoard extends Observable {
             if(newWarehouseResources.get(i).getMaxQuantity()!=warehouse.get(i).getMaxQuantity())
                 throw new IllegalArgumentException("New warehouse structure incompatible");
         }
+        ArrayList<Resource> presentResources = new ArrayList<>();
+        for(DepotState depotState: newWarehouseResources){
+            if(depotState.getCurrentQuantity()>0){
+                Resource r = depotState.getResourceType();
+                if(presentResources.contains(r)) throw new IllegalArgumentException("Multiple depots contain the same resource");
+                presentResources.add(r);
+            }
+        }
+
         for(int i=0; i<warehouse.size(); i++){
             Depot depot = warehouse.get(i);
             DepotState depotState = newWarehouseResources.get(i);
             try {
                 depot.subResources(depot.getResourceType(), depot.getCurrentQuantity());
                 depot.addResources(depotState.getResourceType(), depotState.getCurrentQuantity());
-            } catch (ResourcesLimitsException | DepotResourceException e) {
-                e.printStackTrace();
-            }
+            } catch (ResourcesLimitsException | DepotResourceException ignore) { }
         }
         notifyObservers();
     }
@@ -193,11 +207,11 @@ public class DashBoard extends Observable {
 
     /**
      * Method that checks if a card can go in a certain slot
-     * @param devCard The card to check
      * @param slotIndex The index to check
+     * @param devCard The card to check
      * @return whether the card can go in the given slot
      */
-    public boolean checkSlot(DevCard devCard, int slotIndex){
+    public boolean checkSlot(int slotIndex, DevCard devCard){
         if(cardSlots.get(slotIndex).isEmpty())
             return devCard.getLevel()==1;
 

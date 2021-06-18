@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class ProductionPower {
     private final HashMap<Resource, Integer> consumedResources;
@@ -84,21 +83,4 @@ public class ProductionPower {
     public int getFaithPointsProduced() {
         return faithPointsProduced;
     }
-
-    /*/**
-     * tells if the given resource satisfyies the consumed ones
-     *
-     * @param resources given resoruces
-     * @return true if are enough, false if not
-     */
-    /*
-    public boolean canProduce(HashMap<Resource, Integer> resources) {
-        for (Map.Entry<Resource, Integer> i : consumedResources.entrySet()) {
-            if (resources.containsKey(i.getKey()))
-                return false;
-            else if (resources.get(i.getKey()) < i.getValue())
-                return false;
-        }
-        return true;
-    }*/
 }

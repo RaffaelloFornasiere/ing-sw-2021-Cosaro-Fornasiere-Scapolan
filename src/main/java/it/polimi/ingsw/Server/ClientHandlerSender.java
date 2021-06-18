@@ -14,6 +14,10 @@ import java.io.PrintWriter;
 public class ClientHandlerSender implements Sender {
     PrintWriter printWriter;
 
+    /**
+     * Constructor for the class
+     * @param outputStream the stream where to write the messages to send
+     */
     public ClientHandlerSender(OutputStream outputStream) {
         printWriter = new PrintWriter(outputStream);
     }
@@ -34,6 +38,9 @@ public class ClientHandlerSender implements Sender {
         }
     }
 
+    /**
+     * Method responsible for closing the stream
+     */
     public void closeConnection() {
         printWriter.close();
     }

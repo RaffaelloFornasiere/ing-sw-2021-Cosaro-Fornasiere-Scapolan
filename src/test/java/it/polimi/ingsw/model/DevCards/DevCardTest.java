@@ -95,7 +95,15 @@ public class DevCardTest {
 
         } catch (IOException e) {
             e.printStackTrace();
+            fail();
         }
         Assert.assertEquals(devCard1, devCard2);
+    }
+    @Test
+    public void testEqualsNulls() {
+        DevCard devCard1 = new DevCard(new HashMap<>(), 3, null, 4, null);
+        DevCard devCard2 = new DevCard(new HashMap<>(), 3, null, 4, null);
+
+        assertEquals(devCard1, devCard2);
     }
 }

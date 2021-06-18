@@ -55,7 +55,7 @@ public class PreGameController {
             int lobbyIndex = searchFirstLobbyNotFull();
             if(lobbyIndex==-1){
                 System.out.println("Creating new Lobby");
-                Lobby lobby = new Lobby();
+                Lobby lobby = new Lobby(Config.getInstance().getMaxPlayers());
                 lobby.addObserver(new LobbyHandler(this.networkData));
                 networkData.put(event.getPlayerId(), event.getRequestsElaborator());
                 lobby.setLeaderID(event.getPlayerId());
@@ -77,7 +77,7 @@ public class PreGameController {
 
         if(event.getPlayerId().equals(event.getLobbyLeaderID())){
             System.out.println("Creating new Lobby");
-            Lobby lobby = new Lobby();
+            Lobby lobby = new Lobby(Config.getInstance().getMaxPlayers());
             lobby.addObserver(new LobbyHandler(this.networkData));
             networkData.put(event.getPlayerId(), event.getRequestsElaborator());
             lobby.setLeaderID(event.getPlayerId());

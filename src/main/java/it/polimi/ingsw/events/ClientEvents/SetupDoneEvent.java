@@ -1,7 +1,7 @@
 package it.polimi.ingsw.events.ClientEvents;
 
 /**
- * Event sent to the client once its setup has benn compleeted
+ * Event sent to the client once its setup has benn completed
  */
 public class SetupDoneEvent extends ClientEvent{
     /**

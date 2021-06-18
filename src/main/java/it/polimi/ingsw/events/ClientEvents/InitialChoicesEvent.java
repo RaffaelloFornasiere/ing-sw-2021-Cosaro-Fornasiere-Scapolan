@@ -18,10 +18,9 @@ public class InitialChoicesEvent extends ClientEvent{
      * @param numberOFLeaderCardsToChose The number of leader cards the player can keep
      * @param numberResourcesOfChoice The number of resources that the player can choose
      */
-    @SuppressWarnings("unchecked")
     public InitialChoicesEvent(String playerId, ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose, int numberResourcesOfChoice) {
         super(playerId);
-        this.leaderCardsIDs = (ArrayList<String>) leaderCardsIDs.clone();
+        this.leaderCardsIDs = new ArrayList<>(leaderCardsIDs);
         this.numberResourcesOfChoice = numberResourcesOfChoice;
         this.numberOFLeaderCardsToChose = numberOFLeaderCardsToChose;
     }
@@ -30,9 +29,8 @@ public class InitialChoicesEvent extends ClientEvent{
      * Getter for the IDs of the leader card the player has to choose from to keep
      * @return The IDs of the leader card the player has to choose from to keep
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<String> getLeaderCards() {
-        return (ArrayList<String>) leaderCardsIDs.clone();
+        return new ArrayList<>(leaderCardsIDs);
     }
 
     /**

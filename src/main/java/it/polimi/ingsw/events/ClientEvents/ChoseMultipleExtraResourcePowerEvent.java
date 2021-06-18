@@ -19,10 +19,9 @@ public class ChoseMultipleExtraResourcePowerEvent extends ClientEvent{
      * @param resourceTypes The type of resources they can chose from
      * @param numberOfResources The total number of resources that they will need to chose
      */
-    @SuppressWarnings("unchecked")
     public ChoseMultipleExtraResourcePowerEvent(String playerId, ArrayList<Resource> resourceTypes, int numberOfResources){
         super(playerId);
-        this.resourceTypes = (ArrayList<Resource>) resourceTypes.clone();
+        this.resourceTypes = new ArrayList<>(resourceTypes);
         this.numberOfResources = numberOfResources;
     }
 
@@ -30,9 +29,8 @@ public class ChoseMultipleExtraResourcePowerEvent extends ClientEvent{
      * Getter for the type of resources they can chose from
      * @return The type of resources they can chose from
      */
-    @SuppressWarnings("unchecked")
     public ArrayList<Resource> getResourceTypes() {
-        return (ArrayList<Resource>) resourceTypes.clone();
+        return new ArrayList<>(resourceTypes);
     }
 
     /**
