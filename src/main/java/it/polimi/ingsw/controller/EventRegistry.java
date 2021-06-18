@@ -10,7 +10,7 @@ public class EventRegistry implements PropertyChangeSubject {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     /**
-     * Notifies the arrival of an event and triggers the registered handlers
+     * Notifies the arrival of an event and triggers the registered handlers that have as an associated string the name of the event
      * @param event The event that arrived
      */
     public void sendEvent(Event event){
