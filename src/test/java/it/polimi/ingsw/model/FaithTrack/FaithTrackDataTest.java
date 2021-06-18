@@ -19,6 +19,7 @@ public class FaithTrackDataTest {
             ftd.addPopeFavorCard(8, card);
             Assert.assertEquals(3, ftd.getFavorPopeCardPoints());
             Assert.assertEquals(0, ftd.getPosition());
+            FaithTrack.resetForTest();
 
         } catch (IllegalArgumentException e) {
             Assert.fail();
@@ -35,6 +36,7 @@ public class FaithTrackDataTest {
             Assert.fail();
 
         } catch (IllegalArgumentException e) {
+            FaithTrack.resetForTest();
 
         }
     }
@@ -54,6 +56,7 @@ public class FaithTrackDataTest {
             ftd.addPopeFavorCard(16, card2);
             ftd.addPopeFavorCard(24, card3);
             Assert.assertEquals(6, ftd.getFavorPopeCardPoints());
+            FaithTrack.resetForTest();
 
         }catch (IllegalArgumentException e){Assert.fail();}
 
@@ -69,6 +72,7 @@ public class FaithTrackDataTest {
         try {
             ftd.incrementPosition(24);
             Assert.assertEquals(24, ftd.getPosition());
+            FaithTrack.resetForTest();
 
         } catch (OutOfBoundException e) {
             Assert.fail();
@@ -85,6 +89,7 @@ public class FaithTrackDataTest {
         try {
             ftd.incrementPosition(24);
             Assert.assertEquals(24, ftd.getPosition());
+            FaithTrack.resetForTest();
 
         } catch (OutOfBoundException e) {
             Assert.fail();
@@ -98,6 +103,7 @@ public class FaithTrackDataTest {
         try {
             ftd.setPosition(24);
             Assert.assertEquals(24, ftd.getPosition());
+            FaithTrack.resetForTest();
 
         } catch (OutOfBoundException e) {
             Assert.fail();
@@ -112,6 +118,7 @@ public class FaithTrackDataTest {
         try {
             ftd.setPosition(24);
             Assert.assertEquals(24, ftd.getPosition());
+            FaithTrack.resetForTest();
 
         } catch (OutOfBoundException e) {
             Assert.fail();
@@ -127,6 +134,8 @@ public class FaithTrackDataTest {
             Assert.fail();
 
         } catch (OutOfBoundException e) {FaithTrack.resetForTest();
+            FaithTrack.resetForTest();
+
         }
     }
 
@@ -143,6 +152,8 @@ public class FaithTrackDataTest {
             ftd.addPopeFavorCard(16, card2);
             ftd.addPopeFavorCard(24, card3);
             Assert.assertEquals(card2, ftd.getAcquiredPopeFavorCards().get(16));
+            FaithTrack.resetForTest();
+
         }catch(IllegalArgumentException e){ Assert.fail();}
 
     }

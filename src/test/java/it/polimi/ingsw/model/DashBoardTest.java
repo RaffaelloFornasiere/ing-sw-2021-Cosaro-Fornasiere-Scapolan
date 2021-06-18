@@ -29,6 +29,8 @@ public class DashBoardTest extends TestCase {
         DashBoard dashBoard = new DashBoard(3, dCapacity, productionPower);
 
         assertEquals(productionPower, dashBoard.getPersonalPower());
+        FaithTrack.resetForTest();
+
     }
 
     /**
@@ -54,6 +56,7 @@ public class DashBoardTest extends TestCase {
 
         d.addResourcesToStrongBox(Resource.SHIELD, 4);
         assertEquals(4, (int) d.getStrongBox().get(Resource.SHIELD));
+        FaithTrack.resetForTest();
 
     }
 
@@ -81,6 +84,8 @@ public class DashBoardTest extends TestCase {
             fail();
         }
         assertEquals(2, (int) d.getStrongBox().get(Resource.ROCK));
+        FaithTrack.resetForTest();
+
     }
 
     /**
@@ -104,7 +109,9 @@ public class DashBoardTest extends TestCase {
         try {
             d.subResourcesToStrongBox(Resource.ROCK, 5);
             fail();
-        } catch( EmptyStrongboxException ignore){}
+        } catch( EmptyStrongboxException ignore){
+            FaithTrack.resetForTest();
+        }
     }
 
     /**
@@ -562,12 +569,7 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        ArrayList<Integer> a = new ArrayList<>(4);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
@@ -599,12 +601,7 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        ArrayList<Integer> a = new ArrayList<>(4);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
@@ -615,7 +612,7 @@ public class DashBoardTest extends TestCase {
         DevCard card = new DevCard(resources,1, CardColor.GREEN, 4, new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0));
         //I try to add the card to a not acceptable index
         try{  d.addCard(4, card);fail();}
-        catch( IndexSlotException ignored){}
+        catch( IndexSlotException ignored){ FaithTrack.resetForTest();}
         catch( LevelCardException e){fail();}
 
     }
@@ -630,12 +627,7 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        ArrayList<Integer> a = new ArrayList<>(4);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
@@ -653,7 +645,7 @@ public class DashBoardTest extends TestCase {
         DevCard card2 = new DevCard(resources,3, CardColor.GREEN, 4, new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0));
         try{  d.addCard(1, card2);fail();}
         catch( IndexSlotException e){fail();}
-        catch( LevelCardException ignored){}
+        catch( LevelCardException ignored){ FaithTrack.resetForTest();}
 
     }
 
@@ -668,12 +660,7 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        ArrayList<Integer> a = new ArrayList<>(4);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
@@ -685,7 +672,7 @@ public class DashBoardTest extends TestCase {
         // adds a card level 2 to slot index 1, which is empty. It should give exception.
         try{  d.addCard(1, card);fail();}
         catch( IndexSlotException e){fail();}
-        catch( LevelCardException ignored){}
+        catch( LevelCardException ignored){ FaithTrack.resetForTest();}
     }
 
     /**
