@@ -33,3 +33,29 @@
 .Card {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 15, 0, 00, 0);
 }
+
+.CardSelectableRegion {
+    -fx-border-color: rgba(0, 176, 255, 0.85);
+    -fx-border-width: 7px;
+    -fx-border-radius: 10px;
+    -fx-opacity: 0;
+}
+.CardSelectableRegion:hover {
+    -fx-opacity: 1;
+}
+
+.check-box .box{
+    -fx-background-color: rgba(0, 176, 255, 0);
+    -fx-border-color: black;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.check-box:selected .box{
+    -fx-background-color: rgba(0, 176, 255, 1);
+    -fx-border-color: black;
+}
+
+.check-box:selected .mark{
+    -fx-background-color: white;
+}
