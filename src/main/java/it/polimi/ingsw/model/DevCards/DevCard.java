@@ -20,12 +20,14 @@ public class DevCard {
     private final ProductionPower productionPower;
 
     /**
+     * constructor
      *
      * @param cost required resources to buy the card
      * @param level level of the card
      * @param color color of the card
      * @param victoryPoints victory points provided by the card
      * @param productionPower power production of the card
+     * @throws IllegalArgumentException if the level of the card is negative
      */
     public DevCard(HashMap<Resource, Integer> cost, int level, CardColor color, int victoryPoints, ProductionPower productionPower) {
         if (level < 0) throw new IllegalArgumentException("The card level cannot be negative");
@@ -56,7 +58,8 @@ public class DevCard {
     }
 
     /**
-     * getter
+     * getter of the id of the card
+     *
      * @return the id of the card
      */
     public String getCardID() {
@@ -65,9 +68,10 @@ public class DevCard {
 
 
     /**
-     * getter
+     * getter of the cost of the card
+     *
      * @return the resources required to buy the card. The key of the has
-     * represents the type of required and the value is the qty of that
+     * represents the type of required and the value is the quantity of that
      * resources
      */
     public HashMap<Resource, Integer> getCost() {
@@ -75,7 +79,8 @@ public class DevCard {
     }
 
     /**
-     * getter
+     * getter of the level of the card
+     *
      * @return the level of the card
      */
     public int getLevel() {
@@ -83,7 +88,8 @@ public class DevCard {
     }
 
     /**
-     * getter
+     * getter of the color of the card
+     *
      * @return the color of the card
      */
     public CardColor getColor() {
@@ -91,7 +97,8 @@ public class DevCard {
     }
 
     /**
-     * getter
+     * getter of the victory points of the card
+     *
      * @return the victory points of the card
      */
     public int getVictoryPoints() {
@@ -99,7 +106,8 @@ public class DevCard {
     }
 
     /**
-     * getter
+     * getter of the production power of the card
+     *
      * @return the production power of the card
      */
     public ProductionPower getProductionPower() {
@@ -108,6 +116,7 @@ public class DevCard {
 
     /**
      * checks if @this card is buy with a given set of resources
+     *
      * @param availableResources set of resources
      * @return true if @this card can be bought with the set of given resources
      */
