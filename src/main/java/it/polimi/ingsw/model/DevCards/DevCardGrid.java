@@ -64,8 +64,8 @@ public class DevCardGrid extends Observable {
     }
 
     /**
-     * 
-     * @return
+     * getter of the number of rows
+     * @return the number of rows
      */
     public int getRowsNumber() {
         return decks.length;
