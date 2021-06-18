@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 /**
  * Immutable class
+ * Represents the Development cards of the game
  */
 public class DevCard {
     private String cardID;
@@ -17,6 +18,14 @@ public class DevCard {
     private final int victoryPoints;
     private final ProductionPower productionPower;
 
+    /**
+     *
+     * @param cost required resources to buy the card
+     * @param level level of the card
+     * @param color color of the card
+     * @param victoryPoints victory points provided by the card
+     * @param productionPower
+     */
     @SuppressWarnings("unchecked")
     public DevCard(HashMap<Resource, Integer> cost, int level, CardColor color, int victoryPoints, ProductionPower productionPower) {
         if (level < 0) throw new IllegalArgumentException("The card level cannot be negative");
