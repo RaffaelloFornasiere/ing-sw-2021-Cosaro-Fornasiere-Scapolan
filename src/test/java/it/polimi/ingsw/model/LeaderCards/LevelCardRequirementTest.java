@@ -79,7 +79,7 @@ public class LevelCardRequirementTest {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
         Player player = new Player("test", dashBoard);
 
         try {
@@ -99,7 +99,7 @@ public class LevelCardRequirementTest {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
         Player player = new Player("test", dashBoard);
 
         try {

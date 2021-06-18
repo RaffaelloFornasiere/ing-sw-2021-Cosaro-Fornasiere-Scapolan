@@ -24,13 +24,11 @@ public class DashBoardTest extends TestCase {
 
         ProductionPower productionPower = new ProductionPower(new HashMap<>(), new HashMap<>(), 3 ,2 ,1);
 
-        FaithTrack faithTrack = FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
+        FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
 
-        DashBoard dashBoard = new DashBoard(3, dCapacity, productionPower, faithTrack);
+        DashBoard dashBoard = new DashBoard(3, dCapacity, productionPower);
 
         assertEquals(productionPower, dashBoard.getPersonalPower());
-
-        assertEquals(faithTrack, dashBoard.getFaithTrackData().getPhysicalFaithTrack());
     }
 
     /**
@@ -43,17 +41,16 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        FaithTrack ft;
         ArrayList<Integer> a = new ArrayList<>(4);
         a.add(1);
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
         //creates production power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //create dashboard
-        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p, ft);
+        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
         //checks
         assertEquals(4, (int) d.getStrongBox().get(Resource.ROCK));
@@ -77,17 +74,16 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        FaithTrack ft;
         ArrayList<Integer> a = new ArrayList<>(4);
         a.add(1);
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
 
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
 
-        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p, ft);
+        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
         assertEquals(4, (int) d.getStrongBox().get(Resource.ROCK));
         try {
@@ -108,17 +104,16 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        FaithTrack ft;
         ArrayList<Integer> a = new ArrayList<>(4);
         a.add(1);
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
         //creates production power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0,0);
         //creates dashboard
-        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p, ft);
+        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
         d.addResourcesToStrongBox(Resource.ROCK, 4);
         assertEquals(4, (int) d.getStrongBox().get(Resource.ROCK));
         //subtracts 5 ROCKS , but there are only 4
@@ -136,7 +131,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -174,7 +169,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.addResourcesToWarehouse(Resource.SHIELD, 2);
@@ -197,7 +192,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.addResourcesToWarehouse(Resource.SHIELD, 4);
@@ -216,7 +211,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -242,7 +237,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -269,7 +264,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -307,7 +302,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -342,7 +337,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -377,7 +372,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -416,7 +411,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -454,7 +449,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -492,7 +487,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -519,7 +514,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -539,7 +534,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -560,7 +555,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         ArrayList<DepotState> newWarehouse = new ArrayList<>();
         newWarehouse.add(new DepotState(Resource.COIN, 1, 1));
@@ -583,17 +578,16 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        FaithTrack ft;
         ArrayList<Integer> a = new ArrayList<>(4);
         a.add(1);
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p, ft);
+        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
         //creates dev card
         HashMap<Resource, Integer> resources =new HashMap<>();
         resources.put(Resource.ROCK,2);
@@ -621,17 +615,16 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        FaithTrack ft;
         ArrayList<Integer> a = new ArrayList<>(4);
         a.add(1);
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p, ft);
+        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
         //creates dev card
         HashMap<Resource, Integer> resources =new HashMap<>();
         resources.put(Resource.ROCK,2);
@@ -653,17 +646,16 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        FaithTrack ft;
         ArrayList<Integer> a = new ArrayList<>(4);
         a.add(1);
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p, ft);
+        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
         //creates dev card
         HashMap<Resource, Integer> resources =new HashMap<>();
         resources.put(Resource.ROCK,2);
@@ -692,17 +684,16 @@ public class DashBoardTest extends TestCase {
         dCapacity.add(3);
         dCapacity.add(5);
         //creates faith track
-        FaithTrack ft;
         ArrayList<Integer> a = new ArrayList<>(4);
         a.add(1);
         a.add(2);
         a.add(3);
         a.add(4);
-        ft = FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
+        FaithTrack.initFaithTrack(4, new ArrayList<>(), a);
         //creates production Power
         ProductionPower p = new ProductionPower(new HashMap<>(), new HashMap<>(), 0, 0, 0);
         //creates dashboard
-        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p, ft);
+        DashBoard d = new DashBoard(dCapacity.size(), dCapacity, p);
         //creates dev card
         HashMap<Resource, Integer> resources =new HashMap<>();
         resources.put(Resource.ROCK,2);
@@ -721,7 +712,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         DevCard dc1 = new DevCard(new HashMap<>(), 1, CardColor.BLUE, 2, null);
         DevCard dc2 = new DevCard(new HashMap<>(), 2, CardColor.BLUE, 3, null);
@@ -747,7 +738,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         DevCard dc1 = new DevCard(new HashMap<>(), 1, CardColor.BLUE, 2, null);
         DevCard dc2 = new DevCard(new HashMap<>(), 2, CardColor.BLUE, 3, null);
@@ -785,7 +776,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.getWarehouse().get(0).addResources(Resource.COIN, 1);
@@ -825,7 +816,7 @@ public class DashBoardTest extends TestCase {
         eachDepotCapacity.add(1);
         eachDepotCapacity.add(2);
         eachDepotCapacity.add(3);
-        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null, null);
+        DashBoard dashBoard = new DashBoard(3, eachDepotCapacity, null);
 
         try {
             dashBoard.getWarehouse().get(1).addResources(Resource.SERVANT, 1);

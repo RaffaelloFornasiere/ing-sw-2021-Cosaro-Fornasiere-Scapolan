@@ -7,96 +7,82 @@ import java.util.HashMap;
 
 public class FaithTrackData extends Observable {
     private int position;
-    private final FaithTrack physicalFaithTrack;
-    private HashMap<Integer, PopeFavorCard> acquiredPopeFavorCards;
+    private final HashMap<Integer, PopeFavorCard> acquiredPopeFavorCards = new HashMap<>();
 
     /**
-     * Constructor inizializes one instance of the class: initial position equal to zero,
-     * takes as input one instance of Faithtrack given by the Controller,
+     * Constructor initializes one instance of the class: initial position equal to zero,
+     * takes as input one instance of FaithTrack given by the Controller,
      * has initial list of popeFavorCard empty.
-     * @param physicalFaithTrack is given by the controller
+     *
      */
-    public FaithTrackData(FaithTrack physicalFaithTrack){
-        position=0;
-        this.physicalFaithTrack=physicalFaithTrack;
-        acquiredPopeFavorCards=new HashMap<>();
+    public FaithTrackData() {
+        position = 0;
     }
 
 
-
     /**
-     * Getter  of position in  the faithtrack
-     * @return position in the faithtrack
+     * Getter  of position in  the faithTrack
+     *
+     * @return position in the faithTrack
      */
     public int getPosition() {
         return position;
     }
 
 
-
     /**
-     * Setter of position in the faithtrack
-     * @param position in the faithtrack
+     * Setter of position in the faithTrack
+     *
+     * @param position in the faithTrack
      */
-    public void setPosition(int position) throws OutOfBoundException{
-        if(position <= physicalFaithTrack.size()) this.position = position;
-        else throw new OutOfBoundException();
+    public void setPosition(int position) throws OutOfBoundException {
+        if (position < FaithTrack.size()) this.position = position;
+        else throw new OutOfBoundException("");
         notifyObservers();
-    }
-
-
-
-    /**
-     *Getter of the physical Track
-     * @return PhysicalTrack
-     */
-    public FaithTrack getPhysicalFaithTrack() {
-        return physicalFaithTrack;
     }
 
 
 
     /**
      * Getter of acquiredFavorPopeCard
-     * @return the array of favorpopecard
+     *
+     * @return the array of favor pope cards
      */
-    public HashMap<Integer,PopeFavorCard> getAcquiredPopeFavorCards() {
+    public HashMap<Integer, PopeFavorCard> getAcquiredPopeFavorCards() {
         return acquiredPopeFavorCards;
     }
 
 
-
     /**
      * Adds one popeFavorCard to the list of popeFavorCards
+     *
      * @param card is a popeFavorCard to add
      */
-    public void addPopeFavorCard(int n,  PopeFavorCard card){
+    public void addPopeFavorCard(int n, PopeFavorCard card)  {
+        if(!(FaithTrack.getArrayOfCells().get(n) instanceof PopeCell)) throw  new IllegalArgumentException("Wrong key in the hashMap of Favor Pope Cars, because for that index index there is no PopeCell in the FaithTrack");
         acquiredPopeFavorCards.put(n, card);
         notifyObservers();
     }
 
-
-
     /**
      * Counts the total of points obtained from FavorPopeCards
+     *
      * @return the total number of points obtained from FavorPopeCards
      */
-    public int getFavorPopeCardPoints(){
-       return  acquiredPopeFavorCards.values()
-                .stream().map(value->value.getVictoryPoints())
+    public int getFavorPopeCardPoints() {
+        return acquiredPopeFavorCards.values()
+                .stream().map(PopeFavorCard::getVictoryPoints)
                 .mapToInt(Integer::valueOf)
                 .sum();
     }
 
-
-
-
     /**
      * increment the position
+     *
      * @param n number os steps to increment
      */
     public void incrementPosition(int n) throws OutOfBoundException {
-        if(position+n<= physicalFaithTrack.size()) position +=n;
+        if (position + n < FaithTrack.size()) position += n;
         else throw new OutOfBoundException();
         notifyObservers();
     }

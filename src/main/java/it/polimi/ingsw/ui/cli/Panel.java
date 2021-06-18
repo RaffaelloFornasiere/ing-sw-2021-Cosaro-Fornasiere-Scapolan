@@ -1,20 +1,15 @@
 package it.polimi.ingsw.ui.cli;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 public class Panel {
-    int width;
-
+    private int width;
     public void setHeight(int height) {
         this.height = height;
     }
-
-    int height;
+    private int height;
     ArrayList<DrawableObject> objects;
     PrintWriter writer;
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.FaithTrack;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 public class PopeCellTest extends TestCase {
 
@@ -20,5 +21,23 @@ public class PopeCellTest extends TestCase {
     }
 
     public void testGetCard() {
+        PopeCell effectCell= new PopeCell(3, 4, new PopeFavorCard(4),5);
+        Assert.assertEquals(4, effectCell.getCard().getVictoryPoints());
+    }
+
+    public void testTestGetVaticanReportSection() {
+        PopeCell effectCell= new PopeCell(3, 4, new PopeFavorCard(4),5);
+        Assert.assertEquals(5, effectCell.getVaticanReportSection());
+
+    }
+
+    public void testTestGetCard() {
+        PopeCell effectCell= new PopeCell(new Cell(2,3), new PopeFavorCard(4),5);
+        Assert.assertEquals(5, effectCell.getVaticanReportSection());
+        Assert.assertEquals(3, effectCell.getVictoryPoints());
+
+    }
+
+    public void testActivateEffect() {
     }
 }
