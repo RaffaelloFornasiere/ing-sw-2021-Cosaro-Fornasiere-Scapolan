@@ -1994,7 +1994,7 @@ public class CLI extends UI {
     }
 
     /**
-     * Method toupdate Lorenzo' position in the single player match.
+     * Method to update Lorenzo' position in the single player match.
      * @param position the  new position.
      */
     @Override
