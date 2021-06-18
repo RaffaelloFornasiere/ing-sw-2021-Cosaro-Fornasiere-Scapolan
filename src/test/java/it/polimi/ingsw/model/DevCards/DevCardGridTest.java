@@ -62,8 +62,7 @@ public class DevCardGridTest {
             }
         });
 
-        if(!Arrays.deepEquals(decks, grid.getDecks()))
-            Assert.fail();
+        Assert.assertArrayEquals(decks, grid.getDecks());
     }
 
     @Test

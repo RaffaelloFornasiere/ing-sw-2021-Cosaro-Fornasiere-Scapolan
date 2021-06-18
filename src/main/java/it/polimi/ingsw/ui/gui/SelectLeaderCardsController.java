@@ -1,6 +1,7 @@
 package it.polimi.ingsw.ui.gui;
 
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -72,6 +73,10 @@ public class SelectLeaderCardsController extends Controller implements Initializ
     public void onCancel() {
         Alert alert = new Alert(Alert.AlertType.ERROR, "You must select " + selectable +" " +  ((selectable > 1) ? "leader cards" : "leader card"), ButtonType.OK);
         alert.showAndWait();
+    }
+
+    public void onCardSelected(MouseEvent mouseEvent){
+        //((Group)mouseEvent.getSource()).getChildren().stream().filter(n -> n -> n instanceof Region).
     }
 
 }

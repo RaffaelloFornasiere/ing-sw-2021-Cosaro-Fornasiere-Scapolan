@@ -14,16 +14,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="931.0" prefWidth="1418.0"
-            stylesheets="@stylesheets/main.css"
-            xmlns="http://javafx.com/javafx/16"
-            xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0" prefWidth="1418.0" stylesheets="@stylesheets/main.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="178.0" stylesheets="@stylesheets/main.css" BorderPane.alignment="CENTER">
          <children>
@@ -148,6 +144,16 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Group>
+            <Group fx:id="marketIcon" onMouseClicked="#openMarket" styleClass="market">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="180.0" layoutX="3.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/FilledMarket.png" />
+                     </image>
+                  </ImageView>
+                  <Region prefHeight="156.0" prefWidth="186.0" styleClass="SelectableRegion" />
+               </children>
+            </Group>
          </children>
          <opaqueInsets>
             <Insets />
@@ -160,16 +166,16 @@
                <children>
                   <ImageView fx:id="s1card1" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/YellowLevel1_1.png" />
+                        <Image url="@images/Front/DevCard4.png" />
                      </image></ImageView>
                   <ImageView fx:id="s1card2" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="-25.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/PurpleLevel2_4.png" />
+                        <Image url="@images/Front/DevCard2.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="s1card3" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="-100.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/GreenLevel3_4.png" />
+                        <Image url="@images/Front/DevCard1.png" />
                      </image>
                   </ImageView>
                </children>
@@ -181,16 +187,16 @@
                <children>
                   <ImageView fx:id="s2card1" fitHeight="350.0" fitWidth="300.0" layoutX="23.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/GreenLevel1_1.png" />
+                        <Image url="@images/Front/DevCard5.png" />
                      </image></ImageView>
                   <ImageView fx:id="s2card2" fitHeight="350.0" fitWidth="300.0" layoutX="23.0" layoutY="-25.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/LightBlueLevel2_1.png" />
+                        <Image url="@images/Front/DevCard23.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="s2card3" fitHeight="350.0" fitWidth="300.0" layoutX="23.0" layoutY="-100.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/YellowLevel3_4.png" />
+                        <Image url="@images/Front/DevCard48.png" />
                      </image>
                   </ImageView>
                </children>
@@ -202,17 +208,17 @@
                <children>
                   <ImageView fx:id="s3card1" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/YellowLevel1_1.png" />
+                        <Image url="@images/Front/DevCard7.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="s3card2" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="-25.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/PurpleLevel2_4.png" />
+                        <Image url="@images/Front/DevCard21.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="-100.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/Front/LightBlueLevel3_4.png" />
+                        <Image url="@images/Front/DevCard46.png" />
                      </image>
                   </ImageView>
                </children>

@@ -11,11 +11,22 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
+/**
+ * represent the gird of all the cards. It is a wrapper of a 2D array
+ * with some methods that helps the managing of the array for the
+ * specific purpose
+ */
 public class DevCardGrid extends Observable {
     private DevDeck[][] decks;
 
-
+    /**
+     * constructor. Takes as input an array of different cards and
+     * splits it into different decks with respect to the level and
+     * the color of the cards.
+     *
+     * @param cards all the cards available for the game
+     * @throws IllegalArgumentException if the array provided is null or void
+     */
     public DevCardGrid(ArrayList<DevCard> cards) throws IllegalArgumentException{
         if(cards == null || cards.size() <= 0)
             throw new IllegalArgumentException("can construct grid from a null or a void array");
@@ -30,6 +41,11 @@ public class DevCardGrid extends Observable {
         });
     }
 
+    /**
+     * getter of the decks
+     *
+     * @return the decks in the grid
+     */
     public DevDeck[][] getDecks() {
         DevDeck[][] returns = new DevDeck[getRowsNumber()][getColumnsNumber()];
         for (int i = 0; i < getRowsNumber(); i++)
@@ -38,10 +54,20 @@ public class DevCardGrid extends Observable {
         return returns;
     }
 
+    /**
+     * getter of the number of the columns
+     *
+     * @return the number of the columns
+     */
     public int getColumnsNumber() {
         return decks[0].length;
     }
 
+    /**
+     * getter of the number of rows
+     *
+     * @return the number of rows
+     */
     public int getRowsNumber() {
         return decks.length;
     }

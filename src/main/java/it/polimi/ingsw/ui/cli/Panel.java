@@ -17,8 +17,7 @@ public class Panel {
         this.width = width;
         this.height = height;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < width * height; i++)
-            sb.append(" ");
+        sb.append(" ".repeat(Math.max(0, width * height)));
         objects = new ArrayList<>();
         this.writer = new PrintWriter(os);
     }
@@ -27,8 +26,7 @@ public class Panel {
         this.width = width;
         this.height = height;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < width * height; i++)
-            sb.append(" ");
+        sb.append(" ".repeat(Math.max(0, width * height)));
         objects = new ArrayList<>();
         this.writer = writer;
     }
@@ -70,8 +68,7 @@ public class Panel {
     public void show() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width - 1; j++)
-                sb.append(' ');
+            sb.append(" ".repeat(Math.max(0, width - 1)));
             sb.append('\n');
         }
         for (var object : objects) {
@@ -90,7 +87,7 @@ public class Panel {
             }
         }
 
-        writer.println(sb.toString());
+        writer.println(sb);
         writer.flush();
     }
 }

@@ -112,4 +112,14 @@
 }
 
 
+.market > .SelectableRegion{
+    -fx-border-color: rgba(0, 176, 255, 0.85);
+    -fx-border-width: 6px;
+    -fx-border-radius: 10px;
+    -fx-opacity: 0;
+}
+
+.market:hover > .SelectableRegion{
+    -fx-opacity: 1;
+}
 

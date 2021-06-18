@@ -25,7 +25,7 @@
                         <Image url="@images/market.png" />
                     </image>
                 </ImageView>
-                <ImageView id="leftMarble" fitHeight="76.0" fitWidth="53.0" layoutX="233.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView id="leftMarble" fx:id="marbleLeftImage" fitHeight="76.0" fitWidth="53.0" layoutX="233.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@images/blue-marble.png" />
                     </image>
@@ -43,62 +43,62 @@
                         <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble">
+                        <ImageView id="i00" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble">
                             <image>
                                 <Image url="@images/purple-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="1">
+                        <ImageView id="i01" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="1">
                             <image>
                                 <Image url="@images/white-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="2">
+                        <ImageView id="i02" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="2">
                             <image>
                                 <Image url="@images/white-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1">
+                        <ImageView id="i10" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1">
                             <image>
                                 <Image url="@images/blue-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <ImageView id="i11" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <image>
                                 <Image url="@images/red-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <ImageView id="i12" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <image>
                                 <Image url="@images/gray-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2">
+                        <ImageView id="i20" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2">
                             <image>
                                 <Image url="@images/purple-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <ImageView id="i21" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="1">
                             <image>
                                 <Image url="@images/white-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <ImageView id="i22" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="2">
                             <image>
                                 <Image url="@images/yellow-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3">
+                        <ImageView id="i30" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3">
                             <image>
                                 <Image url="@images/gray-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <ImageView id="i31" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="1">
                             <image>
                                 <Image url="@images/white-marble.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <ImageView id="i32" fitHeight="76.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="2">
                             <image>
                                 <Image url="@images/yellow-marble.png" />
                             </image>
@@ -189,7 +189,7 @@
                 <Font name="System Bold" size="12.0" />
             </font>
         </Button>
-        <Button alignment="CENTER" layoutX="519.0" layoutY="346.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
+        <Button fx:id="nextButton" alignment="CENTER" layoutX="519.0" layoutY="346.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
             <font>
                 <Font name="System Bold" size="12.0" />
             </font>

@@ -35,8 +35,7 @@ public class Market extends Observable {
     }
 
     public Market(int rows, int columns, ArrayList<Marble> marbles) {
-        if (marbles.size() != rows * columns + 1)
-            throw new IllegalArgumentException("number of marbles is not compatible with grid size");
+        if (marbles.size() != rows * columns + 1)  throw new IllegalArgumentException("number of marbles is not compatible with grid size");
         this.rows = rows;
         this.cols = columns;
         grid = new Marble[rows][columns];
@@ -82,20 +81,6 @@ public class Market extends Observable {
             if(0<index && index>cols) throw new IllegalArgumentException("Index out of bounds");
             for (Marble[] marbles : grid)
                 res.put(marbles[index], res.containsKey(marbles[index]) ? res.get(marbles[index]) + 1 : 1);
-        }
-        return res;
-    }
-
-    public ArrayList<Marble> getMarblesAsList(Direction direction, int index) {
-        ArrayList<Marble> res = new ArrayList<>();
-        if (direction == Direction.ROW) {
-            if(0<index && index>rows) throw new IllegalArgumentException("Index out of bounds");
-            Collections.addAll(res, grid[index]);
-        }
-        else {
-            if(0<index && index>cols) throw new IllegalArgumentException("Index out of bounds");
-            for (Marble[] marbles : grid)
-                res.add(marbles[index]);
         }
         return res;
     }

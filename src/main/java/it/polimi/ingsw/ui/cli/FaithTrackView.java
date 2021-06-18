@@ -17,9 +17,8 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class FaithTrackView {
-    private HashMap<String, Integer> playersPositions;
-    private HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
-    private int lorenzoPosition;
+    private final HashMap<String, Integer> playersPositions;
+    private final HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
 
     public FaithTrackView(ArrayList<String> playersNames) {
         playersPositions = new HashMap<>();
@@ -100,24 +99,18 @@ public class FaithTrackView {
 
         System.out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
         StringBuilder othersPopeFavorCards = new StringBuilder();
-        popeFavorCards.keySet().stream().filter(f -> f != currentPlayer).forEach(p -> {
-            othersPopeFavorCards.append(p.toUpperCase() + "\n");
+        popeFavorCards.keySet().stream().filter(f -> !f.equals(currentPlayer)).forEach(p -> {
+            othersPopeFavorCards.append(p.toUpperCase()).append("\n");
             Collection<PopeFavorCard> pointsCard = popeFavorCards.get(p).values();
-            pointsCard.stream().forEach(c -> {
-                othersPopeFavorCards.append("╔═══╗" + " ");
-            });
-            othersPopeFavorCards.append(Color.reset() + "\n");
-            pointsCard.stream().forEach(c -> {
-                othersPopeFavorCards.append("║ " + c.getVictoryPoints() + " ║" + " ");
-            });
-            othersPopeFavorCards.append(Color.reset() + "\n");
-            pointsCard.stream().forEach(c -> {
-                othersPopeFavorCards.append("╚═══╝" + " ");
-            });
+            pointsCard.forEach(c -> othersPopeFavorCards.append("╔═══╗" + " "));
+            othersPopeFavorCards.append(Color.reset()).append("\n");
+            pointsCard.forEach(c -> othersPopeFavorCards.append("║ ").append(c.getVictoryPoints()).append(" ║").append(" "));
+            othersPopeFavorCards.append(Color.reset()).append("\n");
+            pointsCard.forEach(c -> othersPopeFavorCards.append("╚═══╝" + " "));
 
-            othersPopeFavorCards.append(Color.reset() + "\n");
+            othersPopeFavorCards.append(Color.reset()).append("\n");
         });
-        System.out.println(othersPopeFavorCards.toString());
+        System.out.println(othersPopeFavorCards);
 
 
     }
@@ -134,7 +127,6 @@ public class FaithTrackView {
 
     //TODO put lorenzo position into visualization
     public void updateLorenzoPosition(int position) {
-        lorenzoPosition = position;
     }
 
     public static void main(String[] args) {

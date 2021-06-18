@@ -14,4 +14,9 @@ public class MainViewController extends Controller implements Initializable {
 
     public MainViewController(GUI gui){super(gui);}
 
+
+    public void openMarket(){
+
+    }
+
 }

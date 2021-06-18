@@ -82,7 +82,6 @@ public class FaithTrackDataTest {
     public void testIncrementPositionUnsuccessful() {
         FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         FaithTrackData ftd = new FaithTrackData();
-        System.out.println(ftd.getPosition());
         try {
             ftd.incrementPosition(24);
             Assert.assertEquals(24, ftd.getPosition());
@@ -108,7 +107,6 @@ public class FaithTrackDataTest {
     @Test
     public void testSetPosition() {
         FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
-        System.out.println(FaithTrack.size());
         FaithTrackData ftd = new FaithTrackData();
         try {
             ftd.setPosition(24);

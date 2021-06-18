@@ -53,6 +53,7 @@ public class GUI extends UI {
     LobbyController lobbyController;
     MainViewController mainViewController;
 
+    private  PlayerState playerState;
 
     public GUI() {
 
@@ -82,10 +83,10 @@ public class GUI extends UI {
                     //displayLobbyState("paolo", new ArrayList<>(Arrays.asList("martino", "paolo", "beppe", "ginevra")));
                     Marble[][] marketStatus = new Marble[][]{
                             {Marble.PURPLE, Marble.PURPLE, Marble.PURPLE, Marble.GRAY},
-                            {Marble.WHITE, Marble.RED, Marble.WHITE, Marble.WHITE},
-                            {Marble.WHITE, Marble.GRAY, Marble.YELLOW, Marble.YELLOW}
+                            {Marble.PURPLE, Marble.PURPLE, Marble.WHITE, Marble.WHITE},
+                            {Marble.WHITE, Marble.PURPLE, Marble.PURPLE, Marble.PURPLE}
                     };
-                    MarketController controller = new MarketController(aux, marketStatus, Marble.BLUE, actionPerformed);
+                    MarketController controller = new MarketController(aux, marketStatus, Marble.YELLOW);
                     try {
                         MainApplication.setScene("market", controller);
                     } catch (IOException e) {
@@ -99,6 +100,20 @@ public class GUI extends UI {
         }
 
     }
+
+
+
+    public void addEvent(Event event){
+        if (event instanceof BuyResourcesEvent) {
+            actionPerformed.setItem(Action.MARKET_ACTION);
+        } else if (event instanceof BuyDevCardsEvent) {
+            actionPerformed.setItem(Action.DEV_CARD_ACTION);
+        } else if (event instanceof ActivateProductionEvent) {
+            actionPerformed.setItem(Action.PRODUCTION_ACTION);
+        }
+        playerState.events.add(event);
+    }
+
 
     public String getPlayerImage() {
         return PlayerImage;
