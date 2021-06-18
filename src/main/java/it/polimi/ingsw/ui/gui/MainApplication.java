@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLOutput;
 import java.util.*;
+import java.util.Objects;
 
 
 
@@ -28,6 +29,8 @@ public class MainApplication extends Application {
         if (MainApplication.gui == null)
             MainApplication.gui = gui;
     }
+
+
 
     static private GUI gui;
 
