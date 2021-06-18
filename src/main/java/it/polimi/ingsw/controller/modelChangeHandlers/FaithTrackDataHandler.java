@@ -10,15 +10,27 @@ import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 
+/**
+ * Observer for the FaithTrackData
+ */
 public class FaithTrackDataHandler extends MatchObserver{
 
-    private MatchState matchState;
+    private final MatchState matchState;
 
+    /**
+     * Constructor for the class
+     * @param networkData The Senders of all the player involved into the match
+     * @param matchState The match state the FaithTrackData belongs to
+     */
     public FaithTrackDataHandler(HashMap<String, Sender> networkData, MatchState matchState) {
         super(networkData);
         this.matchState = matchState;
     }
 
+    /**
+     * Sends to all the players the new position of a Player when they move, along with the pope favor card of everyone
+     * @param o The FaithTrackData that changed
+     */
     @Override
     public void update(Object o) {
         FaithTrackData faithTrackData = (FaithTrackData) o;

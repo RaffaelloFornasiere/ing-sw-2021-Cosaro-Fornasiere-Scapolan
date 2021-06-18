@@ -8,6 +8,9 @@ import it.polimi.ingsw.model.TurnState;
 
 import java.util.HashMap;
 
+/**
+ * Observer for the MatchState
+ */
 public class MatchStateHandler extends MatchObserver{
 
     private TurnState oldTurnState = null;
@@ -16,6 +19,10 @@ public class MatchStateHandler extends MatchObserver{
         super(networkData);
     }
 
+    /**
+     * sends to all the player the new match state every time the turn state changes
+     * @param o The MatchState that changed
+     */
     @Override
     public void update(Object o) {
         MatchState matchState = (MatchState) o;

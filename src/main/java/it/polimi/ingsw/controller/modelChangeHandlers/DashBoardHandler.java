@@ -14,14 +14,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
+/**
+ * Observer for DashBoards
+ */
 public class DashBoardHandler extends MatchObserver{
-    private Player dashBoardOwner;
+    private final Player dashBoardOwner;
 
+    /**
+     * Constructor for the class
+     * @param networkData The Senders of all the player involved into the match
+     * @param dashBoardOwner The owner of the DashBoard being observed
+     */
     public DashBoardHandler(HashMap<String, Sender> networkData, Player dashBoardOwner) {
         super(networkData);
         this.dashBoardOwner = dashBoardOwner;
     }
 
+    /**
+     * Sends to every player of the match the top of the card slots, the state of the warehouse and the state of the strongbox of the DashBoard
+     * @param o The DashBoard that changed
+     */
     @Override
     public void update(Object o) {
         DashBoard dashBoard = (DashBoard) o;

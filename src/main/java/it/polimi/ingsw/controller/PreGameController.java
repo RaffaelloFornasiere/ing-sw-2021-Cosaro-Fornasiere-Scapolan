@@ -21,10 +21,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+/**
+ * Class responsible for handling all the data unrelated to any game
+ *
+ * note: handler for events don't follow the same naming scheme of other methods (in particular they have the firs letter in upper case) because they have to, in order to be automatically registered for handling the right event
+ */
 public class PreGameController {
     private ArrayList<Lobby> lobbies;
     private HashMap<String, RequestsElaborator> networkData;
 
+    /**
+     * Constructor for the class
+     * @param subject The object responsible for registering and notify the arrival of events uncorrelated to any match
+     */
     public PreGameController(PropertyChangeSubject subject){
         subject.addPropertyChangeListener(NewPlayerEventWithNetworkData.class.getSimpleName(), this::NewPlayerEventHandler);
         subject.addPropertyChangeListener(StartMatchEvent.class.getSimpleName(), this::StartMatchEventHandler);
@@ -33,6 +42,9 @@ public class PreGameController {
         this.networkData = new HashMap<>();
     }
 
+    /**
+     * Handler for NewPlayerEvent
+     */
     public synchronized void NewPlayerEventHandler(PropertyChangeEvent evt){
         NewPlayerEventWithNetworkData event = (NewPlayerEventWithNetworkData) evt.getNewValue();
         System.out.println("Handling NewPlayerEvent");
@@ -102,6 +114,10 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Utility method that searches for the first lobby non full
+     * @return The index of the first not full lobby, or -1 if all the lobbies are full
+     */
     private int searchFirstLobbyNotFull() {
         for(int i = 0; i< lobbies.size(); i++)
             if(!lobbies.get(i).isFull())
@@ -110,6 +126,11 @@ public class PreGameController {
         return -1;
     }
 
+    /**
+     * Utility method that searches the lobby from it's leader ID
+     * @param lobbyLeaderID The ID of the leader of the lobby
+     * @return The index of the searched lobby, or -1 if there's no lobby with the given leader
+     */
     private int searchLobbyByLeader(String lobbyLeaderID) {
         for(int i = 0; i< lobbies.size(); i++)
             if(lobbies.get(i).getLeaderID().equals(lobbyLeaderID))
@@ -118,6 +139,11 @@ public class PreGameController {
         return -1;
     }
 
+    /**
+     * Utility method that searches the lobby from one of it's player IDs
+     * @param playerID The ID of one of the player in the lobby
+     * @return The index of the searched lobby, or -1 if there's no lobby containing the given player
+     */
     private int searchLobby(String playerID) {
         for(int i = 0; i< lobbies.size(); i++)
             if(lobbies.get(i).getLeaderID().equals(playerID) || lobbies.get(i).getOtherPLayersID().contains(playerID))
@@ -126,6 +152,9 @@ public class PreGameController {
         return -1;
     }
 
+    /**
+     * Handler for StartMatchEvent
+     */
     public synchronized void StartMatchEventHandler(PropertyChangeEvent evt){
         StartMatchEvent event = (StartMatchEvent) evt.getNewValue();
         RequestsElaborator re = networkData.getOrDefault(event.getPlayerId(), null);
@@ -148,6 +177,10 @@ public class PreGameController {
         prepareMatch(lobby);
     }
 
+    /**
+     * Prepares the match
+     * @param lobby The lobby of players that will take part in the match
+     */
     private void prepareMatch(Lobby lobby) {
         //Decide player Order
         ArrayList<String> playerOrder= new ArrayList<>();
@@ -169,6 +202,12 @@ public class PreGameController {
         setupMatch(playerOrder, involvedClientHandlerSenders, matchEventHandlerRegistry);
     }
 
+    /**
+     * Creates a match with the given data, and sends to all the involved players the choices they must make before the match starts
+     * @param playerOrder A list containing all the involved players IDs in turn order
+     * @param involvedPlayersSenders An HashMap containing the Senders for each players
+     * @param matchEventHandlerRegistry The event registry responsible for all the events for the match that it's being created
+     */
     public static void setupMatch(ArrayList<String> playerOrder, HashMap<String, Sender> involvedPlayersSenders, EventRegistry matchEventHandlerRegistry) {
         //Initialize faith track
         FaithTrack faithTrack = FaithTrack.initFaithTrack(Config.getInstance().getFaithTrack());
@@ -251,6 +290,9 @@ public class PreGameController {
         System.out.println("All initial choices sent");
     }
 
+    /**
+     * Handler for QuitGameEvent
+     */
     public synchronized void QuitGameEventHandler(PropertyChangeEvent evt){
         QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
 
@@ -272,6 +314,10 @@ public class PreGameController {
         requestsElaborator.closeConnection();
     }
 
+    /**
+     * Methods that checks if a lobby is empty, and if so removes it from the list
+     * @param lobby The lobby to check
+     */
     private void removeLobbyIfEmpty(Lobby lobby) {
         boolean allAFK = true;
         if(networkData.containsKey(lobby.getLeaderID()))

@@ -11,14 +11,26 @@ import it.polimi.ingsw.Server.ClientHandlerSender;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Observer for DepositLeaderPower
+ */
 public class DepositLeaderPowerHandler extends MatchObserver{
-    private Player leaderCardOwner;
+    private final Player leaderCardOwner;
 
+    /**
+     * Constructor for the class
+     * @param networkData The Senders of all the player involved into the match
+     * @param leaderCardOwner The owner of the leader card containing the observed power
+     */
     public DepositLeaderPowerHandler(HashMap<String, Sender> networkData, Player leaderCardOwner) {
         super(networkData);
         this.leaderCardOwner = leaderCardOwner;
     }
 
+    /**
+     * Notifies all the players about the new state of the DepositLeaderPower
+     * @param o The DepositLeaderPower that changed
+     */
     @Override
     public void update(Object o) {
         DepositLeaderPower depositLeaderPower = (DepositLeaderPower) o;

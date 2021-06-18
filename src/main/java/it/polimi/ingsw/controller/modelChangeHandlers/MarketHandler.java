@@ -7,6 +7,9 @@ import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 
+/**
+ * Observer for the Market
+ */
 public class MarketHandler extends MatchObserver {
 
 
@@ -14,6 +17,10 @@ public class MarketHandler extends MatchObserver {
         super(networkData);
     }
 
+    /**
+     * Sends to all the players the new state of the market
+     * @param o The Market that changed
+     */
     @Override
     public void update(Object o) {
         Market market = (Market) o;

@@ -34,8 +34,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO reorganize
-
 public class Controller {
     MarketManager marketManager;
     LeaderCardManager leaderCardManager;
@@ -58,6 +56,13 @@ public class Controller {
     private NewResourcesOrganizationEvent newResourcesOrganizationEvent;
 
 
+    /**
+     * Constructor for the class.
+     * It automatically registers an handler for every event that inherits from MatchEvent
+     * @param subject The object responsible for registering and notify the arrival of events related to the match this is the controller of
+     * @param matchState The match this is the controller of
+     * @param senders The Senders for all the players involved in this match
+     */
     public Controller(PropertyChangeSubject subject, MatchState matchState, HashMap<String, Sender> senders) {
         ArrayList<String> playerIDsInMatch = new ArrayList<>();
         for(Player p: matchState.getPlayers())
@@ -101,11 +106,18 @@ public class Controller {
         setuppedPlayers = new ArrayList<>();
     }
 
+    /**
+     * Methods that sets the initials choices sent to each player
+     * @param initialChoices The initial choices sent to each player
+     */
     public void setInitialChoices(HashMap<String, InitialChoicesEvent> initialChoices) {
         //Important it is not a clone!!!
         this.initialChoices = initialChoices;
     }
 
+    /**
+     * Handler for InitialDecisionsEvent
+     */
     public synchronized void InitialDecisionsEventHandler(PropertyChangeEvent evt) {
         InitialDecisionsEvent event = (InitialDecisionsEvent) evt.getNewValue();
 
@@ -169,6 +181,13 @@ public class Controller {
         }
     }
 
+    /**
+     * Checks if it's the player turn and it's the right TurnSate for doing an certain action
+     * @param event The event that represents the action that will be performed
+     * @param player The player whose turn should be
+     * @param turnState The state the turn should be in
+     * @return If the action can be performed
+     */
     private boolean canActionBePerformed(Event event, Player player, TurnState turnState){
         if(matchState.getTurnState() != turnState){
             senders.get(player.getPlayerId()).sendObject(new BadRequestEvent(player.getPlayerId(), "The action can't be performed now", event));
@@ -181,6 +200,13 @@ public class Controller {
         return true;
     }
 
+    /**
+     * Checks if it's the player turn and it's the right TurnSate for doing an certain action
+     * @param event The event that represents the action that will be performed
+     * @param player The player whose turn should be
+     * @param turnStates A list containing all valid states the turn could be in
+     * @return If the action can be performed
+     */
     private boolean canActionBePerformed(Event event, Player player, ArrayList<TurnState> turnStates){
         if(!turnStates.contains(matchState.getTurnState())){
             senders.get(player.getPlayerId()).sendObject(new BadRequestEvent(player.getPlayerId(), "The action can't be performed now", event));
@@ -193,6 +219,9 @@ public class Controller {
         return true;
     }
 
+    /**
+     * Handler for BuyResourcesEvent
+     */
     public synchronized void BuyResourcesEventHandler(PropertyChangeEvent evt){
         System.out.println("Entered into the handler of BuyResourcesEvent");
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
@@ -296,6 +325,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Asks a player to organize it's resources between warehouse and leader cards deposits
+     * @param resources The resources to organize
+     * @param player The player that should organize them
+     */
     private synchronized void organizeResources(HashMap<Resource, Integer> resources, Player player) {
         boolean empty = true;
         for(Resource r: resources.keySet()){
@@ -384,7 +418,6 @@ public class Controller {
                     if (resources.get(r) != newTotalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0) - oldTotalStoredResources.getOrDefault(r, 0))
                         throw new HandlerCheckException(new PlayerActionError(player.getPlayerId(), "Total number of each resource given back does not correspond to the number sent", newResourcesOrganizationEvent));
                 }
-                //TODO check if discarded resources have to be discarded
 
                 goodChoice = true;
 
@@ -422,6 +455,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Handler for NewResourcesOrganizationEvent
+     */
     public void NewResourcesOrganizationEventHandler(PropertyChangeEvent evt){
         NewResourcesOrganizationEvent event = (NewResourcesOrganizationEvent) evt.getNewValue();
         synchronized (waitingForResourceOrganizationLock){
@@ -449,6 +485,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Handler for LeaderPowerSelectStateEvent
+     */
     public synchronized void LeaderPowerSelectStateEventHandler(PropertyChangeEvent evt){
         LeaderPowerSelectStateEvent event = (LeaderPowerSelectStateEvent) evt.getNewValue();
         try {
@@ -487,6 +526,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Handler for ActivateLeaderCardEvent
+     */
     public synchronized void ActivateLeaderCardEventHandler(PropertyChangeEvent evt){
         ActivateLeaderCardEvent event = (ActivateLeaderCardEvent) evt.getNewValue();
         try {
@@ -518,7 +560,10 @@ public class Controller {
         }
     }
 
-    public synchronized void  BuyDevCardsEventHandler(PropertyChangeEvent evt){
+    /**
+     * Handler for BuyDevCardsEvent
+     */
+    public synchronized void BuyDevCardsEventHandler(PropertyChangeEvent evt){
         BuyDevCardsEvent event = (BuyDevCardsEvent) evt.getNewValue();
 
         DevCardGrid devCardGrid = matchState.getDevCardGrid();
@@ -589,7 +634,7 @@ public class Controller {
                     senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Selected resources from warehouse not present", event));
                 }
             }
-            removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPower);
+            leaderCardManager.removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPower);
             for(Resource r: resourcesFromStrongBox.keySet())
                 player.getDashBoard().subResourcesToStrongBox(r, resourcesFromStrongBox.get(r));
             player.getDashBoard().addCard(event.getCardSlot(), devCard);
@@ -611,36 +656,9 @@ public class Controller {
         }
     }
 
-    private synchronized void removeResourcesFromLeaderCards(Player player, HashMap<Resource, Integer> resources) throws NotPresentException {
-        HashMap<Resource, Integer> tempResources = new HashMap<>();
-        for(Resource r: resources.keySet()) {
-            int n = resources.get(r);
-            if (n > 0)
-                tempResources.put(r, n);
-        }
-        resources = tempResources;
-
-        if(resources.isEmpty()) return;
-
-        for(LeaderCard lc: player.getActiveLeaderCards())
-            for(LeaderPower lp: lc.getLeaderPowers()){
-                if(lp.getClass()== DepositLeaderPower.class){
-                    DepositLeaderPower dlp = (DepositLeaderPower) lp;
-                    HashMap<Resource, Integer> currentResources = dlp.getCurrentResources();
-                    for(Resource r: currentResources.keySet()) {
-                        int toRemove = Integer.min(resources.getOrDefault(r, 0), currentResources.get(r));
-                        currentResources.put(r, currentResources.get(r)-toRemove);
-                        resources.put(r, resources.get(r)-toRemove);
-                        if(resources.get(r)<=0)
-                            resources.remove(r);
-                        if(resources.isEmpty()) return;
-                    }
-                }
-            }
-        //WUT
-        throw new NotPresentException("Not enough resources in the leaderCards");
-    }
-
+    /**
+     * Handler for DiscardLeaderCardEvent
+     */
     public synchronized void DiscardLeaderCardEventHandler(PropertyChangeEvent evt){
         DiscardLeaderCardEvent event = (DiscardLeaderCardEvent) evt.getNewValue();
 
@@ -668,6 +686,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Handler for ActivateProductionEvent
+     */
     public synchronized void ActivateProductionEventHandler(PropertyChangeEvent evt){
         ActivateProductionEvent event = (ActivateProductionEvent) evt.getNewValue();
 
@@ -677,8 +698,7 @@ public class Controller {
             return;
         }
 
-        //TODO Why?
-        new Thread(()->{
+        //new Thread(()->{
             HashMap<Resource, Integer> consumedResources = new HashMap<>();
             HashMap<Resource, Integer> producedResources = new HashMap<>();
             int requiredResourceOfChoice = 0;
@@ -831,7 +851,7 @@ public class Controller {
 
                 //produce
                 player.getDashBoard().subResourcesToWarehouse(selectedResourcesFromWarehouse);
-                removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPowers);
+                leaderCardManager.removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPowers);
                 for(Resource r: allPlayerResources.keySet()){
                     player.getDashBoard().subResourcesToStrongBox(r, allPlayerResources.get(r) - selectedResourcesFromWarehouse.getOrDefault(r, 0) - selectedResourcesFromLeaderPowers.getOrDefault(r, 0));
                 }
@@ -847,9 +867,12 @@ public class Controller {
                 notPresentException.printStackTrace();
             }
 
-        }).start();
+        //}).start();
     }
 
+    /**
+     * Handler for EndTurnEvent
+     */
     public synchronized void EndTurnEventHandler(PropertyChangeEvent evt){
         EndTurnEvent event = (EndTurnEvent) evt.getNewValue();
 
@@ -866,6 +889,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Does the actions Lorenzo il Magnifico must do between player's turns
+     */
     private void doIATurn() {
         SinglePlayerMatchState singlePlayerMatchState = (SinglePlayerMatchState) matchState;
         try {
@@ -896,6 +922,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Passes the turn to the next player
+     * @param previousPlayer The player that was taking it's turn until now
+     */
     private void nextTurn(Player previousPlayer){
         try {
             for (LeaderCard lc : previousPlayer.getActiveLeaderCards()) {
@@ -924,6 +954,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Ends the game, notifying all the client of it, and sending them the leaderboard
+     */
     private synchronized void endGame() {
         ArrayList<FinalPlayerState> finalPlayerStates = createLeaderboard();
         matchState.setTurnState(TurnState.MATCH_ENDED);
@@ -936,6 +969,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Creates the leaderboard for the match
+     * @return the state of each player, ordered in ascending order (from last to first)
+     */
     private synchronized ArrayList<FinalPlayerState> createLeaderboard() {
         ArrayList<FinalPlayerState> finalPlayerStates = new ArrayList<>();
 
@@ -974,6 +1011,9 @@ public class Controller {
         return finalPlayerStates;
     }
 
+    /**
+     * Handler for ChosenResourcesEvent
+     */
     public void ChosenResourcesEventHandler(PropertyChangeEvent evt){
         ChosenResourcesEvent event = (ChosenResourcesEvent) evt.getNewValue();
         synchronized (waitingForResourcesLock){
@@ -988,6 +1028,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Handler for SimpleChosenResourcesEvent
+     */
     public void SimpleChosenResourcesEventHandler(PropertyChangeEvent evt){
         SimpleChosenResourcesEvent event = (SimpleChosenResourcesEvent) evt.getNewValue();
         synchronized (waitingForSimpleResourcesLock){
@@ -1002,6 +1045,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Handler for QuitGameEvent
+     */
     public synchronized void QuitGameEventHandler(PropertyChangeEvent evt){
         QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
 

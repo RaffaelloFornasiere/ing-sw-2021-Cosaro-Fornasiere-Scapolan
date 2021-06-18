@@ -7,14 +7,25 @@ import it.polimi.ingsw.Server.RequestsElaborator;
 
 import java.util.HashMap;
 
+/**
+ * Observer for the Lobby
+ */
 public class LobbyHandler implements Observer {
 
-    private HashMap<String, RequestsElaborator> networkData;
+    private final HashMap<String, RequestsElaborator> networkData;
 
+    /**
+     * Constructor for the class
+     * @param networkData The network data of the players in the Lobby
+     */
     public LobbyHandler(HashMap<String, RequestsElaborator> networkData){
         this.networkData = networkData;
     }
 
+    /**
+     * Sends to the players in the Lobby the state of it every time a player joins/leaves
+     * @param o The Lobby that changed
+     */
     @Override
     public void update(Object o) {
         Lobby lobby = (Lobby) o;

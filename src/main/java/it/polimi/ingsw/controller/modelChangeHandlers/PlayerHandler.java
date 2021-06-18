@@ -8,11 +8,18 @@ import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 
+/**
+ * Observer for the Player
+ */
 public class PlayerHandler extends MatchObserver{
     public PlayerHandler(HashMap<String, Sender> networkData) {
         super(networkData);
     }
 
+    /**
+     * Sends to all the players the new state of a Player when it changes
+     * @param o The Player that changed
+     */
     @Override
     public void update(Object o) {
         Player player = (Player) o;

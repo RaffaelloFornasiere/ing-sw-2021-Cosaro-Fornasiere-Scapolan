@@ -5,16 +5,19 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.FaithTrack.AbstractCell;
+import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LeaderCardManager {
 
@@ -36,7 +39,7 @@ public class LeaderCardManager {
     }
 
     /**
-     * Methods that selects a leader power
+     * Selects a leader power
      * @param player the player owning the leader card containing the power to select
      * @param leaderCard the leader card containing the power to select
      * @param leaderPower the power to select
@@ -64,7 +67,7 @@ public class LeaderCardManager {
     }
 
     /**
-     * Methods that deselects a leader power
+     * Deselects a leader power
      * @param player the player owning the leader card containing the power to deselect
      * @param leaderCard the leader card containing the power to deselect
      * @param leaderPower the power to deselect
@@ -84,7 +87,7 @@ public class LeaderCardManager {
     }
 
     /**
-     *
+     *Activates a leader card
      * @param p the player owning the leader card to activate
      * @param leaderCard the leader card to activate
      * @throws NotPresentException if the leader card does not belong to this player
@@ -101,10 +104,16 @@ public class LeaderCardManager {
         p.activateLeaderCard(leaderCard);
     }
 
+
+    /**
+     * Cleans the requirements to make it easier to check them
+     * @param toClean The list of requirements to clean
+     * @return The list of requirements cleaned
+     */
     private ArrayList<Requirement> cleanRequirements(ArrayList<Requirement> toClean){
         if(toClean == null || toClean.size()==0) return toClean;
 
-        ArrayList<Requirement> cleaned = new ArrayList<Requirement>(toClean);
+        ArrayList<Requirement> cleaned = new ArrayList<>(toClean);
 
         int i = 0;
         int j;
@@ -146,13 +155,61 @@ public class LeaderCardManager {
         return cleaned;
     }
 
+    /**
+     * Assignees a set of leader cards to a player
+     * @param player The player to assign the leader card to
+     * @param leaderCards A list containing the leader cards to assign
+     */
     public void assignLeaderCards(Player player, ArrayList<LeaderCard> leaderCards){
         player.setLeaderCards(leaderCards);
     }
 
+    /**
+     * Removes a leader card from a player
+     * @param player The player that will have the leader card removed
+     * @param leaderCard The leader card to remove
+     * @throws NotPresentException If the player does not own the leader card
+     * @throws IllegalOperation If the leader card to remove is active
+     */
     public void removeLeaderCard(Player player, LeaderCard leaderCard) throws NotPresentException, IllegalOperation {
         if(player.getActiveLeaderCards().contains(leaderCard)) throw new IllegalOperation("The leader card is active");
         player.removeLeaderCard(leaderCard);
+    }
+
+    /**
+     * Removes resources from the deposits of the leader cards
+     * @param player The player owning the leader cards the resources will be removed from
+     * @param resources The resources to remove
+     * @throws NotPresentException if there aren't enough resources in the deposit leader powers of the leader cards owned by the player
+     */
+    public synchronized void removeResourcesFromLeaderCards(Player player, HashMap<Resource, Integer> resources) throws NotPresentException {
+        HashMap<Resource, Integer> tempResources = new HashMap<>();
+        for(Resource r: resources.keySet()) {
+            int n = resources.get(r);
+            if (n > 0)
+                tempResources.put(r, n);
+        }
+        resources = tempResources;
+
+        if(resources.isEmpty()) return;
+
+        for(LeaderCard lc: player.getActiveLeaderCards())
+            for(LeaderPower lp: lc.getLeaderPowers()){
+                if(lp.getClass()== DepositLeaderPower.class){
+                    DepositLeaderPower dlp = (DepositLeaderPower) lp;
+                    HashMap<Resource, Integer> currentResources = dlp.getCurrentResources();
+                    for(Resource r: currentResources.keySet()) {
+                        int toRemove = Integer.min(resources.getOrDefault(r, 0), currentResources.get(r));
+                        currentResources.put(r, currentResources.get(r)-toRemove);
+                        resources.put(r, resources.get(r)-toRemove);
+                        if(resources.get(r)<=0)
+                            resources.remove(r);
+                        if(resources.isEmpty()) return;
+                    }
+                }
+            }
+
+        throw new NotPresentException("Not enough resources in the leaderCards");
     }
 
 }

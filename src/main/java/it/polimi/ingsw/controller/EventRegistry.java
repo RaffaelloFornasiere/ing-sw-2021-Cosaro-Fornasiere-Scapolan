@@ -7,16 +7,15 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class EventRegistry implements PropertyChangeSubject {
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public EventRegistry(){}
-
+    /**
+     * Notifies the arrival of an event and triggers the registered handlers
+     * @param event The event that arrived
+     */
     public void sendEvent(Event event){
         support.firePropertyChange(event.getEventName(), null, event);
     }
-
-
-
 
     @Override
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {

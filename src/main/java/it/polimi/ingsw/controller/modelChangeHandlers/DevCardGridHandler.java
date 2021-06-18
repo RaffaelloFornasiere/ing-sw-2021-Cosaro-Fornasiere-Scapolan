@@ -8,12 +8,19 @@ import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 
+/**
+ * Observer for the DevCardGrid
+ */
 public class DevCardGridHandler extends MatchObserver{
 
     public DevCardGridHandler(HashMap<String, Sender> networkData) {
         super(networkData);
     }
 
+    /**
+     * Sends to all the players the top card of each deck of the grid
+     * @param o The DevCardGrid that changed
+     */
     @Override
     public void update(Object o) {
         DevCardGrid devCardGrid = (DevCardGrid) o;
