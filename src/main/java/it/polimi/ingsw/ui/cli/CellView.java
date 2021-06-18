@@ -7,7 +7,6 @@ public class CellView {
     private int victoryPoints;
     private String color;
     private boolean occupied;
-    private boolean vaticanSection;
     private boolean popeCell;
     private String placeholder;
     private int favorPopeCardPoint;
@@ -20,7 +19,6 @@ public class CellView {
         this.victoryPoints = victoryPoints;
         this.color = Color.reset();
         this.occupied = false;
-        this.vaticanSection = false;
         this.popeCell = false;
         this.favorPopeCardPoint = 0;
         this.showFavorPopeCard = false;
@@ -63,66 +61,68 @@ public class CellView {
     }
 
     public void setVaticanSection() {
-        this.vaticanSection = true;
         setColor(Color.CYAN);
     }
 
     public String toString() {
         StringBuilder string = new StringBuilder();
-        string
-                .append(color + "╔═════╗" + Color.reset() + "\n")
-                .append(color + "║");
+        string.append(color).append("╔═════╗").append(Color.reset()).append("\n").append(color).append("║");
         if (index > 9 && victoryPoints > 9)
-            string.append(index + " " + this.victoryPoints + "║" + Color.reset() + "\n");
+            string.append(index).append(" ").append(this.victoryPoints).append("║").append(Color.reset()).append("\n");
         else if (index <= 9 && victoryPoints <= 9)
-            string.append(index + "   " + this.victoryPoints + "║" + Color.reset() + "\n");
-        else string.append(index + "  " + this.victoryPoints + "║" + Color.reset() + "\n");
+            string.append(index).append("   ").append(this.victoryPoints).append("║").append(Color.reset()).append("\n");
+        else string.append(index).append("  ").append(this.victoryPoints).append("║").append(Color.reset()).append("\n");
 
 
         if (occupied) {
-            if( placeholder.length()==1) string.append(color + "╚══" + placeholder + "══╝" + Color.reset() + "\n");
-            else if (placeholder.length()==2)string.append(color + "╚═" + placeholder + "══╝" + Color.reset() + "\n");
-            else if (placeholder.length()==3)string.append(color + "╚═" + placeholder + "═╝" + Color.reset() + "\n");
-            else string.append(color + "╚" + placeholder + "═╝" + Color.reset() + "\n");
-        } else string.append(color +"╚═════╝" + Color.reset() + "\n");
+            if( placeholder.length()==1) string.append(color).append("╚══").append(placeholder).append("══╝").append(Color.reset()).append("\n");
+            else if (placeholder.length()==2)
+                string.append(color).append("╚═").append(placeholder).append("══╝").append(Color.reset()).append("\n");
+            else if (placeholder.length()==3)
+                string.append(color).append("╚═").append(placeholder).append("═╝").append(Color.reset()).append("\n");
+            else string.append(color).append("╚").append(placeholder).append("═╝").append(Color.reset()).append("\n");
+        } else string.append(color).append("╚═════╝").append(Color.reset()).append("\n");
 
         if (popeCell) {
             if (showFavorPopeCard && favorPopeCardPoint != 0) {
-                string.append(color + "╠══" + favorPopeCardPoint + "══╣" + Color.reset() + "\n");
-                if( popeFavorCardPlaceholder.length()==1) string.append(color + "╚══" + popeFavorCardPlaceholder + "══╝" + Color.reset() + "\n");
-                else if (popeFavorCardPlaceholder.length()==2)string.append(color + "╚═" + popeFavorCardPlaceholder + "══╝" + Color.reset() + "\n");
-                else if (popeFavorCardPlaceholder.length()==3)string.append(color + "╚═" + popeFavorCardPlaceholder + "═╝" + Color.reset() + "\n");
-                else string.append(color + "╚" + popeFavorCardPlaceholder + "═╝" + Color.reset() + "\n");
+                string.append(color).append("╠══").append(favorPopeCardPoint).append("══╣").append(Color.reset()).append("\n");
+                if( popeFavorCardPlaceholder.length()==1) string.append(color).append("╚══").append(popeFavorCardPlaceholder).append("══╝").append(Color.reset()).append("\n");
+                else if (popeFavorCardPlaceholder.length()==2)
+                    string.append(color).append("╚═").append(popeFavorCardPlaceholder).append("══╝").append(Color.reset()).append("\n");
+                else if (popeFavorCardPlaceholder.length()==3)
+                    string.append(color).append("╚═").append(popeFavorCardPlaceholder).append("═╝").append(Color.reset()).append("\n");
+                else string.append(color).append("╚").append(popeFavorCardPlaceholder).append("═╝").append(Color.reset()).append("\n");
             }
             else {
-                string.append(color + "╠══ ══╣" + Color.reset() + "\n");
-                string.append(color + "       " + Color.reset() + "\n");
+                string.append(color).append("╠══ ══╣").append(Color.reset()).append("\n");
+                string.append(color).append("       ").append(Color.reset()).append("\n");
             }
         } else {
-            string.append(color + "       " + Color.reset() + "\n");
-            string.append(color + "       " + Color.reset() + "\n");
+            string.append(color).append("       ").append(Color.reset()).append("\n");
+            string.append(color).append("       ").append(Color.reset()).append("\n");
         }
 
 
         return string.toString();
     }
-/*
 
-    public static void main(String[] args) {
 
-        Panel panel = new Panel(10000, 100, System.out);
-        for (int i = 0; i < 20; i++) {
-            CellView cell = new CellView(2, 3);
-            cell.setVaticanSection();
-            cell.setPopeCell();
-            cell.setFavorPopeCardPoint(3);
+//    public static void main(String[] args) {
+//
+//        Panel panel = new Panel(10000, 100, System.out);
+//        for (int i = 0; i < 20; i++) {
+//            CellView cell = new CellView(2, 3);
+//            cell.setVaticanSection();
+//            cell.setPopeCell();
+//            cell.setFavorPopeCardPoint(3);
+//            cell.setPopeFavorCardPlaceHolder("G");
+//
+//            cell.setPlaceHolder("+");
+//            DrawableObject d = new DrawableObject(cell.toString(), 20 * i, 1);
+//            panel.addItem(d);
+//
+//        }
+//        panel.show();
+//    }
 
-            cell.setPlaceHolder("+");
-            DrawableObject d = new DrawableObject(cell.toString(), 20 * i, 1);
-            panel.addItem(d);
-
-        }
-        panel.show();
-    }
-*/
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.ui.cli;
 
-import com.google.gson.Gson;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
@@ -19,14 +18,14 @@ public class DashBoardView {
     private HashMap<Resource, Integer> strongBox;
     private ArrayList<DepotState> warehouse;
     private ProductionPower personalProductionPower;
-    private String player;
+    private final String player;
 
 
     public DashBoardView(ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse, String player) {
         this.topDevCards = new ArrayList<>();
         this.topDevCards.addAll(topDevCards);
 
-        this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
+        this.strongBox = new HashMap<>(strongBox);
         this.warehouse = new ArrayList<>();
         for (DepotState d : warehouse) {
             this.warehouse.add(new DepotState(d.getResourceType(), d.getMaxQuantity(), d.getCurrentQuantity()));
@@ -53,15 +52,15 @@ public class DashBoardView {
     }
 
     public void updateTopDevCards(ArrayList<String> topDevCards) {
-        this.topDevCards = (ArrayList<String>) topDevCards.clone();
+        this.topDevCards = new ArrayList<>(topDevCards);
     }
 
     public void updateStrongBox(HashMap<Resource, Integer> strongBox) {
-        this.strongBox = (HashMap<Resource, Integer>) strongBox.clone();
+        this.strongBox = new HashMap<>(strongBox);
     }
 
     public DepotResultMessage tryAddResource(Resource r, DepotState depot) {
-        if (warehouse.stream().filter(dep -> dep != depot).map(dep->((dep.getCurrentQuantity()!=0) && (dep.getResourceType()!=r))||dep.getCurrentQuantity()==0).reduce(true, (prev, foll) -> prev && foll)) {
+        if (warehouse.stream().filter(dep -> dep != depot).map(dep -> dep.getCurrentQuantity() == 0 || (dep.getResourceType() != r)).reduce(true, (prev, foll) -> prev && foll)) {
             return depot.tryAddResource(r);
         }
         return DepotResultMessage.INVALID_DEPOT;
@@ -82,8 +81,7 @@ public class DashBoardView {
     }
 
     public DepotResultMessage switchDepots(int depot1, int depot2) {
-        DepotResultMessage result = warehouse.get(depot1).switchDepot(warehouse.get(depot2));
-        return result;
+        return warehouse.get(depot1).switchDepot(warehouse.get(depot2));
     }
 
     public void setPersonalProductionPower(ProductionPower personalProductionPower) {
@@ -93,20 +91,16 @@ public class DashBoardView {
     public String resourceNumberToString() {
         HashMap<Resource, Integer> totalRes = new HashMap();
         Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
-        strongBox.keySet().forEach(resource -> {
-            totalRes.put(resource, totalRes.get(resource) + strongBox.get(resource));
-        });
-        warehouse.stream().forEach(depotState -> {
-            totalRes.put(depotState.getResourceType(), totalRes.get(depotState.getResourceType()) + depotState.getCurrentQuantity());
-        });
+        strongBox.keySet().forEach(resource -> totalRes.put(resource, totalRes.get(resource) + strongBox.get(resource)));
+        warehouse.forEach(depotState -> totalRes.put(depotState.getResourceType(), totalRes.get(depotState.getResourceType()) + depotState.getCurrentQuantity()));
         StringBuilder builder = new StringBuilder();
         builder.append("\033[31;1;4mTOTAL OF RESOURCES:\033[0m \n");
         totalRes.keySet().forEach(resource -> {
             String color = CLI.colorResource(resource);
             String shape = CLI.shapeResource(resource);
-            builder.append(color + resource.toString() + ": ");
-            IntStream.range(0, totalRes.get(resource)).forEach(n -> builder.append(color + shape + " "));
-            builder.append(":" + totalRes.get(resource) + Color.reset() + "\n");
+            builder.append(color).append(resource.toString()).append(": ");
+            IntStream.range(0, totalRes.get(resource)).forEach(n -> builder.append(color).append(shape).append(" "));
+            builder.append(":").append(totalRes.get(resource)).append(Color.reset()).append("\n");
         });
         return builder.toString();
     }
@@ -124,18 +118,18 @@ public class DashBoardView {
             }
             String shape = CLI.shapeResource(l.getResourceType());
             if (l.getCurrentQuantity() == 0) {
-                warehouseBuilder.append(color + "   " + "EMPTY" + "\n   ");
+                warehouseBuilder.append(color).append("   ").append("EMPTY").append("\n   ");
             } else {
-                warehouseBuilder.append(color + "   " + l.getResourceType().toString() + "\n   ");
+                warehouseBuilder.append(color).append("   ").append(l.getResourceType().toString()).append("\n   ");
             }
 
-            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╔═══╗" + " "));
-            warehouseBuilder.append(Color.reset() + "\n" + "." + m + " ");
-            IntStream.range(0, l.getCurrentQuantity()).forEach(n -> warehouseBuilder.append(color + "║ " + shape + " ║" + " "));
-            IntStream.range(0, (l.getMaxQuantity() - l.getCurrentQuantity())).forEach(n -> warehouseBuilder.append(color + "║   ║" + " "));
-            warehouseBuilder.append(Color.reset() + "\n   ");
-            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color + "╚═══╝" + " "));
-            warehouseBuilder.append(Color.reset() + "\n");
+            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color).append("╔═══╗").append(" "));
+            warehouseBuilder.append(Color.reset()).append("\n").append(".").append(m).append(" ");
+            IntStream.range(0, l.getCurrentQuantity()).forEach(n -> warehouseBuilder.append(color).append("║ ").append(shape).append(" ║").append(" "));
+            IntStream.range(0, (l.getMaxQuantity() - l.getCurrentQuantity())).forEach(n -> warehouseBuilder.append(color).append("║   ║").append(" "));
+            warehouseBuilder.append(Color.reset()).append("\n   ");
+            IntStream.range(0, l.getMaxQuantity()).forEach(n -> warehouseBuilder.append(color).append("╚═══╝").append(" "));
+            warehouseBuilder.append(Color.reset()).append("\n");
             m++;
 
         }
@@ -149,9 +143,9 @@ public class DashBoardView {
         strongBox.keySet().forEach(resource -> {
             String color = CLI.colorResource(resource);
             String shape = CLI.shapeResource(resource);
-            strongBoxBuilder.append(color + resource.toString() + ": ");
-            IntStream.range(0, strongBox.get(resource)).forEach(n -> strongBoxBuilder.append(color + shape + " "));
-            strongBoxBuilder.append(Color.reset() + "\n");
+            strongBoxBuilder.append(color).append(resource.toString()).append(": ");
+            IntStream.range(0, strongBox.get(resource)).forEach(n -> strongBoxBuilder.append(color).append(shape).append(" "));
+            strongBoxBuilder.append(Color.reset()).append("\n");
         });
         return strongBoxBuilder.toString();
     }
@@ -177,17 +171,16 @@ public class DashBoardView {
         AtomicInteger slotIndex = new AtomicInteger(1);
         ArrayList<DrawableObject> objs = new ArrayList<>();
         AtomicInteger height = new AtomicInteger(0);
-        topDevCards.stream().forEach(x -> {
+        topDevCards.forEach(x -> {
+            DrawableObject obj;
             if (x != null) {
-                DrawableObject obj = new DrawableObject(color + "   " + color + "SLOT " + slotIndex + color + "  " + Color.reset() + "\n" + new DevCardView(x).toString(), gap.get() * 40, 3);
+                obj = new DrawableObject(color + "   " + color + "SLOT " + slotIndex + color + "  " + Color.reset() + "\n" + new DevCardView(x), gap.get() * 40, 3);
 
-                height.set(Integer.max(height.get(), obj.getHeight() + 1));
-                objs.add(obj);
             } else {
-                DrawableObject obj = new DrawableObject(color + "   " + color + "SLOT " + slotIndex + color + "  " + Color.reset() + "\n" + DevCardView.emptySlot(14), gap.get() * 40, 3);
-                height.set(Integer.max(height.get(), obj.getHeight() + 1));
-                objs.add(obj);
+                obj = new DrawableObject(color + "   " + color + "SLOT " + slotIndex + color + "  " + Color.reset() + "\n" + DevCardView.emptySlot(14), gap.get() * 40, 3);
             }
+            height.set(Integer.max(height.get(), obj.getHeight() + 1));
+            objs.add(obj);
             gap.getAndIncrement();
             slotIndex.getAndIncrement();
         });
@@ -204,16 +197,14 @@ public class DashBoardView {
     public HashMap<Resource, Integer> totalResourcesInWarehouse() {
         HashMap<Resource, Integer> totalRes = new HashMap<>();
         Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
-        warehouse.stream().forEach(depotState -> {
-            totalRes.put(depotState.getResourceType(), totalRes.get(depotState.getResourceType()) + depotState.getCurrentQuantity());
-        });
+        warehouse.forEach(depotState -> totalRes.put(depotState.getResourceType(), totalRes.get(depotState.getResourceType()) + depotState.getCurrentQuantity()));
         return totalRes;
     }
 
 
     public void displayAll(String playerID) {
 
-        System.out.println("\033[31;1;4mTHIS IS " + player + "'S DASHBOARD\033[0m \n");
+        System.out.println("\033[31;1;4mTHIS IS " + playerID + "'S DASHBOARD\033[0m \n");
 
         String warehouseString = warehouseToString();
         String strongBoxString = strongBoxToString();
@@ -222,7 +213,7 @@ public class DashBoardView {
         DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
         DrawableObject strongBox = new DrawableObject(strongBoxString, 0, warehouse.getHeight() + 2);
         DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight() + strongBox.getHeight() + 2);
-        Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight()+ personalProductionPower.getHeight() + 4, System.out);
+        Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight() + personalProductionPower.getHeight() + 4, System.out);
 
         panel.addItem(warehouse);
         panel.addItem(strongBox);
@@ -256,9 +247,9 @@ public class DashBoardView {
         DashBoardView d = new DashBoardView(cards, str, totalLevels, player);
         System.out.println(d.tryAddResource(Resource.COIN, d.getWarehouse().get(1)).getMessage());
 
-        DepotState depot1=d.getWarehouse().get(1);
+        DepotState depot1 = d.getWarehouse().get(1);
         System.out.println(depot1.getResourceType());
-        d.getWarehouse().stream().filter(dep-> dep!=depot1).map(dep->((dep.getCurrentQuantity()!=0) && (dep.getResourceType()!=depot1.getResourceType()))||dep.getCurrentQuantity()==0).forEach(bool-> System.out.println(bool));
+        d.getWarehouse().stream().filter(dep -> dep != depot1).map(dep -> dep.getCurrentQuantity() == 0 || (dep.getResourceType() != depot1.getResourceType())).forEach(System.out::println);
 
 
         d.displayAll(player);

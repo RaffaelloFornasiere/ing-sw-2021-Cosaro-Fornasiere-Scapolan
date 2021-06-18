@@ -1,10 +1,10 @@
 package it.polimi.ingsw.ui.cli;
 
 public class DrawableObject {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private int width;
-    private int height;
+    private final int height;
     private String textObject;
 
 

@@ -16,15 +16,15 @@ public enum DepotResultMessage {
     REACHED_MIN_CAP_STRONGBOX("YOU DON'T HAVE ENOUGH OF THESE RESOURCES IN THE STRONGBOX", false),
     INVALID_RES_STRONGBOX("THE STRONGBOX DOESN'T CONTAIN ANY RESOURCE OF THIS KIND", false),
     UNSUCCESSFUL_SUB_FROM_LEADER("YOU CAN'T TAKE THIS NUMBER OF RESOURCES FROM DEPOSIT LEADER POWERS BECAUSE THERE NONE OR NOT ENOUGH", false),
-    SUCCESSFUL_GENERIC("YOU CAN TAKE SUCCESSFULLY THESE RESURCES FROM YOUR DEPOSITS", true),
+    SUCCESSFUL_GENERIC("YOU CAN TAKE SUCCESSFULLY THESE RESOURCES FROM YOUR DEPOSITS", true),
     INVALID_DEPOT("OTHER DEPOTS ALREADY CONTAIN THIS TYPE OF RESOURCE", false);
 
     private final String message;
     private final boolean successful;
 
-    DepotResultMessage(String message, boolean successfull) {
+    DepotResultMessage(String message, boolean successful) {
         this.message = message;
-        this.successful = successfull;
+        this.successful = successful;
     }
 
 
@@ -32,7 +32,7 @@ public enum DepotResultMessage {
         return message;
     }
 
-    public boolean getSuccessfull() {
+    public boolean getSuccessful() {
         return successful;
     }
 

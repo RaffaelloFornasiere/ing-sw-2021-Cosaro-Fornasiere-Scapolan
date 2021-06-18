@@ -35,57 +35,44 @@ public class DevCardView {
     public String toString() {
         String color = translateColor(card.getColor());
         StringBuilder build = new StringBuilder();
-        build.append(
-                color + "   " + color + card.getCardID() + color + "  " + Color.reset() + "\n" +
-                        color + "╔════" + color + "Level" + color + "════╗" + Color.reset() + "\n" +
-                        color + "║      " + color + card.getLevel() + color + "      ║" + Color.reset() + "\n" +
-                        color + "╠════" + color + "Cost" + color + "═════╣" + Color.reset() + "\n");
+        build.append(color).append("   ").append(color).append(card.getCardID()).append(color).append("  ").append(Color.reset()).append("\n").append(color).append("╔════").append(color).append("Level").append(color).append("════╗").append(Color.reset()).append("\n").append(color).append("║      ").append(color).append(card.getLevel()).append(color).append("      ║").append(Color.reset()).append("\n").append(color).append("╠════").append(color).append("Cost").append(color).append("═════╣").append(Color.reset()).append("\n");
         for (Resource resource : card.getCost().keySet()) {
-            build.append(color + "║     " + CLI.colorResource(resource) + card.getCost().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+            build.append(color).append("║     ").append(CLI.colorResource(resource)).append(card.getCost().get(resource)).append(" ").append(CLI.shapeResource(resource)).append(color).append("     ║").append(Color.reset()).append("\n");
         }
-        build.append(color + "╠═" + color + "Production" + color + "══╣" + Color.reset() + "\n");
+        build.append(color).append("╠═").append(color).append("Production").append(color).append("══╣").append(Color.reset()).append("\n");
         for (Resource resource : card.getProductionPower().getConsumedResources().keySet()) {
-            build.append(color + "║     " + CLI.colorResource(resource) + card.getProductionPower().getConsumedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+            build.append(color).append("║     ").append(CLI.colorResource(resource)).append(card.getProductionPower().getConsumedResources().get(resource)).append(" ").append(CLI.shapeResource(resource)).append(color).append("     ║").append(Color.reset()).append("\n");
         }
         if (card.getProductionPower().getRequiredResourceOfChoice() != 0) {
-            build.append(color + "║     " + color + +card.getProductionPower().getRequiredResourceOfChoice() + " " + "?" + color + "     ║" + Color.reset() + "\n");
+            build.append(color).append("║     ").append(color).append(+card.getProductionPower().getRequiredResourceOfChoice()).append(" ").append("?").append(color).append("     ║").append(Color.reset()).append("\n");
         }
-        build.append(color + "║   " + color + "--->>> " + color + "   ║ " + Color.reset() + "\n");
+        build.append(color).append("║   ").append(color).append("--->>> ").append(color).append("   ║ ").append(Color.reset()).append("\n");
         for (Resource resource : card.getProductionPower().getProducedResources().keySet()) {
-            build.append(color + "║     " + CLI.colorResource(resource) + card.getProductionPower().getProducedResources().get(resource) + " " + CLI.shapeResource(resource) + color + "     ║" + Color.reset() + "\n");
+            build.append(color).append("║     ").append(CLI.colorResource(resource)).append(card.getProductionPower().getProducedResources().get(resource)).append(" ").append(CLI.shapeResource(resource)).append(color).append("     ║").append(Color.reset()).append("\n");
         }
         if (card.getProductionPower().getFaithPointsProduced() != 0) {
-            build.append(color + "║     " + color + +card.getProductionPower().getFaithPointsProduced() + " " + "+" + color + "     ║" + Color.reset() + "\n");
+            build.append(color).append("║     ").append(color).append(+card.getProductionPower().getFaithPointsProduced()).append(" ").append("+").append(color).append("     ║").append(Color.reset()).append("\n");
         }
         if (card.getProductionPower().getProducedResourceOfChoice() != 0) {
-            build.append(color + "║     " + color + +card.getProductionPower().getProducedResourceOfChoice() + " " + "?" + color + "     ║" + Color.reset() + "\n");
+            build.append(color).append("║     ").append(color).append(+card.getProductionPower().getProducedResourceOfChoice()).append(" ").append("?").append(color).append("     ║").append(Color.reset()).append("\n");
         }
 
 
-        build.append(color + "╠═══" + color + "VPoints" + color + "═══╣" + Color.reset() + "\n");
+        build.append(color).append("╠═══").append(color).append("VPoints").append(color).append("═══╣").append(Color.reset()).append("\n");
         if (card.getVictoryPoints() < 10) {
-            build.append(color + "║      " + color + card.getVictoryPoints() + color + "      ║" + Color.reset() + "\n");
+            build.append(color).append("║      ").append(color).append(card.getVictoryPoints()).append(color).append("      ║").append(Color.reset()).append("\n");
         } else
-            build.append(color + "║     " + color + card.getVictoryPoints() + color + "      ║" + Color.reset() + "\n");
-        build.append(color + "╚════" + color + color + "═════════╝" + Color.reset() + "\n");
-        for (int i = 0; i < 5; i++) {
-            build.append(color + "     " + color + color + "          " + Color.reset() + "\n");
-        }
+            build.append(color).append("║     ").append(color).append(card.getVictoryPoints()).append(color).append("      ║").append(Color.reset()).append("\n");
+        build.append(color).append("╚════").append(color).append(color).append("═════════╝").append(Color.reset()).append("\n");
+        build.append((color + "     " + color + color + "          " + Color.reset() + "\n").repeat(5));
         return build.toString();
     }
-    public static String emptySlot(int heigth) {
+    public static String emptySlot(int height) {
         String color = Color.WHITE.getAnsiCode();
-        StringBuilder build = new StringBuilder();
-        build.append(color + "   " + color + "        " + color + "  " + Color.reset() + "\n" +
-        color + "╔════" + color + "═════" + color + "════╗" + Color.reset() + "\n" );
-        for (int i = 0; i < heigth - 6; i++) {
-            build.append(color + "║    " + color + "     " + color + "    ║" + Color.reset() + "\n");
-        }
-        build.append(color + "╚════" + color + color + "═════════╝" + Color.reset() + "\n");
-        for (int i = 0; i < 5; i++) {
-            build.append(color + "     " + color + color + "          " + Color.reset() + "\n");
-        }
-        return build.toString();
+        return color + "   " + color + "        " + color + "  " + Color.reset() + "\n" + color + "╔════" + color + "═════" + color + "════╗" + Color.reset() + "\n" +
+                (color + "║    " + color + "     " + color + "    ║" + Color.reset() + "\n").repeat(Math.max(0, height - 6)) +
+                color + "╚════" + color + color + "═════════╝" + Color.reset() + "\n" +
+                (color + "     " + color + color + "          " + Color.reset() + "\n").repeat(5);
     }
 
     public static void main(String[] args) {
