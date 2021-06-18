@@ -126,8 +126,15 @@ public class MarketTest {
 
     @Test
     public void getMarbleLeft() {
-        Market market = new Market(4, 3, marbles);
-        Assert.assertEquals(market.getMarbleLeft(), Marble.BLUE);
+        ArrayList<Marble> marbleArrayList = new ArrayList<Marble>() {{
+            marbles.forEach((key, value) ->
+                    IntStream.range(0, value)
+                            .forEach(n -> add(key))
+            );
+        }};
+        Market market = new Market(4,3, marbleArrayList);
+
+        Assert.assertEquals(market.getMarbleLeft(), marbleArrayList.get(marbleArrayList.size()-1));
     }
 
     @Test
