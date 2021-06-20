@@ -1,7 +1,6 @@
 package it.polimi.ingsw.utilities;
 
 
-
 public class LockWrap<T> {
     private T item;
     private T lockingState;
@@ -10,12 +9,13 @@ public class LockWrap<T> {
         this.item = item;
         lockingState = null;
     }
+
     public LockWrap(T item, T lockingState) {
         this.item = item;
         this.lockingState = lockingState;
     }
 
-    public T getWaitIfLocked()  {
+    public T getWaitIfLocked() {
         T res;
         synchronized (this) {
             while (item == lockingState) {

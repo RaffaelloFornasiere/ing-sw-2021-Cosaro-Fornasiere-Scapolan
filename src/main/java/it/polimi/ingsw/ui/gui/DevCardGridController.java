@@ -7,7 +7,9 @@ import java.util.ResourceBundle;
 
 public class DevCardGridController extends Controller implements Initializable {
 
-    DevCardGridController(GUI gui, String[][] devCardGridState){super(gui);}
+    DevCardGridController(GUI gui, String[][] devCardGridState) {
+        super(gui);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.ui.gui;
 
-import com.sun.tools.javac.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -17,7 +16,9 @@ public class MainViewController extends Controller implements Initializable {
 
     }
 
-    public MainViewController(GUI gui){super(gui);}
+    public MainViewController(GUI gui) {
+        super(gui);
+    }
 
 
     public void openMarket() throws IOException {

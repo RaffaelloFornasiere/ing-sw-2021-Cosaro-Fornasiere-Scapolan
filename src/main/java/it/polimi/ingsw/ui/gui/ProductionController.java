@@ -3,6 +3,7 @@ package it.polimi.ingsw.ui.gui;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenResourcesEvent;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
@@ -13,11 +14,13 @@ import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.Pair;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -30,10 +33,7 @@ import javafx.scene.shape.Line;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.checkerframework.checker.units.qual.A;
 
-import javax.swing.*;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -206,9 +206,25 @@ public class ProductionController extends Controller implements Initializable {
 
     public void onNext() {
         HashMap<Resource, Integer> allRes = new HashMap<>();
+        HashMap<Resource, Integer> fromWareHouse = new HashMap<>();
+        resourcesToUse.getItems().stream()
+                .forEach(r -> allRes.put(Resource.valueOf(r.getText()), allRes.get(Resource.valueOf(r.getText())) + 1));
+        resourcesToUse.getItems().stream().filter(n -> n.getId().contains("warehouseListCell"))
+                .forEach(r -> fromWareHouse.put(Resource.valueOf(r.getText()), fromWareHouse.get(Resource.valueOf(r.getText())) + 1));
 
-        // gui.playerState.chosenResources = new ChosenResourcesEvent(gui.askUserID(), allRes, )
-        //gui.addEvent(new ChosenResourcesEvent(gui.askUserID(), ));
+        HashMap<Resource, Integer> leaderPowers = new HashMap<>();
+        ArrayList<Label> copy = resourcesOfChoiceList.getItems().stream()
+                .map(n -> (Label) n.getChildren()
+                        .stream().filter(b -> b instanceof Label)
+                        .collect(Collectors.toList()).get(0))
+                .collect(Collectors.toCollection(ArrayList::new));
+        copy.remove(0);
+        copy.stream().filter(n -> n.getId().contains("warehouseListCell"))
+                .forEach(r -> leaderPowers.put(Resource.valueOf(r.getText()), leaderPowers.get(Resource.valueOf(r.getText())) + 1));
+
+        gui.playerState.chosenResources = new ChosenResourcesEvent(gui.askUserID(), allRes, fromWareHouse, leaderPowers);
+        // gui.playerState.events.add(new ActivateProductionEvent())
+
     }
 
 
@@ -249,8 +265,8 @@ public class ProductionController extends Controller implements Initializable {
             label.setMaxHeight(10);
             Line buttonLine = new Line();
             buttonLine.setStrokeWidth(4);
-            buttonLine.setEndX(hBox.getWidth()-5);
-            buttonLine.setStartX(hBox.getWidth()-20);
+            buttonLine.setEndX(hBox.getWidth() - 5);
+            buttonLine.setStartX(hBox.getWidth() - 20);
             buttonLine.setStroke(Paint.valueOf("red"));
             buttonLine.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
 
@@ -264,4 +280,6 @@ public class ProductionController extends Controller implements Initializable {
             System.out.println(list.getSelectionModel().getSelectedItem().getText());
         }
     }
+
+
 }

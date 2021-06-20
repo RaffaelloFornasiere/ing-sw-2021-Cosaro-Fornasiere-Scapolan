@@ -5,17 +5,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
@@ -37,8 +33,10 @@ public class ServerSettingsController extends Controller implements Initializabl
     TextField hostnameTextField;
 
 
-
-    public ServerSettingsController(GUI gui){super(gui);serverAddress =null;}
+    public ServerSettingsController(GUI gui) {
+        super(gui);
+        serverAddress = null;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -53,10 +51,9 @@ public class ServerSettingsController extends Controller implements Initializabl
             }
         });
         portText.setText("50885");
-        if(serverAddress != null) {
+        if (serverAddress != null) {
             hostnameTextField.setText(serverAddress.getHostAddress());
-        }
-        else {
+        } else {
             hostnameTextField.setPromptText("www.mastersofrenaissance.ns0.it");
         }
 
@@ -77,7 +74,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     public void onPortChanged() {
         int port = Integer.parseInt(portText.getText());
         System.out.println("port typed: " + Integer.toString(port));
-        if (port < 1024 ) {
+        if (port < 1024) {
             portErrorLabel.setOpacity(1);
             System.out.println("error");
             return;
@@ -91,10 +88,9 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onNext() throws IOException {
-        if(hostnameTextField.getText() != "")
+        if (hostnameTextField.getText() != "")
             onServerChanged(hostnameTextField.getText());
-        if(serverAddress == null)
-        {
+        if (serverAddress == null) {
             invalidAddress.setOpacity(1);
             return;
         }
@@ -102,7 +98,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onServerChanged(ActionEvent event) {
-        onServerChanged(((TextField)event.getSource()).getText());
+        onServerChanged(((TextField) event.getSource()).getText());
     }
 
     public void onServerChanged(String ip) {

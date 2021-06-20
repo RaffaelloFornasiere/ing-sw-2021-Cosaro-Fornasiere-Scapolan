@@ -1,12 +1,10 @@
 package it.polimi.ingsw.ui.gui;
 
-import com.google.gson.Gson;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
@@ -27,9 +25,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -90,13 +85,13 @@ public class GUI extends UI {
                 public void run() {
                     Stage stage = new Stage();
                     FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("production.fxml"));
-                    HashMap<Resource, Integer> strongBox = new HashMap<>(){{
+                    HashMap<Resource, Integer> strongBox = new HashMap<>() {{
                         put(Resource.COIN, 4);
                         put(Resource.SHIELD, 2);
                         put(Resource.SERVANT, 5);
                         put(Resource.ROCK, 3);
                     }};
-                    ArrayList<DepotState> warehouse = new ArrayList<>(){{
+                    ArrayList<DepotState> warehouse = new ArrayList<>() {{
                         add(new DepotState(Resource.COIN, 1, 1));
                         add(new DepotState(Resource.SHIELD, 2, 2));
                         add(new DepotState(Resource.ROCK, 3, 3));
@@ -131,15 +126,15 @@ public class GUI extends UI {
 
     }
 
-    public Pair<Marble[][], Marble> getMarketStatus(){
+    public Pair<Marble[][], Marble> getMarketStatus() {
         return new Pair<>(playerState.marketStatus);
     }
 
-    public String[][] getDevCardGridState(){
+    public String[][] getDevCardGridState() {
         return playerState.devCardGrid.clone();
     }
 
-    public void addEvent(Event event){
+    public void addEvent(Event event) {
         if (event instanceof BuyResourcesEvent) {
             actionPerformed.setItem(Action.MARKET_ACTION);
         } else if (event instanceof BuyDevCardsEvent) {
@@ -255,7 +250,7 @@ public class GUI extends UI {
         }
     }
 
-    void startGame(){
+    void startGame() {
         client.startMatch();
     }
 
@@ -339,7 +334,7 @@ public class GUI extends UI {
         //Integer index = playerInfo.getBoughtResourcesInfo().getValue();
         //return new BuyResourcesEvent(playerID.getItem(), dir, index);
 
-        return  null;
+        return null;
     }
 
     @Override
@@ -348,7 +343,7 @@ public class GUI extends UI {
         //int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
         //return new BuyDevCardsEvent(playerID.getItem(), devCardId, cardSlot);
 
-        return  null;
+        return null;
     }
 
     @Override
@@ -356,7 +351,7 @@ public class GUI extends UI {
         //var devCards = playerInfo.getProdPowerDevCards();
         //var personalPower = playerInfo.isActivatePersonalPower();
         //return new ActivateProductionEvent(playerID.getItem(), devCards, personalPower);
-        return  null;
+        return null;
     }
 
     @Override
@@ -379,8 +374,8 @@ public class GUI extends UI {
     @Override
     public ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
 
-        ArrayList<Event> events= new ArrayList<>();
-        if(playerID.equals(this.playerID.getItem()))
+        ArrayList<Event> events = new ArrayList<>();
+        if (playerID.equals(this.playerID.getItem()))
             return events;
         Action a;
         a = actionPerformed.getWaitIfLocked();
