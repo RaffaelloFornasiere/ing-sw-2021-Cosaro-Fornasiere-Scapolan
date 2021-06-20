@@ -10,6 +10,13 @@ public class Pair<K, V> {
         this.key = key;
         this.value = value;
     }
+    public Pair(Pair<K,V> p) {
+        this.key = p.key;
+        this.value = p.value;
+    }
+
+
+
 
     @Override
     public boolean equals(Object o) {

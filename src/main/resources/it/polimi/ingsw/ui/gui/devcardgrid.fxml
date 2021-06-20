@@ -30,11 +30,11 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Group id="g00" onMouseClicked="#tes" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                <Group id="g00"  GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="105.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                             <image>
-                                <Image url="@images/Front/DevCard1.png" />
+                                <Image url="@images/Front/DevCard45.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -44,7 +44,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/DevCard2.png" />
+                                <Image url="@images/Front/DevCard21.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -54,7 +54,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/DevCard4.png" />
+                                <Image url="@images/Front/DevCard1.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -64,7 +64,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/LightBlueLevel3_4.png" />
+                                <Image url="@images/Front/DevCard47.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -74,7 +74,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/LightBlueLevel2_4.png" />
+                                <Image url="@images/Front/DevCard31.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -84,7 +84,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/LightBlueLevel1_4.png" />
+                                <Image url="@images/Front/DevCard3.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -94,7 +94,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/YellowLevel3_4.png" />
+                                <Image url="@images/Front/DevCard48.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -104,7 +104,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/YellowLevel2_4.png" />
+                                <Image url="@images/Front/DevCard24.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -114,7 +114,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@images/Front/YellowLevel1_4.png" />
+                            <Image url="@images/Front/DevCard4.png" />
                         </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -124,7 +124,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/PurpleLevel3_1.png" />
+                                <Image url="@images/Front/DevCard46.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -134,7 +134,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/PurpleLevel2_1.png" />
+                                <Image url="@images/Front/DevCard22.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
@@ -144,7 +144,7 @@
                     <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Front/PurpleLevel1_1.png" />
+                                <Image url="@images/Front/DevCard2.png" />
                             </image>
                         </ImageView>
                         <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />

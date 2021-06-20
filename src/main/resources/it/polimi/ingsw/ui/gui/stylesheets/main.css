@@ -100,15 +100,22 @@
 }
 
 .VictoryPoint{
-    -fx-image: url(../images/VictoryPoint.png);
+    -fx-background-image: url(../images/VictoryPoint.png);
+    -fx-background-size: stretch;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
-    -fx-scale-x: 0.4;
-    -fx-scale-y: 0.4;
+
+}
+
+.region:hover{
+    -fx-border-color: rgba(0, 176, 255, 0.85);
+    -fx-border-width: 6px;
+    -fx-border-radius: 10px;
 }
 
 
 .DevCardCounter{
-    -fx-image: url(../images/back.png);
+    -fx-background-image: url(../images/back.png);
+    -fx-background-size: stretch;
 }
 
 
@@ -121,5 +128,14 @@
 
 .market:hover > .SelectableRegion{
     -fx-opacity: 1;
+}
+
+
+.SelectableImage{
+    -fx-background-image: url(../images/FilledMarket.png);
+    -fx-background-size: stretch;
+}
+.SelectableImage:hover{
+
 }
 

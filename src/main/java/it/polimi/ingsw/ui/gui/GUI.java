@@ -1,10 +1,12 @@
 package it.polimi.ingsw.ui.gui;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
@@ -13,6 +15,7 @@ import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
+import it.polimi.ingsw.utilities.Pair;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +27,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +59,7 @@ public class GUI extends UI {
     LobbyController lobbyController;
     MainViewController mainViewController;
 
-    private  PlayerState playerState;
+    PlayerState playerState;
 
     public GUI() {
 
@@ -61,6 +67,7 @@ public class GUI extends UI {
         loginController = new LoginController(this);
         splashScreenController = new SplashScreenController(this);
         mainViewController = new MainViewController(this);
+
 
         MainApplication.setGui(this);
         MainApplication.setFirstScene("splashscreen", splashScreenController);
@@ -73,25 +80,48 @@ public class GUI extends UI {
 
             }
         }.start();
+        playerState = new PlayerState();
         var aux = this;
         try {
             TimeUnit.SECONDS.sleep(1);
+
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    //playerID.setItem("beppe");
-                    //displayLobbyState("paolo", new ArrayList<>(Arrays.asList("martino", "paolo", "beppe", "ginevra")));
-                    Marble[][] marketStatus = new Marble[][]{
-                            {Marble.PURPLE, Marble.PURPLE, Marble.PURPLE, Marble.GRAY},
-                            {Marble.PURPLE, Marble.PURPLE, Marble.WHITE, Marble.WHITE},
-                            {Marble.WHITE, Marble.PURPLE, Marble.PURPLE, Marble.PURPLE}
-                    };
-                    MarketController controller = new MarketController(aux, marketStatus, Marble.YELLOW);
+                    Stage stage = new Stage();
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("production.fxml"));
+                    HashMap<Resource, Integer> strongBox = new HashMap<>(){{
+                        put(Resource.COIN, 4);
+                        put(Resource.SHIELD, 2);
+                        put(Resource.SERVANT, 5);
+                        put(Resource.ROCK, 3);
+                    }};
+                    ArrayList<DepotState> warehouse = new ArrayList<>(){{
+                        add(new DepotState(Resource.COIN, 1, 1));
+                        add(new DepotState(Resource.SHIELD, 2, 2));
+                        add(new DepotState(Resource.ROCK, 3, 3));
+
+                    }};
+
+                    aux.playerState.ownedCards.get(0).add("DevCard35");
+                    aux.playerState.ownedCards.get(1).add("DevCard26");
+                    aux.playerState.ownedCards.get(2).add("DevCard29");
+                    aux.playerState.leaderCards.add("LeaderCard1");
+                    aux.playerState.leaderCards.add("LeaderCard15");
+                    aux.playerState.leaderCards.add("LeaderCard10");
+
+
+                    aux.playerState.warehouse = warehouse;
+                    aux.playerState.strongBox = strongBox;
+                    //aux.playerState.ownedCards = cards;
+                    ProductionController productionController = new ProductionController(aux);
+                    fxmlLoader.setController(productionController);
                     try {
-                        MainApplication.setScene("market", controller);
+                        stage.setScene(new Scene(fxmlLoader.load()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    stage.show();
                 }
             });
 
@@ -101,7 +131,13 @@ public class GUI extends UI {
 
     }
 
+    public Pair<Marble[][], Marble> getMarketStatus(){
+        return new Pair<>(playerState.marketStatus);
+    }
 
+    public String[][] getDevCardGridState(){
+        return playerState.devCardGrid.clone();
+    }
 
     public void addEvent(Event event){
         if (event instanceof BuyResourcesEvent) {
