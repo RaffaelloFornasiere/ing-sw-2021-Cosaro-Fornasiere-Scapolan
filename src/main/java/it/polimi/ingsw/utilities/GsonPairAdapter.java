@@ -4,6 +4,9 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * Class implements the methods to correctly serialize and deserialize the Pair class into a Json with the Gson library
+ */
 public class GsonPairAdapter implements JsonSerializer<Pair>, JsonDeserializer<Pair> {
     private static final String KEY_CLASSNAME = "KEY_CLASSNAME";
     private static final String KEY_INSTANCE = "KEY_INSTANCE";

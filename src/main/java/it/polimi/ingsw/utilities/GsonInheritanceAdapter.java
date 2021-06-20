@@ -4,6 +4,10 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * Class implements the methods to correctly serialize and deserialize any class that has subclasses into a Json with the Gson library
+ * @param <T> The class
+ */
 public class GsonInheritanceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
 
     private static final String CLASSNAME = "CLASSNAME";
