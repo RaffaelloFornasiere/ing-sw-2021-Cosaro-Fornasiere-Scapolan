@@ -16,13 +16,13 @@ public enum CardColor {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return name();
     }
 
     /**
      * Getter for the code of the card color
+     *
      * @return the code of the card color
      */
     public int getCode() {
@@ -31,6 +31,7 @@ public enum CardColor {
 
     /**
      * Getter for the card color as a human readable string
+     *
      * @return The card color as a human readable string
      */
     public String getColor() {

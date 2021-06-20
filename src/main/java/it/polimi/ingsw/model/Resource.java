@@ -13,6 +13,7 @@ public enum Resource {
 
     /**
      * Getter for the code corresponding to the resource type
+     *
      * @return The code corresponding to the resource type
      */
     @SuppressWarnings("unused")

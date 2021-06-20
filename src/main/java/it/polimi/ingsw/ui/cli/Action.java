@@ -9,7 +9,6 @@ public enum Action {
     DISPLAY_SMTH("DISPLAY SOMETHING");
 
 
-
     Action(String description) {
         this.description = description;
     }

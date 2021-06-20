@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model.DevCards;
 
-import com.google.j2objc.annotations.ObjectiveCName;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;
 
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Represents the a single deck in the development card grid
  */
-public class DevDeck{
+public class DevDeck {
     private ArrayList<DevCard> cards;
     int level;
     CardColor color;
@@ -19,22 +17,22 @@ public class DevDeck{
 
     @Override
     public boolean equals(Object o) {
-        if (o.getClass() != getClass())            return false;
-        if (this == o)            return true;
+        if (o.getClass() != getClass()) return false;
+        if (this == o) return true;
 
         DevDeck devDeck = (DevDeck) o;
 
         int res = 1;
 
-         res *= (devDeck.cards.equals(cards))?1:0;
-         res *= (devDeck.level == level)?1:0;
-         res *= (devDeck.color.equals(color))?1:0;
-        return res==1;
+        res *= (devDeck.cards.equals(cards)) ? 1 : 0;
+        res *= (devDeck.level == level) ? 1 : 0;
+        res *= (devDeck.color.equals(color)) ? 1 : 0;
+        return res == 1;
     }
 
     /**
-     *
      * construct the deck from a list of cards. check the coherence of the cards
+     *
      * @param cards cards to construct the deck
      */
     public DevDeck(ArrayList<DevCard> cards) {
@@ -66,7 +64,6 @@ public class DevDeck{
     }
 
     /**
-     *
      * @return pops the card on the deck's top
      */
     public DevCard pop() throws NotPresentException {
@@ -76,21 +73,19 @@ public class DevDeck{
     }
 
     /**
-     *
      * @return the card on the first position of the deck (
      * behaves as a LIFO stack)
      */
     public DevCard topCard() throws NotPresentException {
-        if(cards.size() == 0) throw new NotPresentException("The deck is empty");
+        if (cards.size() == 0) throw new NotPresentException("The deck is empty");
         return cards.get(cards.size() - 1);
     }
 
 
     /**
-     *
      * @return the size of the deck
      */
-    public int size(){
+    public int size() {
         return cards.size();
     }
 
