@@ -26,7 +26,6 @@ public class NetworkHandlerReceiver{
         if (server == null)
             throw new NullPointerException();
         try {
-            //input = new BufferedReader(new InputStreamReader(server.getInputStream()));
             scanner = new Scanner(server.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,38 +52,4 @@ public class NetworkHandlerReceiver{
     public EventRegistry getEventRegistry() {
         return eventRegistry;
     }
-
-    /*@Override
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        if (propertyName == null || propertyName.equals("")) {
-            addPropertyChangeListener(listener);
-            return;
-        }
-        support.addPropertyChangeListener(propertyName, listener);
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        if (propertyName == null || "".equals(propertyName)) {
-            removePropertyChangeListener(listener);
-            return;
-        }
-        support.removePropertyChangeListener(propertyName, listener);
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        support.removePropertyChangeListener(listener);
-    }
-
-    @Override
-    public PropertyChangeListener[] getAllPropertyChangeListener(){
-        return support.getPropertyChangeListeners();
-    }
-    */
 }
