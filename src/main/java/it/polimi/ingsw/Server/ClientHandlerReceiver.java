@@ -3,8 +3,10 @@ package it.polimi.ingsw.Server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import it.polimi.ingsw.client.NetworkHandlerSender;
 import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.MessageWrapper;
 
@@ -49,9 +51,14 @@ public class ClientHandlerReceiver {
         while(true) {
             String eventJSON = "";
             try {
-            eventJSON = MessageWrapper.unwrap(scanner.nextLine());
-            System.out.println("Received: "+ eventJSON);
-                Event event = gson.fromJson(eventJSON, Event.class);
+                eventJSON = MessageWrapper.unwrap(scanner.nextLine());
+                System.out.println("Received: " + eventJSON);
+                Event event;
+                if (eventJSON.equals("heartbeat")) {
+                    event = new HeartbeatEvent();
+                } else {
+                    event = gson.fromJson(eventJSON, Event.class);
+                }
                 boolean done = false;
                 while (!done) {
                     try {

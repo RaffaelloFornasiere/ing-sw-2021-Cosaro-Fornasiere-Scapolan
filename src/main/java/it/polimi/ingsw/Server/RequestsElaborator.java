@@ -6,6 +6,7 @@ import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
 import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.events.QueueStopEvent;
 
 import java.io.IOException;
@@ -73,7 +74,9 @@ public class RequestsElaborator {
         }
         if (socket != null) {
             System.out.println("Elaborating: " + event.getEventName());
-            if (event.getClass() == NewPlayerEvent.class)
+            if(event.getClass() == HeartbeatEvent.class)
+                clientHandlerSender.sendObject(event);
+            else if (event.getClass() == NewPlayerEvent.class)
                 event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
             else if (!ownerUserID.equals(event.getPlayerId()))
                 mainEventHandlerRegistry.sendEvent(new BadRequestEvent(event.getPlayerId(),

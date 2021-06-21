@@ -96,7 +96,7 @@ public class NetworkAdapter {
 
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
-        //server.setSoTimeout(3000);
+        server.setSoTimeout(10*1000);
         sender = new NetworkHandlerSender(server);
         receiver = new NetworkHandlerReceiver(server);
         new Thread(receiver::receive).start();
@@ -108,7 +108,7 @@ public class NetworkAdapter {
                 ((NetworkHandlerSender)sender).sendData("heartbeat");
             }
         };
-        //timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
+        timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
         return true;
     }
 
@@ -315,6 +315,18 @@ public class NetworkAdapter {
         view.printWarning(event.getLeaderCardID() + " can't be activated because you don't meet the requirements");
     }
 
+    public synchronized void ServerDisconnectionEventHandler(PropertyChangeEvent evt) {
+        ServerDisconnectionEvent event = (ServerDisconnectionEvent) evt.getNewValue();
+
+        view.printError("The connection with the server was closed. Shutting down the application");
+        sender.closeConnection();
+        receiver.closeConnection();
+        try {
+            server.close();
+        } catch (IOException e) {
+            System.err.println("Error closing the socket");
+        }
+    }
 
     public synchronized void SetupDoneEventHandler(PropertyChangeEvent evt) {
         SetupDoneEvent event = (SetupDoneEvent) evt.getNewValue();
