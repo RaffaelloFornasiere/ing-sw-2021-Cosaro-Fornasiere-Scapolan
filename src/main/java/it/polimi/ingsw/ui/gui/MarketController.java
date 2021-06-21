@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -85,7 +86,7 @@ public class MarketController extends Controller implements Initializable {
     }
 
     public void onCancel() throws IOException {
-        MainApplication.setPreviousScene();
+        ((Stage)gridPane.getScene().getWindow()).close();
     }
 
     public void onNext() {

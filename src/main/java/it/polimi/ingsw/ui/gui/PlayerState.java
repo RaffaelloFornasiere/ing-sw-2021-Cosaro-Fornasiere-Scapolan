@@ -24,7 +24,7 @@ public class PlayerState {
 
     ArrayList<Event> events;
     ChosenResourcesEvent chosenResources;
-    //Resource
+    Resource resourceOfChoice;
 
     public PlayerState() {
         warehouse = new ArrayList<>();
