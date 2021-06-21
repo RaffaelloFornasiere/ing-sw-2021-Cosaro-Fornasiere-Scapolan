@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ProgressIndicator;
-
 import javafx.util.Duration;
 
 import java.io.IOException;

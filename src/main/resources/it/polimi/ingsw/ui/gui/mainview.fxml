@@ -77,7 +77,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
             </Group>
-            <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+            <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#openCardGrid" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
@@ -120,8 +120,8 @@
             </Group>
             <Group>
                <children>
-                  <ImageView fitHeight="177.0" fitWidth="168.0" layoutX="3.6000022888183594" layoutY="3.600006103515625" pickOnBounds="true" preserveRatio="true" styleClass="VictoryPoint" />
-                  <Label layoutX="63.0" layoutY="75.0" text="15">
+                  <Region prefHeight="57.0" prefWidth="53.0" styleClass="VictoryPoint" />
+                  <Label layoutX="11.0" layoutY="11.0" text="15">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -133,7 +133,7 @@
             </Group>
             <Group>
                <children>
-                  <ImageView fitHeight="109.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" styleClass="DevCardCounter" />
+                  <Region prefHeight="92.0" prefWidth="64.0" styleClass="DevCardCounter" />
                   <Label layoutX="13.0" layoutY="1.0" text="3" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="64.0" />
@@ -144,16 +144,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Group>
-            <Group fx:id="marketIcon" onMouseClicked="#openMarket" styleClass="market">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="180.0" layoutX="3.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@images/FilledMarket.png" />
-                     </image>
-                  </ImageView>
-                  <Region prefHeight="156.0" prefWidth="186.0" styleClass="SelectableRegion" />
-               </children>
-            </Group>
+            <Region onMouseClicked="#openMarket" prefHeight="153.0" prefWidth="182.0" styleClass="SelectableImage" />
          </children>
          <opaqueInsets>
             <Insets />
@@ -315,21 +306,21 @@
                               </ImageView>
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
                               <Label layoutX="25.0" layoutY="20.0" text="1" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
                               <Label layoutX="25.0" layoutY="20.0" text="2" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateX="-10.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="58.0" fitWidth="77.0" layoutX="-13.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true" translateX="-26.0" x="10.0">
@@ -350,14 +341,14 @@
                               </Label>
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
                               <Label layoutX="25.0" layoutY="20.0" text="4" />
                            </children>
                         </Group>
-      
+
                               <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -369,7 +360,7 @@
                               <Label layoutX="25.0" layoutY="20.0" text="5" />
                            </children>
                         </Group>
-      
+
                               <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
@@ -391,7 +382,7 @@
                               </Label>
                            </children>
                         </Group>
-      
+
                               <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -402,7 +393,7 @@
                               <Label layoutX="25.0" layoutY="20.0" text="7" />
                            </children>
                         </Group>
-      
+
                               <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -414,7 +405,7 @@
                               <Label layoutX="25.0" layoutY="20.0" text="8" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
@@ -435,21 +426,21 @@
                               </Label>
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
                               <Label layoutX="22.0" layoutY="20.0" text="10" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
                               <Label layoutX="22.0" layoutY="20.0" text="11" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="12.0" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
@@ -471,7 +462,7 @@
                               </Label>
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -482,7 +473,7 @@
                               <Label layoutX="22.0" layoutY="20.0" text="13" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -493,7 +484,7 @@
                               <Label layoutX="22.0" layoutY="20.0" text="14" />
                            </children>
                         </Group>
-      
+
                               <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="12.0" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
@@ -516,14 +507,14 @@
                               </Label>
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
                               <Label layoutX="22.0" layoutY="19.0" text="17" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <children>
                               <Label layoutX="22.0" layoutY="20.0" text="16" />
@@ -535,7 +526,7 @@
                                  </styleClass></ImageView>
                            </children>
                         </Group>
-      
+
                               <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="58.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -557,7 +548,7 @@
                               </Label>
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="13" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -568,7 +559,7 @@
                               <Label layoutX="22.0" layoutY="19.0" text="19" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="14" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -579,7 +570,7 @@
                               <Label layoutX="22.0" layoutY="19.0" text="20" />
                            </children>
                         </Group>
-      
+
                               <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="15" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
@@ -602,7 +593,7 @@
                               </Label>
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="16" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -613,7 +604,7 @@
                               <Label layoutX="22.0" layoutY="19.0" text="22" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="17" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -624,7 +615,7 @@
                               <Label layoutX="22.0" layoutY="20.0" text="23" />
                            </children>
                         </Group>
-      
+
                         <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="18" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                            <children>
                               <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
@@ -688,7 +679,7 @@
                               </ImageView>
                            </children>
                         </Group>
-      
+
                      </children>
                      <padding>
                         <Insets top="20.0" />

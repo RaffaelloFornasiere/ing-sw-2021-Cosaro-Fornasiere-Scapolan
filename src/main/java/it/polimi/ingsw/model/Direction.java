@@ -6,13 +6,13 @@ public enum Direction {
 
     private final String direction;
 
-    Direction(String direction)
-    {
+    Direction(String direction) {
         this.direction = direction;
     }
 
     /**
      * Getter for the direction as a human readable string
+     *
      * @return The direction as a human readable string
      */
     public String getDirection() {
@@ -20,8 +20,7 @@ public enum Direction {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return name();
     }
 }

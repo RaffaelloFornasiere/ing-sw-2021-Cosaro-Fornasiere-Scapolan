@@ -4,6 +4,7 @@ import java.util.Objects;
 
 /**
  * Class representing a pair of object
+ *
  * @param <K> The type of the first object
  * @param <V> The type of the second object
  */
@@ -13,13 +14,20 @@ public class Pair<K, V> {
 
     /**
      * Constructor for the pair
-     * @param key The first value
+     *
+     * @param key   The first value
      * @param value The second value
      */
     public Pair(K key, V value) {
         this.key = key;
         this.value = value;
     }
+
+    public Pair(Pair<K, V> p) {
+        this.key = p.key;
+        this.value = p.value;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -31,6 +39,7 @@ public class Pair<K, V> {
 
     /**
      * Getter for the first value
+     *
      * @return The first value
      */
     public K getKey() {
@@ -39,6 +48,7 @@ public class Pair<K, V> {
 
     /**
      * Getter for the second value
+     *
      * @return The second value
      */
     public V getValue() {

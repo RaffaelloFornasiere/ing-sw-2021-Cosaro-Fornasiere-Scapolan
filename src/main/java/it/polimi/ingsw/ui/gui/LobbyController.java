@@ -2,8 +2,6 @@ package it.polimi.ingsw.ui.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -19,20 +17,21 @@ public class LobbyController extends Controller implements Initializable {
     private ArrayList<String> players;
     private String leader;
     private boolean isLeader;
-    public LobbyController(GUI gui, String leader, ArrayList<String> players, boolean isLeader){
+
+    public LobbyController(GUI gui, String leader, ArrayList<String> players, boolean isLeader) {
         super(gui);
         updateData(leader, players);
         this.isLeader = isLeader;
     }
 
-    private void updateData(String leader, ArrayList<String> players)
-    {
+    private void updateData(String leader, ArrayList<String> players) {
         this.leader = leader;
         this.players = players;
 
-        if(!players.contains(leader))
+        if (!players.contains(leader))
             throw new IllegalArgumentException("no leader present");
     }
+
     @FXML
     ListView<Label> playersList;
     @FXML
@@ -45,8 +44,7 @@ public class LobbyController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         updatePlayerList(leader, players);
-        if(isLeader)
-        {
+        if (isLeader) {
             startGameButton.setDisable(false);
             startGameButton.setVisible(true);
 
@@ -54,8 +52,7 @@ public class LobbyController extends Controller implements Initializable {
     }
 
 
-    public void updatePlayerList(String leader, ArrayList<String> players)
-    {
+    public void updatePlayerList(String leader, ArrayList<String> players) {
         updateData(leader, players);
         playersList.getItems().clear();
         playersList.getItems().addAll(players.stream().map(Label::new).collect(Collectors.toList()));
@@ -65,21 +62,20 @@ public class LobbyController extends Controller implements Initializable {
                 .get(0).setStyle("    -fx-text-fill: #6a0a0a;");
 
         var children = playersGrid.getChildren();
-        for(int i =0; i < children.size(); i++)
-        {
+        for (int i = 0; i < children.size(); i++) {
             Label playerName =
-            ((Label) ((AnchorPane) children.get(i)).getChildren()
-                    .stream().filter(n -> n instanceof Label)
-                    .collect(Collectors.toList()).get(0));
+                    ((Label) ((AnchorPane) children.get(i)).getChildren()
+                            .stream().filter(n -> n instanceof Label)
+                            .collect(Collectors.toList()).get(0));
             playerName.setText(players.get(i));
-            if(players.get(i).equals(leader))
+            if (players.get(i).equals(leader))
                 playerName.setStyle("    -fx-text-fill: #6a0a0a; -fx-background-color: transparent");
 
         }
     }
 
 
-    public void onStartGame(){
+    public void onStartGame() {
         gui.startGame();
     }
 }

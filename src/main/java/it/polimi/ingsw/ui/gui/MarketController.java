@@ -3,7 +3,6 @@ package it.polimi.ingsw.ui.gui;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.model.Marble;
-import it.polimi.ingsw.utilities.LockWrap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,15 +11,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
-import org.checkerframework.checker.units.qual.A;
-import org.reflections.vfs.Vfs;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MarketController extends Controller implements Initializable {
@@ -49,7 +44,7 @@ public class MarketController extends Controller implements Initializable {
         for (int i = 0; i < marketStatus.length; i++) {
             this.marketStatus.add(new ArrayList<String>());
             for (int j = 0; j < marketStatus[0].length; j++) {
-                String  url = "file:/" + imagePath + marketStatus[i][j].toString().toLowerCase() + "-marble.png";
+                String url = "file:/" + imagePath + marketStatus[i][j].toString().toLowerCase() + "-marble.png";
                 System.out.println(url);
                 this.marketStatus.get(i).add(url);
             }
@@ -67,7 +62,7 @@ public class MarketController extends Controller implements Initializable {
                     .get(marble.getId().charAt(1) - '0')));
         }
         marbleLeftImage.setImage(new Image(marbleLeft));
-        if(gui == null)
+        if (gui == null)
             nextButton.disabledProperty();
 
     }

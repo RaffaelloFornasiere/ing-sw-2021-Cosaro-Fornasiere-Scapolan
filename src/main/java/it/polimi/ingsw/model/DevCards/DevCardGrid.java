@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model.DevCards;
 
-import com.google.gson.Gson;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Pair;
 
@@ -27,8 +25,8 @@ public class DevCardGrid extends Observable {
      * @param cards all the cards available for the game
      * @throws IllegalArgumentException if the array provided is null or void
      */
-    public DevCardGrid(ArrayList<DevCard> cards) throws IllegalArgumentException{
-        if(cards == null || cards.size() <= 0)
+    public DevCardGrid(ArrayList<DevCard> cards) throws IllegalArgumentException {
+        if (cards == null || cards.size() <= 0)
             throw new IllegalArgumentException("can construct grid from a null or a void array");
         int levels = cards.stream().mapToInt(DevCard::getLevel).max().getAsInt();
         decks = new DevDeck[levels][CardColor.values().length];
@@ -76,8 +74,8 @@ public class DevCardGrid extends Observable {
     /**
      * pushes a card on top the deck specified by row and column
      *
-     * @param card Card to be pushed
-     * @param row index of the row in the grid
+     * @param card   Card to be pushed
+     * @param row    index of the row in the grid
      * @param column index of the column in the gird
      */
     public void push(DevCard card, int row, int column) {
@@ -93,7 +91,7 @@ public class DevCardGrid extends Observable {
     /**
      * pushes a card on top the deck specified by row and column
      *
-     * @param card Card to be pushed
+     * @param card    Card to be pushed
      * @param indexes pair containing the indices of the position in the grid
      */
     public void push(DevCard card, Pair<Integer, Integer> indexes) {
@@ -104,11 +102,11 @@ public class DevCardGrid extends Observable {
      * pops out the card on the top of the deck specified by row and column
      * After popping notifies all observers.
      *
-     * @param row row index in the grid
+     * @param row    row index in the grid
      * @param column column index in the grid
      * @return the card on top of the deck pointed
      * @throws NotPresentException id row or column are out of bound or if there is no card
-     * in the deck pointed
+     *                             in the deck pointed
      */
     public DevCard pop(int row, int column) throws NotPresentException {
         if (row < 0 || row > getRowsNumber())
@@ -128,7 +126,7 @@ public class DevCardGrid extends Observable {
      * @param indexes indexes pointing a deck in the grid
      * @return the card on top of the deck pointed
      * @throws NotPresentException id row or column are out of bound or if there is no card
-     * in the deck pointed
+     *                             in the deck pointed
      */
     public DevCard pop(Pair<Integer, Integer> indexes) throws NotPresentException {
         return pop(indexes.getKey(), indexes.getValue());
@@ -137,11 +135,11 @@ public class DevCardGrid extends Observable {
     /**
      * Returns the card on the top of the deck specified by row and column
      *
-     * @param row row index in the grid
+     * @param row    row index in the grid
      * @param column column index in the grid
      * @return the card on top of the deck pointed
      * @throws NotPresentException id row or column are out of bound or if there is no card
-     * in the deck pointed
+     *                             in the deck pointed
      */
     public DevCard topCard(int row, int column) throws NotPresentException {
         if (row < 0 || row > getRowsNumber())
@@ -159,7 +157,7 @@ public class DevCardGrid extends Observable {
      * @param indexes indexes pointing a deck in the grid
      * @return the card on top of the deck pointed
      * @throws NotPresentException id row or column are out of bound or if there is no card
-     * in the deck pointed
+     *                             in the deck pointed
      */
     public DevCard topCard(Pair<Integer, Integer> indexes) throws NotPresentException {
         return topCard(indexes.getKey(), indexes.getValue());
@@ -168,8 +166,9 @@ public class DevCardGrid extends Observable {
     /**
      * Provides the row and the column indexes of the card identified by the string passed.
      * Searches in all decks of the grid
+     *
      * @param devCardID card string identifier
-     * @return  the row and the column indexes of the card identified by the string passed.
+     * @return the row and the column indexes of the card identified by the string passed.
      * @throws NotPresentException if there's no card at the top of any deck with the given ID
      */
     public Pair<Integer, Integer> getRowColOfCardFromID(String devCardID) throws NotPresentException {

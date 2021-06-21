@@ -22,6 +22,8 @@ public class ClientAppFastSinglePlayer {
         HashMap<String, Sender> clientHandlerSender = new HashMap<>();
         clientHandlerSender.put(playerID, new LocalSender(toPlayer));
 
-        PreGameController.setupMatch(new ArrayList<>(){{add(playerID);}}, clientHandlerSender, toController);
+        PreGameController.setupMatch(new ArrayList<>() {{
+            add(playerID);
+        }}, clientHandlerSender, toController);
     }
 }
