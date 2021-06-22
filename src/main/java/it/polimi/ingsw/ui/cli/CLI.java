@@ -17,10 +17,7 @@ import it.polimi.ingsw.utilities.Pair;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -282,10 +279,10 @@ public class CLI extends UI {
     /**
      * Method to display a form to ask the user to make some selection among different choices of any kind,where the user can choose the same option multiple times.
      *
-     * @param option_itsColor           The array of pairs of title of the option(String)- color the option in displayed with(String).
-     * @param displayPanel              The optional panel may display additional information which might help the user taking the decision about the options.
+     * @param option_itsColor        The array of pairs of title of the option(String)- color the option in displayed with(String).
+     * @param displayPanel           The optional panel may display additional information which might help the user taking the decision about the options.
      * @param numberOfOptionsToChose The maximum number of options the user can select.
-     * @param message                   Additional massage to include in the selection form, to tell the user what the selection is about.
+     * @param message                Additional massage to include in the selection form, to tell the user what the selection is about.
      * @return The array of indexes referring to the selected items in the array of options.
      */
     public static ArrayList<Integer> displaySelectionFormMultipleChoices(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
@@ -597,60 +594,72 @@ public class CLI extends UI {
                 resourcesOptions.add(new Pair<>(shapeResource(resType), colorResource(resType)));
                 justResources.add(resType);
             }));
-            int inputResource;
+            ArrayList<Integer> inputResources = new ArrayList<>();
             if (totalNumberOfResourcesToOrganize == 1) {
                 String white = Color.WHITE.getAnsiCode();
                 out.println("YOU HAVE JUST ONE RESOURCE TO STORE: \n" +
                         white + "╔" + white + "═══" + white + "╗\n" +
                         white + "║ " + colorResource(justResources.get(0)) + shapeResource(justResources.get(0)) + white + " ║\n" +
                         white + "╚" + white + "═══" + white + "╝");
-                inputResource = 0;
+                inputResources.add(0);
                 // the chosen resource needs to be assigned to one of the deposits
             } else {
-                String s = "YOU HAVE " + totalNumberOfResourcesToOrganize + " AVAILABLE FOR STORING, LET'S STORE ONE AT A TIME\n";
+                String s = "YOU HAVE " + totalNumberOfResourcesToOrganize + " AVAILABLE FOR STORING:\n";
                 // the chosen resource needs to be assigned to one of the deposits
-                inputResource = displaySelectionForm(resourcesOptions, null, 1, s).get(0);
+                inputResources = displaySelectionFormVariableChoices(resourcesOptions, null, totalNumberOfResourcesToOrganize, s);
             }
-            System.out.println("WHERE DO YOU WANT TO PUT THIS RESOURCE ( " + resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset() + " )?");
+//            StringBuilder builder = new StringBuilder();
+//            inputResources.stream().forEach(inputResource -> {
+//                builder.append(resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset());
+//            });
 
-            // prepare the selection form for deposits.
-            ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
-            IntStream.range(0, currentDepotStates.size()).forEach(n -> {
-                if (currentDepotStates.get(n).getCurrentQuantity() == 0)
-                    depositOptions.add(new Pair<>("DEPOT " + (n + 1), Color.WHITE.getAnsiCode()));
-                else
-                    depositOptions.add(new Pair<>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType())));
+            HashMap<Resource,Integer> resInHashMap= new HashMap<>();
+            // organize resources in hashmap
+            inputResources.stream().map(justResources::get).forEach(res->{
+                if(resInHashMap.containsKey(res)) resInHashMap.put(res, resInHashMap.get(res)+1);
+                else resInHashMap.put(res, 1);
             });
-            IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> depositOptions.add(new Pair<>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode())));
+            //System.out.println("YOU HAVE TO STORE THESE RESOURCES:  ( " + builder.toString() + Color.reset() + " )?");
+           resInHashMap.forEach((res, integer)->{
+               String s= colorResource(res)+res.toString() + shapeResource(res)+ Color.reset().repeat(integer);
+               System.out.println("WHERE TO PUT THESE:  ( " +s+" )?");
+               // prepare the selection form for deposits.
+               ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
+               IntStream.range(0, currentDepotStates.size()).forEach(n -> {
+                   if (currentDepotStates.get(n).getCurrentQuantity() == 0)
+                       depositOptions.add(new Pair<>("DEPOT " + (n + 1), Color.WHITE.getAnsiCode()));
+                   else
+                       depositOptions.add(new Pair<>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType())));
+               });
+               IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> depositOptions.add(new Pair<>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode())));
 
-            //result of transition
-            AtomicBoolean successful = new AtomicBoolean(false);
-            //inputDeposit is the result of the selection of one destination among deposits
-            int inputDeposit = displaySelectionForm(depositOptions, null, 1, "THESE ARE THE AVAILABLE DEPOSITS\n").get(0);
-            //if the selected index belongs to depots...
-            if (inputDeposit < currentDepotStates.size()) {
-                DepotResultMessage result = thisDashboard.tryAddResource(justResources.get(inputResource), currentDepotStates.get(inputDeposit));
-                successful.set(result.getSuccessful());
-                out.println(result.getMessage());
-            }
-            //or if it belongs to leader card extra depots...
-            else {
-                int index = inputDeposit - currentDepotStates.size();
-                HashMap<Resource, Integer> resInput = new HashMap<>();
-                resInput.put(justResources.get(inputResource), 1);
+               //result of transition
+               AtomicBoolean successful = new AtomicBoolean(false);
+               //inputDeposit is the result of the selection of one destination among deposits
+               int inputDeposit = displaySelectionForm(depositOptions, null, 1, "THESE ARE THE AVAILABLE DEPOSITS\n").get(0);
+               //if the selected index belongs to depots...
+               if (inputDeposit < currentDepotStates.size()) {
+                   DepotResultMessage result = thisDashboard.tryAddResource(res, integer,  currentDepotStates.get(inputDeposit));
+                   successful.set(result.getSuccessful());
+                   out.println(result.getMessage());
+               }
+               //or if it belongs to leader card extra depots...
+               else {
+                   int index = inputDeposit - currentDepotStates.size();
 
+                   leaderCardViews.forEach(cardView -> {
+                       if (cardView.getIdCard().equals(thisDepositLeaderPowers.get(index).getCardId())) {
+                           DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), res, integer);
+                           successful.set(result.getSuccessful());
+                           out.println(result.getMessage());
+                       }
+                   });
+               }
+               if (successful.get()) {
+                   resourcesToOrganize.put(res, (resourcesToOrganize.get(res) - integer));
+               }
+               });
 
-                leaderCardViews.forEach(cardView -> {
-                    if (cardView.getIdCard().equals(thisDepositLeaderPowers.get(index).getCardId())) {
-                        DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), justResources.get(inputResource));
-                        successful.set(result.getSuccessful());
-                        out.println(result.getMessage());
-                    }
-                });
-            }
-            if (successful.get()) {
-                resourcesToOrganize.put(justResources.get(inputResource), (resourcesToOrganize.get(justResources.get(inputResource)) - 1));
-            }
             return getWarehouseDisplacement(resourcesToOrganize);
         }
 
@@ -958,16 +967,31 @@ public class CLI extends UI {
         ArrayList<Integer> cardIndexes = new ArrayList<>();
         while (numberOFLeaderCardsToChoseLeft > 0) {
             out.println("YOU HAVE " + numberOFLeaderCardsToChoseLeft + " CARDS LEFT TO CHOOSE,\n PLEASE TYPE THE NUMBER OF ONE CARD: ");
-            int input = in.nextInt();
-            while (!indexes.contains(input)) {
-                out.println("WRONG NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
-                input = in.nextInt();
+            String input = in.nextLine();
+            boolean validInput = false;
+            int chosenNumber = 0;
+            while (!validInput) {
+                if (!input.matches("-?\\d+")) {
+                    out.println("YOU HAVE TO INSERT NUMBERS");
+                    input = in.nextLine();
+                    continue;
+                }
+                chosenNumber = Integer.parseInt(input);
+                if (!indexes.contains(chosenNumber)) {
+                    out.println("WRONG NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
+                    input = in.nextLine();
+                    continue;
+                }
+                if (cardIndexes.contains(chosenNumber)) {
+                    out.println("YOU HAVE ALREADY SELECTED THIS NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
+                    input = in.nextLine();
+                    continue;
+                }
+
+                validInput = true;
             }
-            while (cardIndexes.contains(input)) {
-                out.println("YOU HAVE ALREADY SELECTED THIS NUMBER, PLEASE RETRY TYPING THE NUMBER OF ONE CARD: ");
-                input = in.nextInt();
-            }
-            cardIndexes.add(input);
+
+            cardIndexes.add(chosenNumber);
             numberOFLeaderCardsToChoseLeft--;
         }
         out.println("YOU HAVE CHOSEN THESE LEADER CARDS:");
@@ -1014,13 +1038,28 @@ public class CLI extends UI {
         for (Resource res : resourceType) {
             if (res != resourceType.get(resourceType.size() - 1) && numberOFResourcesLeft > 0) {
                 out.println("HOW MANY " + colorResource(res) + res.toString() + Color.reset() + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResourcesLeft + " LEFT)");
-                int n = in.nextInt();
-                while (numberOFResourcesLeft - n < 0) {
-                    out.println("RETRY, HOW MANY " + colorResource(res) + res + Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
-                    n = in.nextInt();
+                String input = in.nextLine();
+                boolean validInput = false;
+                int chosenNumber = 0;
+                while (!validInput) {
+                    if (!input.matches("-?\\d+")) {
+                        out.println("YOU HAVE TO INSERT NUMBERS");
+                        input = in.nextLine();
+                        continue;
+                    }
+                    chosenNumber = Integer.parseInt(input);
+
+                    if (numberOFResourcesLeft - chosenNumber < 0) {
+                        out.println("RETRY, HOW MANY " + colorResource(res) + res + Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
+                        input = in.nextLine();
+                        continue;
+                    }
+
+                    validInput = true;
                 }
-                initialResources.put(res, n);
-                numberOFResourcesLeft = numberOFResourcesLeft - n;
+
+                initialResources.put(res, chosenNumber);
+                numberOFResourcesLeft = numberOFResourcesLeft - chosenNumber;
             }
         }
         if (numberOFResourcesLeft >= 0) {
@@ -1217,7 +1256,8 @@ public class CLI extends UI {
 
     /**
      * Method used to ask the user which production power they want to activate.
-     * @return  ActivateProductionEvent  with all the information required to activate production.
+     *
+     * @return ActivateProductionEvent  with all the information required to activate production.
      */
     @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
@@ -1237,6 +1277,7 @@ public class CLI extends UI {
 
     /**
      * Method to ask the user which LeaderCard to discard.
+     *
      * @return The id of the card to discard.
      * @throws NotPresentException If there aren't leader cards to discard.
      */
@@ -1258,6 +1299,7 @@ public class CLI extends UI {
 
     /**
      * Method to ask the user which leader card to activate.
+     *
      * @return The id of the card to activate.
      * @throws NotPresentException If there aren't any cards or all the leader card are already active.
      */
@@ -1279,6 +1321,7 @@ public class CLI extends UI {
 
     /**
      * Method to ask the user if they want to select or deselect leader powers in a leader card.
+     *
      * @return The array of LeaderPower whose state "selected" has changed
      * @throws NotPresentException if no leader power  is available since all the cards are not active.
      */
@@ -1316,9 +1359,11 @@ public class CLI extends UI {
 
     /**
      * Utility method to display any possible information of the match, concerning the user or the other players.
-     * @return  a generic int to the caller method.
+     *
+     * @return a generic int to the caller method.
      */
     public int displayOthers() {
+
         ArrayList<Pair<String, String>> options;
         options = Arrays.stream(DisplayOptions.values()).map(option -> new Pair<>(option.getTitle(), Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
         options.add(new Pair<>("NOTHING", Color.WHITE.getAnsiCode()));
@@ -1391,7 +1436,8 @@ public class CLI extends UI {
 
     /**
      * Method which gives the user a set of options about which next action to do. It could be a main action (between buy resources from market, buy dev card and produce) or it could be a leader action( discard, activate a card) or the possibility to see some other player's state or the possibility to select or deselect a leader power.
-     * @param playerID this player Id.
+     *
+     * @param playerID  this player Id.
      * @param lastRound If it is the last round.
      * @param turnState One of the possible state of one turn: according to which state of the turn the player is in, possible actions to do are different.
      * @return The array of Events this method generates.
@@ -1400,9 +1446,32 @@ public class CLI extends UI {
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
 
         ArrayList<Event> events = new ArrayList<>();
-
         if (!thisPlayer.equals(playerID)) {
-            out.println("[31;1;4m"+playerID + " " + turnState.getDescription()+"\033[0m \n\n");
+//            boolean stopThread = false;
+//            while (!stopThread) {
+//                long startTime = System.currentTimeMillis();
+//                long elapsedTime = 0;
+//
+//                while (elapsedTime < 2 * 60 * 1000) {
+//                    elapsedTime = (new Date()).getTime() - startTime;
+//                }
+//                stopThread =thisPlayer.equals(playerID);
+//            }
+//
+//
+//                        stopThread = true;
+//
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    while (!stopThread) {  do something }
+//                        displayOthers();
+//                    }
+//                }
+//            }).start();
+
+
+            out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
             displayOthers();
         } else {
             switch (turnState) {
@@ -1641,10 +1710,11 @@ public class CLI extends UI {
 
     /**
      * Method used to update the DepositLeaderPowers
-     * @param playerID This Player
-     * @param leaderCardID The id of the leader card  where deposits need to be updated.
+     *
+     * @param playerID         This Player
+     * @param leaderCardID     The id of the leader card  where deposits need to be updated.
      * @param leaderPowerIndex The index of the leader power in the array of powers of this card.
-     * @param storedResources New organization of resources in the depositLeaderPower.
+     * @param storedResources  New organization of resources in the depositLeaderPower.
      */
     @Override
     public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<
@@ -1654,8 +1724,9 @@ public class CLI extends UI {
 
     /**
      * Method to update the state ( selected/ deselected ) of leader powers in one given leader card.
-     * @param playerId this player id
-     * @param leaderCardID the leader card in question.
+     *
+     * @param playerId            this player id
+     * @param leaderCardID        the leader card in question.
      * @param powerSelectedStates The array of booleans telling for each leader power whether it is selected or not.
      */
     @Override
@@ -1669,6 +1740,7 @@ public class CLI extends UI {
 
     /**
      * Method to display the grid of final scores in the end of the game.
+     *
      * @param finalPlayerStates Array of FinalPlayerStates, with player- number of points gained, number of resources gained.
      */
     public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
@@ -1708,10 +1780,17 @@ public class CLI extends UI {
         builder.append(buildBorderOfLength("Total Scores".length() + 1, "═", "╩"));
         builder.append(buildBorderOfLength("Total Resources".length() + 1, "═", "╝\n"));
         out.println(builder);
+
+        out.println("WHEN YOU WANT TO QUIT THE GAME, TYPE 'QUIT'\n");
+        String answer = in.nextLine();
+        while (answer.equalsIgnoreCase("QUIT")) {
+            answer = in.nextLine();
+        }
     }
 
     /**
      * Utility method which counts the total quantity of resources in the DepositLeaderPower
+     *
      * @return The hashmap with ResourceType- Quantity.
      */
     public HashMap<Resource, Integer> getDepositLeaderPowerTotalResources() {
@@ -1723,9 +1802,10 @@ public class CLI extends UI {
 
     /**
      * Utility method to build a  string resembling a border,  delimited by some given symbols,  and of given length.
-     * @param length The length of the string.
+     *
+     * @param length           The length of the string.
      * @param typeOfBorderInit The symbol to put at the beginning of the string.
-     * @param typeOfBorderEnd The symbol to put at the end of the string.
+     * @param typeOfBorderEnd  The symbol to put at the end of the string.
      * @return The border given as a string.
      */
     public static String buildBorderOfLength(int length, String typeOfBorderInit, String typeOfBorderEnd) {
@@ -1737,33 +1817,46 @@ public class CLI extends UI {
 
     /**
      * Utility method to count the difference between the length of one string and a given  length  and replace this difference with empty space.
-     * @param length The given length.
+     *
+     * @param length  The given length.
      * @param content the given string
      * @return the  string of empty spaces.
      */
-
     public static String buildContent(int length, String content) {
         return content +
                 " ".repeat(Math.max(0, length - content.length()));
     }
 
     /**
-     *Method to ask the user where to take some resources from either the warehouse or  the deposit leader power if available and selected or the strongbox.
-     * @param required resources to take.
+     * this method checks whether an hashmap of resources is empty or not.
+     */
+    public static boolean isEmptyHashMap(HashMap<Resource, Integer> map) {
+        return map.keySet().stream().map(key -> map.get(key) == 0).reduce(true, (a, b) -> a && b);
+    }
+
+    /**
+     * Method to ask the user where to take some resources from either the warehouse or  the deposit leader power if available and selected or the strongbox.
+     *
+     * @param required0            resources to take.
      * @param freeChoicesResources optional additional resources to take.
-     * @return  The event which contains all the necessary information to take resources from deposits, for example to buy a devCard or to activate a leader card.
+     * @return The event which contains all the necessary information to take resources from deposits, for example to buy a devCard or to activate a leader card.
      */
     @Override
-    public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required,
+    public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required0,
                                                             int freeChoicesResources) {
+        HashMap<Resource, Integer> required = new HashMap<>();
+        //remove empty keys
+        required0.forEach((key, value) -> {
+            if (value != 0) required.put(key, value);
+        });
         //clone required
-        HashMap<Resource, Integer> clonedRequired = (HashMap<Resource, Integer>) required.clone();
+        HashMap<Resource, Integer> clonedRequired = new HashMap<>(required);
         HashMap<Resource, Integer> emptyHashmap = new HashMap<>();
         Arrays.stream(Resource.values()).forEach(re -> emptyHashmap.put(re, 0));
         //prepare parameters to build event to return
         HashMap<Resource, Integer> allChosen = new HashMap<>(emptyHashmap);
         HashMap<Resource, Integer> chosenFromWarehouse = new HashMap<>(emptyHashmap);
-
+        HashMap<Resource, Integer> chosenFromStrongbox = new HashMap<>(emptyHashmap);
         HashMap<Resource, Integer> chosenFromLeaderPower = new HashMap<>(emptyHashmap);
 
         DashBoardView thisDashboard = playerStates.get(thisPlayer).getDashBoard();
@@ -1789,28 +1882,79 @@ public class CLI extends UI {
 //        displayAvailableDeposits(thisDashboard);
 //        out.println(thisDashboard.strongBoxToString());
 
-        //display how many resources the user has to take
-        StringBuilder builder = new StringBuilder();
-        builder.append("YOU HAVE TO TAKE THE FOLLOWING RESOURCES FROM YOUR DEPOSITS: \n");
-        builder.append(displayResourcesInHashMap(required)).append("\n");
-        if (freeChoicesResources != 0) {
-            builder.append("ALSO, YOU HAVE ").append(freeChoicesResources).append(" OPTIONAL RESOURCES YOU CAN CHOOSE:\n");
-            choseResources(Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new)), freeChoicesResources).forEach((key, value) -> {
-                if (required.containsKey(key)) required.put(key, required.get(key) + value);
-                else required.put(key, value);
-            });
-            builder.append("SO NOW, THE RESOURCES YOU HAVE TO TAKE FROM THE DEPOSITS HAVE BECOME THE FOLLOWING: \n");
-            builder.append(displayResourcesInHashMap(required));
-        }
-        out.println(builder);
+
         //hashmaps that take count of total resources in each category of deposit(warehouse, leader deposit, strongbox)
         HashMap<Resource, Integer> warehouseHashMap = thisDashboard.totalResourcesInWarehouse();
         HashMap<Resource, Integer> leaderDepositsHashMap = getDepositLeaderPowerTotalResources();
         HashMap<Resource, Integer> strongBoxHashMap = (HashMap<Resource, Integer>) thisDashboard.getStrongBox().clone();
 
-        //until there will be resources to take, the user will be asked to chose where to take from
-        while (!required.keySet().stream().map(resource -> required.get(resource) == 0).reduce(true, (prev, foll) -> prev && foll)) {
+        //display how many resources the user has to take
+        StringBuilder builder = new StringBuilder();
+        boolean emptyRequired = isEmptyHashMap(required);
+        if (!emptyRequired) {
+            out.println("YOU HAVE TO TAKE THE FOLLOWING RESOURCES FROM YOUR DEPOSITS: \n");
+            out.println(displayResourcesInHashMap(required) + "\n");
+        }
+        if (freeChoicesResources != 0) {
+            out.println("YOU HAVE " + freeChoicesResources + " OPTIONAL RESOURCES YOU CAN CHOOSE:\n");
+            out.println("HAVE A LOOK AT THE STATE OF YOUR DEPOSITS:\n");
+            out.println("Warehouse: \n");
+            out.println(displayResourcesInHashMap(warehouseHashMap));
+            out.println("Leader deposits: \n");
+            out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+            out.println("Strongbox: \n");
+            out.println(displayResourcesInHashMap(strongBoxHashMap));
 
+            boolean validResourcesChosen = false;
+            while (!validResourcesChosen) {
+                HashMap<Resource, Integer> temp = new HashMap<>(required);
+                choseResources(Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new)), freeChoicesResources).forEach((key, value) -> {
+                    if (temp.containsKey(key)) temp.put(key, temp.get(key) + value);
+                    else temp.put(key, value);
+                });
+                //check if there are enough resources in the deposits
+                HashMap<Resource, Integer> totalResources = new HashMap<>(warehouseHashMap);
+                leaderDepositsHashMap.forEach((key, value) -> {
+                    if (totalResources.containsKey(key)) totalResources.put(key, totalResources.get(key) + value);
+                    else totalResources.put(key, value);
+                });
+                strongBoxHashMap.forEach((key, value) -> {
+                    if (totalResources.containsKey(key)) totalResources.put(key, totalResources.get(key) + value);
+                    else totalResources.put(key, value);
+                });
+
+                boolean hasAllTheRequiredResources = temp.keySet().stream().map(key -> {
+                    if (!totalResources.containsKey(key)) return false;
+                    else return totalResources.get(key) >= temp.get(key);
+                }).reduce(true, (a, b) -> a && b);
+
+                if (!hasAllTheRequiredResources) {
+                    out.println("YOU DON'T HAVE ENOUGH OF THESE OPTIONAL CHOSEN RESOURCES IN YOUR DEPOSITS, WOULD YOU LIKE TO RETRY OR QUIT? INSERT RETRY/ QUIT \n");
+                    String input = in.next();
+                    if (input.equalsIgnoreCase("QUIT")) {
+                        validResourcesChosen = true;
+                    }
+                } else {
+                    required.putAll(temp);
+                    validResourcesChosen = true;
+                }
+            }
+        }
+
+        if (!emptyRequired && freeChoicesResources != 0) {
+            builder.append("SO NOW, THE RESOURCES YOU HAVE TO TAKE FROM THE DEPOSITS HAVE BECOME THE FOLLOWING: \n");
+            builder.append(displayResourcesInHashMap(required));
+        }
+        out.println(builder);
+
+
+        //until there will be resources to take, the user will be asked to chose where to take from
+        while (!isEmptyHashMap(required)) {
+            //ASK WHICH RESOURCE
+            out.println("CHOOSE ONE TYPE OF RESOURCE AT A TIME:\n");
+            ArrayList<Resource> justResources = new ArrayList<>(required.keySet());
+            ArrayList<Pair<String, String>> finalResourcesOptions = justResources.stream().map(res -> new Pair<>(res.toString() + " " + shapeResource(res), colorResource(res))).collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<Integer> inputs2 = displaySelectionForm(finalResourcesOptions, null, 1, " ");
             //ask where to take resources from
             ArrayList<Pair<String, String>> depositCategory = new ArrayList<>();
             depositCategory.add(new Pair<>("WAREHOUSE", Color.WHITE.getAnsiCode()));
@@ -1835,11 +1979,6 @@ public class CLI extends UI {
                         break;
                     }
                 }
-
-                out.println("WHICH KIND OF RESOURCES WOULD YOU LIKE TO REMOVE FROM " + depositCategory.get(input).getKey() + "?\n");
-                ArrayList<Resource> justResources = new ArrayList<>(required.keySet());
-                ArrayList<Pair<String, String>> finalResourcesOptions = justResources.stream().map(res -> new Pair<>(res.toString() + " " + shapeResource(res), colorResource(res))).collect(Collectors.toCollection(ArrayList::new));
-                ArrayList<Integer> inputs2 = displaySelectionFormVariableChoices(finalResourcesOptions, null, finalResourcesOptions.size(), " ");
                 inputs2.forEach(index -> {
                     out.println("HOW MANY " + justResources.get(index).toString() + " WOULD YOU LIKE TO REMOVE FROM THE " + depositCategory.get(input).getKey() + "?  INSERT A NUMBER\n");
                     int quantityToTake = required.get(justResources.get(index));
@@ -1883,6 +2022,7 @@ public class CLI extends UI {
                                 warehouseHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
 
                             }
+                            out.println("WHAT REMAINS IN WAREHOUSE:\n");
                             out.println(displayResourcesInHashMap(warehouseHashMap));
                             break;
                         }
@@ -1898,6 +2038,7 @@ public class CLI extends UI {
                                 allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
                                 leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
                             }
+                            out.println("WHAT REMAINS IN DEPOSIT LEADER POWER:\n");
                             out.println(displayResourcesInHashMap(leaderDepositsHashMap));
 
                             break;
@@ -1915,10 +2056,12 @@ public class CLI extends UI {
                                 out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
                                 successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
                                 allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
+                                chosenFromStrongbox.put(justResources.get(index), chosenFromStrongbox.get(justResources.get(index)) + chosenNumber);
                                 leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
 
                             }
-                            out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+                            out.println("WHAT REMAINS IN STRONGBOX:\n");
+                            out.println(displayResourcesInHashMap(strongBoxHashMap));
                             break;
                         }
 
@@ -1937,14 +2080,16 @@ public class CLI extends UI {
                 out.println(displayResourcesInHashMap(required));
             }
         }
+
+
         out.println("THIS IS THE FINAL RESULT OF YOUR CHOICE :\n");
         out.println("Resources chosen from Warehouse: \n");
-        out.println(displayResourcesInHashMap(warehouseHashMap));
+        out.println(displayResourcesInHashMap(chosenFromWarehouse));
         out.println("Resources chosen from Leader deposits: \n");
-        out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+        out.println(displayResourcesInHashMap(chosenFromLeaderPower));
         out.println("Resources chosen from Strongbox: \n");
-        out.println(displayResourcesInHashMap(strongBoxHashMap));
-        out.println("IF YOU'RE NOT SATISFIED WITH YOUR CHOICES AND WANT TO MOVE FORWARD? Y/N\n");
+        out.println(displayResourcesInHashMap(chosenFromStrongbox));
+        out.println(" ARE YOU SATISFIED WITH YOUR CHOICES AND WANT TO MOVE FORWARD? Y/N\n");
         String answer = in.next().toUpperCase();
         in.nextLine();
         if (isAffirmative(answer)) {
@@ -1954,8 +2099,9 @@ public class CLI extends UI {
 
     /**
      * Method used to choose resources from a set of possible types of resources and given a quantity that must be chosen.
+     *
      * @param requiredResourcesOFChoice quantity of resources to chose.
-     * @param allowedResourcesTypes allowed types of resources.
+     * @param allowedResourcesTypes     allowed types of resources.
      * @return hashmap with resource chosen-quantity.
      */
     @Override
@@ -1978,7 +2124,8 @@ public class CLI extends UI {
 
     /**
      * Method used to print the description of an action taken from the enum Action.
-     * @param action  the Action.
+     *
+     * @param action the Action.
      */
     @Override
     public void displayIAAction(SoloActionToken action) {
@@ -1995,6 +2142,7 @@ public class CLI extends UI {
 
     /**
      * Method to update Lorenzo' position in the single player match.
+     *
      * @param position the  new position.
      */
     @Override

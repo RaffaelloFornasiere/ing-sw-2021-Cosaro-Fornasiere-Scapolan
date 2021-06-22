@@ -56,13 +56,13 @@ public class DepotState {
         return currentQuantity;
     }
 
-    public DepotResultMessage tryAddResource(Resource r) {
+    public DepotResultMessage tryAddResource(Resource r, int n) {
         if(currentQuantity>0) {
             if (r != resourceType) return DepotResultMessage.INVALID_RES_DEPOT;
-            if (currentQuantity + 1 > maxQuantity) return DepotResultMessage.REACH_MAX_CAP_DEPOT;
+            if (currentQuantity + n > maxQuantity) return DepotResultMessage.REACH_MAX_CAP_DEPOT;
 
         } else resourceType=r;
-        this.currentQuantity++;
+        this.currentQuantity += n;
         return DepotResultMessage.SUCCESSFUL_DEPOT;
     }
 
@@ -83,4 +83,5 @@ public class DepotState {
         depot.currentQuantity=tempCurrentQuantity;
         return DepotResultMessage.SUCCESSFUL_SWITCH;
     }
+
 }
