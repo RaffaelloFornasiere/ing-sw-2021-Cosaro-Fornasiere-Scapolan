@@ -1,37 +1,15 @@
-.root{
-    -fx-background-color: #393939;
+.root {
+    -fx-background-image: url(../images/MarketBackground.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 }
 
 
-
-
-.arrow-button{
-    -fx-border-color: #ba8a54;
-    -fx-background-color: transparent;
-    -fx-border-width: 3px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0,0, 0);
-    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
-
-}
-
-.arrow-button-right{
-    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
-    -fx-rotate: 180;
-}
-
-.arrow-button:hover{
-    -fx-background-color: #ba8a54;
-}
-
-.arrow-button:pressed{
-    -fx-background-color: #d7a062;
-}
-
-
-
-.list-view{
+.list-view {
     -fx-background-color: #ffffff10;
 }
+
 /*
 1. Odd rows with white background color;
 2. ListView: when mouse over an item, highlight with a blue shade;
@@ -40,58 +18,106 @@
 5. ListView: all items will start with text-fill black. But on mouse over and/or selected it will change to white.
 */
 
-.list-cell > .label { -fx-text-fill: black; /* 5 */ }
-.list-cell:odd{ -fx-background-color: #535353; /* 1 */ }
-.list-cell:even{ -fx-background-color: #717171; /* for information */ }
+.list-cell > .label {
+    -fx-text-fill: black; /* 5 */
+}
 
-.list-cell:selected{
+.list-cell:odd {
+    -fx-background-color: rgba(83, 83, 83, 0.25); /* 1 */
+}
+
+.list-cell:even {
+    -fx-background-color: rgba(113, 113, 113, 0.25); /* for information */
+}
+
+.list-cell:selected {
     -fx-background-color: rgba(147, 147, 198, 0.57);
 }
 
- #warehouseListCell{
+#warehouseListCell {
     -fx-background-color: rgba(147, 147, 198, 0.57);
 }
 
- #strongboxListCell{
+#strongboxListCell {
     -fx-background-color: rgba(198, 147, 147, 0.57);
 }
 
- #leaderCardListCell{
-     -fx-background-color: rgba(171, 198, 147, 0.57);
- }
+#leaderCardListCell {
+    -fx-background-color: rgba(171, 198, 147, 0.57);
+}
 
 
-.button{
+.button {
     -fx-background-radius: 20 20 20 20;
-    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-radius: 20 20 20 20;
     -fx-border-width: 1.5;
-    -fx-background-color: #393939;
-    -fx-border-color: #848484;
-    -fx-text-fill: #848484;
+    -fx-background-color: transparent;
+    -fx-border-color: #393939;
+    -fx-text-fill: #393939;
     -fx-text-alignment: center;
 }
 
-
-.button:hover{
-    -fx-background-color: #848484;
-    -fx-text-fill: #393939;
-}
-.button:pressed{
-    -fx-background-color: #949494;
+.button:hover {
+    -fx-background-color: #ba8a54;
 }
 
-.selectableRegion{
+.button:pressed {
+    -fx-background-color: #dba76d;
+}
+
+
+.arrow-button {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+
+}
+
+arrow-button-left {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+}
+
+.arrow-button-right {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+    -fx-rotate: 180;
+}
+
+.arrow-button:hover {
+    -fx-background-color: #ba8a54;
+}
+
+.arrow-button:pressed {
+    -fx-background-color: #dba76d;
+    -fx-border-color: #dba76d;
+}
+
+.selectable {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+}
+
+.selectableRegion {
     -fx-border-color: rgba(0, 176, 255, 0.85);
     -fx-border-width: 7px;
     -fx-border-radius: 10px;
     -fx-opacity: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
 
 .selectableRegion:hover {
     -fx-opacity: 1;
 }
 
-#addResourceOfChoiceButton{
+#addResourceOfChoiceButton {
     -fx-background-color: transparent;
     -fx-border-width: 3px;
     -fx-border-color: #848484;
@@ -100,6 +126,6 @@
     -fx-shape: "m 100.54167,100.54167 h 13.22916 V 87.312499 h 5.29167 v 13.229171 h 13.22916 v 5.29166 H 119.0625 v 13.22917 h -5.29167 v -13.22917 h -13.22916 z";
 }
 
-#addResourceOfChoiceButton:hover{
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0,0, 0);
+#addResourceOfChoiceButton:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }

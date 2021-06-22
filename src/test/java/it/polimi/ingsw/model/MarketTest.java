@@ -122,7 +122,6 @@ public class MarketTest {
         col2.entrySet().removeIf(n -> n.getValue() == 0);
 
         market.update(direction, index);
-
         HashMap<Marble, Integer> col = market.getMarbles(direction, index);
 
         Assert.assertEquals(col, col2);

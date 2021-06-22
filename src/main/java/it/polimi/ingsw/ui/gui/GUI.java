@@ -105,6 +105,10 @@ public class GUI extends UI {
                     aux.playerState.ownedCards.get(1).add("DevCard26");
                     //aux.playerState.ownedCards.get(2).add("DevCard29");
                     aux.playerState.leaderCards.add("LeaderCard15");
+                    aux.playerState.leaderDepots = new HashMap<>(){{
+                        put(Resource.COIN, 2);
+                        put(Resource.SERVANT, 1);
+                    }};
                     //aux.playerState.leaderCards.add("LeaderCard15");
                     //aux.playerState.leaderCards.add("LeaderCard10");
 

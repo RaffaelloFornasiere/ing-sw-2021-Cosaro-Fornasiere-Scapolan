@@ -3,7 +3,7 @@ package it.polimi.ingsw.utilities;
 
 public class LockWrap<T> {
     private T item;
-    private T lockingState;
+    private final T lockingState;
 
     public LockWrap(T item) {
         this.item = item;
@@ -19,15 +19,12 @@ public class LockWrap<T> {
         T res;
         synchronized (this) {
             while (item == lockingState) {
-
-                System.out.println("start waiting");
                 try {
                     this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            System.out.println("end waiting for :" + item.getClass().getSimpleName());
             res = item;
         }
         return res;
