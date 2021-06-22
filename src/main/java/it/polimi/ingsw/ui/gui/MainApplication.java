@@ -1,26 +1,13 @@
 package it.polimi.ingsw.ui.gui;
 
-import com.sun.tools.javac.Main;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLOutput;
-import java.util.*;
-import java.util.Objects;
-
+import java.util.Stack;
 
 
 public class MainApplication extends Application {
@@ -29,7 +16,6 @@ public class MainApplication extends Application {
         if (MainApplication.gui == null)
             MainApplication.gui = gui;
     }
-
 
 
     static private GUI gui;

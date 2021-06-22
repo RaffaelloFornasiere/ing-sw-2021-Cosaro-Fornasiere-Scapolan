@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 public class ClientAppLS2 {
-    public static void main( String[] args )
-    {
+    public static void main(String[] args) {
         UI ui = new CLI();
         NetworkAdapter networkAdapter = connectToServer(ui);
         ui.setClient(networkAdapter);
@@ -20,7 +19,7 @@ public class ClientAppLS2 {
 
     private static NetworkAdapter connectToServer(UI ui) {
         NetworkAdapter networkAdapter = null;
-        while(networkAdapter==null){
+        while (networkAdapter == null) {
             InetAddress inetAddress = ui.askIP();
             try {
                 networkAdapter = new NetworkAdapter(inetAddress, ui);

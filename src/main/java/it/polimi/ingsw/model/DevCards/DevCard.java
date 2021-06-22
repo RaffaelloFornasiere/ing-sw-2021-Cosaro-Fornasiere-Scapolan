@@ -22,10 +22,10 @@ public class DevCard {
     /**
      * constructor
      *
-     * @param cost required resources to buy the card
-     * @param level level of the card
-     * @param color color of the card
-     * @param victoryPoints victory points provided by the card
+     * @param cost            required resources to buy the card
+     * @param level           level of the card
+     * @param color           color of the card
+     * @param victoryPoints   victory points provided by the card
      * @param productionPower power production of the card
      * @throws IllegalArgumentException if the level of the card is negative
      */
@@ -41,8 +41,8 @@ public class DevCard {
 
     @Override
     public boolean equals(Object o) {
-        if (o.getClass() != getClass())return false;
-        if (this == o)return true;
+        if (o.getClass() != getClass()) return false;
+        if (this == o) return true;
 
         DevCard card = (DevCard) o;
 

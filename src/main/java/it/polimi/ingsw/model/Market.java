@@ -103,7 +103,7 @@ public class Market extends Observable {
         } else {
             if(0<index && index>cols) throw new IllegalArgumentException("Index out of bounds");
             aux = grid[0][index];
-            for (int i = 0; i < grid[index].length - 1; i++)
+            for (int i = 0; i < grid.length - 1; i++)
                 grid[i][index] = grid[i + 1][index];
             grid[grid.length - 1][index] = marbleLeft;
         }

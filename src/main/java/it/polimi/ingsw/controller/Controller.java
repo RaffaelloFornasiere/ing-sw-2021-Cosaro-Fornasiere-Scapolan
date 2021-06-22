@@ -748,9 +748,26 @@ public class Controller {
                     faithPointsProduced+= productionPower.getFaithPointsProduced();
                 }
 
+                HashMap<Resource, Integer> allPlayerResources = player.getAllPayerResources();
+                int surplusOfResources = 0;
+                for(Resource r: allPlayerResources.keySet()){
+                    int diff = allPlayerResources.get(r) - consumedResources.getOrDefault(r, 0);
+                    if(diff<0){
+                        senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Not enough resources for the production powers chosen", event));
+                        new MatchStateHandler(senders).update(matchState);
+                        return;
+                    }
+                    surplusOfResources+=diff;
+                }
+                if(surplusOfResources<requiredResourceOfChoice){
+                    senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Not enough resources for the production powers chosen", event));
+                    new MatchStateHandler(senders).update(matchState);
+                    return;
+                }
+
                 HashMap<Resource, Integer> selectedResourcesFromLeaderPowers = new HashMap<>();
                 HashMap<Resource, Integer> selectedResourcesFromWarehouse = new HashMap<>();
-                HashMap<Resource, Integer> allPlayerResources = new HashMap<>();
+
                 boolean goodChoice = false;
                 while(!goodChoice) {
                     try {
@@ -786,13 +803,12 @@ public class Controller {
                         }
 
                         HashMap<Resource, Integer> allResourcesSelected = chosenResourcesEvent.getAllResourcesChosen();
-                        allPlayerResources = player.getAllPayerResources();
                         int extraResources = 0;
                         for (Resource r : allResourcesSelected.keySet()) {
                             if (allPlayerResources.get(r) < allResourcesSelected.get(r)) {
                                 throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "The selected resources are not present in the player inventory", event));
                             }
-                            int difference = allResourcesSelected.get(r) - consumedResources.get(r);
+                            int difference = allResourcesSelected.get(r) - consumedResources.getOrDefault(r, 0);
                             if (difference < 0) {
                                 throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too few resources chosen", event));
                             }

@@ -11,9 +11,10 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.ResourceBundle;
 
 public class LoginController extends Controller implements Initializable {
 
@@ -60,7 +61,7 @@ public class LoginController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if(gui.getPlayerImage() == null)
+        if (gui.getPlayerImage() == null)
             playerImage.setImage(new Image(currentImage.next()));
         else
             playerImage.setImage(new Image(gui.getPlayerImage()));
@@ -68,12 +69,12 @@ public class LoginController extends Controller implements Initializable {
 
     public void nextImage() {
         String newImage;
-        if(currentImage.hasNext())
+        if (currentImage.hasNext())
             newImage = currentImage.next();
         else
             newImage = (currentImage = playerImages.listIterator()).next();
 
-        if(playerImage.getImage().getUrl().equals(newImage)) {
+        if (playerImage.getImage().getUrl().equals(newImage)) {
             nextImage();
             return;
         }
@@ -82,12 +83,12 @@ public class LoginController extends Controller implements Initializable {
 
     public void previousImage() {
         String newImage;
-        if(currentImage.hasPrevious())
+        if (currentImage.hasPrevious())
             newImage = currentImage.previous();
         else
-            newImage = (currentImage = playerImages.listIterator(playerImages.size()-1)).next();
+            newImage = (currentImage = playerImages.listIterator(playerImages.size() - 1)).next();
 
-        if(playerImage.getImage().getUrl().equals(newImage)) {
+        if (playerImage.getImage().getUrl().equals(newImage)) {
             previousImage();
             return;
         }

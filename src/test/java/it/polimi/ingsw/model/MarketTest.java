@@ -82,7 +82,7 @@ public class MarketTest {
     }
 
     @Test
-    public void updateTest() {
+    public void updateTestRow() {
 
         Market market = new Market(4, 3, marbles);
         market.shuffleMarket();
@@ -101,6 +101,30 @@ public class MarketTest {
         list.forEach(i -> row2.put(i, row2.containsKey(i) ? (row2.get(i) + 1) : 1));
 
         assertEquals(row, row2);
+    }
+
+    @Test
+    public void updateTestColumn() {
+
+        Market market = new Market(4, 3, marbles);
+        market.shuffleMarket();
+
+        int index = 2;
+        Direction direction = Direction.COLUMN;
+
+        HashMap<Marble, Integer> col2 = market.getMarbles(direction, index);
+        Marble[][] marketStatus = market.getMarketStatus();
+
+        Marble marble = market.getMarbleLeft();
+        col2.put(marble, col2.getOrDefault(marble, 0)+1);
+        marble = marketStatus[0][index];
+        col2.put(marble, col2.get(marble)-1);
+        col2.entrySet().removeIf(n -> n.getValue() == 0);
+
+        market.update(direction, index);
+        HashMap<Marble, Integer> col = market.getMarbles(direction, index);
+
+        Assert.assertEquals(col, col2);
     }
 
 

@@ -31,7 +31,7 @@
                <children>
                   <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/leaders/Leader_1.png" />
+                        <Image url="@images/leaders/LeaderCard7.png" />
                      </image>
                   </ImageView>
                   <Region id="region1" fx:id="selectableRegion1" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
@@ -42,10 +42,10 @@
                <children>
                   <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/leaders/Leader_10.png" />
+                        <Image url="@images/leaders/LeaderCard8.png" />
                      </image>
                   </ImageView>
-                  <Region id="region2" fx:id="selectableRegion2" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
+                  <Region id="region2" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
                   <CheckBox fx:id="checkBox1" layoutX="131.0" layoutY="20.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="21.0" />
                </children>
             </Group>
@@ -53,7 +53,7 @@
                <children>
                   <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/leaders/Leader_6.png" />
+                        <Image url="@images/leaders/LeaderCard9.png" />
                      </image>
                   </ImageView>
                   <Region id="region3" fx:id="selectableRegion3" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
@@ -64,7 +64,7 @@
                <children>
                   <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="13.999999761581421" layoutY="14.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                      <image>
-                        <Image url="@images/leaders/Leader_16.png" />
+                        <Image url="@images/leaders/LeaderCard1.png" />
                      </image>
                   </ImageView>
                   <Region id="region4" fx:id="selectableRegion4" layoutX="7.6000001430511475" layoutY="9.199999809265137" onMouseClicked="#onMouseClicked" prefHeight="210.0" prefWidth="152.0" styleClass="CardSelectableRegion" />
@@ -83,7 +83,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
+            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
