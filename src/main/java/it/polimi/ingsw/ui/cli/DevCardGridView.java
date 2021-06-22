@@ -18,7 +18,7 @@ public class DevCardGridView {
         int totalHeight= 0;
         ArrayList<DrawableObject>  objs= new ArrayList<>();
         Panel panel = new Panel(500, 0, System.out);
-        for (int x = 0; x < topDevCardIDs.length; x++){
+        for (int x = topDevCardIDs.length-1; x >=0; x--){
             int height=0;
             for (int y = 0; y < topDevCardIDs[0].length; y++) {
                 DrawableObject obj= new DrawableObject((new DevCardView(topDevCardIDs[x][y])).toString(), 40 * y, 20 * x);

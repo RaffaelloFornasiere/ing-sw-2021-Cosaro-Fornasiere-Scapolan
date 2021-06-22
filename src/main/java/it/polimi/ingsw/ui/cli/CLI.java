@@ -465,15 +465,17 @@ public class CLI extends UI {
      * @return The string to print.
      */
     public String displayResourcesInHashMap(HashMap<Resource, Integer> hashMapToDisplay) {
-        StringBuilder builder0 = new StringBuilder();
-        hashMapToDisplay.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
-            builder0.append(color).append(resource.toString()).append(": ");
-            IntStream.range(0, hashMapToDisplay.get(resource)).forEach(n -> builder0.append(color).append(shape).append(" "));
-            builder0.append(Color.WHITE.getAnsiCode()).append(" --> ").append(hashMapToDisplay.get(resource)).append("\n");
-        });
-        return builder0.toString();
+        if(!hashMapToDisplay.isEmpty()) {
+            StringBuilder builder0 = new StringBuilder();
+            hashMapToDisplay.keySet().forEach(resource -> {
+                String color = colorResource(resource);
+                String shape = shapeResource(resource);
+                builder0.append(color).append(resource.toString()).append(": ");
+                IntStream.range(0, hashMapToDisplay.get(resource)).forEach(n -> builder0.append(color).append(shape).append(" "));
+                builder0.append(Color.WHITE.getAnsiCode()).append(" --> ").append(hashMapToDisplay.get(resource)).append("\n");
+            });
+            return builder0.toString();
+        }else return "Empty";
     }
 
     /**
@@ -1831,7 +1833,8 @@ public class CLI extends UI {
      * this method checks whether an hashmap of resources is empty or not.
      */
     public static boolean isEmptyHashMap(HashMap<Resource, Integer> map) {
-        return map.keySet().stream().map(key -> map.get(key) == 0).reduce(true, (a, b) -> a && b);
+        if(!map.isEmpty()) return map.keySet().stream().map(key -> map.get(key) == 0).reduce(true, (a, b) -> a && b);
+        else return true;
     }
 
     /**
@@ -1886,7 +1889,7 @@ public class CLI extends UI {
         //hashmaps that take count of total resources in each category of deposit(warehouse, leader deposit, strongbox)
         HashMap<Resource, Integer> warehouseHashMap = thisDashboard.totalResourcesInWarehouse();
         HashMap<Resource, Integer> leaderDepositsHashMap = getDepositLeaderPowerTotalResources();
-        HashMap<Resource, Integer> strongBoxHashMap = (HashMap<Resource, Integer>) thisDashboard.getStrongBox().clone();
+        HashMap<Resource, Integer> strongBoxHashMap = new HashMap<>(thisDashboard.getStrongBox());
 
         //display how many resources the user has to take
         StringBuilder builder = new StringBuilder();
@@ -1918,8 +1921,10 @@ public class CLI extends UI {
             while (!validResourcesChosen) {
                 HashMap<Resource, Integer> temp = new HashMap<>(required);
                 choseResources(Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new)), freeChoicesResources).forEach((key, value) -> {
-                    if (temp.containsKey(key)) temp.put(key, temp.get(key) + value);
-                    else temp.put(key, value);
+                    if (value != 0) {
+                        if (temp.containsKey(key)) temp.put(key, temp.get(key) + value);
+                        else temp.put(key, value);
+                    }
                 });
                 //check if there are enough resources in the deposits
                 HashMap<Resource, Integer> totalResources = new HashMap<>(warehouseHashMap);
@@ -1969,7 +1974,8 @@ public class CLI extends UI {
             depositCategory.add(new Pair<>("WAREHOUSE", Color.WHITE.getAnsiCode()));
             if (thisDepositLeaderPowers.size() > 0)
                 depositCategory.add(new Pair<>("EXTRA DEPOSITS", Color.WHITE.getAnsiCode()));
-            depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
+            if (! isEmptyHashMap(strongBoxHashMap))
+                depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
             ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, depositCategory.size(), "WHERE WOULD YOU LIKE TO TAKE THE RESOURCES FROM?\n ");
             inputs.forEach(input -> {
                 out.print("HAVE A LOOK AT THE CURRENT TOTAL QUANTITY OF RESOURCES IN THE " + depositCategory.get(input).getKey() + "\n");
