@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
@@ -49,7 +50,8 @@ public class NetworkHandlerSender implements Sender{
         Gson gson = builder.create();
         String data = gson.toJson(e, Event.class);
 
-        System.out.println(data);
+        if(e.getClass()!= HeartbeatEvent.class)
+            System.out.println(data);
         sendData(data);
     }
 

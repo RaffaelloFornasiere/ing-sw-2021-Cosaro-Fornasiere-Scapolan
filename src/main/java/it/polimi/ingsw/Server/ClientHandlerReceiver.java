@@ -52,7 +52,8 @@ public class ClientHandlerReceiver {
             String eventJSON = "";
             try {
                 eventJSON = MessageWrapper.unwrap(scanner.nextLine());
-                System.out.println("Received: " + eventJSON);
+                if(!eventJSON.contains("\"CLASSNAME\":\"it.polimi.ingsw.events.HeartbeatEvent\""))
+                    System.out.println("Received: " + eventJSON);
                 Event event = gson.fromJson(eventJSON, Event.class);
                 boolean done = false;
                 while (!done) {

@@ -40,7 +40,8 @@ public class NetworkHandlerReceiver{
             String json;
             try {
                 json = MessageWrapper.unwrap(scanner.nextLine());
-                System.out.println(json);
+                if(!json.contains("\"CLASSNAME\":\"it.polimi.ingsw.events.HeartbeatEvent\""))
+                    System.out.println(json);
                 Event event = gson.fromJson(json, Event.class);
                 if (event.getClass() != HeartbeatEvent.class) {
                     userID = event.getPlayerId();

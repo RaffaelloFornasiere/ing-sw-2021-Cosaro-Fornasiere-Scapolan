@@ -73,7 +73,6 @@ public class RequestsElaborator {
             eventLock.notifyAll();
         }
         if (socket != null) {
-            System.out.println("Elaborating: " + event.getEventName());
             if(event.getClass() == HeartbeatEvent.class)
                 clientHandlerSender.sendObject(event);
             else if (event.getClass() == NewPlayerEvent.class)
