@@ -71,7 +71,79 @@
             </Group>
             <Group>
                <children>
-                  <ImageView fitHeight="149.0" fitWidth="135.0" layoutX="-9.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" styleClass="StrongBox" />
+                  <ImageView fitHeight="154.0" fitWidth="160.0" layoutX="-18.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" styleClass="StrongBox" />
+                  <HBox layoutX="-6.0" layoutY="76.0" prefHeight="43.0" prefWidth="115.0">
+                     <children>
+                        <VBox alignment="CENTER">
+                           <HBox.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </HBox.margin>
+                           <children>
+                              <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/coin.png" />
+                                 </image>
+                              </ImageView>
+                              <Label alignment="CENTER" text="4" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER">
+                           <HBox.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </HBox.margin>
+                           <children>
+                              <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/shield.png" />
+                                 </image>
+                              </ImageView>
+                              <Label alignment="CENTER" text="7" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER">
+                           <HBox.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </HBox.margin>
+                           <children>
+                              <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/servant2.png" />
+                                 </image>
+                              </ImageView>
+                              <Label alignment="CENTER" text="12" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER">
+                           <HBox.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </HBox.margin>
+                           <children>
+                              <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/stone2.png" />
+                                 </image>
+                              </ImageView>
+                              <Label alignment="CENTER" text="5" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

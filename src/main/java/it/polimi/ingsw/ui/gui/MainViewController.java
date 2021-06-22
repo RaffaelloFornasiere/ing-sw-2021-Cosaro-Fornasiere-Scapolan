@@ -28,7 +28,7 @@ public class MainViewController extends Controller implements Initializable {
         Scene scene = new Scene(fxmlLoader.load());
         marketStage.initModality(Modality.APPLICATION_MODAL);
         marketStage.setScene(scene);
-        marketStage.show();
+        marketStage.showAndWait();
     }
 
     public void openCardGrid() throws IOException {
@@ -38,8 +38,20 @@ public class MainViewController extends Controller implements Initializable {
         Scene scene = new Scene(fxmlLoader.load());
         gridStage.initModality(Modality.APPLICATION_MODAL);
         gridStage.setScene(scene);
-        gridStage.show();
+        gridStage.showAndWait();
     }
+
+    public void openProduction() throws IOException {
+        Stage productionStage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("production.fxml"));
+        fxmlLoader.setController(new ProductionController(gui));
+        Scene scene = new Scene(fxmlLoader.load());
+        productionStage.initModality(Modality.APPLICATION_MODAL);
+        productionStage.setScene(scene);
+        productionStage.showAndWait();
+
+    }
+
 
 
 }

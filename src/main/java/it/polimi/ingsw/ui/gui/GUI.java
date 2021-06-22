@@ -6,6 +6,7 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
@@ -45,6 +46,7 @@ public class GUI extends UI {
     private final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
     private final LockWrap<Integer> serverPort = new LockWrap<>(null);
 
+
     private PlayerState playerInfo;
     private String PlayerImage;
 
@@ -83,6 +85,7 @@ public class GUI extends UI {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    playerID.setItem("paolo");
                     Stage stage = new Stage();
                     FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("production.fxml"));
                     HashMap<Resource, Integer> strongBox = new HashMap<>() {{
@@ -100,10 +103,14 @@ public class GUI extends UI {
 
                     aux.playerState.ownedCards.get(0).add("DevCard35");
                     aux.playerState.ownedCards.get(1).add("DevCard26");
-                    aux.playerState.ownedCards.get(2).add("DevCard29");
-                    aux.playerState.leaderCards.add("LeaderCard1");
+                    //aux.playerState.ownedCards.get(2).add("DevCard29");
                     aux.playerState.leaderCards.add("LeaderCard15");
-                    aux.playerState.leaderCards.add("LeaderCard10");
+                    aux.playerState.leaderDepots = new HashMap<>(){{
+                        put(Resource.COIN, 2);
+                        put(Resource.SERVANT, 1);
+                    }};
+                    //aux.playerState.leaderCards.add("LeaderCard15");
+                    //aux.playerState.leaderCards.add("LeaderCard10");
 
 
                     aux.playerState.warehouse = warehouse;
@@ -117,6 +124,13 @@ public class GUI extends UI {
                         e.printStackTrace();
                     }
                     stage.show();
+
+                    /*choseInitialLeaderCards(new ArrayList<>(){{
+                        add("LeaderCard1");
+                        add("LeaderCard7");
+                        add("LeaderCard5");
+                        add("LeaderCard14");
+                    }}, 2);*/
                 }
             });
 
@@ -278,7 +292,7 @@ public class GUI extends UI {
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
         Stage popUp = new Stage();
         ArrayList<String> res = new ArrayList<>();
-        SelectLeaderCardsController controller = new SelectLeaderCardsController(leaderCardsIDs, numberOFLeaderCardsToChose, res, popUp);
+        SelectLeaderCardsController controller = new SelectLeaderCardsController(leaderCardsIDs, numberOFLeaderCardsToChose);
         try {
             FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectleadercards.fxml"));
             loader.setController(controller);
@@ -286,6 +300,7 @@ public class GUI extends UI {
             popUp.initModality(Modality.APPLICATION_MODAL);
             popUp.setScene(scene);
             popUp.showAndWait();
+            res = controller.getSelected();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -13,17 +13,19 @@ public class ChoseResourcesEvent extends SimpleChoseResourcesEvent {
 
     /**
      * Constructor for the class
-     * @param playerId The ID of the player that will have to make the choice
-     * @param requiredResources The required resources of each type
+     *
+     * @param playerId                  The ID of the player that will have to make the choice
+     * @param requiredResources         The required resources of each type
      * @param requiredResourcesOfChoice The required resources of any type
      */
-    public ChoseResourcesEvent(String playerId, HashMap<Resource, Integer> requiredResources, int requiredResourcesOfChoice){
+    public ChoseResourcesEvent(String playerId, HashMap<Resource, Integer> requiredResources, int requiredResourcesOfChoice) {
         super(playerId, requiredResourcesOfChoice);
         this.requiredResources = new HashMap<>(requiredResources);
     }
 
     /**
      * Getter for the required resources of each type
+     *
      * @return The required resources of each type
      */
     public HashMap<Resource, Integer> getRequiredResources() {

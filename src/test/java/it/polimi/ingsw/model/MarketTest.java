@@ -114,16 +114,17 @@ public class MarketTest {
 
         HashMap<Marble, Integer> col2 = market.getMarbles(direction, index);
         Marble[][] marketStatus = market.getMarketStatus();
+
         Marble marble = market.getMarbleLeft();
         col2.put(marble, col2.getOrDefault(marble, 0)+1);
         marble = marketStatus[0][index];
         col2.put(marble, col2.get(marble)-1);
+        col2.entrySet().removeIf(n -> n.getValue() == 0);
 
         market.update(direction, index);
+        HashMap<Marble, Integer> col = market.getMarbles(direction, index);
 
-        var col = market.getMarbles(direction, index);
-
-        assertEquals(col, col2);
+        Assert.assertEquals(col, col2);
     }
 
 
