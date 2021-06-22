@@ -10,7 +10,6 @@ public abstract class Event {
     public Event(String playerId) {
         this.playerId = playerId;
     }
-    public Event(){}
 
     /**
      * The getter for the player that generated(directly or indirectly) this event

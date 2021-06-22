@@ -136,7 +136,7 @@ public class RequestsElaborator {
         try {
             socket.close();
             socket = null;
-            requestsQueue.put(new QueueStopEvent());
+            requestsQueue.put(new QueueStopEvent(ownerUserID));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

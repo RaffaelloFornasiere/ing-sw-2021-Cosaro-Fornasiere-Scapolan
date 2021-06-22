@@ -53,12 +53,7 @@ public class ClientHandlerReceiver {
             try {
                 eventJSON = MessageWrapper.unwrap(scanner.nextLine());
                 System.out.println("Received: " + eventJSON);
-                Event event;
-                if (eventJSON.equals("heartbeat")) {
-                    event = new HeartbeatEvent();
-                } else {
-                    event = gson.fromJson(eventJSON, Event.class);
-                }
+                Event event = gson.fromJson(eventJSON, Event.class);
                 boolean done = false;
                 while (!done) {
                     try {

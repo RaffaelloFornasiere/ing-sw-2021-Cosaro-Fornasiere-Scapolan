@@ -39,14 +39,12 @@ public class NetworkHandlerReceiver{
         while (true) {
             String json;
             try {
-                if (scanner.hasNext()) {
-                    json = MessageWrapper.unwrap(scanner.nextLine());
-                    System.out.println(json);
-                    Event event = gson.fromJson(json, Event.class);
-                    if(event.getClass() != HeartbeatEvent.class) {
-                        userID = event.getPlayerId();
-                        eventRegistry.sendEvent(event);
-                    }
+                json = MessageWrapper.unwrap(scanner.nextLine());
+                System.out.println(json);
+                Event event = gson.fromJson(json, Event.class);
+                if (event.getClass() != HeartbeatEvent.class) {
+                    userID = event.getPlayerId();
+                    eventRegistry.sendEvent(event);
                 }
             } catch (JsonSyntaxException ignore) {
             } catch (NoSuchElementException | IllegalStateException e){

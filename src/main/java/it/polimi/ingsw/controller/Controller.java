@@ -769,6 +769,7 @@ public class Controller {
 
             HashMap<Resource, Integer> selectedResourcesFromLeaderPowers = new HashMap<>();
             HashMap<Resource, Integer> selectedResourcesFromWarehouse = new HashMap<>();
+            HashMap<Resource, Integer> allResourcesSelected = new HashMap<>();
 
             boolean goodChoice = false;
             while (!goodChoice) {
@@ -804,7 +805,7 @@ public class Controller {
                         }
                     }
 
-                    HashMap<Resource, Integer> allResourcesSelected = chosenResourcesEvent.getAllResourcesChosen();
+                    allResourcesSelected = chosenResourcesEvent.getAllResourcesChosen();
                     int extraResources = 0;
                     for (Resource r : allResourcesSelected.keySet()) {
                         if (allPlayerResources.get(r) < allResourcesSelected.get(r)) {
@@ -868,8 +869,8 @@ public class Controller {
             //produce
             player.getDashBoard().subResourcesToWarehouse(selectedResourcesFromWarehouse);
             leaderCardManager.removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPowers);
-            for (Resource r : allPlayerResources.keySet()) {
-                player.getDashBoard().subResourcesToStrongBox(r, allPlayerResources.get(r) - selectedResourcesFromWarehouse.getOrDefault(r, 0) - selectedResourcesFromLeaderPowers.getOrDefault(r, 0));
+            for (Resource r : allResourcesSelected.keySet()) {
+                player.getDashBoard().subResourcesToStrongBox(r, allResourcesSelected.get(r) - selectedResourcesFromWarehouse.getOrDefault(r, 0) - selectedResourcesFromLeaderPowers.getOrDefault(r, 0));
             }
 
             for (Resource r : Resource.values())

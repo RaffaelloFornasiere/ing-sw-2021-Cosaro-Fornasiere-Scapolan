@@ -8,6 +8,7 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
@@ -30,6 +31,7 @@ public class NetworkAdapter {
     Socket server;
     String playerID;
     UI view;
+    Timer heartbeatTimer;
 
     public NetworkAdapter(InetAddress address, UI ui) throws IOException {
         connectToServer(address);
@@ -100,15 +102,15 @@ public class NetworkAdapter {
         sender = new NetworkHandlerSender(server);
         receiver = new NetworkHandlerReceiver(server);
         new Thread(receiver::receive).start();
-        Timer timer = new Timer();
+        heartbeatTimer = new Timer();
         TimerTask heartbeat;
         heartbeat = new TimerTask() {
             @Override
             public void run() {
-                ((NetworkHandlerSender)sender).sendData("heartbeat");
+                ((NetworkHandlerSender)sender).sendObject(new HeartbeatEvent(playerID));
             }
         };
-        timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
+        heartbeatTimer.scheduleAtFixedRate(heartbeat, 1000, 1000);
         return true;
     }
 
@@ -319,6 +321,7 @@ public class NetworkAdapter {
         ServerDisconnectionEvent event = (ServerDisconnectionEvent) evt.getNewValue();
 
         view.printError("The connection with the server was closed. Shutting down the application");
+        heartbeatTimer.cancel();
         sender.closeConnection();
         receiver.closeConnection();
         try {
