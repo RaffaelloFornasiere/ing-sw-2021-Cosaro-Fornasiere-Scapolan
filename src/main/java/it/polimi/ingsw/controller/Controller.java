@@ -506,7 +506,7 @@ public class Controller {
                     leaderCardManager.deselectLeaderPower(player, leaderCard,
                             leaderCard.getLeaderPowers().get(event.getLeaderPowerIndex()));
 
-                matchState.setTurnState(matchState.getTurnState());
+                new MatchStateHandler(senders).update(matchState);
             } catch (NotPresentException notPresentException) {
                 senders.get(event.getPlayerId()).sendObject(new BadRequestEvent(event.getPlayerId(), "Leader card not owned by this player", event));
                 System.out.println(notPresentException.getMessage());
@@ -689,202 +689,201 @@ public class Controller {
     /**
      * Handler for ActivateProductionEvent
      */
-    public synchronized void ActivateProductionEventHandler(PropertyChangeEvent evt){
+    public synchronized void ActivateProductionEventHandler(PropertyChangeEvent evt) {
         ActivateProductionEvent event = (ActivateProductionEvent) evt.getNewValue();
 
-        if(!event.isPersonalPowerActive() && event.getDevCards().size()==0){
+        if (!event.isPersonalPowerActive() && event.getDevCards().size() == 0) {
             senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "You must select at least one production power", event));
             new MatchStateHandler(senders).update(matchState);
             return;
         }
 
-        //new Thread(()->{
-            HashMap<Resource, Integer> consumedResources = new HashMap<>();
-            HashMap<Resource, Integer> producedResources = new HashMap<>();
-            int requiredResourceOfChoice = 0;
-            int producedResourceOfChoice = 0;
-            int faithPointsProduced = 0;
+        HashMap<Resource, Integer> consumedResources = new HashMap<>();
+        HashMap<Resource, Integer> producedResources = new HashMap<>();
+        int requiredResourceOfChoice = 0;
+        int producedResourceOfChoice = 0;
+        int faithPointsProduced = 0;
 
-            try {
-                Player player = matchState.getPlayerFromID(event.getPlayerId());
-                if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_LEADER_CARD_ACTION);}})) return;
-                ArrayList<DevCard> topDevCards = player.getDashBoard().getTopCards();
-                for(String devCardID: event.getDevCards()){
-                    int index = -1;
-                    for(int i=0; i<topDevCards.size(); i++){
-                        if(topDevCards.get(i).getCardID().equals(devCardID)) index=i;
-                    }
-                    if(index == -1){
-                        senders.get(event.getPlayerId()).sendObject(new BadRequestEvent(event.getPlayerId(), "DevCard not at the top of any of the player slot", event));
-                        return;
-                    }
-
-                    //can probably be it's own function returning a cumulative production power
-                    ProductionPower productionPower = topDevCards.get(index).getProductionPower();
-                    HashMap<Resource, Integer> cr = productionPower.getConsumedResources();
-                    for(Resource r: cr.keySet()){
-                        consumedResources.put(r, cr.get(r) + consumedResources.getOrDefault(r, 0));
-                    }
-                    HashMap<Resource, Integer> pr = productionPower.getConsumedResources();
-                    for(Resource r: pr.keySet()){
-                        producedResources.put(r, pr.get(r) + producedResources.getOrDefault(r, 0));
-                    }
-                    requiredResourceOfChoice+=productionPower.getRequiredResourceOfChoice();
-                    producedResourceOfChoice+=productionPower.getProducedResourceOfChoice();
-                    faithPointsProduced+= productionPower.getFaithPointsProduced();
+        try {
+            Player player = matchState.getPlayerFromID(event.getPlayerId());
+            if (!canActionBePerformed(event, player, new ArrayList<>() {{
+                add(TurnState.START);
+                add(TurnState.AFTER_LEADER_CARD_ACTION);
+            }})) return;
+            ArrayList<DevCard> topDevCards = player.getDashBoard().getTopCards();
+            for (String devCardID : event.getDevCards()) {
+                int index = -1;
+                for (int i = 0; i < topDevCards.size(); i++) {
+                    if (topDevCards.get(i).getCardID().equals(devCardID)) index = i;
                 }
-                if(event.isPersonalPowerActive()){
-                    ProductionPower productionPower = player.getDashBoard().getPersonalPower();
-                    HashMap<Resource, Integer> cr = productionPower.getConsumedResources();
-                    for(Resource r: cr.keySet()){
-                        consumedResources.put(r, cr.get(r) + consumedResources.getOrDefault(r, 0));
-                    }
-                    HashMap<Resource, Integer> pr = productionPower.getConsumedResources();
-                    for(Resource r: pr.keySet()){
-                        producedResources.put(r, pr.get(r) + producedResources.getOrDefault(r, 0));
-                    }
-                    requiredResourceOfChoice+=productionPower.getRequiredResourceOfChoice();
-                    producedResourceOfChoice+=productionPower.getProducedResourceOfChoice();
-                    faithPointsProduced+= productionPower.getFaithPointsProduced();
+                if (index == -1) {
+                    senders.get(event.getPlayerId()).sendObject(new BadRequestEvent(event.getPlayerId(), "DevCard not at the top of any of the player slot", event));
+                    return;
                 }
 
-                HashMap<Resource, Integer> allPlayerResources = player.getAllPayerResources();
-                int surplusOfResources = 0;
-                for(Resource r: allPlayerResources.keySet()){
-                    int diff = allPlayerResources.get(r) - consumedResources.getOrDefault(r, 0);
-                    if(diff<0){
-                        senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Not enough resources for the production powers chosen", event));
-                        new MatchStateHandler(senders).update(matchState);
-                        return;
-                    }
-                    surplusOfResources+=diff;
+                //can probably be it's own function returning a cumulative production power
+                ProductionPower productionPower = topDevCards.get(index).getProductionPower();
+                HashMap<Resource, Integer> cr = productionPower.getConsumedResources();
+                for (Resource r : cr.keySet()) {
+                    consumedResources.put(r, cr.get(r) + consumedResources.getOrDefault(r, 0));
                 }
-                if(surplusOfResources<requiredResourceOfChoice){
+                HashMap<Resource, Integer> pr = productionPower.getConsumedResources();
+                for (Resource r : pr.keySet()) {
+                    producedResources.put(r, pr.get(r) + producedResources.getOrDefault(r, 0));
+                }
+                requiredResourceOfChoice += productionPower.getRequiredResourceOfChoice();
+                producedResourceOfChoice += productionPower.getProducedResourceOfChoice();
+                faithPointsProduced += productionPower.getFaithPointsProduced();
+            }
+            if (event.isPersonalPowerActive()) {
+                ProductionPower productionPower = player.getDashBoard().getPersonalPower();
+                HashMap<Resource, Integer> cr = productionPower.getConsumedResources();
+                for (Resource r : cr.keySet()) {
+                    consumedResources.put(r, cr.get(r) + consumedResources.getOrDefault(r, 0));
+                }
+                HashMap<Resource, Integer> pr = productionPower.getConsumedResources();
+                for (Resource r : pr.keySet()) {
+                    producedResources.put(r, pr.get(r) + producedResources.getOrDefault(r, 0));
+                }
+                requiredResourceOfChoice += productionPower.getRequiredResourceOfChoice();
+                producedResourceOfChoice += productionPower.getProducedResourceOfChoice();
+                faithPointsProduced += productionPower.getFaithPointsProduced();
+            }
+
+            HashMap<Resource, Integer> allPlayerResources = player.getAllPayerResources();
+            int surplusOfResources = 0;
+            for (Resource r : allPlayerResources.keySet()) {
+                int diff = allPlayerResources.get(r) - consumedResources.getOrDefault(r, 0);
+                if (diff < 0) {
                     senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Not enough resources for the production powers chosen", event));
                     new MatchStateHandler(senders).update(matchState);
                     return;
                 }
+                surplusOfResources += diff;
+            }
+            if (surplusOfResources < requiredResourceOfChoice) {
+                senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Not enough resources for the production powers chosen", event));
+                new MatchStateHandler(senders).update(matchState);
+                return;
+            }
 
-                HashMap<Resource, Integer> selectedResourcesFromLeaderPowers = new HashMap<>();
-                HashMap<Resource, Integer> selectedResourcesFromWarehouse = new HashMap<>();
-                HashMap<Resource, Integer> allResourcesSelected = new HashMap<>();
+            HashMap<Resource, Integer> selectedResourcesFromLeaderPowers = new HashMap<>();
+            HashMap<Resource, Integer> selectedResourcesFromWarehouse = new HashMap<>();
+            HashMap<Resource, Integer> allResourcesSelected = new HashMap<>();
 
-                boolean goodChoice = false;
-                while(!goodChoice) {
-                    try {
-                        senders.get(event.getPlayerId()).sendObject(new ChoseResourcesEvent(event.getPlayerId(), consumedResources, requiredResourceOfChoice));
+            boolean goodChoice = false;
+            while (!goodChoice) {
+                try {
+                    senders.get(event.getPlayerId()).sendObject(new ChoseResourcesEvent(event.getPlayerId(), consumedResources, requiredResourceOfChoice));
 
-                        synchronized (waitingForResourcesLock){
-                            try {
-                                matchState.setWaitingForSomething();
-                                waitingForResourcesLock.wait();
-                                matchState.somethingArrived();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if(chosenResourcesEvent==null) return;
-
-                        //check resources chosen to produce
-                        selectedResourcesFromLeaderPowers = chosenResourcesEvent.getSelectedResourcesFromLeaderPowers();
-                        selectedResourcesFromWarehouse = chosenResourcesEvent.getSelectedResourcesFromWarehouse();
-
-                        HashMap<Resource, Integer> wareHouseResources = player.getDashBoard().getWarehouseResources();
-                        for (Resource r : wareHouseResources.keySet()) {
-                            if (wareHouseResources.get(r) < selectedResourcesFromWarehouse.getOrDefault(r, 0)) {
-                                throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Selected resources from warehouse not present", event));
-                            }
-                        }
-
-                        HashMap<Resource, Integer> leaderPowerResources = player.getLeaderCardsResources();
-                        for (Resource r : leaderPowerResources.keySet()) {
-                            if (leaderPowerResources.get(r) < selectedResourcesFromLeaderPowers.getOrDefault(r, 0)) {
-                                throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Selected resources from leader powers not present", event));
-                            }
-                        }
-
-                        allResourcesSelected = chosenResourcesEvent.getAllResourcesChosen();
-                        int extraResources = 0;
-                        for (Resource r : allResourcesSelected.keySet()) {
-                            if (allPlayerResources.get(r) < allResourcesSelected.get(r)) {
-                                throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "The selected resources are not present in the player inventory", event));
-                            }
-                            int difference = allResourcesSelected.get(r) - consumedResources.getOrDefault(r, 0);
-                            if (difference < 0) {
-                                throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too few resources chosen", event));
-                            }
-                            extraResources += difference;
-                        }
-                        if (extraResources < requiredResourceOfChoice) {
-                            throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too few resources to consume chosen", event));
-                        }
-                        if (extraResources > requiredResourceOfChoice) {
-                            throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too many resources to consume chosen", event));
-                        }
-                        goodChoice = true;
-                    } catch(HandlerCheckException e){
-                        goodChoice = false;
-                        Event eventToSend = e.getEventToSend();
-                        if(eventToSend != null) senders.get(player.getPlayerId()).sendObject(e.getEventToSend());
-                    }
-
-                }
-
-                //chose PRODUCED resource of choice
-                int numChosenResources = 0;
-                HashMap<Resource, Integer> chosenResources = new HashMap<>();
-                goodChoice = false;
-                while(!goodChoice) {
-                    senders.get(event.getPlayerId()).sendObject(new SimpleChoseResourcesEvent(event.getPlayerId(), producedResourceOfChoice));
-
-                    synchronized (waitingForSimpleResourcesLock){
+                    synchronized (waitingForResourcesLock) {
                         try {
                             matchState.setWaitingForSomething();
-                            waitingForSimpleResourcesLock.wait();
+                            waitingForResourcesLock.wait();
                             matchState.somethingArrived();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
+                    if (chosenResourcesEvent == null) return;
 
-                    if(simpleChosenResourcesEvent==null) return;
+                    //check resources chosen to produce
+                    selectedResourcesFromLeaderPowers = chosenResourcesEvent.getSelectedResourcesFromLeaderPowers();
+                    selectedResourcesFromWarehouse = chosenResourcesEvent.getSelectedResourcesFromWarehouse();
 
-                    //check produced resource of choice
-                    chosenResources = simpleChosenResourcesEvent.getAllResourcesChosen();
-                    for (Resource r : chosenResources.keySet()) {
-                        numChosenResources += chosenResources.get(r);
+                    HashMap<Resource, Integer> wareHouseResources = player.getDashBoard().getWarehouseResources();
+                    for (Resource r : wareHouseResources.keySet()) {
+                        if (wareHouseResources.get(r) < selectedResourcesFromWarehouse.getOrDefault(r, 0)) {
+                            throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Selected resources from warehouse not present", event));
+                        }
                     }
-                    if (numChosenResources < producedResourceOfChoice) {
-                        senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Too few resources to produce chosen", event));
-                        goodChoice = false;
+
+                    HashMap<Resource, Integer> leaderPowerResources = player.getLeaderCardsResources();
+                    for (Resource r : leaderPowerResources.keySet()) {
+                        if (leaderPowerResources.get(r) < selectedResourcesFromLeaderPowers.getOrDefault(r, 0)) {
+                            throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Selected resources from leader powers not present", event));
+                        }
                     }
-                    else if (numChosenResources > producedResourceOfChoice) {
-                        senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Too many resources to produce chosen", event));
-                        goodChoice = false;
+
+                    allResourcesSelected = chosenResourcesEvent.getAllResourcesChosen();
+                    int extraResources = 0;
+                    for (Resource r : allResourcesSelected.keySet()) {
+                        if (allPlayerResources.get(r) < allResourcesSelected.get(r)) {
+                            throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "The selected resources are not present in the player inventory", event));
+                        }
+                        int difference = allResourcesSelected.get(r) - consumedResources.getOrDefault(r, 0);
+                        if (difference < 0) {
+                            throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too few resources chosen", event));
+                        }
+                        extraResources += difference;
                     }
-                    else
-                        goodChoice = true;
+                    if (extraResources < requiredResourceOfChoice) {
+                        throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too few resources to consume chosen", event));
+                    }
+                    if (extraResources > requiredResourceOfChoice) {
+                        throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too many resources to consume chosen", event));
+                    }
+                    goodChoice = true;
+                } catch (HandlerCheckException e) {
+                    goodChoice = false;
+                    Event eventToSend = e.getEventToSend();
+                    if (eventToSend != null) senders.get(player.getPlayerId()).sendObject(e.getEventToSend());
                 }
 
-                //produce
-                player.getDashBoard().subResourcesToWarehouse(selectedResourcesFromWarehouse);
-                leaderCardManager.removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPowers);
-                for(Resource r:allResourcesSelected.keySet()){
-                    player.getDashBoard().subResourcesToStrongBox(r, allResourcesSelected.get(r) - selectedResourcesFromWarehouse.getOrDefault(r, 0) - selectedResourcesFromLeaderPowers.getOrDefault(r, 0));
-                }
-
-                for(Resource r: Resource.values())
-                    player.getDashBoard().addResourcesToStrongBox(r, producedResources.getOrDefault(r, 0) + chosenResources.getOrDefault(r, 0));
-
-                faithTrackManager.incrementFaithTrackPosition(player, faithPointsProduced);
-                matchState.setTurnState(TurnState.AFTER_MAIN_ACTION);
-
-            } catch (NotPresentException | ResourcesLimitsException | EmptyStrongboxException notPresentException) {
-                //impossible
-                notPresentException.printStackTrace();
             }
 
-        //}).start();
+            //chose PRODUCED resource of choice
+            int numChosenResources = 0;
+            HashMap<Resource, Integer> chosenResources = new HashMap<>();
+            goodChoice = false;
+            while (!goodChoice && producedResourceOfChoice>0) {
+                senders.get(event.getPlayerId()).sendObject(new SimpleChoseResourcesEvent(event.getPlayerId(), producedResourceOfChoice));
+
+                synchronized (waitingForSimpleResourcesLock) {
+                    try {
+                        matchState.setWaitingForSomething();
+                        waitingForSimpleResourcesLock.wait();
+                        matchState.somethingArrived();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (simpleChosenResourcesEvent == null) return;
+
+                //check produced resource of choice
+                chosenResources = simpleChosenResourcesEvent.getAllResourcesChosen();
+                for (Resource r : chosenResources.keySet()) {
+                    numChosenResources += chosenResources.get(r);
+                }
+                if (numChosenResources < producedResourceOfChoice) {
+                    senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Too few resources to produce chosen", event));
+                    goodChoice = false;
+                } else if (numChosenResources > producedResourceOfChoice) {
+                    senders.get(event.getPlayerId()).sendObject(new PlayerActionError(event.getPlayerId(), "Too many resources to produce chosen", event));
+                    goodChoice = false;
+                } else
+                    goodChoice = true;
+            }
+
+            //produce
+            player.getDashBoard().subResourcesToWarehouse(selectedResourcesFromWarehouse);
+            leaderCardManager.removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPowers);
+            for (Resource r : allResourcesSelected.keySet()) {
+                player.getDashBoard().subResourcesToStrongBox(r, allResourcesSelected.get(r) - selectedResourcesFromWarehouse.getOrDefault(r, 0) - selectedResourcesFromLeaderPowers.getOrDefault(r, 0));
+            }
+
+            for (Resource r : Resource.values())
+                player.getDashBoard().addResourcesToStrongBox(r, producedResources.getOrDefault(r, 0) + chosenResources.getOrDefault(r, 0));
+
+            faithTrackManager.incrementFaithTrackPosition(player, faithPointsProduced);
+            matchState.setTurnState(TurnState.AFTER_MAIN_ACTION);
+
+        } catch (NotPresentException | ResourcesLimitsException | EmptyStrongboxException notPresentException) {
+            //impossible
+            notPresentException.printStackTrace();
+        }
+
     }
 
     /**

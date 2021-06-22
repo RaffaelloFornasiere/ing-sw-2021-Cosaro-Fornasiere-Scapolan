@@ -8,6 +8,7 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
@@ -30,6 +31,7 @@ public class NetworkAdapter {
     Socket server;
     String playerID;
     UI view;
+    Timer heartbeatTimer;
 
     public NetworkAdapter(InetAddress address, UI ui) throws IOException {
         connectToServer(address);
@@ -96,7 +98,7 @@ public class NetworkAdapter {
     boolean stopThread = false;
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
-        //server.setSoTimeout(3000);
+        server.setSoTimeout(10*1000);
         sender = new NetworkHandlerSender(server);
         receiver = new NetworkHandlerReceiver(server);
 
@@ -107,15 +109,17 @@ public class NetworkAdapter {
 
         }).start();
 
-        Timer timer = new Timer();
+
+
+        heartbeatTimer = new Timer();
         TimerTask heartbeat;
         heartbeat = new TimerTask() {
             @Override
             public void run() {
-                ((NetworkHandlerSender) sender).sendData("heartbeat");
+                ((NetworkHandlerSender)sender).sendObject(new HeartbeatEvent(playerID));
             }
         };
-        //timer.scheduleAtFixedRate(heartbeat, 1000, 1000);
+        heartbeatTimer.scheduleAtFixedRate(heartbeat, 1000, 1000);
         return true;
     }
     public void stopThread(){
@@ -327,6 +331,19 @@ public class NetworkAdapter {
         view.printWarning(event.getLeaderCardID() + " can't be activated because you don't meet the requirements");
     }
 
+    public synchronized void ServerDisconnectionEventHandler(PropertyChangeEvent evt) {
+        ServerDisconnectionEvent event = (ServerDisconnectionEvent) evt.getNewValue();
+
+        view.printError("The connection with the server was closed. Shutting down the application");
+        heartbeatTimer.cancel();
+        sender.closeConnection();
+        receiver.closeConnection();
+        try {
+            server.close();
+        } catch (IOException e) {
+            System.err.println("Error closing the socket");
+        }
+    }
 
     public synchronized void SetupDoneEventHandler(PropertyChangeEvent evt) {
         SetupDoneEvent event = (SetupDoneEvent) evt.getNewValue();
