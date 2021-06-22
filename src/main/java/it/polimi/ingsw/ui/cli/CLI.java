@@ -613,52 +613,52 @@ public class CLI extends UI {
 //                builder.append(resourcesOptions.get(inputResource).getValue() + resourcesOptions.get(inputResource).getKey() + Color.reset());
 //            });
 
-            HashMap<Resource,Integer> resInHashMap= new HashMap<>();
+            HashMap<Resource, Integer> resInHashMap = new HashMap<>();
             // organize resources in hashmap
-            inputResources.stream().map(justResources::get).forEach(res->{
-                if(resInHashMap.containsKey(res)) resInHashMap.put(res, resInHashMap.get(res)+1);
+            inputResources.stream().map(justResources::get).forEach(res -> {
+                if (resInHashMap.containsKey(res)) resInHashMap.put(res, resInHashMap.get(res) + 1);
                 else resInHashMap.put(res, 1);
             });
             //System.out.println("YOU HAVE TO STORE THESE RESOURCES:  ( " + builder.toString() + Color.reset() + " )?");
-           resInHashMap.forEach((res, integer)->{
-               String s= colorResource(res)+res.toString() + shapeResource(res)+ Color.reset().repeat(integer);
-               System.out.println("WHERE TO PUT THESE:  ( " +s+" )?");
-               // prepare the selection form for deposits.
-               ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
-               IntStream.range(0, currentDepotStates.size()).forEach(n -> {
-                   if (currentDepotStates.get(n).getCurrentQuantity() == 0)
-                       depositOptions.add(new Pair<>("DEPOT " + (n + 1), Color.WHITE.getAnsiCode()));
-                   else
-                       depositOptions.add(new Pair<>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType())));
-               });
-               IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> depositOptions.add(new Pair<>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode())));
+            resInHashMap.forEach((res, integer) -> {
+                String s = colorResource(res) + integer + " " + res.toString() + " " + shapeResource(res) + Color.reset();
+                System.out.println("WHERE TO PUT THESE:  ( " + s + " )?");
+                // prepare the selection form for deposits.
+                ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
+                IntStream.range(0, currentDepotStates.size()).forEach(n -> {
+                    if (currentDepotStates.get(n).getCurrentQuantity() == 0)
+                        depositOptions.add(new Pair<>("DEPOT " + (n + 1), Color.WHITE.getAnsiCode()));
+                    else
+                        depositOptions.add(new Pair<>("DEPOT " + (n + 1), colorResource(currentDepotStates.get(n).getResourceType())));
+                });
+                IntStream.range(0, thisDepositLeaderPowers.size()).forEach(n -> depositOptions.add(new Pair<>("LEADER POWER " + (n + 1), Color.WHITE.getAnsiCode())));
 
-               //result of transition
-               AtomicBoolean successful = new AtomicBoolean(false);
-               //inputDeposit is the result of the selection of one destination among deposits
-               int inputDeposit = displaySelectionForm(depositOptions, null, 1, "THESE ARE THE AVAILABLE DEPOSITS\n").get(0);
-               //if the selected index belongs to depots...
-               if (inputDeposit < currentDepotStates.size()) {
-                   DepotResultMessage result = thisDashboard.tryAddResource(res, integer,  currentDepotStates.get(inputDeposit));
-                   successful.set(result.getSuccessful());
-                   out.println(result.getMessage());
-               }
-               //or if it belongs to leader card extra depots...
-               else {
-                   int index = inputDeposit - currentDepotStates.size();
+                //result of transition
+                AtomicBoolean successful = new AtomicBoolean(false);
+                //inputDeposit is the result of the selection of one destination among deposits
+                int inputDeposit = displaySelectionForm(depositOptions, null, 1, "THESE ARE THE AVAILABLE DEPOSITS\n").get(0);
+                //if the selected index belongs to depots...
+                if (inputDeposit < currentDepotStates.size()) {
+                    DepotResultMessage result = thisDashboard.tryAddResource(res, integer, currentDepotStates.get(inputDeposit));
+                    successful.set(result.getSuccessful());
+                    out.println(result.getMessage());
+                }
+                //or if it belongs to leader card extra depots...
+                else {
+                    int index = inputDeposit - currentDepotStates.size();
 
-                   leaderCardViews.forEach(cardView -> {
-                       if (cardView.getIdCard().equals(thisDepositLeaderPowers.get(index).getCardId())) {
-                           DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), res, integer);
-                           successful.set(result.getSuccessful());
-                           out.println(result.getMessage());
-                       }
-                   });
-               }
-               if (successful.get()) {
-                   resourcesToOrganize.put(res, (resourcesToOrganize.get(res) - integer));
-               }
-               });
+                    leaderCardViews.forEach(cardView -> {
+                        if (cardView.getIdCard().equals(thisDepositLeaderPowers.get(index).getCardId())) {
+                            DepotResultMessage result = cardView.updateDepositLeaderPower(thisDepositLeaderPowers.get(index).getPowerIndex(), res, integer);
+                            successful.set(result.getSuccessful());
+                            out.println(result.getMessage());
+                        }
+                    });
+                }
+                if (successful.get()) {
+                    resourcesToOrganize.put(res, (resourcesToOrganize.get(res) - integer));
+                }
+            });
 
             return getWarehouseDisplacement(resourcesToOrganize);
         }
@@ -1898,12 +1898,21 @@ public class CLI extends UI {
         if (freeChoicesResources != 0) {
             out.println("YOU HAVE " + freeChoicesResources + " OPTIONAL RESOURCES YOU CAN CHOOSE:\n");
             out.println("HAVE A LOOK AT THE STATE OF YOUR DEPOSITS:\n");
-            out.println("Warehouse: \n");
-            out.println(displayResourcesInHashMap(warehouseHashMap));
-            out.println("Leader deposits: \n");
-            out.println(displayResourcesInHashMap(leaderDepositsHashMap));
-            out.println("Strongbox: \n");
-            out.println(displayResourcesInHashMap(strongBoxHashMap));
+            if (isEmptyHashMap(warehouseHashMap)) out.println("Warehouse is empty\n");
+            else {
+                out.println("Warehouse: \n");
+                out.println(displayResourcesInHashMap(warehouseHashMap));
+            }
+            if (isEmptyHashMap(leaderDepositsHashMap)) out.println("LeaderDeposit is empty\n");
+            else {
+                out.println("Leader deposits: \n");
+                out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+            }
+            if (isEmptyHashMap(strongBoxHashMap)) out.println("Strongbox is empty\n");
+            else {
+                out.println("Strongbox: \n");
+                out.println(displayResourcesInHashMap(strongBoxHashMap));
+            }
 
             boolean validResourcesChosen = false;
             while (!validResourcesChosen) {
@@ -2069,6 +2078,7 @@ public class CLI extends UI {
                     }//end of switch
                     if (successful)
                         required.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+                    if (required.get(justResources.get(index)) == 0) required.remove(justResources.get(index));
 
                 });
 
