@@ -105,6 +105,7 @@ public class Player extends Observable {
     public void removeLeaderCard(LeaderCard leaderCard) throws NotPresentException {
         if(leaderCards.remove(leaderCard) == null)
             throw new NotPresentException("Leader card not present");
+        notifyObservers();
     }
 
     /**

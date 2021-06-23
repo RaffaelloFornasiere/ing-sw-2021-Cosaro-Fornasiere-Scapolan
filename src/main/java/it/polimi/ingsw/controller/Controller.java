@@ -674,9 +674,9 @@ public class Controller {
             }
             if(!canActionBePerformed(event, player, new ArrayList<>(){{add(TurnState.START); add(TurnState.AFTER_MAIN_ACTION);}})) return;
             leaderCardManager.removeLeaderCard(player, player.getLeaderCardFromID(event.getLeaderCardID()));
-            for(Player p: matchState.getPlayers())
-                if(p!=player)
-                    faithTrackManager.incrementFaithTrackPosition(p, Config.getInstance().getFaithPointPerDiscardedResource());
+
+            faithTrackManager.incrementFaithTrackPosition(player, Config.getInstance().getFaithPointPerDiscardedResource());
+
             matchState.leaderActionExecuted = true;
             if(matchState.getTurnState() == TurnState.START) matchState.setTurnState(TurnState.AFTER_LEADER_CARD_ACTION);
             else matchState.setTurnState(TurnState.END_OF_TURN);

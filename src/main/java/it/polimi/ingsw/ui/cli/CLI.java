@@ -1147,7 +1147,17 @@ public class CLI extends UI {
     public void updateLeaderCardsState(String playerId, HashMap<String, Boolean> leaderCards) {
         HashMap<String, LeaderCardView> leaderCardsViews = playerStates.get(playerId).leaderCards;
 
-        for (String leaderCardID : leaderCards.keySet()) {
+        Set<String> newLeaderCards = leaderCards.keySet();
+
+        Set<String> toRemove = new HashSet<>();
+        for(String leaderCardID: leaderCardsViews.keySet()){
+            if(!newLeaderCards.contains(leaderCardID))
+                toRemove.add(leaderCardID);
+        }
+        for(String s:toRemove)
+            leaderCardsViews.remove(s);
+
+        for (String leaderCardID : newLeaderCards) {
             LeaderCardView leaderCardView = leaderCardsViews.get(leaderCardID);
             if (leaderCardView == null) {
                 leaderCardsViews.put(leaderCardID, new LeaderCardView(leaderCardID));
@@ -1285,9 +1295,12 @@ public class CLI extends UI {
      */
     @Override
     public String askForLeaderCardToDiscard() throws NotPresentException {
-        ArrayList<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
+        Collection<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values();
+        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be discarded because you have no leader card");
 
-        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be discarded");
+        leaderCardViews = leaderCardViews.stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
+
+        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be discarded because you're leader cards are already active");
 
         ArrayList<Pair<String, String>> choices = leaderCardViews.stream().map(LeaderCardView::getIdCard).map(s -> new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
 
@@ -1307,9 +1320,12 @@ public class CLI extends UI {
      */
     @Override
     public String askForLeaderCardToActivate() throws NotPresentException {
-        ArrayList<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
+        Collection<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values();
+        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be activated because you have no leader card");
 
-        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be activated");
+        leaderCardViews = leaderCardViews.stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
+
+        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be activated because you're leader cards are already active");
 
         ArrayList<Pair<String, String>> choices = leaderCardViews.stream().map(LeaderCardView::getIdCard).map(s -> new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
 
@@ -1346,14 +1362,12 @@ public class CLI extends UI {
                 leaderPowersSelectedState.add(leaderCardView.getSelected(i));
             }
         }
-        AtomicInteger i = new AtomicInteger(-1);
-        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
-                .map(s -> {
-                    i.getAndIncrement();
-                    return new DrawableObject(s, i.get() * 40, 0);
-                }).collect(Collectors.toCollection(ArrayList::new));
+        if(options.size()==0) throw new NotPresentException("No leader power is selectable");
 
-        ArrayList<Integer> choices = displaySelectionFormVariableChoices(options, new Panel(drawableLeaderCards, out, false), options.size(), "Choose the leader powers to select\n");
+        ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
+                .map(s -> new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<Integer> choices = displaySelectionFormVariableChoices(options, new Panel(drawableLeaderCards, out, true), options.size(), "Choose the leader powers to select\n");
 
         ArrayList<LeaderPowerSelectStateEvent> ret = new ArrayList<>();
         for (int choice : choices) {
@@ -1405,15 +1419,10 @@ public class CLI extends UI {
 
                     out.println("[31;1;4m" + players.get(inputPlayer) + "'S SET OF LEADER CARDS\n" + Color.reset());
                     ArrayList<DrawableObject> objs = new ArrayList<>();
-                    AtomicInteger offSet = new AtomicInteger();
-                    AtomicInteger height = new AtomicInteger();
                     playerStates.get(players.get(inputPlayer)).getLeaderCards().forEach((cardId, cardView) -> {
-                        DrawableObject obj = new DrawableObject(cardView.toString(), 0, 20 * offSet.get());
-                        objs.add(obj);
-                        offSet.getAndIncrement();
-                        height.set(Integer.max(height.get(), obj.getHeight()));
+                        objs.add(new DrawableObject(cardView.toString(), 0, 0));
                     });
-                    Panel cardPanel = new Panel(objs, out, false);
+                    Panel cardPanel = new Panel(objs, out, true);
                     cardPanel.show();
 
                     break;
@@ -1479,6 +1488,7 @@ public class CLI extends UI {
             out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
             displayOthers();
         } else {
+            Action selectedAction = null;
             switch (turnState) {
                 case START -> {
                     int inputIndex;
@@ -1490,77 +1500,8 @@ public class CLI extends UI {
 
                     }
                     inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
-                    Action selectedAction = allActions.get(inputIndex);
+                    selectedAction = allActions.get(inputIndex);
                     out.println(selectedAction.getDescription());
-
-                    switch (selectedAction) {
-                        case BUY_DEVCARD -> {
-                            events.add(askForDevCard());
-                            break;
-                        }
-                        case TAKE_RESOURCES_FROM_MARKET -> {
-                            events.add(askForMarketRow());
-                            break;
-                        }
-                        case PRODUCE -> {
-                            events.add(askForProductionPowersToUse());
-                            break;
-                        }
-                        case LEADER_ACTION -> {
-                            ArrayList<Pair<String, String>> options = new ArrayList<>();
-                            options.add(new Pair<>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
-                            options.add(new Pair<>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
-
-                            int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
-                            if (playerStates.get(thisPlayer).getLeaderCards().size() != 0) {
-                                if (chosenAction == 0) {
-                                    try {
-                                        String leaderCardToDiscard = askForLeaderCardToDiscard();
-                                        events.add(new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard));
-                                    } catch (NotPresentException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                } else {
-                                    if (!playerStates.get(thisPlayer).getLeaderCards().values().stream().map(LeaderCardView::isActive).reduce(true, (a, b) -> a && b)) {
-                                        try {
-                                            String leaderCardToActivate = askForLeaderCardToActivate();
-                                            events.add(new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate));
-                                        } catch (NotPresentException e) {
-                                            e.printStackTrace();
-                                        }
-                                    } else {
-                                        out.println("ALL LEADER CARDS ARE ALREADY ACTIVE\n");
-                                        events.addAll(askForNextAction(playerID, lastRound, turnState));
-                                    }
-                                }
-                            } else {
-                                out.println("THERE ARE NO ACTIVE LEADER CARDS\n ");
-                                events.addAll(askForNextAction(playerID, lastRound, turnState));
-                            }
-                            break;
-                        }
-                        case DISPLAY_SMTH -> {
-                            displayOthers();
-                            events.addAll(askForNextAction(playerID, lastRound, turnState));
-                            break;
-                        }
-                        case SELECT_LEADER_CARD -> {
-                            ArrayList<LeaderCardView> leaderCardActive = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
-
-                            if (leaderCardActive.size() != 0) {
-                                try {
-                                    events.addAll(askForLeaderCardToSelectOrDeselect());
-                                } catch (NotPresentException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                out.println("THERE ARE NO LEADER CARDS ACTIVE, THEREFORE NO LEADER POWERS TO SELECT OR DESELECT");
-                                events.addAll(askForNextAction(playerID, lastRound, turnState));
-                            }
-                        }
-
-                    }
 
                     break;
                 }
@@ -1576,45 +1517,8 @@ public class CLI extends UI {
 
                     }
                     inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
-                    Action selectedAction = allActions.get(inputIndex);
+                    selectedAction = allActions.get(inputIndex);
                     out.println(selectedAction.getDescription());
-
-                    switch (selectedAction) {
-                        case BUY_DEVCARD -> {
-                            events.add(askForDevCard());
-                            break;
-                        }
-                        case TAKE_RESOURCES_FROM_MARKET -> {
-                            events.add(askForMarketRow());
-                            break;
-                        }
-                        case PRODUCE -> {
-                            events.add(askForProductionPowersToUse());
-                            break;
-                        }
-                        case DISPLAY_SMTH -> {
-                            displayOthers();
-                            events.addAll(askForNextAction(playerID, lastRound, turnState));
-                            break;
-                        }
-                        case SELECT_LEADER_CARD -> {
-                            ArrayList<LeaderCardView> leaderCardActive = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
-
-                            if (leaderCardActive.size() != 0) {
-                                try {
-                                    events.addAll(askForLeaderCardToSelectOrDeselect());
-                                } catch (NotPresentException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                out.println("THERE ARE NO LEADER CARDS ACTIVE, THEREFORE NO LEADER POWERS TO SELECT OR DESELECT");
-                                events.addAll(askForNextAction(playerID, lastRound, turnState));
-                            }
-                            break;
-                        }
-
-
-                    }
                     break;
                 }
 
@@ -1632,52 +1536,8 @@ public class CLI extends UI {
                     possibleActions.add(new Pair<>("FINISH TURN", Color.WHITE.getAnsiCode()));
                     inputIndex = displaySelectionForm(possibleActions, null, 1, "POSSIBLE ACTIONS: \n").get(0);
                     if (inputIndex < allActions.size()) {
-                        Action selectedAction = allActions.get(inputIndex);
+                        selectedAction = allActions.get(inputIndex);
                         out.println(selectedAction.getDescription());
-
-
-                        switch (selectedAction) {
-                            case LEADER_ACTION -> {
-                                ArrayList<Pair<String, String>> options = new ArrayList<>();
-                                options.add(new Pair<>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
-                                options.add(new Pair<>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
-
-                                int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
-                                if (playerStates.get(thisPlayer).getLeaderCards().size() != 0) {
-                                    if (chosenAction == 0) {
-                                        try {
-                                            String leaderCardToDiscard = askForLeaderCardToDiscard();
-                                            events.add(new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard));
-                                        } catch (NotPresentException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    } else {
-                                        if (!playerStates.get(thisPlayer).getLeaderCards().values().stream().map(LeaderCardView::isActive).reduce(true, (a, b) -> a && b)) {
-                                            try {
-                                                String leaderCardToActivate = askForLeaderCardToActivate();
-                                                events.add(new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate));
-                                            } catch (NotPresentException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else {
-                                            out.println("ALL LEADER CARDS ARE ALREADY ACTIVE\n");
-                                            events.addAll(askForNextAction(playerID, lastRound, turnState));
-                                        }
-                                    }
-                                } else {
-                                    out.println("THERE ARE NO ACTIVE LEADER CARDS\n ");
-                                    events.addAll(askForNextAction(playerID, lastRound, turnState));
-                                }
-                                break;
-                            }
-
-                            case DISPLAY_SMTH -> {
-                                displayOthers();
-                                events.addAll(askForNextAction(playerID, lastRound, turnState));
-                                break;
-                            }
-                        }
                     } else {
                         events.add(new EndTurnEvent(thisPlayer));
                     }
@@ -1701,11 +1561,68 @@ public class CLI extends UI {
                 case WAITING_FOR_SOMETHING -> {
                     break;
                 }
+
+
                 case MATCH_ENDED -> {
                     out.println("MATCH HAS ENDED");
                     break;
                 }
+            }
 
+            if (selectedAction != null) {
+                switch (selectedAction) {
+                    case BUY_DEVCARD -> {
+                        events.add(askForDevCard());
+                        break;
+                    }
+                    case TAKE_RESOURCES_FROM_MARKET -> {
+                        events.add(askForMarketRow());
+                        break;
+                    }
+                    case PRODUCE -> {
+                        events.add(askForProductionPowersToUse());
+                        break;
+                    }
+                    case LEADER_ACTION -> {
+                        ArrayList<Pair<String, String>> options = new ArrayList<>();
+                        options.add(new Pair<>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
+                        options.add(new Pair<>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
+
+                        int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
+
+                        if (chosenAction == 0) {
+                            try {
+                                String leaderCardToDiscard = askForLeaderCardToDiscard();
+                                events.add(new DiscardLeaderCardEvent(thisPlayer, leaderCardToDiscard));
+                            } catch (NotPresentException e) {
+                                printWarning(e.getMessage().toUpperCase());
+                                events.addAll(askForNextAction(playerID, lastRound, turnState));
+                            }
+                        } else {
+                            try {
+                                String leaderCardToActivate = askForLeaderCardToActivate();
+                                events.add(new ActivateLeaderCardEvent(thisPlayer, leaderCardToActivate));
+                            } catch (NotPresentException e) {
+                                printWarning(e.getMessage().toUpperCase());
+                                events.addAll(askForNextAction(playerID, lastRound, turnState));
+                            }
+                        }
+                        break;
+                    }
+                    case DISPLAY_SMTH -> {
+                        displayOthers();
+                        events.addAll(askForNextAction(playerID, lastRound, turnState));
+                        break;
+                    }
+                    case SELECT_LEADER_CARD -> {
+                        try {
+                            events.addAll(askForLeaderCardToSelectOrDeselect());
+                        } catch (NotPresentException e) {
+                            printWarning(e.getMessage().toUpperCase());
+                            events.addAll(askForNextAction(playerID, lastRound, turnState));
+                        }
+                    }
+                }
             }
 
         }
