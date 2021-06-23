@@ -132,7 +132,6 @@ public class ProductionController extends Controller implements Initializable {
         }}.stream()).map(Label::new).collect(Collectors.toList());
         leaderDeportsResourcesList.getItems().addAll(marbles);
         leaderDeportsResourcesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
         resourcesToUse.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 
@@ -165,6 +164,7 @@ public class ProductionController extends Controller implements Initializable {
             Image im = null;
             if (i >= leaderCards.size()) {
                 selectableImages.remove(leaderCardImages.get(i));
+                leaderCardImages.get(i).getStyleClass().remove("selectable");
                 leaderCardImages.get(i).setOpacity(0);
                 continue;
             }
@@ -175,13 +175,12 @@ public class ProductionController extends Controller implements Initializable {
             if (leaderCard.getLeaderPowers().stream().noneMatch(n -> n instanceof ProductionLeaderPower)) {
                 selectableImages.remove(leaderCardImages.get(i));
             }
-
-
             leaderCardImages.get(i).setImage(new Image("file:/" + imagePath + "leaders/" + leaderCards.get(i).getCardID() + ".png"));
 
         }
 
-
+        SelectableImage.setSelectable(root);
+        /*
         // ************************************************************************************************** //
         // CREATING SELECTABLE BORDER REGION
         // ************************************************************************************************** //
@@ -200,7 +199,6 @@ public class ProductionController extends Controller implements Initializable {
             border.getStyleClass().add("selectableRegion");
             selectedProductions.add(new Pair<>(image, border));
             border.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                System.out.println("ciao");
                 boolean checked = border.getStyle().contains("-fx-opacity: 1");
                 border.setStyle(checked ? null : "-fx-opacity: 1");
                 String name = image.getImage().getUrl();
@@ -221,7 +219,37 @@ public class ProductionController extends Controller implements Initializable {
                 //check the validity of the output
                 checkResources();
             });
-        }
+        }*/
+    }
+
+    public void onProductionClicked(MouseEvent mouseEvent) {
+        ImageView image = (ImageView) mouseEvent.getSource();
+        String name = image.getImage().getUrl();
+
+        name = name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
+        System.out.println(name);
+        ArrayList<String> aux = null;
+        if (name.contains("DevCard"))
+            aux = selectedDevCards;
+        else if (name.contains("LeaderCard"))
+            aux = selectedLeaderCards;
+        if (aux != null) {
+            boolean present = aux.contains(name);
+            if (!present)
+                aux.add(name);
+            else
+                aux.remove(name);
+        } else
+            personalPower = true;
+
+
+        //check the validity of the output
+        checkResources();
+    }
+
+
+    public void leaderClick(MouseEvent event) {
+
     }
 
 

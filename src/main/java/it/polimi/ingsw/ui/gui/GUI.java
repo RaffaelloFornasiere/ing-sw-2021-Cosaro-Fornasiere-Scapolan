@@ -5,12 +5,10 @@ import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
+import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.DevCards.DevCardGrid;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
-import it.polimi.ingsw.model.Marble;
-import it.polimi.ingsw.model.ProductionPower;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
@@ -23,12 +21,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 
 public class GUI extends UI {
@@ -86,8 +87,7 @@ public class GUI extends UI {
                 @Override
                 public void run() {
                     playerID.setItem("paolo");
-                    Stage stage = new Stage();
-                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("production.fxml"));
+
                     HashMap<Resource, Integer> strongBox = new HashMap<>() {{
                         put(Resource.COIN, 4);
                         put(Resource.SHIELD, 2);
@@ -101,23 +101,49 @@ public class GUI extends UI {
 
                     }};
 
-                    aux.playerState.ownedCards.get(0).add("DevCard35");
-                    aux.playerState.ownedCards.get(1).add("DevCard26");
-                    //aux.playerState.ownedCards.get(2).add("DevCard29");
+                    aux.playerState.ownedCards.get(0).add("DevCard1");
+                    aux.playerState.ownedCards.get(0).add("DevCard23");
+                    aux.playerState.ownedCards.get(1).add("DevCard4");
+                    aux.playerState.ownedCards.get(2).add("DevCard8");
+                    aux.playerState.ownedCards.get(2).add("DevCard26");
+                    aux.playerState.ownedCards.get(2).add("DevCard35");
+
                     aux.playerState.leaderCards.add("LeaderCard15");
                     aux.playerState.leaderDepots = new HashMap<>(){{
                         put(Resource.COIN, 2);
                         put(Resource.SERVANT, 1);
                     }};
-                    //aux.playerState.leaderCards.add("LeaderCard15");
-                    //aux.playerState.leaderCards.add("LeaderCard10");
-
-
                     aux.playerState.warehouse = warehouse;
                     aux.playerState.strongBox = strongBox;
-                    //aux.playerState.ownedCards = cards;
-                    ProductionController productionController = new ProductionController(aux);
-                    fxmlLoader.setController(productionController);
+                    aux.playerState.faithTrackPoints = 4;
+                    aux.playerState.victoryPoints = 15;
+
+                    int rows = 3; int cols = 4;
+                    aux.playerState.devCardGrid = new String[rows][cols];
+                    for(int i = 0; i < rows; i++)
+                    {
+                        for(int j = 0; j < cols; j++)
+                        {
+                            int level = i*16+1;
+                            aux.playerState.devCardGrid[i][j] = "DevCard" + String.valueOf(level + j);
+                            System.out.println(aux.playerState.devCardGrid[i][j]);
+                        }
+                    }
+                    HashMap<Marble, Integer> marbles = new HashMap<>() {{
+                        put(Marble.GRAY, 2);
+                        put(Marble.YELLOW, 2);
+                        put(Marble.PURPLE, 2);
+                        put(Marble.BLUE, 2);
+                        put(Marble.WHITE, 4);
+                        put(Marble.RED, 1);
+                    }};
+                    Market market = new Market(4, 3, marbles);
+                    aux.playerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
+
+                    Stage stage = new Stage();
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainview.fxml"));
+                    MainViewController mainViewController = new MainViewController(aux);
+                    fxmlLoader.setController(mainViewController);
                     try {
                         stage.setScene(new Scene(fxmlLoader.load()));
                     } catch (IOException e) {
@@ -125,12 +151,7 @@ public class GUI extends UI {
                     }
                     stage.show();
 
-                    /*choseInitialLeaderCards(new ArrayList<>(){{
-                        add("LeaderCard1");
-                        add("LeaderCard7");
-                        add("LeaderCard5");
-                        add("LeaderCard14");
-                    }}, 2);*/
+
                 }
             });
 

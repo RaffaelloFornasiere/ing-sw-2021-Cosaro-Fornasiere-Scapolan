@@ -7,7 +7,8 @@ import java.util.ResourceBundle;
 
 public class DevCardGridController extends Controller implements Initializable {
 
-    DevCardGridController(GUI gui, String[][] devCardGridState) {
+
+    DevCardGridController(GUI gui) {
         super(gui);
     }
 
