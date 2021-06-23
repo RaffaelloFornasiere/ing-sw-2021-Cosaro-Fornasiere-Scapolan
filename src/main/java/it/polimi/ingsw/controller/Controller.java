@@ -171,6 +171,10 @@ public class Controller {
             for (Sender sender : senders.values())
                 sender.sendObject(new SetupDoneEvent(event.getPlayerId()));
 
+            //CHEATS
+
+            //END_CHEATS
+
             if (setuppedPlayers.size() == matchState.getPlayers().size())
                 matchState.beginMatch();
         } catch (IOException e) {
