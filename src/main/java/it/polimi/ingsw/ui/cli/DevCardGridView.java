@@ -10,15 +10,18 @@ public class DevCardGridView {
     private final String[][] topDevCardIDs;
 
     public DevCardGridView(String[][] topDevCardIDs) {
-        this.topDevCardIDs = topDevCardIDs;
-    }
+       this.topDevCardIDs= new String[topDevCardIDs.length][topDevCardIDs[0].length];
+        for (int x= topDevCardIDs.length-1; x >=0; x--) {
+            System.arraycopy(topDevCardIDs[x], 0, this.topDevCardIDs[topDevCardIDs.length - 1 - x], 0, topDevCardIDs[0].length);
+        }
+        }
 
     public void display() {
         DevCardView[][] cardGrid = new DevCardView[topDevCardIDs.length][topDevCardIDs[0].length];
         int totalHeight= 0;
         ArrayList<DrawableObject>  objs= new ArrayList<>();
         Panel panel = new Panel(500, 0, System.out);
-        for (int x = 0; x < topDevCardIDs.length; x++){
+        for (int x = topDevCardIDs.length-1; x >=0; x--){
             int height=0;
             for (int y = 0; y < topDevCardIDs[0].length; y++) {
                 DrawableObject obj= new DrawableObject((new DevCardView(topDevCardIDs[x][y])).toString(), 40 * y, 20 * x);

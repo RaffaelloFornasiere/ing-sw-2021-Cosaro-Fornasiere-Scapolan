@@ -58,12 +58,15 @@ public class Panel {
         this.writer = printWriter;
     }
 
+
+
     public void addItem(DrawableObject o) throws IllegalArgumentException {
         if (o.getX() + o.getWidth() > width
                 || o.getY() + o.getHeight() > height)
             throw new IllegalArgumentException();
         objects.add(o);
     }
+
 
     public void show() {
         StringBuilder sb = new StringBuilder();

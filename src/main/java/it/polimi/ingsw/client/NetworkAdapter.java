@@ -63,7 +63,7 @@ public class NetworkAdapter {
         }
     }
 
-    public NetworkAdapter(UI ui, EventRegistry toController, EventRegistry toPlayer, String playerID){
+    public NetworkAdapter(UI ui, EventRegistry toController, EventRegistry toPlayer, String playerID) {
         sender = new LocalSender(toController);
         server = null;
         this.playerID = playerID;
@@ -95,23 +95,35 @@ public class NetworkAdapter {
         }
     }
 
-
+    boolean stopThread = false;
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
         server.setSoTimeout(10*1000);
         sender = new NetworkHandlerSender(server);
         receiver = new NetworkHandlerReceiver(server);
-        new Thread(receiver::receive).start();
+
+        new Thread(() -> {
+            while (!stopThread) {
+                receiver.receive();
+            }
+
+        }).start();
+
+
+
         heartbeatTimer = new Timer();
         TimerTask heartbeat;
         heartbeat = new TimerTask() {
             @Override
             public void run() {
-                ((NetworkHandlerSender)sender).sendObject(new HeartbeatEvent(playerID));
+                sender.sendObject(new HeartbeatEvent(playerID));
             }
         };
         heartbeatTimer.scheduleAtFixedRate(heartbeat, 1000, 1000);
         return true;
+    }
+    public void stopThread(){
+        stopThread=true;
     }
 
     private void send(Event e) {
@@ -183,7 +195,7 @@ public class NetworkAdapter {
 
     public synchronized void CantAffordErrorHandler(PropertyChangeEvent evt) {
         CantAffordError event = (CantAffordError) evt.getNewValue();
-        view.printWarning("You can't afford "+event.getDevCardID());
+        view.printWarning("You can't afford " + event.getDevCardID());
     }
 
     public synchronized void ChoseMultipleExtraResourcePowerEventHandler(PropertyChangeEvent evt) {
@@ -223,10 +235,12 @@ public class NetworkAdapter {
     }
 
     public synchronized void GameEndedEventHandler(PropertyChangeEvent evt) {
-        System.out.println("Received" + evt.getClass().getSimpleName());
+        GameEndedEvent event = (GameEndedEvent) evt.getNewValue();
+        view.displayEndOfGame(event.getFinalPlayerStates());
+        stopThread();
     }
 
-    public synchronized void IAActionEventHandler(PropertyChangeEvent evt){
+    public synchronized void IAActionEventHandler(PropertyChangeEvent evt) {
         IAActionEvent event = (IAActionEvent) evt.getNewValue();
         view.displayIAAction(event.getAction());
     }

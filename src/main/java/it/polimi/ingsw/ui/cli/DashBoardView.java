@@ -59,9 +59,9 @@ public class DashBoardView {
         this.strongBox = new HashMap<>(strongBox);
     }
 
-    public DepotResultMessage tryAddResource(Resource r, DepotState depot) {
+    public DepotResultMessage tryAddResource(Resource r, int n,  DepotState depot) {
         if (warehouse.stream().filter(dep -> dep != depot).map(dep -> dep.getCurrentQuantity() == 0 || (dep.getResourceType() != r)).reduce(true, (prev, foll) -> prev && foll)) {
-            return depot.tryAddResource(r);
+            return depot.tryAddResource(r, n);
         }
         return DepotResultMessage.INVALID_DEPOT;
     }
@@ -245,7 +245,7 @@ public class DashBoardView {
         String player = "PAOLO";
 
         DashBoardView d = new DashBoardView(cards, str, totalLevels, player);
-        System.out.println(d.tryAddResource(Resource.COIN, d.getWarehouse().get(1)).getMessage());
+        System.out.println(d.tryAddResource(Resource.COIN,1, d.getWarehouse().get(1)).getMessage());
 
         DepotState depot1 = d.getWarehouse().get(1);
         System.out.println(depot1.getResourceType());
@@ -254,6 +254,7 @@ public class DashBoardView {
 
         d.displayAll(player);
     }
+
 
 
 }
