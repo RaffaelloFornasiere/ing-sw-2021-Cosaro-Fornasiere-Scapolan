@@ -104,18 +104,12 @@ arrow-button-left {
 .selectable {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
-
-.selectableRegion {
-    -fx-border-color: rgba(0, 176, 255, 0.85);
-    -fx-border-width: 7px;
-    -fx-border-radius: 10px;
-    -fx-opacity: 0;
+.hoverBorder{
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
 
-.selectableRegion:hover {
-    -fx-opacity: 1;
-}
+
+
 
 #addResourceOfChoiceButton {
     -fx-background-color: transparent;

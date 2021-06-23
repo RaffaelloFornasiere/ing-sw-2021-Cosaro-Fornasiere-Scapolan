@@ -147,11 +147,11 @@
             <Font name="System Bold" size="13.0" />
          </font></Label>
         <Label id="addResourceOfChoiceButton" layoutX="778.0" layoutY="381.0" onMouseClicked="#onAddResourcesClicked" />
-      <Label fx:id="warningLabel" layoutX="591.0" layoutY="339.0" style="-fx-opacity: 1;" text="Not enought resources" textFill="#8b1010">
+      <Label fx:id="warningLabel" layoutX="591.0" layoutY="339.0" style="-fx-opacity: 0;" text="Not enought resources" textFill="#8b1010">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Label>
-      <Label fx:id="warningLabelOfChoice" layoutX="592.0" layoutY="519.0" style="-fx-opacity: 1;" text="Select resources of choice" textFill="#8b1010">
+      <Label fx:id="warningLabelOfChoice" layoutX="592.0" layoutY="519.0" style="-fx-opacity: 0;" text="Select resources of choice" textFill="#8b1010">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Label>
