@@ -10,8 +10,13 @@ public class DevCardGridView {
     private final String[][] topDevCardIDs;
 
     public DevCardGridView(String[][] topDevCardIDs) {
-        this.topDevCardIDs = topDevCardIDs;
-    }
+       this.topDevCardIDs= new String[topDevCardIDs.length][topDevCardIDs[0].length];
+        for (int x= topDevCardIDs.length-1; x >=0; x--) {
+            for (int y = 0; y < topDevCardIDs[0].length; y++) {
+                this.topDevCardIDs[topDevCardIDs.length -1- x][y] = topDevCardIDs[x][y];
+            }
+        }
+        }
 
     public void display() {
         DevCardView[][] cardGrid = new DevCardView[topDevCardIDs.length][topDevCardIDs[0].length];

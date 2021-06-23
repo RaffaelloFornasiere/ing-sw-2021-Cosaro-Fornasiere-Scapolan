@@ -465,7 +465,7 @@ public class CLI extends UI {
      * @return The string to print.
      */
     public String displayResourcesInHashMap(HashMap<Resource, Integer> hashMapToDisplay) {
-        if(!hashMapToDisplay.isEmpty()) {
+        if (!hashMapToDisplay.isEmpty()) {
             StringBuilder builder0 = new StringBuilder();
             hashMapToDisplay.keySet().forEach(resource -> {
                 String color = colorResource(resource);
@@ -475,7 +475,7 @@ public class CLI extends UI {
                 builder0.append(Color.WHITE.getAnsiCode()).append(" --> ").append(hashMapToDisplay.get(resource)).append("\n");
             });
             return builder0.toString();
-        }else return "Empty";
+        } else return "Empty";
     }
 
     /**
@@ -1346,11 +1346,14 @@ public class CLI extends UI {
                 leaderPowersSelectedState.add(leaderCardView.getSelected(i));
             }
         }
-
+        AtomicInteger i = new AtomicInteger(-1);
         ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
-                .map(s -> new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
+                .map(s -> {
+                    i.getAndIncrement();
+                    return new DrawableObject(s, i.get() * 40, 0);
+                }).collect(Collectors.toCollection(ArrayList::new));
 
-        ArrayList<Integer> choices = displaySelectionFormVariableChoices(options, new Panel(drawableLeaderCards, out, true), options.size(), "Choose the leader powers to select");
+        ArrayList<Integer> choices = displaySelectionFormVariableChoices(options, new Panel(drawableLeaderCards, out, false), options.size(), "Choose the leader powers to select\n");
 
         ArrayList<LeaderPowerSelectStateEvent> ret = new ArrayList<>();
         for (int choice : choices) {
@@ -1833,7 +1836,7 @@ public class CLI extends UI {
      * this method checks whether an hashmap of resources is empty or not.
      */
     public static boolean isEmptyHashMap(HashMap<Resource, Integer> map) {
-        if(!map.isEmpty()) return map.keySet().stream().map(key -> map.get(key) == 0).reduce(true, (a, b) -> a && b);
+        if (!map.isEmpty()) return map.keySet().stream().map(key -> map.get(key) == 0).reduce(true, (a, b) -> a && b);
         else return true;
     }
 
@@ -1974,7 +1977,7 @@ public class CLI extends UI {
             depositCategory.add(new Pair<>("WAREHOUSE", Color.WHITE.getAnsiCode()));
             if (thisDepositLeaderPowers.size() > 0)
                 depositCategory.add(new Pair<>("EXTRA DEPOSITS", Color.WHITE.getAnsiCode()));
-            if (! isEmptyHashMap(strongBoxHashMap))
+            if (!isEmptyHashMap(strongBoxHashMap))
                 depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
             ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, depositCategory.size(), "WHERE WOULD YOU LIKE TO TAKE THE RESOURCES FROM?\n ");
             inputs.forEach(input -> {

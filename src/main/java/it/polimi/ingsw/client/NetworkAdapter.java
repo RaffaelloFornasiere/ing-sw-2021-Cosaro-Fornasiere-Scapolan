@@ -116,7 +116,7 @@ public class NetworkAdapter {
         heartbeat = new TimerTask() {
             @Override
             public void run() {
-                ((NetworkHandlerSender)sender).sendObject(new HeartbeatEvent(playerID));
+                sender.sendObject(new HeartbeatEvent(playerID));
             }
         };
         heartbeatTimer.scheduleAtFixedRate(heartbeat, 1000, 1000);
