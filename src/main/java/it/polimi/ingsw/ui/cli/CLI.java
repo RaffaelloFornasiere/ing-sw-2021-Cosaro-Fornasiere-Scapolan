@@ -113,19 +113,19 @@ public class CLI extends UI {
         String inputString;
         ArrayList<Integer> inputs = new ArrayList<>();
         while (m > 0) {
-            inputString = in.next();
-            if (inputString.matches("-?\\d+")) {
-                int input = Integer.parseInt(inputString);
-                if (inputs.contains(input)) {
-                    out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
-                } else if (input < 1 || input > size) {
-                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                inputString = in.nextLine();
+                if (inputString.matches("-?\\d+")) {
+                    int input = Integer.parseInt(inputString);
+                    if (inputs.contains(input)) {
+                        out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
+                    } else if (input < 1 || input > size) {
+                        out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                    } else {
+                        inputs.add(input);
+                        m--;
+                    }
                 } else {
-                    inputs.add(input);
-                    m--;
-                }
-            } else {
-                out.println("PLEASE INSERT A NUMBER");
+                    out.println("PLEASE INSERT A NUMBER");
             }
         }
 
