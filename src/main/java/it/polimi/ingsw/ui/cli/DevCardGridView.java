@@ -12,9 +12,7 @@ public class DevCardGridView {
     public DevCardGridView(String[][] topDevCardIDs) {
        this.topDevCardIDs= new String[topDevCardIDs.length][topDevCardIDs[0].length];
         for (int x= topDevCardIDs.length-1; x >=0; x--) {
-            for (int y = 0; y < topDevCardIDs[0].length; y++) {
-                this.topDevCardIDs[topDevCardIDs.length -1- x][y] = topDevCardIDs[x][y];
-            }
+            System.arraycopy(topDevCardIDs[x], 0, this.topDevCardIDs[topDevCardIDs.length - 1 - x], 0, topDevCardIDs[0].length);
         }
         }
 

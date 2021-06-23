@@ -130,7 +130,7 @@ public class CLI extends UI {
         StringBuilder builder2 = new StringBuilder();
         inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
 
-        inputs.forEach(index -> builder2.append(index).append(1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
+        inputs.forEach(index -> builder2.append(index+1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
         out.println(builder2);
 
         out.println("DO YOU AGREE? yes/no");
@@ -262,7 +262,7 @@ public class CLI extends UI {
         StringBuilder builder2 = new StringBuilder();
         inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
 
-        inputs.forEach(index -> builder2.append(index).append(1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
+        inputs.forEach(index -> builder2.append(index+1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
         out.println(builder2);
 
         out.println("DO YOU AGREE? yes/no");
@@ -326,7 +326,7 @@ public class CLI extends UI {
         StringBuilder builder2 = new StringBuilder();
         inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
 
-        inputs.forEach(index -> builder2.append(index).append(1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
+        inputs.forEach(index -> builder2.append(index+1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
         out.println(builder2);
 
         out.println("DO YOU AGREE? yes/no");
