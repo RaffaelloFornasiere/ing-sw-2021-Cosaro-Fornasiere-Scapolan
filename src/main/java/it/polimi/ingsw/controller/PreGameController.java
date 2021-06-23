@@ -64,7 +64,7 @@ public class PreGameController {
         System.out.println("The username si free");
 
         if(event.getLobbyLeaderID().equals("*")){
-            int lobbyIndex = searchFirstLobbyNotFull();
+            int lobbyIndex = searchFirstAvailableLobby();
             if(lobbyIndex==-1){
                 System.out.println("Creating new Lobby");
                 Lobby lobby = new Lobby(Config.getInstance().getMaxPlayers());
@@ -109,20 +109,21 @@ public class PreGameController {
                 event.getRequestsElaborator().setOwnerUserID(event.getPlayerId());
             } catch (IllegalOperation illegalOperation) {
                 event.getRequestsElaborator().getClientHandlerSender().sendObject(new LobbyError(event.getPlayerId(),
-                        "The lobby is full"));
+                        "The lobby can't accept any more players"));
             }
         }
     }
 
     /**
-     * Utility method that searches for the first lobby non full
-     * @return The index of the first not full lobby, or -1 if all the lobbies are full
+     * Utility method that searches for the first lobby that can still host some players
+     * @return The index of the first lobby that can still host some players, or -1 if all the lobbies are full
      */
-    private int searchFirstLobbyNotFull() {
-        for(int i = 0; i< lobbies.size(); i++)
-            if(!lobbies.get(i).isFull())
+    private int searchFirstAvailableLobby() {
+        for(int i = 0; i< lobbies.size(); i++) {
+            Lobby l = lobbies.get(i);
+            if (!l.isFull() && l.canAcceptPlayers())
                 return i;
-
+        }
         return -1;
     }
 
@@ -174,6 +175,7 @@ public class PreGameController {
             return;
         }
 
+        lobby.setCanAcceptPlayers(false);
         prepareMatch(lobby);
     }
 

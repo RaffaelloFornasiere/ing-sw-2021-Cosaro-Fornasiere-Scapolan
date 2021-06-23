@@ -10,4 +10,9 @@ public interface Sender {
      * @param e the event to send
      */
     void sendObject(Event e);
+
+    /**
+     * Method responsible for closing the connection with the entity the object are being sent
+     */
+    void closeConnection();
 }

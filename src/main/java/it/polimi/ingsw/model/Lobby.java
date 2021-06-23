@@ -10,6 +10,7 @@ public class Lobby extends Observable {
     private String leaderID;
     private final ArrayList<String> otherPLayersID;
     private final int maxPlayers;
+    private boolean canAcceptPlayers;
 
     /**
      * Constructor for the class
@@ -21,6 +22,7 @@ public class Lobby extends Observable {
         this.leaderID = null;
         otherPLayersID = new ArrayList<>();
         this.maxPlayers = maxPlayers;
+        canAcceptPlayers = true;
     }
 
     /**
@@ -59,10 +61,10 @@ public class Lobby extends Observable {
     /**
      * Adds a player to this lobby. If there's no leader, sets it also as the leader
      * @param playerID The ID of the player to add
-     * @throws IllegalOperation When the lobby is full
+     * @throws IllegalOperation When the lobby can't accept any more players
      */
     public void addPlayerID(String playerID) throws IllegalOperation {
-        if(isFull()) throw new IllegalOperation("The lobby is full");
+        if(isFull() || !canAcceptPlayers) throw new IllegalOperation("The lobby can't accept any more players");
         if(this.leaderID == null) leaderID = playerID;
         else this.otherPLayersID.add(playerID);
         notifyObservers();
@@ -88,5 +90,21 @@ public class Lobby extends Observable {
         }
         notifyObservers();
         return otherPLayersID.size() + (leaderID == null ? 0 : 1);
+    }
+
+    /**
+     * Returns whether the lobby can still accept players
+     * @return Whether the lobby can still accept players
+     */
+    public boolean canAcceptPlayers() {
+        return canAcceptPlayers;
+    }
+
+    /**
+     * Sets if the lobby can accept players
+     * @param canAcceptPlayers Whether the lobby can accept players
+     */
+    public void setCanAcceptPlayers(boolean canAcceptPlayers) {
+        this.canAcceptPlayers = canAcceptPlayers;
     }
 }

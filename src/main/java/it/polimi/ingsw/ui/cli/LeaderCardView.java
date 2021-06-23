@@ -56,16 +56,16 @@ public class LeaderCardView {
         }
     }
 
-    public DepotResultMessage updateDepositLeaderPower(int leaderPowerIndex, Resource res) {
+    public DepotResultMessage updateDepositLeaderPower(int leaderPowerIndex, Resource res, int n) {
 
         if (!((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources().containsKey(res))
             return DepotResultMessage.INVALID_RES_LEADER;
 
-        if (((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources().get(res) + 1 > ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getMaxResources().get(res))
+        if (((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources().get(res) + n > ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getMaxResources().get(res))
             return DepotResultMessage.REACH_MAX_CAP_LEADER;
         try {
             HashMap<Resource, Integer> toAdd = new HashMap<>();
-            toAdd.put(res, 1);
+            toAdd.put(res, n);
             ((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).addResources(toAdd);
         } catch (ResourcesLimitsException e) {
             e.printStackTrace();

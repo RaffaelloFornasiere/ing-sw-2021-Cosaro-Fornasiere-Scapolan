@@ -43,7 +43,7 @@ public class Panel {
             for(DrawableObject drawableObject: drawableObjects){
                 DrawableObject newDrawableObject = new DrawableObject(drawableObject.getTextObject(), width, 0);
                 newDrawableObjects.add(newDrawableObject);
-                width = width + newDrawableObject.getWidth();
+                width = width + newDrawableObject.getWidth() + 3;
                 if(newDrawableObject.getHeight()>height)
                     height= newDrawableObject.getHeight();
             }
@@ -58,12 +58,15 @@ public class Panel {
         this.writer = printWriter;
     }
 
+
+
     public void addItem(DrawableObject o) throws IllegalArgumentException {
         if (o.getX() + o.getWidth() > width
                 || o.getY() + o.getHeight() > height)
             throw new IllegalArgumentException();
         objects.add(o);
     }
+
 
     public void show() {
         StringBuilder sb = new StringBuilder();
@@ -75,7 +78,6 @@ public class Panel {
             String to = object.getTextObject();
 
             int pos = object.getX() + object.getY() * width;
-            int line = 0;
             for (int i = 0; i < to.length(); i++) {
                 var c = to.charAt(i);
                 if (c == '\n')

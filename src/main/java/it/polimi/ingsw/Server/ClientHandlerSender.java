@@ -10,6 +10,7 @@ import it.polimi.ingsw.utilities.MessageWrapper;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.NoSuchElementException;
 
 public class ClientHandlerSender implements Sender {
     PrintWriter printWriter;
@@ -34,13 +35,15 @@ public class ClientHandlerSender implements Sender {
             printWriter.println(MessageWrapper.wrap(eventJSON));
             printWriter.flush();
         } catch (IllegalOperation illegalOperation) {
-            illegalOperation.printStackTrace();
+            System.err.println("Impossible to send:");
+            System.err.println(eventJSON);
+            System.err.println("because it cannot be wrapped");
+        }catch (NoSuchElementException | IllegalStateException e){
+            System.err.println("Impossible to send because the stream was closed");
         }
     }
 
-    /**
-     * Method responsible for closing the stream
-     */
+    @Override
     public void closeConnection() {
         printWriter.close();
     }
