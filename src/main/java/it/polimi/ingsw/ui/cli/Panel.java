@@ -43,7 +43,7 @@ public class Panel {
             for(DrawableObject drawableObject: drawableObjects){
                 DrawableObject newDrawableObject = new DrawableObject(drawableObject.getTextObject(), width, 0);
                 newDrawableObjects.add(newDrawableObject);
-                width = width + newDrawableObject.getWidth();
+                width = width + newDrawableObject.getWidth() + 3;
                 if(newDrawableObject.getHeight()>height)
                     height= newDrawableObject.getHeight();
             }
@@ -75,7 +75,6 @@ public class Panel {
             String to = object.getTextObject();
 
             int pos = object.getX() + object.getY() * width;
-            int line = 0;
             for (int i = 0; i < to.length(); i++) {
                 var c = to.charAt(i);
                 if (c == '\n')

@@ -5,7 +5,7 @@ public class DrawableObject {
     private final int y;
     private int width;
     private final int height;
-    private String textObject;
+    private final String textObject;
 
 
 
@@ -16,16 +16,20 @@ public class DrawableObject {
         width = 0;
 
         for (int i = 0, j = 0; i < to.length(); i++) {
-            if (to.charAt(i) != '\n')
+            if (to.charAt(i) != '\n') {
                 j++;
-            else if (j > width) {
-                width = j;
+            }
+            else {
+                if (j > width) {
+                    width = j;
+                }
                 j = 0;
             }
-            textObject = to;
-
         }
+
+        textObject = to;
     }
+
 
     public String getTextObject() {
         return textObject;
@@ -46,5 +50,4 @@ public class DrawableObject {
     public int getHeight() {
         return height;
     }
-
 }
