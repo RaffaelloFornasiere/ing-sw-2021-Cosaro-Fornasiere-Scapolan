@@ -22,6 +22,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.Timer;
+
 
 public class CLI extends UI {
     private static final PrintWriter out = new PrintWriter(System.out, true);
@@ -32,7 +34,8 @@ public class CLI extends UI {
     private final ArrayList<String> players;
     private DevCardGridView devCardGridView;
     private MarketView market;
-
+    private boolean isYourTurn;
+    private Thread thread;
 
     public CLI() {
         players = new ArrayList<>();
@@ -130,7 +133,7 @@ public class CLI extends UI {
         StringBuilder builder2 = new StringBuilder();
         inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
 
-        inputs.forEach(index -> builder2.append(index+1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
+        inputs.forEach(index -> builder2.append(index + 1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
         out.println(builder2);
 
         out.println("DO YOU AGREE? yes/no");
@@ -262,7 +265,7 @@ public class CLI extends UI {
         StringBuilder builder2 = new StringBuilder();
         inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
 
-        inputs.forEach(index -> builder2.append(index+1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
+        inputs.forEach(index -> builder2.append(index + 1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
         out.println(builder2);
 
         out.println("DO YOU AGREE? yes/no");
@@ -326,7 +329,7 @@ public class CLI extends UI {
         StringBuilder builder2 = new StringBuilder();
         inputs = inputs.stream().map(integer -> integer - 1).collect(Collectors.toCollection(ArrayList::new));
 
-        inputs.forEach(index -> builder2.append(index+1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
+        inputs.forEach(index -> builder2.append(index + 1).append(" -> ").append(option_itsColor.get(index).getValue()).append(option_itsColor.get(index).getKey()).append(Color.reset()).append("\n"));
         out.println(builder2);
 
         out.println("DO YOU AGREE? yes/no");
@@ -1452,6 +1455,19 @@ public class CLI extends UI {
 
         ArrayList<Event> events = new ArrayList<>();
         if (!thisPlayer.equals(playerID)) {
+            isYourTurn = false;
+           this.thread= new Thread(() -> {
+                new Timer().scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                       if(isYourTurn) thread.interrupt();
+                    }
+                }, 60 * 1000,  60 * 1000);
+
+                out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
+                displayOthers();
+            });
+           thread.start();
 //            boolean stopThread = false;
 //            while (!stopThread) {
 //                long startTime = System.currentTimeMillis();
@@ -1476,9 +1492,8 @@ public class CLI extends UI {
 //            }).start();
 
 
-            out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
-            displayOthers();
         } else {
+            isYourTurn=true;
             switch (turnState) {
                 case START -> {
                     int inputIndex;
@@ -1839,6 +1854,29 @@ public class CLI extends UI {
         if (!map.isEmpty()) return map.keySet().stream().map(key -> map.get(key) == 0).reduce(true, (a, b) -> a && b);
         else return true;
     }
+    private boolean doCase2InSwitch( Resource res, int chosenNumber, HashMap<Resource,Integer> strongBoxHashMap,HashMap<Resource,Integer> chosenFromStrongbox,HashMap<Resource,Integer> leaderDepositsHashMap,  HashMap<Resource,Integer> allChosen, HashMap<Resource,Integer> required  ){
+        DashBoardView thisDashboard = playerStates.get(thisPlayer).getDashBoard();
+boolean successful;
+        if (!thisDashboard.getStrongBox().containsKey(res)) {
+            out.println(DepotResultMessage.INVALID_RES_STRONGBOX.getMessage());
+            successful = DepotResultMessage.INVALID_RES_STRONGBOX.getSuccessful();
+            out.println("QUANTITY OF RESOURCES IN THE STRONGBOX REMAINS THE SAME\n");
+        } else if (chosenNumber > strongBoxHashMap.get(res)) {
+            out.println(DepotResultMessage.REACHED_MIN_CAP_STRONGBOX.getMessage());
+            successful = DepotResultMessage.REACHED_MIN_CAP_STRONGBOX.getSuccessful();
+            out.println("QUANTITY OF RESOURCES IN THE STRONGBOX REMAINS THE SAME\n");
+        } else {
+            out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
+            successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
+            allChosen.put(res, allChosen.get(res) + chosenNumber);
+            chosenFromStrongbox.put(res, chosenFromStrongbox.get(res) + chosenNumber);
+            leaderDepositsHashMap.put(res, required.get(res) - chosenNumber);
+
+        }
+        out.println("WHAT REMAINS IN STRONGBOX:\n");
+        out.println(displayResourcesInHashMap(strongBoxHashMap));
+        return successful;
+    }
 
     /**
      * Method to ask the user where to take some resources from either the warehouse or  the deposit leader power if available and selected or the strongbox.
@@ -1989,7 +2027,8 @@ public class CLI extends UI {
                         break;
                     }
                     case 1 -> {
-                        out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+                        if(thisDepositLeaderPowers.size() > 0) out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+                        else out.println(displayResourcesInHashMap(strongBoxHashMap));
                         break;
                     }
                     case 2 -> {
@@ -2045,41 +2084,28 @@ public class CLI extends UI {
                             break;
                         }
                         case 1 -> {//DEPOSIT LEADER POWER
-                            if (chosenNumber > leaderDepositsHashMap.get(justResources.get(index))) {
-                                out.println(DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getMessage());
-                                successful = DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getSuccessful();
-                                out.println("QUANTITY OF RESOURCES IN THE LEADER DEPOSITS REMAINS THE SAME\n");
-                            } else {
-                                out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
-                                successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
-                                chosenFromWarehouse.put(justResources.get(index), chosenFromWarehouse.get(justResources.get(index)) + chosenNumber);
-                                allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
-                                leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+                            if(thisDepositLeaderPowers.size() > 0) {
+                                if (chosenNumber > leaderDepositsHashMap.get(justResources.get(index))) {
+                                    out.println(DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getMessage());
+                                    successful = DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getSuccessful();
+                                    out.println("QUANTITY OF RESOURCES IN THE LEADER DEPOSITS REMAINS THE SAME\n");
+                                } else {
+                                    out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
+                                    successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
+                                    chosenFromWarehouse.put(justResources.get(index), chosenFromWarehouse.get(justResources.get(index)) + chosenNumber);
+                                    allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
+                                    leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+                                }
+                                out.println("WHAT REMAINS IN DEPOSIT LEADER POWER:\n");
+                                out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+                            }else {
+                               successful= doCase2InSwitch(justResources.get(index), chosenNumber,  strongBoxHashMap,chosenFromStrongbox,leaderDepositsHashMap,   allChosen, required   );
                             }
-                            out.println("WHAT REMAINS IN DEPOSIT LEADER POWER:\n");
-                            out.println(displayResourcesInHashMap(leaderDepositsHashMap));
-
                             break;
                         }
                         case 2 -> {//STRONGBOX
-                            if (!thisDashboard.getStrongBox().containsKey(justResources.get(index))) {
-                                out.println(DepotResultMessage.INVALID_RES_STRONGBOX.getMessage());
-                                successful = DepotResultMessage.INVALID_RES_STRONGBOX.getSuccessful();
-                                out.println("QUANTITY OF RESOURCES IN THE STRONGBOX REMAINS THE SAME\n");
-                            } else if (chosenNumber > strongBoxHashMap.get(justResources.get(index))) {
-                                out.println(DepotResultMessage.REACHED_MIN_CAP_STRONGBOX.getMessage());
-                                successful = DepotResultMessage.REACHED_MIN_CAP_STRONGBOX.getSuccessful();
-                                out.println("QUANTITY OF RESOURCES IN THE STRONGBOX REMAINS THE SAME\n");
-                            } else {
-                                out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
-                                successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
-                                allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
-                                chosenFromStrongbox.put(justResources.get(index), chosenFromStrongbox.get(justResources.get(index)) + chosenNumber);
-                                leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+                            successful= doCase2InSwitch(justResources.get(index), chosenNumber,  strongBoxHashMap,chosenFromStrongbox,leaderDepositsHashMap,   allChosen, required   );
 
-                            }
-                            out.println("WHAT REMAINS IN STRONGBOX:\n");
-                            out.println(displayResourcesInHashMap(strongBoxHashMap));
                             break;
                         }
 
