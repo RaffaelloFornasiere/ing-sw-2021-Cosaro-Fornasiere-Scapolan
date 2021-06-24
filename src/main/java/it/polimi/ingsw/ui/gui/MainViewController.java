@@ -53,6 +53,7 @@ public class MainViewController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         SelectableImage.setSelectable(root);
         Platform.runLater(new Runnable() {
             @Override

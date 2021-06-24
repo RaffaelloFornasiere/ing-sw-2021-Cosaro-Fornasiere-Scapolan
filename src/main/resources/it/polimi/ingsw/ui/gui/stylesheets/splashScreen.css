@@ -1,33 +1,33 @@
-.root{
+.root {
     -fx-background-color: #393939;
 
 }
 
-.label{
+.label {
     -fx-text-fill: #848484;
 }
 
-.progress-indicator{
+.progress-indicator {
     /*-fx-scale-x: 0;*/
     -fx-progress-color: rgba(203, 141, 117, 0.66);
 }
 
-.ButtonsGroup{
+.ButtonsGroup {
 
     /*visibility: false;*/
     /*-fx-opacity: 0.0;*/
 }
 
-.button{
+.button {
     -fx-background-radius: 20 20 20 20;
     -fx-background-color: #84522b;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 0, 0, 0);
 }
 
-.button:hover{
+.button:hover {
     -fx-background-color: #b8703b;
 }
 
-.button:pressed{
+.button:pressed {
     -fx-background-color: #b8703b;
 }

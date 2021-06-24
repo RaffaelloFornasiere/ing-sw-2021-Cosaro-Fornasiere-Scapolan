@@ -1,59 +1,59 @@
-.root{
+.root {
     -fx-background-color: #393939;
 
 }
 
-.label{
+.label {
     -fx-text-fill: #848484;
 }
 
-.errorLabel{
+.errorLabel {
     -fx-text-fill: #d20000;
     -fx-opacity: 0;
 }
 
-.text-field{
+.text-field {
     -fx-background-color: #393939;
     -fx-border-color: #848484;
     -fx-border-width: 1;
-    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-radius: 20 20 20 20;
     -fx-text-fill: #848484;
     -fx-prompt-text-fill: #84848480;
 }
 
-.accordion .titled-pane > *.content{
-    -fx-background-color: transparent ;
+.accordion .titled-pane > *.content {
+    -fx-background-color: transparent;
     -fx-border-width: 0;
 }
 
-.titled-pane > .title > .arrow-button .arrow
-{
+.titled-pane > .title > .arrow-button .arrow {
     -fx-background-color: #848484;
     -fx-background-insets: 1 0 -1 0, 0;
     -fx-padding: 0.25em 0.3125em 0.25em 0.3125em;
     -fx-shape: "M 0 0 h 7 l -3.5 4 z";
 }
 
- .titled-pane  > .title{
+.titled-pane > .title {
     -fx-background-color: transparent;
 
 }
- .titled-pane{
-     -fx-text-fill: #848484;
- }
 
- .button{
-     -fx-background-radius: 20 20 20 20;
-     -fx-border-radius: 20 20 20 20 ;
-     -fx-border-width: 1.5;
-     -fx-background-color: #393939;
-     -fx-border-color: #848484;
-     -fx-text-fill: #848484;
-     -fx-text-alignment: center;
- }
+.titled-pane {
+    -fx-text-fill: #848484;
+}
+
+.button {
+    -fx-background-radius: 20 20 20 20;
+    -fx-border-radius: 20 20 20 20;
+    -fx-border-width: 1.5;
+    -fx-background-color: #393939;
+    -fx-border-color: #848484;
+    -fx-text-fill: #848484;
+    -fx-text-alignment: center;
+}
 
 
- .button:hover{
-     -fx-background-color: #848484;
-     -fx-text-fill: #393939;
- }
+.button:hover {
+    -fx-background-color: #848484;
+    -fx-text-fill: #393939;
+}

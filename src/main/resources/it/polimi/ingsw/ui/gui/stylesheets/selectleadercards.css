@@ -45,22 +45,23 @@
     -fx-border-radius: 20px;
     -fx-opacity: 0;
 }
+
 .CardSelectableRegion:hover {
     -fx-opacity: 1;
 }
 
-.check-box .box{
+.check-box .box {
     -fx-background-color: rgba(0, 176, 255, 0);
     -fx-border-color: black;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
 }
 
-.check-box:selected .box{
+.check-box:selected .box {
     -fx-background-color: rgba(0, 176, 255, 1);
     -fx-border-color: black;
 }
 
-.check-box:selected .mark{
+.check-box:selected .mark {
     -fx-background-color: white;
 }

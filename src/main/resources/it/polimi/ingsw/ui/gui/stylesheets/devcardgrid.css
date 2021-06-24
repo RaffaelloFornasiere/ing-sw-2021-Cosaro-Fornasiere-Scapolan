@@ -5,14 +5,14 @@
     -fx-background-size: stretch;
 }
 
-.list-view{
+.list-view {
     -fx-background-color: #ffffff50;
 }
 
 
-.button{
+.button {
     -fx-background-radius: 20 20 20 20;
-    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-radius: 20 20 20 20;
     -fx-border-width: 1.5;
     -fx-background-color: transparent;
     -fx-border-color: #393939;
@@ -21,11 +21,12 @@
 }
 
 
-.button:hover{
+.button:hover {
     -fx-background-color: #848484;
     -fx-text-fill: #393939;
 }
-.button:pressed{
+
+.button:pressed {
     -fx-background-color: #949494;
 }
 
@@ -40,22 +41,23 @@
     -fx-border-radius: 10px;
     -fx-opacity: 0;
 }
+
 .CardSelectableRegion:hover {
     -fx-opacity: 1;
 }
 
-.check-box .box{
+.check-box .box {
     -fx-background-color: rgba(0, 176, 255, 0);
     -fx-border-color: black;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
 }
 
-.check-box:selected .box{
+.check-box:selected .box {
     -fx-background-color: rgba(0, 176, 255, 1);
     -fx-border-color: black;
 }
 
-.check-box:selected .mark{
+.check-box:selected .mark {
     -fx-background-color: white;
 }
