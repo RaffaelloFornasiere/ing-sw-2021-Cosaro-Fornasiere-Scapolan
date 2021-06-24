@@ -102,7 +102,7 @@ public class MainViewController extends Controller implements Initializable {
 
     public void decrementPos() {
         System.out.println("decrement");
-        faithTrackController.decrementPosition();
+        faithTrackController.setPosition(0);
     }
 
     public void incrementPos() {

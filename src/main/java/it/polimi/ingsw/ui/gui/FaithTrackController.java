@@ -70,6 +70,7 @@ public class FaithTrackController {
         cellsize = faithTrack.getWidth() / 19;
         System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
         cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
+        cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
         cross.setTranslateY(zeroPos.y * 1.2);
         currentPos.x = -zeroPos.x + zeroPos.y / 2;
         currentPos.y = zeroPos.y * 1.2;
@@ -78,30 +79,47 @@ public class FaithTrackController {
 
     public void setPosition(int newPosition) {
         //
-
+        if(newPosition == position)
+            return;
         int sideMove = 0;
         int verticalMove = 0;
         ArrayList<TranslateTransition> path = new ArrayList<>();
+        TranslateTransition base = new TranslateTransition(Duration.millis(150));
+        base.setNode(cross);
+        base.setAutoReverse(false);
+        base.setFromX(currentPos.x);
+        base.setFromY(currentPos.y);
+        base.setToX(currentPos.x);
+        base.setToY(currentPos.y);
+        path.add(base);
         System.out.println("pos: " + position + " new pos: " + newPosition);
         SequentialTransition sequentialTransition = new SequentialTransition();
-        for (int i = position; i != newPosition; i += Math.abs(newPosition - position) / (newPosition - position)) {
+        int di = Math.abs(newPosition - position) / (newPosition - position);
+        for (int i = position; i != newPosition; i += di) {
             Point current = track.get(i).getValue1();
-            Point next = track.get(i + 1).getValue1();
+            Point next = track.get(i + di).getValue1();
             sideMove = next.y - current.y;
             verticalMove = next.x - current.x;
-            System.out.println("side: " + sideMove + " vertical: " + verticalMove);
-            TranslateTransition transition = new TranslateTransition();
-            transition.setNode(cross);
-            transition.setDuration(Duration.millis(300));
-            transition.setAutoReverse(false);
-            transition.setFromX(currentPos.x);
-            transition.setFromY(currentPos.y);
-            transition.setToX(currentPos.x + cellsize * sideMove);
-            transition.setToY(currentPos.y + cellsize * verticalMove);
+            var lastTransition = path.get(path.size() - 1);
+            if (lastTransition.getFromY() == lastTransition.getToY() && verticalMove == 0) {
+                lastTransition.setToX(currentPos.x + cellsize * sideMove);
+                lastTransition.setDuration(lastTransition.getDuration().add(Duration.millis(150)));
+            } else if (lastTransition.getFromX() == lastTransition.getToX() && sideMove == 0) {
+                lastTransition.setToY(currentPos.y + cellsize * verticalMove);
+                lastTransition.setDuration(lastTransition.getDuration().add(Duration.millis(150)));
+            } else {
+                TranslateTransition transition = new TranslateTransition(Duration.millis(150));
+                transition.setNode(cross);
+                transition.setAutoReverse(false);
+                transition.setFromX(currentPos.x);
+                transition.setFromY(currentPos.y);
+                transition.setToX(currentPos.x + cellsize * sideMove);
+                transition.setToY(currentPos.y + cellsize * verticalMove);
+                path.add(transition);
+            }
             currentPos.x = currentPos.x + cellsize * sideMove;
             currentPos.y = currentPos.y + cellsize * verticalMove;
 
-            path.add(transition);
         }
         for (var transition : path)
             sequentialTransition.getChildren().add(transition);
@@ -121,3 +139,39 @@ public class FaithTrackController {
 
 
 }
+
+//
+//    public void setPosition(int newPosition) {
+//        //
+//
+//        int sideMove = 0;
+//        int verticalMove = 0;
+//        ArrayList<TranslateTransition> path = new ArrayList<>();
+//        System.out.println("pos: " + position + " new pos: " + newPosition);
+//        SequentialTransition sequentialTransition = new SequentialTransition();
+//        for (int i = position; i != newPosition; i += Math.abs(newPosition - position) / (newPosition - position)) {
+//            Point current = track.get(i).getValue1();
+//            Point next = track.get(i + 1).getValue1();
+//            sideMove = next.y - current.y;
+//            verticalMove = next.x - current.x;
+//            System.out.println("side: " + sideMove + " vertical: " + verticalMove);
+//            TranslateTransition transition = new TranslateTransition();
+//            transition.setNode(cross);
+//            transition.setDuration(Duration.millis(300));
+//            transition.setAutoReverse(false);
+//            transition.setFromX(currentPos.x);
+//            transition.setFromY(currentPos.y);
+//            transition.setToX(currentPos.x + cellsize * sideMove);
+//            transition.setToY(currentPos.y + cellsize * verticalMove);
+//            currentPos.x = currentPos.x + cellsize * sideMove;
+//            currentPos.y = currentPos.y + cellsize * verticalMove;
+//
+//            path.add(transition);
+//        }
+//        for (var transition : path)
+//            sequentialTransition.getChildren().add(transition);
+//        sequentialTransition.play();
+//
+//
+//        position = newPosition;
+//    }
