@@ -55,10 +55,10 @@ public class GUI extends UI {
     LobbyController lobbyController;
     MainViewController mainViewController;
 
-    PlayerState playerState;
+    HashMap<String, PlayerState> playerStates;
 
     public PlayerState thisPlayerState(){
-        return playerState;
+        return playerStates.get(playerID.getItem());
     }
 
 
@@ -81,7 +81,7 @@ public class GUI extends UI {
 
             }
         }.start();
-        playerState = new PlayerState();
+        playerStates = new HashMap<>();
         var aux = this;
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -90,6 +90,7 @@ public class GUI extends UI {
                 @Override
                 public void run() {
                     playerID.setItem("paolo");
+                    playerStates.put(playerID.getItem(), new PlayerState());
 
                     HashMap<Resource, Integer> strongBox = new HashMap<>() {{
                         put(Resource.COIN, 4);
@@ -104,31 +105,31 @@ public class GUI extends UI {
 
                     }};
 
-                    aux.playerState.ownedCards.get(0).add("DevCard1");
-                    aux.playerState.ownedCards.get(0).add("DevCard23");
-                    aux.playerState.ownedCards.get(1).add("DevCard4");
-                    aux.playerState.ownedCards.get(2).add("DevCard8");
-                    aux.playerState.ownedCards.get(2).add("DevCard26");
-                    aux.playerState.ownedCards.get(2).add("DevCard35");
+                    aux.thisPlayerState().ownedCards.get(0).add("DevCard1");
+                    aux.thisPlayerState().ownedCards.get(0).add("DevCard23");
+                    aux.thisPlayerState().ownedCards.get(1).add("DevCard4");
+                    aux.thisPlayerState().ownedCards.get(2).add("DevCard8");
+                    aux.thisPlayerState().ownedCards.get(2).add("DevCard26");
+                    aux.thisPlayerState().ownedCards.get(2).add("DevCard35");
 
-                    aux.playerState.leaderCards.add("LeaderCard15");
-                    aux.playerState.leaderDepots = new HashMap<>(){{
+                    aux.thisPlayerState().leaderCards.add("LeaderCard15");
+                    aux.thisPlayerState().leaderDepots = new HashMap<>(){{
                         put(Resource.COIN, 2);
                         put(Resource.SERVANT, 1);
                     }};
-                    aux.playerState.warehouse = warehouse;
-                    aux.playerState.strongBox = strongBox;
-                    aux.playerState.faithTrackPoints = 4;
-                    aux.playerState.victoryPoints = 15;
+                    aux.thisPlayerState().warehouse = warehouse;
+                    aux.thisPlayerState().strongBox = strongBox;
+                    aux.thisPlayerState().faithTrackPoints = 4;
+                    aux.thisPlayerState().victoryPoints = 15;
 
                     int rows = 3; int cols = 4;
-                    aux.playerState.devCardGrid = new String[rows][cols];
+                    PlayerState.devCardGrid = new String[rows][cols];
                     for(int i = 0; i < rows; i++)
                     {
                         for(int j = 0; j < cols; j++)
                         {
                             int level = i*16+1;
-                            aux.playerState.devCardGrid[i][j] = "DevCard" + (level + j);
+                            PlayerState.devCardGrid[i][j] = "DevCard" + (level + j);
                             //System.out.println(aux.playerState.devCardGrid[i][j]);
                         }
                     }
@@ -141,7 +142,7 @@ public class GUI extends UI {
                         put(Marble.RED, 1);
                     }};
                     Market market = new Market(4, 3, marbles);
-                    aux.playerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
+                    PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
 
                     Stage stage = new Stage();
                     FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainview.fxml"));
@@ -165,11 +166,11 @@ public class GUI extends UI {
     }
 
     public Pair<Marble[][], Marble> getMarketStatus() {
-        return new Pair<>(playerState.marketStatus);
+        return new Pair<>(PlayerState.marketStatus);
     }
 
     public String[][] getDevCardGridState() {
-        return playerState.devCardGrid.clone();
+        return PlayerState.devCardGrid.clone();
     }
 
     public void addEvent(Event event) {
@@ -180,7 +181,7 @@ public class GUI extends UI {
         } else if (event instanceof ActivateProductionEvent) {
             actionPerformed.setItem(Action.PRODUCTION_ACTION);
         }
-        playerState.events.add(event);
+        thisPlayerState().events.add(event);
     }
 
 
@@ -401,7 +402,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+    public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
 
         ArrayList<Event> events = new ArrayList<>();
         if (playerID.equals(this.playerID.getItem()))

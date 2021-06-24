@@ -22,8 +22,8 @@ public class PlayerState {
     ArrayList<String> leaderCards;
     Integer victoryPoints;
     Integer faithTrackPoints;
-    Pair<Marble[][], Marble> marketStatus;
-    String[][] devCardGrid;
+    static Pair<Marble[][], Marble> marketStatus;
+    static String[][] devCardGrid;
 
     ArrayList<Event> events;
     ChosenResourcesEvent chosenResources;

@@ -72,7 +72,7 @@ public class MainViewController extends Controller implements Initializable {
     public void openMarket() throws IOException {
         Stage marketStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("market.fxml"));
-        fxmlLoader.setController(new MarketController(gui, gui.playerState.marketStatus.getKey(), gui.playerState.marketStatus.getValue()));
+        fxmlLoader.setController(new MarketController(gui, PlayerState.marketStatus.getKey(), PlayerState.marketStatus.getValue()));
         Scene scene = new Scene(fxmlLoader.load());
         marketStage.initModality(Modality.APPLICATION_MODAL);
         marketStage.setScene(scene);
