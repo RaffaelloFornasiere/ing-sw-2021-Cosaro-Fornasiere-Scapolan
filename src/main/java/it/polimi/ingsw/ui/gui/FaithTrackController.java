@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import org.javatuples.Triplet;
 
 import java.awt.*;
@@ -86,14 +87,21 @@ public class FaithTrackController {
         for (int i = position; i != newPosition; i += Math.abs(newPosition - position) / (newPosition - position)) {
             Point current = track.get(i).getValue1();
             Point next = track.get(i + 1).getValue1();
-            sideMove += next.y - current.y;
-            verticalMove += next.x - current.x;
-
-
-
-
+            sideMove = next.y - current.y;
+            verticalMove = next.x - current.x;
+            System.out.println("side: " + sideMove + " vertical: " + verticalMove);
+            TranslateTransition transition = new TranslateTransition();
+            transition.setNode(cross);
+            transition.setDuration(Duration.millis(300));
+            transition.setAutoReverse(false);
+            transition.setFromX(currentPos.x);
+            transition.setFromY(currentPos.y);
+            transition.setToX(currentPos.x + cellsize * sideMove);
+            transition.setToY(currentPos.y + cellsize * verticalMove);
             currentPos.x = currentPos.x + cellsize * sideMove;
             currentPos.y = currentPos.y + cellsize * verticalMove;
+
+            path.add(transition);
         }
         for (var transition : path)
             sequentialTransition.getChildren().add(transition);
