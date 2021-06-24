@@ -5,6 +5,8 @@ import it.polimi.ingsw.client.NetworkAdapter;
 import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.controller.EventRegistry;
 import it.polimi.ingsw.controller.PreGameController;
+import it.polimi.ingsw.events.ClientEvents.GameStartingEvent;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.ui.cli.CLI;
 import it.polimi.ingsw.ui.gui.GUI;
@@ -41,9 +43,11 @@ public class ClientApp {
         HashMap<String, Sender> clientHandlerSender = new HashMap<>();
         clientHandlerSender.put(playerID, new LocalSender(toPlayer));
 
-        PreGameController.setupMatch(new ArrayList<>() {{
-            add(playerID);
-        }}, clientHandlerSender, toController);
+        ArrayList<String> playerArrayList =  new ArrayList<>();
+        playerArrayList.add(playerID);
+
+        toPlayer.sendEvent(new GameStartingEvent(playerID, playerArrayList));
+        PreGameController.setupMatch(playerArrayList, clientHandlerSender, toController);
     }
 
     private static UI selectUI() {

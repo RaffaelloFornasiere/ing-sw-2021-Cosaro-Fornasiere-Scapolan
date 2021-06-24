@@ -57,6 +57,10 @@ public class GUI extends UI {
 
     PlayerState playerState;
 
+    public PlayerState thisPlayerState(){
+        return playerState;
+    }
+
 
     public GUI() {
 
@@ -293,20 +297,10 @@ public class GUI extends UI {
 
     }
 
-    //TODO deleted from UI
-    /*@Override
-    public void beginGame() {
-        try {
-            MainApplication.setScene("mainview", mainViewController);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
-    public void setUserTurnActive(boolean active) {
-        actionPerformed.setItem(null);
-    }*/
+    public void initializeMatchObjects() {
+
+    }
 
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {

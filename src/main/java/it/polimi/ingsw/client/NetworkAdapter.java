@@ -234,6 +234,11 @@ public class NetworkAdapter {
         view.updateFaithTrack(event.getPlayerId(), event.getPosition(), event.getPopeFavorCards());
     }
 
+    public synchronized void GameStartingEventHandler(PropertyChangeEvent evt) {
+        GameStartingEvent event = (GameStartingEvent) evt.getNewValue();
+        view.initializeMatchObjects();
+    }
+
     public synchronized void GameEndedEventHandler(PropertyChangeEvent evt) {
         GameEndedEvent event = (GameEndedEvent) evt.getNewValue();
         view.displayEndOfGame(event.getFinalPlayerStates());
