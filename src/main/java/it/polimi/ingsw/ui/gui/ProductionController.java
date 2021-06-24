@@ -180,46 +180,7 @@ public class ProductionController extends Controller implements Initializable {
         }
 
         SelectableImage.setSelectable(root);
-        /*
-        // ************************************************************************************************** //
-        // CREATING SELECTABLE BORDER REGION
-        // ************************************************************************************************** //
-        for (var image : selectableImages) {
-            Region border = new Region();
-            root.getChildren().add(border);
-            double k = Math.min(image.getFitWidth() / image.getImage().getWidth(), image.getFitHeight() / image.getImage().getHeight());
-            double out = 1.05;
-            double width = image.getImage().getWidth() * k;
-            double height = image.getImage().getHeight() * k;
-            double x = image.getLayoutX() - width * (out - 1) / 2;
-            double y = image.getLayoutY() - height * (out - 1) / 2;
-            border.setLayoutX(x);
-            border.setLayoutY(y);
-            border.setPrefSize(width * out, height * out);
-            border.getStyleClass().add("selectableRegion");
-            selectedProductions.add(new Pair<>(image, border));
-            border.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                boolean checked = border.getStyle().contains("-fx-opacity: 1");
-                border.setStyle(checked ? null : "-fx-opacity: 1");
-                String name = image.getImage().getUrl();
-                name = name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
-                System.out.println(name);
-                ArrayList<String> aux = null;
-                if (name.contains("DevCard"))
-                    aux = selectedDevCards;
-                else if (name.contains("LeaderCard"))
-                    aux = selectedLeaderCards;
-                if (aux != null && !checked)
-                    aux.add(name);
-                else if (aux != null)
-                    aux.remove(name);
-                else
-                    personalPower = true;
 
-                //check the validity of the output
-                checkResources();
-            });
-        }*/
     }
 
     public void onProductionClicked(MouseEvent mouseEvent) {

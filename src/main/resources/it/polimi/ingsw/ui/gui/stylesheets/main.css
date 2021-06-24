@@ -118,3 +118,59 @@
 }
 
 
+
+
+.button {
+    -fx-background-radius: 20 20 20 20;
+    -fx-border-radius: 20 20 20 20;
+    -fx-border-width: 1.5;
+    -fx-background-color: transparent;
+    -fx-border-color: #393939;
+    -fx-text-fill: #393939;
+    -fx-text-alignment: center;
+}
+
+.button:hover {
+    -fx-background-color: #ba8a54;
+}
+
+.button:pressed {
+    -fx-background-color: #dba76d;
+}
+
+.arrow-button {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+
+}
+
+arrow-button-left {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+}
+
+.arrow-button-right {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+    /*-fx-rotate: 180;*/
+}
+
+.arrow-button:hover {
+    -fx-background-color: #ba8a54;
+}
+
+.arrow-button:pressed {
+    -fx-background-color: #dba76d;
+    -fx-border-color: #dba76d;
+}
+
+

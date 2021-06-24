@@ -68,8 +68,6 @@ public class SelectableImage {
             border.setPrefSize(width * out, height * out);
 
 
-            //int i = image.getStyle().indexOf(".Card");
-            //System.out.println(i);
             String css =
                     "    -fx-border-color: rgba(0, 176, 255, 0.85);\n" +
                             "    -fx-border-width: 7px;\n" +
@@ -92,7 +90,7 @@ public class SelectableImage {
 
 
             //controls the border
-            System.out.println(image.getImage().getUrl());
+           // System.out.println(image.getImage().getUrl());
             if (image.getStyleClass().contains("selectable")) {
                 image.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
                     if (!border.getId().contains("selected")) {

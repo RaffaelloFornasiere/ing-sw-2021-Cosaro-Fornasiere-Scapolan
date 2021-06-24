@@ -125,8 +125,8 @@ public class GUI extends UI {
                         for(int j = 0; j < cols; j++)
                         {
                             int level = i*16+1;
-                            aux.playerState.devCardGrid[i][j] = "DevCard" + String.valueOf(level + j);
-                            System.out.println(aux.playerState.devCardGrid[i][j]);
+                            aux.playerState.devCardGrid[i][j] = "DevCard" + (level + j);
+                            //System.out.println(aux.playerState.devCardGrid[i][j]);
                         }
                     }
                     HashMap<Marble, Integer> marbles = new HashMap<>() {{
