@@ -18,7 +18,7 @@ public class WarehouseController {
         depots.add(new ArrayList<>(){{add(""); add(""); add("");}});
 
 
-        //warehouse.getChildren().forEach();
+
 
     }
 

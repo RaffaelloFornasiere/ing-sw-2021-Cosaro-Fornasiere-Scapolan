@@ -376,7 +376,7 @@ public class ProductionController extends Controller implements Initializable {
         AnchorPane.setRightAnchor(confirm, 20.0);
         AnchorPane.setBottomAnchor(confirm, 10.0);
         String path = new java.io.File(".").getAbsolutePath().replace("\\", "/");
-        path = "file:/" + path.substring(0, path.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/stylesheets/selectresource.css";
+        path = "file:/" + path.substring(0, path.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/stylesheets/selectresourcedialog.css";
         root.getStylesheets().add(path);
         dialog.setScene(scene);
         dialog.showAndWait();

@@ -21,7 +21,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -48,7 +47,6 @@ public class GUI extends UI {
     private final LockWrap<Integer> serverPort = new LockWrap<>(null);
 
 
-    private PlayerState playerInfo;
     private String PlayerImage;
 
     ServerSettingsController serverSettingsController;
@@ -58,6 +56,7 @@ public class GUI extends UI {
     MainViewController mainViewController;
 
     PlayerState playerState;
+
 
     public GUI() {
 
