@@ -40,6 +40,16 @@ public class FaithTrackController {
 
     double cellsize;
 
+    /**
+     * constructor: retrieves the gridpane where
+     * the faith track is painted. constructs an
+     * array that contains, the index of the cell
+     * the x-y coordinates inside the grid
+     * and the node of the cell.
+     * Then it calculates the zero position of the
+     * player's cross and place it there.
+     * @param faithTrack
+     */
     FaithTrackController(GridPane faithTrack) {
         zeroPos = new DoublePoint(0, 0);
         currentPos = new DoublePoint(0, 0);
@@ -77,12 +87,17 @@ public class FaithTrackController {
         setPosition(0);
     }
 
+
+    /**
+     * update the current position of the player to his new position
+     * and executes the animation to move the player's cross in
+     * the new player's position on the faith track
+     * @param newPosition the new position of the player
+     */
     public void setPosition(int newPosition) {
-        //
         if(newPosition == position)
             return;
-        int sideMove = 0;
-        int verticalMove = 0;
+
         ArrayList<TranslateTransition> path = new ArrayList<>();
         TranslateTransition base = new TranslateTransition(Duration.millis(150));
         base.setNode(cross);
@@ -92,14 +107,12 @@ public class FaithTrackController {
         base.setToX(currentPos.x);
         base.setToY(currentPos.y);
         path.add(base);
-        System.out.println("pos: " + position + " new pos: " + newPosition);
-        SequentialTransition sequentialTransition = new SequentialTransition();
         int di = Math.abs(newPosition - position) / (newPosition - position);
         for (int i = position; i != newPosition; i += di) {
             Point current = track.get(i).getValue1();
             Point next = track.get(i + di).getValue1();
-            sideMove = next.y - current.y;
-            verticalMove = next.x - current.x;
+            int sideMove = next.y - current.y;
+            int verticalMove = next.x - current.x;
             var lastTransition = path.get(path.size() - 1);
             if (lastTransition.getFromY() == lastTransition.getToY() && verticalMove == 0) {
                 lastTransition.setToX(currentPos.x + cellsize * sideMove);
@@ -121,57 +134,26 @@ public class FaithTrackController {
             currentPos.y = currentPos.y + cellsize * verticalMove;
 
         }
+        SequentialTransition sequentialTransition = new SequentialTransition();
         for (var transition : path)
             sequentialTransition.getChildren().add(transition);
         sequentialTransition.play();
-
-
         position = newPosition;
     }
 
+    /**
+     * increments the position of one step
+     */
     public void incrementPosition() {
         setPosition(position + 1);
     }
 
+    /**
+     * decrements the position of one step
+     */
     public void decrementPosition() {
         setPosition(position - 1);
     }
 
 
 }
-
-//
-//    public void setPosition(int newPosition) {
-//        //
-//
-//        int sideMove = 0;
-//        int verticalMove = 0;
-//        ArrayList<TranslateTransition> path = new ArrayList<>();
-//        System.out.println("pos: " + position + " new pos: " + newPosition);
-//        SequentialTransition sequentialTransition = new SequentialTransition();
-//        for (int i = position; i != newPosition; i += Math.abs(newPosition - position) / (newPosition - position)) {
-//            Point current = track.get(i).getValue1();
-//            Point next = track.get(i + 1).getValue1();
-//            sideMove = next.y - current.y;
-//            verticalMove = next.x - current.x;
-//            System.out.println("side: " + sideMove + " vertical: " + verticalMove);
-//            TranslateTransition transition = new TranslateTransition();
-//            transition.setNode(cross);
-//            transition.setDuration(Duration.millis(300));
-//            transition.setAutoReverse(false);
-//            transition.setFromX(currentPos.x);
-//            transition.setFromY(currentPos.y);
-//            transition.setToX(currentPos.x + cellsize * sideMove);
-//            transition.setToY(currentPos.y + cellsize * verticalMove);
-//            currentPos.x = currentPos.x + cellsize * sideMove;
-//            currentPos.y = currentPos.y + cellsize * verticalMove;
-//
-//            path.add(transition);
-//        }
-//        for (var transition : path)
-//            sequentialTransition.getChildren().add(transition);
-//        sequentialTransition.play();
-//
-//
-//        position = newPosition;
-//    }

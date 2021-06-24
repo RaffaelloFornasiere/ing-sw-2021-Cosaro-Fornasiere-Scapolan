@@ -17,10 +17,7 @@ import it.polimi.ingsw.utilities.Pair;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -1151,6 +1148,7 @@ public class CLI extends UI {
     @Override
     public void updateLeaderCardsState(String playerId, HashMap<String, Boolean> leaderCards) {
         HashMap<String, LeaderCardView> leaderCardsViews = playerStates.get(playerId).leaderCards;
+
 
         Set<String> newLeaderCards = leaderCards.keySet();
 
