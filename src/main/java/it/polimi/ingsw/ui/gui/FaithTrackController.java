@@ -35,6 +35,7 @@ public class FaithTrackController {
 
     private int position;
     ArrayList<ImageView> popeFavorCards;
+
     ImageView cross;
     GridPane faithTrack;
 
@@ -154,6 +155,7 @@ public class FaithTrackController {
     public void decrementPosition() {
         setPosition(position - 1);
     }
+
 
 
 }

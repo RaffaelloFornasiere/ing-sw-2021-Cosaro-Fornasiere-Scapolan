@@ -5,8 +5,43 @@
     -fx-background-size: stretch;
 }
 
+.label{
+    -fx-text-fill: red;
+}
+
+/*
 .list-view {
-    -fx-background-color: #ffffff50;
+    -fx-background-color: #ffffff10;
+}
+
+/*
+
+.list-cell > .label {
+    -fx-text-fill: black;
+}
+
+.list-cell:odd {
+    -fx-background-color: rgba(83, 83, 83, 0.25);
+}
+
+.list-cell:even {
+    -fx-background-color: rgba(113, 113, 113, 0.25);
+}
+
+.list-cell:selected {
+    -fx-background-color: rgba(147, 147, 198, 0.57);
+}
+
+#warehouseListCell {
+    -fx-background-color: rgba(147, 147, 198, 0.57);
+}
+
+#strongboxListCell {
+    -fx-background-color: rgba(198, 147, 147, 0.57);
+}
+
+#leaderCardListCell {
+    -fx-background-color: rgba(171, 198, 147, 0.57);
 }
 
 
@@ -73,33 +108,16 @@ arrow-button-left {
 }
 
 
-.Card {
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 15, 0, 00, 0);
+#addResourceOfChoiceButton {
+    -fx-background-color: transparent;
+    -fx-border-width: 3px;
+    -fx-border-color: #848484;
+    -fx-scale-x: 3;
+    -fx-scale-y: 0.9;
+    -fx-shape: "m 100.54167,100.54167 h 13.22916 V 87.312499 h 5.29167 v 13.229171 h 13.22916 v 5.29166 H 119.0625 v 13.22917 h -5.29167 v -13.22917 h -13.22916 z";
 }
 
-.CardSelectableRegion {
-    -fx-border-color: rgba(0, 176, 255, 0.85);
-    -fx-border-width: 7px;
-    -fx-border-radius: 10px;
-    -fx-opacity: 0;
+#addResourceOfChoiceButton:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
-
-.CardSelectableRegion:hover {
-    -fx-opacity: 1;
-}
-
-.check-box .box {
-    -fx-background-color: rgba(0, 176, 255, 0);
-    -fx-border-color: black;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-}
-
-.check-box:selected .box {
-    -fx-background-color: rgba(0, 176, 255, 1);
-    -fx-border-color: black;
-}
-
-.check-box:selected .mark {
-    -fx-background-color: white;
-}
+*/

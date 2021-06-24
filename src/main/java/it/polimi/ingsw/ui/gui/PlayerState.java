@@ -24,7 +24,6 @@ public class PlayerState {
     Integer faithTrackPoints;
     Pair<Marble[][], Marble> marketStatus;
     String[][] devCardGrid;
-
     ArrayList<Event> events;
     ChosenResourcesEvent chosenResources;
     Resource resourceOfChoice;

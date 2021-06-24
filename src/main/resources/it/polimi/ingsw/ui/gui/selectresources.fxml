@@ -10,7 +10,8 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" stylesheets="@stylesheets/selectleadercards.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="600.0" prefWidth="469.0" stylesheets="@stylesheets/selectleadercards.css"
+            xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox layoutX="44.0" layoutY="13.0" prefHeight="546.0" prefWidth="140.0">
          <children>
