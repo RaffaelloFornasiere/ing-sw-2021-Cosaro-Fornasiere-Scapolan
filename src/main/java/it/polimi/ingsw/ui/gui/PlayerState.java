@@ -6,7 +6,6 @@ import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.Pair;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +21,9 @@ public class PlayerState {
     ArrayList<String> leaderCards;
     Integer victoryPoints;
     Integer faithTrackPoints;
-    Pair<Marble[][], Marble> marketStatus;
-    String[][] devCardGrid;
+    static Pair<Marble[][], Marble> marketStatus;
+    static String[][] devCardGrid;
+
     ArrayList<Event> events;
     ChosenResourcesEvent chosenResources;
     Resource resourceOfChoice;

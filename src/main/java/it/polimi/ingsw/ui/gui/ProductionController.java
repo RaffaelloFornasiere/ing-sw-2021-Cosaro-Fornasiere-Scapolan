@@ -88,14 +88,14 @@ public class ProductionController extends Controller implements Initializable {
         selectedDevCards = new ArrayList<>();
         selectedLeaderCards = new ArrayList<>();
         try {
-            for (var deck : gui.playerState.ownedCards) {
+            for (var deck : gui.thisPlayerState().ownedCards) {
                 if (deck.isEmpty())
                     continue;
                 var devCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + deck.get(deck.size() - 1) + ".json")), DevCard.class);
                 devCards.add(devCard);
             }
 
-            for (var card : gui.playerState.leaderCards) {
+            for (var card : gui.thisPlayerState().leaderCards) {
                 var leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
                 leaderCards.add(leaderCard);
             }
@@ -103,9 +103,9 @@ public class ProductionController extends Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.strongBox = gui.playerState.strongBox;
-        this.warehouse = gui.playerState.warehouse;
-        this.leaderDepots = gui.playerState.leaderDepots;
+        this.strongBox = gui.thisPlayerState().strongBox;
+        this.warehouse = gui.thisPlayerState().warehouse;
+        this.leaderDepots = gui.thisPlayerState().leaderDepots;
         selectedProductions = new ArrayList<>();
     }
 
@@ -334,7 +334,7 @@ public class ProductionController extends Controller implements Initializable {
                 .forEach(r -> fromLeadersDepots.put(Resource.valueOf(r.getText()), fromLeadersDepots.getOrDefault(Resource.valueOf(r.getText()), 0) + 1));
 
 
-        gui.playerState.chosenResources = new ChosenResourcesEvent(gui.askUserID(), allResources, fromWareHouse, fromLeadersDepots);
+        gui.thisPlayerState().chosenResources = new ChosenResourcesEvent(gui.askUserID(), allResources, fromWareHouse, fromLeadersDepots);
         gui.addEvent(new ActivateProductionEvent(gui.askUserID(), new ArrayList<>(
                 selectedProductions.stream()
                         .map(Pair::getKey)

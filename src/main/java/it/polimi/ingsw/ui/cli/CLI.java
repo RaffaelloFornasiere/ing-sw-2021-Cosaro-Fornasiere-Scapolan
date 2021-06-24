@@ -30,7 +30,7 @@ public class CLI extends UI {
 
     private FaithTrackView faithTrack;
     private final HashMap<String, PlayerState> playerStates;
-    private final ArrayList<String> players;
+    private ArrayList<String> players;
     private DevCardGridView devCardGridView;
     private MarketView market;
     private boolean isYourTurn;
@@ -857,13 +857,9 @@ public class CLI extends UI {
      */
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
-        if (!players.contains(leaderID)) players.add(leaderID);
-        playerStates.putIfAbsent(leaderID, new PlayerState());
-        for (String playerID : otherPlayersID) {
-            if (!players.contains(playerID)) players.add(playerID);
-            playerStates.putIfAbsent(playerID, new PlayerState());
-        }
-        faithTrack = new FaithTrackView(players);
+        players = new ArrayList<>();
+        players.add(leaderID);
+        players.addAll(otherPlayersID);
 
         System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
         StringBuilder builder = new StringBuilder();
@@ -909,6 +905,21 @@ public class CLI extends UI {
         }
     }
 
+    /**
+     * Method which asks the leader to type "start" when they want to start the match.
+     */
+    private void askForGameStart() {
+        out.println("Type \"start\" to start the game");
+        String s;
+        try {
+            do {
+                s = in.nextLine().toUpperCase();
+            } while (!s.equals("START"));
+            client.startMatch();
+        } catch (Exception ignore) {
+        }
+    }
+
     private ArrayList<String> toSetupPlayers = null;
 
     /**
@@ -929,18 +940,14 @@ public class CLI extends UI {
     }
 
     /**
-     * Method which asks the leader to type "start" when they want to start the match.
+     * Initializes data structures needed for representing the match
      */
-    private void askForGameStart() {
-        out.println("Type \"start\" to start the game");
-        String s;
-        try {
-            do {
-                s = in.nextLine().toUpperCase();
-            } while (!s.equals("START"));
-            client.startMatch();
-        } catch (Exception ignore) {
+    @Override
+    public void initializeMatchObjects() {
+        for (String playerID : players) {
+            playerStates.putIfAbsent(playerID, new PlayerState());
         }
+        faithTrack = new FaithTrackView(players);
     }
 
     /**

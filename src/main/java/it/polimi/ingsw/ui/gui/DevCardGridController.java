@@ -82,7 +82,7 @@ public class DevCardGridController extends Controller implements Initializable {
     public void onNext() {
         if(selected == null)
             return;
-        gui.playerState.events.add(new BuyDevCardsEvent(gui.askUserID(), selected, devCardSlot));
+        gui.thisPlayerState().events.add(new BuyDevCardsEvent(gui.askUserID(), selected, devCardSlot));
         ((Stage)root.getScene().getWindow()).close();
     }
 
