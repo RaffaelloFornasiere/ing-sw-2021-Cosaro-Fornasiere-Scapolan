@@ -247,7 +247,7 @@ public class CLI extends UI {
                 if (inputs.contains(input)) {
                     out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
                 } else if (input < 0 || input > size) {
-                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 0 AND " + size);
                 } else if (input == 0) {
                     m = 0;
                 } else {
@@ -256,7 +256,7 @@ public class CLI extends UI {
                 }
             } else {
                 if (inputString.equalsIgnoreCase("STOP")) m = 0;
-                else out.println("PLEASE INSERT A NUMBER");
+                else out.println("PLEASE INSERT A NUMBER OR 'STOP'");
             }
         }
 
@@ -918,7 +918,7 @@ public class CLI extends UI {
      */
     @Override
     public void displayWaitingForPlayerToSetupState(String playerID) {
-        if (toSetupPlayers == null) toSetupPlayers = (ArrayList<String>) players.clone();
+        if (toSetupPlayers == null) toSetupPlayers = new ArrayList<>(players);
         toSetupPlayers.remove(playerID);
 
         if (toSetupPlayers.isEmpty() || toSetupPlayers.contains(thisPlayer)) return;
@@ -1399,12 +1399,18 @@ public class CLI extends UI {
                     break;
                 }
                 case DISPLAY_DASHBOARD -> {
-                    ArrayList<Pair<String, String>> allPlayers;
-                    allPlayers = players.stream().map(player -> {
-                        if (player.equals(thisPlayer)) return "YOURS";
-                        else return player;
-                    }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
-                    int inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE DASHBOARD WOULD YOU LIKE TO SEE? \n").get(0);
+                    int inputPlayer;
+                    if(players.size()!=1) {
+                        ArrayList<Pair<String, String>> allPlayers;
+                        allPlayers = players.stream().map(player -> {
+                            if (player.equals(thisPlayer)) return "YOURS";
+                            else return player;
+                        }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
+                        inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE DASHBOARD WOULD YOU LIKE TO SEE? \n").get(0);
+                    }
+                    else{
+                        inputPlayer = 0;
+                    }
                     playerStates.get(players.get(inputPlayer)).getDashBoard().displayAll(players.get(inputPlayer));
                     break;
                 }
@@ -1413,12 +1419,18 @@ public class CLI extends UI {
                     break;
                 }
                 case DISPLAY_LEADER_CARD -> {
-                    ArrayList<Pair<String, String>> allPlayers;
-                    allPlayers = players.stream().map(player -> {
-                        if (player.equals(thisPlayer)) return "YOURS";
-                        else return player;
-                    }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
-                    int inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE LEADER CARDS WOULD YOU LIKE TO SEE? \n").get(0);
+                    int inputPlayer;
+                    if(players.size()!=1) {
+                        ArrayList<Pair<String, String>> allPlayers;
+                        allPlayers = players.stream().map(player -> {
+                            if (player.equals(thisPlayer)) return "YOURS";
+                            else return player;
+                        }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
+                        inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE LEADER CARDS WOULD YOU LIKE TO SEE? \n").get(0);
+                    }
+                    else{
+                        inputPlayer = 0;
+                    }
 
                     out.println("[31;1;4m" + players.get(inputPlayer) + "'S SET OF LEADER CARDS\n" + Color.reset());
                     ArrayList<DrawableObject> objs = new ArrayList<>();
@@ -1600,7 +1612,7 @@ public class CLI extends UI {
                     }
                     case LEADER_ACTION -> {
                         ArrayList<Pair<String, String>> options = new ArrayList<>();
-                        options.add(new Pair<>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
+                        options.add(new Pair<>("DISCARD LEADER CARD", Color.WHITE.getAnsiCode()));
                         options.add(new Pair<>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
 
                         int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);
