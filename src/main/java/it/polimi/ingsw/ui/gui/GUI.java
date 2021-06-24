@@ -244,6 +244,7 @@ public class GUI extends UI {
         alert.showAndWait();
     }
 
+    //TODO
     @Override
     public boolean askSingleplayer() {
         return false;
@@ -274,6 +275,7 @@ public class GUI extends UI {
         playerID.setItem(null);
     }
 
+    //TODO?
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
         try {
@@ -293,6 +295,7 @@ public class GUI extends UI {
         client.startMatch();
     }
 
+    //TODO
     @Override
     public void displayWaitingForPlayerToSetupState(String playerID) {
 
@@ -300,9 +303,12 @@ public class GUI extends UI {
 
     @Override
     public void initializeMatchObjects() {
-
+        for(String playerID: lobbyController.getPlayers()){
+            playerStates.put(playerID, new PlayerState());
+        }
     }
 
+    //TODO?
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
         Stage popUp = new Stage();
@@ -322,6 +328,7 @@ public class GUI extends UI {
         return res;
     }
 
+    //TODO
     @Override
     public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
         return null;
@@ -329,12 +336,18 @@ public class GUI extends UI {
 
     @Override
     public void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower) {
-
+        playerStates.get(playerId).personalProductionPower = personalProductionPower;
     }
 
     @Override
     public void updateFaithTrack(String playerID, int position, HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+        playerStates.get(playerID).setFaithTrackPosition(position);
+        playerStates.get(playerID).setPopeFavorCards(popeFavorCards);
 
+        if(playerID.equals(this.playerID.getItem())){
+            mainViewController.faithTrackController.setPosition(position);
+            mainViewController.faithTrackController.setPopeFavorCards(popeFavorCards);
+        }
     }
 
     @Override
