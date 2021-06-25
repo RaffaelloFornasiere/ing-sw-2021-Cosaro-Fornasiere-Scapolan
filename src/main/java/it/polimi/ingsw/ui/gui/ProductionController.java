@@ -95,7 +95,7 @@ public class ProductionController extends Controller implements Initializable {
                 devCards.add(devCard);
             }
 
-            for (var card : gui.thisPlayerState().leaderCards) {
+            for (var card : gui.thisPlayerState().leaderCards.keySet()) {
                 var leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
                 leaderCards.add(leaderCard);
             }
@@ -105,7 +105,7 @@ public class ProductionController extends Controller implements Initializable {
         }
         this.strongBox = gui.thisPlayerState().strongBox;
         this.warehouse = gui.thisPlayerState().warehouse;
-        this.leaderDepots = gui.thisPlayerState().leaderDepots;
+        this.leaderDepots = gui.thisPlayerState().getLeaderDepots();
         selectedProductions = new ArrayList<>();
     }
 

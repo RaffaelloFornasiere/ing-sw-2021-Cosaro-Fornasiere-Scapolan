@@ -158,10 +158,6 @@ public class FaithTrackController {
         setPosition(position - 1);
     }
 
-    public void setPopeFavorCards(HashMap<Integer, PopeFavorCard> popeFavorCards)
-    {
-
+    public void setPopeFavorCards(HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
     }
-
-
 }

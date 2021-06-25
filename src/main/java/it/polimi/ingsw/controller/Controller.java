@@ -401,7 +401,7 @@ public class Controller {
                     if (!new DepositLeaderPower(dlp.getMaxResources()).canStore(storedResource))
                         throw new HandlerCheckException(new PlayerActionError(player.getPlayerId(), "One of the selected leader powers can't store the resources indicated with it", newResourcesOrganizationEvent));
                     for (Resource r : storedResource.keySet()) {
-                        newTotalStoredResources.put(r, storedResource.get(r) + storedResource.getOrDefault(r, 0));
+                        newTotalStoredResources.put(r, storedResource.get(r) + dlp.getCurrentResources().getOrDefault(r, 0));
                     }
                 }
 
