@@ -577,6 +577,16 @@ public class Controller {
             Pair<Integer, Integer> devDeckIndexes = devCardGrid.getRowColOfCardFromID(event.getDevCardID());
             DevCard devCard = devCardGrid.topCard(devDeckIndexes);
             HashMap<Resource, Integer> cardCost = devCard.getCost();
+            ArrayList<LeaderPower> leaderPowers = leaderCardManager.getSelectedPowers(player, DiscountLeaderPower.class);
+            for(LeaderPower lp: leaderPowers){
+                DiscountLeaderPower dlp = (DiscountLeaderPower) lp;
+                HashMap<Resource, Integer> discount = dlp.getDiscount();
+                for(Resource r: discount.keySet()){
+                    if(cardCost.containsKey(r)){
+                        cardCost.put(r, Math.min(cardCost.get(r) - discount.get(r), 0));
+                    }
+                }
+            }
 
             HashMap<Resource, Integer> allPlayerResources = player.getAllPayerResources();
             HashMap<Resource, Integer> leaderPowerResources = player.getLeaderCardsResources();
