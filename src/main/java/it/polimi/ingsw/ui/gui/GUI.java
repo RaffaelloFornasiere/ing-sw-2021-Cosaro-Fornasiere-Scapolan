@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
+import it.polimi.ingsw.ui.cli.Action;
 import it.polimi.ingsw.utilities.LockWrap;
 import it.polimi.ingsw.utilities.Pair;
 import javafx.application.Application;
@@ -387,70 +388,130 @@ public class GUI extends UI {
         PlayerState.devCardGrid = topDevCardIDs.clone();
     }
 
-    //TODO
     @Override
     public BuyResourcesEvent askForMarketRow() {
-        //
-        //Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
-        //Integer index = playerInfo.getBoughtResourcesInfo().getValue();
-        //return new BuyResourcesEvent(playerID.getItem(), dir, index);
+        PlayerState.availableActions = new ArrayList<>();
+        PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.TAKE_RESOURCES_FROM_MARKET);
 
-        return null;
+        PlayerState.canPerformActions = true;
+        BuyResourcesEvent e = (BuyResourcesEvent)thisPlayerState().event.getWaitIfLocked();
+        thisPlayerState().event.setItem(null);
+        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+        PlayerState.canPerformActions = false;
+
+        return e;
     }
 
-    //TODO
     @Override
     public BuyDevCardsEvent askForDevCard() {
-        //String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
-        //int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
-        //return new BuyDevCardsEvent(playerID.getItem(), devCardId, cardSlot);
+        PlayerState.availableActions = new ArrayList<>();
+        PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.BUY_DEVCARD);
 
-        return null;
+        PlayerState.canPerformActions = true;
+        BuyDevCardsEvent e = (BuyDevCardsEvent)thisPlayerState().event.getWaitIfLocked();
+        thisPlayerState().event.setItem(null);
+        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+        PlayerState.canPerformActions = false;
+
+        return e;
     }
 
-    //TODO
     @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
-        //var devCards = playerInfo.getProdPowerDevCards();
-        //var personalPower = playerInfo.isActivatePersonalPower();
-        //return new ActivateProductionEvent(playerID.getItem(), devCards, personalPower);
-        return null;
+        PlayerState.availableActions = new ArrayList<>();
+        PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.PRODUCE);
+
+        PlayerState.canPerformActions = true;
+        ActivateProductionEvent e = (ActivateProductionEvent)thisPlayerState().event.getWaitIfLocked();
+        thisPlayerState().event.setItem(null);
+        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+        PlayerState.canPerformActions = false;
+
+        return e;
     }
 
-    //TODO
+    //TODO missing a way to differentiate it with activate
     @Override
-    public String askForLeaderCardToDiscard() {
+    public String askForLeaderCardToDiscard() throws NotPresentException{
+        if(!thisPlayerState().leaderCards.containsValue(false)) throw new NotPresentException("No leader card can be discarded");
+        PlayerState.availableActions = new ArrayList<>();
+        PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.LEADER_ACTION);
 
-        return null;
+        PlayerState.canPerformActions = true;
+        String leaderCardID = ((ActivateLeaderCardEvent)thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
+        thisPlayerState().event.setItem(null);
+        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+        PlayerState.canPerformActions = false;
+
+        return leaderCardID;
     }
 
-    //TODO
+    //TODO missing a way to differentiate it with discard
     @Override
-    public String askForLeaderCardToActivate() {
+    public String askForLeaderCardToActivate() throws NotPresentException{
+        if(!thisPlayerState().leaderCards.containsValue(false)) throw new NotPresentException("No leader card can be activated");
+        PlayerState.availableActions = new ArrayList<>();
+        PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.LEADER_ACTION);
 
-        return null;
+        PlayerState.canPerformActions = true;
+        String leaderCardID = ((ActivateLeaderCardEvent)thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
+        thisPlayerState().event.setItem(null);
+        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+        PlayerState.canPerformActions = false;
+
+        return leaderCardID;
     }
 
-    //TODO
     @Override
     public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
-        return null;
+        ArrayList<LeaderPowerSelectStateEvent> events = new ArrayList<>();
+        if(!thisPlayerState().leaderCards.containsValue(true)) throw new NotPresentException("No leader card is active");
+        PlayerState.availableActions = new ArrayList<>();
+        PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.SELECT_LEADER_CARD);
+
+        PlayerState.canPerformActions = true;
+        events.add((LeaderPowerSelectStateEvent)thisPlayerState().event.getWaitIfLocked());
+        thisPlayerState().event.setItem(null);
+        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+        PlayerState.canPerformActions = false;
+
+        return events;
     }
 
-    //TODO
     @Override
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
         ArrayList<Event> events = new ArrayList<>();
-        //unlock all available actions
-
-        //Take next event and put it into the return array
-
-        //null is the lockingState
-        events.add(thisPlayerState().event.getWaitIfLocked());
-        thisPlayerState().event.setItem(null);
-
-        //Lock all
-
+        PlayerState.availableActions = new ArrayList<>();
+        switch(turnState){
+            case START -> {
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.TAKE_RESOURCES_FROM_MARKET);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.BUY_DEVCARD);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.PRODUCE);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.LEADER_ACTION);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.SELECT_LEADER_CARD);
+            }
+            case AFTER_LEADER_CARD_ACTION -> {
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.TAKE_RESOURCES_FROM_MARKET);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.BUY_DEVCARD);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.PRODUCE);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.SELECT_LEADER_CARD);
+            }
+            case AFTER_MAIN_ACTION -> {
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.LEADER_ACTION);
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.END_TURN);
+            }
+            case END_OF_TURN -> {
+                PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.END_TURN);
+            }
+        }
+        if(playerID.equals(this.playerID.getItem())) {
+            PlayerState.canPerformActions = true;
+            //null is the lockingState
+            events.add(thisPlayerState().event.getWaitIfLocked());
+            thisPlayerState().event.setItem(null);
+            //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+            PlayerState.canPerformActions = false;
+        }
         return events;
     }
 
