@@ -21,7 +21,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -48,7 +47,6 @@ public class GUI extends UI {
     private final LockWrap<Integer> serverPort = new LockWrap<>(null);
 
 
-    private PlayerState playerInfo;
     private String PlayerImage;
 
     ServerSettingsController serverSettingsController;
@@ -57,7 +55,12 @@ public class GUI extends UI {
     LobbyController lobbyController;
     MainViewController mainViewController;
 
-    PlayerState playerState;
+    HashMap<String, PlayerState> playerStates;
+
+    public PlayerState thisPlayerState(){
+        return playerStates.get(playerID.getItem());
+    }
+
 
     public GUI() {
 
@@ -78,7 +81,7 @@ public class GUI extends UI {
 
             }
         }.start();
-        playerState = new PlayerState();
+        playerStates = new HashMap<>();
         var aux = this;
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -87,6 +90,7 @@ public class GUI extends UI {
                 @Override
                 public void run() {
                     playerID.setItem("paolo");
+                    playerStates.put(playerID.getItem(), new PlayerState());
 
                     HashMap<Resource, Integer> strongBox = new HashMap<>() {{
                         put(Resource.COIN, 4);
@@ -101,32 +105,33 @@ public class GUI extends UI {
 
                     }};
 
-                    aux.playerState.ownedCards.get(0).add("DevCard1");
-                    aux.playerState.ownedCards.get(0).add("DevCard23");
-                    aux.playerState.ownedCards.get(1).add("DevCard4");
-                    aux.playerState.ownedCards.get(2).add("DevCard8");
-                    aux.playerState.ownedCards.get(2).add("DevCard26");
-                    aux.playerState.ownedCards.get(2).add("DevCard35");
+                    aux.thisPlayerState().ownedCards.get(0).add("DevCard1");
+                    aux.thisPlayerState().ownedCards.get(0).add("DevCard23");
+                    aux.thisPlayerState().ownedCards.get(1).add("DevCard4");
+                    aux.thisPlayerState().ownedCards.get(2).add("DevCard8");
+                    aux.thisPlayerState().ownedCards.get(2).add("DevCard26");
+                    aux.thisPlayerState().ownedCards.get(2).add("DevCard35");
 
-                    aux.playerState.leaderCards.add("LeaderCard15");
-                    aux.playerState.leaderDepots = new HashMap<>(){{
-                        put(Resource.COIN, 2);
-                        put(Resource.SERVANT, 1);
-                    }};
-                    aux.playerState.warehouse = warehouse;
-                    aux.playerState.strongBox = strongBox;
-                    aux.playerState.faithTrackPoints = 4;
-                    aux.playerState.victoryPoints = 15;
+                    aux.thisPlayerState().leaderCards.put("LeaderCard15", false);
+                    aux.thisPlayerState().updateLeaderCardDepositState("LeaderCard15", 0,
+                            new HashMap<>(){{
+                                put(Resource.COIN, 2);
+                                put(Resource.SERVANT, 1);
+                    }});
+                    aux.thisPlayerState().warehouse = warehouse;
+                    aux.thisPlayerState().strongBox = strongBox;
+                    aux.thisPlayerState().faithTrackPoints = 4;
+                    aux.thisPlayerState().victoryPoints = 15;
 
                     int rows = 3; int cols = 4;
-                    aux.playerState.devCardGrid = new String[rows][cols];
+                    PlayerState.devCardGrid = new String[rows][cols];
                     for(int i = 0; i < rows; i++)
                     {
                         for(int j = 0; j < cols; j++)
                         {
                             int level = i*16+1;
-                            aux.playerState.devCardGrid[i][j] = "DevCard" + String.valueOf(level + j);
-                            System.out.println(aux.playerState.devCardGrid[i][j]);
+                            PlayerState.devCardGrid[i][j] = "DevCard" + (level + j);
+                            //System.out.println(aux.playerState.devCardGrid[i][j]);
                         }
                     }
                     HashMap<Marble, Integer> marbles = new HashMap<>() {{
@@ -138,7 +143,7 @@ public class GUI extends UI {
                         put(Marble.RED, 1);
                     }};
                     Market market = new Market(4, 3, marbles);
-                    aux.playerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
+                    PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
 
                     Stage stage = new Stage();
                     FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainview.fxml"));
@@ -162,11 +167,11 @@ public class GUI extends UI {
     }
 
     public Pair<Marble[][], Marble> getMarketStatus() {
-        return new Pair<>(playerState.marketStatus);
+        return new Pair<>(PlayerState.marketStatus);
     }
 
     public String[][] getDevCardGridState() {
-        return playerState.devCardGrid.clone();
+        return PlayerState.devCardGrid.clone();
     }
 
     public void addEvent(Event event) {
@@ -177,7 +182,7 @@ public class GUI extends UI {
         } else if (event instanceof ActivateProductionEvent) {
             actionPerformed.setItem(Action.PRODUCTION_ACTION);
         }
-        playerState.events.add(event);
+        thisPlayerState().events.add(event);
     }
 
 
@@ -240,6 +245,7 @@ public class GUI extends UI {
         alert.showAndWait();
     }
 
+    //TODO
     @Override
     public boolean askSingleplayer() {
         return false;
@@ -270,6 +276,7 @@ public class GUI extends UI {
         playerID.setItem(null);
     }
 
+    //TODO?
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
         try {
@@ -289,26 +296,20 @@ public class GUI extends UI {
         client.startMatch();
     }
 
+    //TODO
     @Override
     public void displayWaitingForPlayerToSetupState(String playerID) {
 
     }
 
-    //TODO deleted from UI
-    /*@Override
-    public void beginGame() {
-        try {
-            MainApplication.setScene("mainview", mainViewController);
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    public void initializeMatchObjects() {
+        for(String playerID: lobbyController.getPlayers()){
+            playerStates.put(playerID, new PlayerState());
         }
     }
 
-    @Override
-    public void setUserTurnActive(boolean active) {
-        actionPerformed.setItem(null);
-    }*/
-
+    //TODO?
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
         Stage popUp = new Stage();
@@ -328,6 +329,7 @@ public class GUI extends UI {
         return res;
     }
 
+    //TODO
     @Override
     public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
         return null;
@@ -335,34 +337,57 @@ public class GUI extends UI {
 
     @Override
     public void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower) {
-
+        playerStates.get(playerId).personalProductionPower = personalProductionPower;
     }
 
     @Override
     public void updateFaithTrack(String playerID, int position, HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+        PlayerState playerState = playerStates.get(playerID);
+        playerState.setFaithTrackPosition(position);
+        playerState.setPopeFavorCards(popeFavorCards);
+
+        if(playerID.equals(this.playerID.getItem())){
+            mainViewController.faithTrackController.setPosition(position);
+            mainViewController.faithTrackController.setPopeFavorCards(popeFavorCards);
+        }
+    }
+
+    @Override
+    public void updateDashboard(String playerID, ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse) {
+        PlayerState playerState = playerStates.get(playerID);
+
+        for(int i=0; i<Math.min(topDevCards.size(), 3); i++){
+            String dcID = topDevCards.get(i);
+            ArrayList<String> slot = playerState.ownedCards.get(i);
+            if(!slot.get(slot.size()-1).equals(dcID))
+                slot.add(dcID);
+        }
+
+        playerState.strongBox = new HashMap<>(strongBox);
+
+        playerState.warehouse = new ArrayList<>(warehouse);
 
     }
 
     @Override
-    public void updateDashboard(String playerId, ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse) {
-
-    }
-
-    @Override
-    public void updateLeaderCardsState(String playerId, HashMap<String, Boolean> leaderCards) {
-
+    public void updateLeaderCardsState(String playerID, HashMap<String, Boolean> leaderCards) {
+        PlayerState playerState = playerStates.get(playerID);
+        playerState.leaderCards = new HashMap<>(leaderCards);
+        for(String lcID: leaderCards.keySet())
+            playerState.leaderPowerStates.putIfAbsent(lcID, new ArrayList<>());
     }
 
     @Override
     public void updateMarket(int rows, int cols, Marble[][] marketStatus, Marble marbleLeft) {
-
+        PlayerState.marketStatus = new Pair<>(marketStatus.clone(), marbleLeft);
     }
 
     @Override
     public void updateDevCardGrid(String[][] topDevCardIDs) {
-
+        PlayerState.devCardGrid = topDevCardIDs.clone();
     }
 
+    //TODO
     @Override
     public BuyResourcesEvent askForMarketRow() {
         //
@@ -373,6 +398,7 @@ public class GUI extends UI {
         return null;
     }
 
+    //TODO
     @Override
     public BuyDevCardsEvent askForDevCard() {
         //String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
@@ -382,6 +408,7 @@ public class GUI extends UI {
         return null;
     }
 
+    //TODO
     @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
         //var devCards = playerInfo.getProdPowerDevCards();
@@ -390,25 +417,29 @@ public class GUI extends UI {
         return null;
     }
 
+    //TODO
     @Override
     public String askForLeaderCardToDiscard() {
 
         return null;
     }
 
+    //TODO
     @Override
     public String askForLeaderCardToActivate() {
 
         return null;
     }
 
+    //TODO
     @Override
     public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
         return null;
     }
 
+    //TODO
     @Override
-    public ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState) {
+    public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
 
         ArrayList<Event> events = new ArrayList<>();
         if (playerID.equals(this.playerID.getItem()))
@@ -445,45 +476,52 @@ public class GUI extends UI {
 
     @Override
     public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
-
+        playerStates.get(playerID).updateLeaderCardDepositState(leaderCardID, leaderPowerIndex, storedResources);
     }
 
     @Override
-    public void updateLeaderPowersSelectedState(String playerId, String leaderCardID, ArrayList<Boolean> powerSelectedStates) {
-
+    public void updateLeaderPowersSelectedState(String playerID, String leaderCardID, ArrayList<Boolean> powerSelectedStates) {
+        playerStates.get(playerID).leaderPowerStates.put(leaderCardID, new ArrayList<>(powerSelectedStates));
     }
 
+    //TODO
     @Override
     public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
 
     }
 
+    //TODO
     @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources) {
 
         return null;
     }
 
+    //TODO
     @Override
     public ChosenResourcesEvent askWhereToTakeResourcesFrom(HashMap<Resource, Integer> required, int freeChoicesResources) {
         return null;
     }
 
+    //TODO
     @Override
     public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<Resource> allowedResourcesTypes) {
         return null;
     }
 
+    //TODO
     @Override
     public void displayIAAction(SoloActionToken action) {
 
     }
 
+    //TODO
     @Override
     public void displaySinglePlayerLost() {
 
     }
 
+    //TODO
     @Override
     public void updateLorenzoPosition(int position) {
 

@@ -30,7 +30,7 @@ public class CLI extends UI {
 
     private FaithTrackView faithTrack;
     private final HashMap<String, PlayerState> playerStates;
-    private final ArrayList<String> players;
+    private ArrayList<String> players;
     private DevCardGridView devCardGridView;
     private MarketView market;
 
@@ -250,7 +250,7 @@ public class CLI extends UI {
                 if (inputs.contains(input)) {
                     out.println("YOU HAVE ALREADY CHOSEN THIS ");
                 } else if (input < 0 || input > size) {
-                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
+                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 0 AND " + size);
                 } else if (input == 0) {
                     m = 0;
                 } else {
@@ -259,7 +259,7 @@ public class CLI extends UI {
                 }
             } else {
                 if (inputString.equalsIgnoreCase("STOP")) m = 0;
-                else out.println("PLEASE INSERT A NUMBER");
+                else out.println("PLEASE INSERT A NUMBER OR 'STOP'");
             }
         }
 
@@ -860,13 +860,9 @@ public class CLI extends UI {
      */
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPlayersID) {
-        if (!players.contains(leaderID)) players.add(leaderID);
-        playerStates.putIfAbsent(leaderID, new PlayerState());
-        for (String playerID : otherPlayersID) {
-            if (!players.contains(playerID)) players.add(playerID);
-            playerStates.putIfAbsent(playerID, new PlayerState());
-        }
-        faithTrack = new FaithTrackView(players);
+        players = new ArrayList<>();
+        players.add(leaderID);
+        players.addAll(otherPlayersID);
 
         System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
         StringBuilder builder = new StringBuilder();
@@ -912,25 +908,6 @@ public class CLI extends UI {
         }
     }
 
-    private ArrayList<String> toSetupPlayers = null;
-
-    /**
-     * Method used to tell a user that they have to wait until all other users have finished their setup.
-     *
-     * @param playerID This user.
-     */
-    @Override
-    public void displayWaitingForPlayerToSetupState(String playerID) {
-        if (toSetupPlayers == null) toSetupPlayers = (ArrayList<String>) players.clone();
-        toSetupPlayers.remove(playerID);
-
-        if (toSetupPlayers.isEmpty() || toSetupPlayers.contains(thisPlayer)) return;
-
-        out.println("Waiting for");
-        for (String p : toSetupPlayers) out.println(p);
-        out.println("to finish their setup");
-    }
-
     /**
      * Method which asks the leader to type "start" when they want to start the match.
      */
@@ -944,6 +921,36 @@ public class CLI extends UI {
             client.startMatch();
         } catch (Exception ignore) {
         }
+    }
+
+    private ArrayList<String> toSetupPlayers = null;
+
+    /**
+     * Method used to tell a user that they have to wait until all other users have finished their setup.
+     *
+     * @param playerID This user.
+     */
+    @Override
+    public void displayWaitingForPlayerToSetupState(String playerID) {
+        if (toSetupPlayers == null) toSetupPlayers = new ArrayList<>(players);
+        toSetupPlayers.remove(playerID);
+
+        if (toSetupPlayers.isEmpty() || toSetupPlayers.contains(thisPlayer)) return;
+
+        out.println("Waiting for");
+        for (String p : toSetupPlayers) out.println(p);
+        out.println("to finish their setup");
+    }
+
+    /**
+     * Initializes data structures needed for representing the match
+     */
+    @Override
+    public void initializeMatchObjects() {
+        for (String playerID : players) {
+            playerStates.putIfAbsent(playerID, new PlayerState());
+        }
+        faithTrack = new FaithTrackView(players);
     }
 
     /**
@@ -1151,6 +1158,7 @@ public class CLI extends UI {
     @Override
     public void updateLeaderCardsState(String playerId, HashMap<String, Boolean> leaderCards) {
         HashMap<String, LeaderCardView> leaderCardsViews = playerStates.get(playerId).leaderCards;
+
 
         Set<String> newLeaderCards = leaderCards.keySet();
 
@@ -1405,12 +1413,18 @@ public class CLI extends UI {
                     break;
                 }
                 case DISPLAY_DASHBOARD -> {
-                    ArrayList<Pair<String, String>> allPlayers;
-                    allPlayers = players.stream().map(player -> {
-                        if (player.equals(thisPlayer)) return "YOURS";
-                        else return player;
-                    }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
-                    int inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE DASHBOARD WOULD YOU LIKE TO SEE? \n").get(0);
+                    int inputPlayer;
+                    if(players.size()!=1) {
+                        ArrayList<Pair<String, String>> allPlayers;
+                        allPlayers = players.stream().map(player -> {
+                            if (player.equals(thisPlayer)) return "YOURS";
+                            else return player;
+                        }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
+                        inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE DASHBOARD WOULD YOU LIKE TO SEE? \n").get(0);
+                    }
+                    else{
+                        inputPlayer = 0;
+                    }
                     playerStates.get(players.get(inputPlayer)).getDashBoard().displayAll(players.get(inputPlayer));
                     break;
                 }
@@ -1419,12 +1433,18 @@ public class CLI extends UI {
                     break;
                 }
                 case DISPLAY_LEADER_CARD -> {
-                    ArrayList<Pair<String, String>> allPlayers;
-                    allPlayers = players.stream().map(player -> {
-                        if (player.equals(thisPlayer)) return "YOURS";
-                        else return player;
-                    }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
-                    int inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE LEADER CARDS WOULD YOU LIKE TO SEE? \n").get(0);
+                    int inputPlayer;
+                    if(players.size()!=1) {
+                        ArrayList<Pair<String, String>> allPlayers;
+                        allPlayers = players.stream().map(player -> {
+                            if (player.equals(thisPlayer)) return "YOURS";
+                            else return player;
+                        }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
+                        inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE LEADER CARDS WOULD YOU LIKE TO SEE? \n").get(0);
+                    }
+                    else{
+                        inputPlayer = 0;
+                    }
 
                     out.println("[31;1;4m" + players.get(inputPlayer) + "'S SET OF LEADER CARDS\n" + Color.reset());
                     ArrayList<DrawableObject> objs = new ArrayList<>();
@@ -1598,7 +1618,7 @@ public class CLI extends UI {
                     }
                     case LEADER_ACTION -> {
                         ArrayList<Pair<String, String>> options = new ArrayList<>();
-                        options.add(new Pair<>("DELETE LEADER CARD", Color.WHITE.getAnsiCode()));
+                        options.add(new Pair<>("DISCARD LEADER CARD", Color.WHITE.getAnsiCode()));
                         options.add(new Pair<>("ACTIVATE LEADER CARD", Color.WHITE.getAnsiCode()));
 
                         int chosenAction = displaySelectionForm(options, null, 1, "THESE ARE THE POSSIBLE LEADER ACTIONS YOU CAN DO: \n").get(0);

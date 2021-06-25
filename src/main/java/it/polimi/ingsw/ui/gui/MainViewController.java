@@ -1,33 +1,30 @@
 package it.polimi.ingsw.ui.gui;
 
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class MainViewController extends Controller implements Initializable {
     @FXML
     BorderPane root;
+    @FXML
+    GridPane faithTrack;
+
+    FaithTrackController faithTrackController;
 
     public static ArrayList<Node> getAllNodes(Parent root) {
         ArrayList<Node> nodes = new ArrayList<Node>();
@@ -56,7 +53,15 @@ public class MainViewController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-            SelectableImage.setSelectable(root);
+
+        SelectableImage.setSelectable(root);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                faithTrackController = new FaithTrackController(faithTrack);
+            }
+        });
+
     }
 
     public MainViewController(GUI gui) {
@@ -67,7 +72,7 @@ public class MainViewController extends Controller implements Initializable {
     public void openMarket() throws IOException {
         Stage marketStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("market.fxml"));
-        fxmlLoader.setController(new MarketController(gui, gui.playerState.marketStatus.getKey(), gui.playerState.marketStatus.getValue()));
+        fxmlLoader.setController(new MarketController(gui, PlayerState.marketStatus.getKey(), PlayerState.marketStatus.getValue()));
         Scene scene = new Scene(fxmlLoader.load());
         marketStage.initModality(Modality.APPLICATION_MODAL);
         marketStage.setScene(scene);
@@ -75,7 +80,7 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openCardGrid(MouseEvent event) throws IOException {
-        System.out.println(((Node)event.getSource()).getId());
+        //System.out.println(((Node)event.getSource()).getId());
         Stage gridStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("devcardgrid.fxml"));
         fxmlLoader.setController(new DevCardGridController(gui));
@@ -95,5 +100,16 @@ public class MainViewController extends Controller implements Initializable {
         productionStage.showAndWait();
     }
 
+
+    public void decrementPos() {
+        System.out.println("decrement");
+        faithTrackController.setPosition(0);
+    }
+
+    public void incrementPos() {
+
+        System.out.println("increment");
+        faithTrackController.setPosition(24);
+    }
 
 }

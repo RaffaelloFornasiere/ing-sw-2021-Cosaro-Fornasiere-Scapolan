@@ -11,13 +11,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="624.0" prefWidth="824.0" stylesheets="@stylesheets/devcardgrid.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.ui.gui.DevCardGridController">
+<AnchorPane fx:id="root" prefHeight="624.0" prefWidth="824.0" stylesheets="@stylesheets/devcardgrid.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <GridPane alignment="CENTER" layoutX="241.0" layoutY="61.0" prefHeight="502.0" prefWidth="520.0">
+        <GridPane fx:id="grid" alignment="CENTER" layoutX="241.0" layoutY="61.0" prefHeight="502.0" prefWidth="520.0">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -30,124 +29,112 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Group id="g00"  GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                <Group id="g00" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="105.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                        <ImageView fitHeight="150.0" fitWidth="105.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard45.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g01" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard21.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g02" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard1.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g10" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard47.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g11" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard31.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g12" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard3.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g20" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard48.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g21" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard24.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g22" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="@images/Front/DevCard4.png" />
-                        </image>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
+                            <image>
+                                <Image url="@images/Front/DevCard4.png" />
+                            </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g30" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="6.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard46.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g31" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard22.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
                 <Group id="g32" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onCardClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
                             <image>
                                 <Image url="@images/Front/DevCard2.png" />
                             </image>
                         </ImageView>
-                        <Region layoutX="-5.0" layoutY="-5.0" prefHeight="160.0" prefWidth="115.0" styleClass="CardSelectableRegion" />
                     </children>
                 </Group>
             </children>

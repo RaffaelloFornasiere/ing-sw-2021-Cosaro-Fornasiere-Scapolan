@@ -1,21 +1,22 @@
-.root{
+.root {
     -fx-background-color: #393939;
 
 }
 
-.label{
+.label {
     -fx-text-fill: #848484;
 }
-.ErrorLabel{
+
+.ErrorLabel {
     -fx-text-fill: #c20000;
     -fx-opacity: 0;
 }
 
-.text-field{
+.text-field {
     -fx-background-color: #393939;
     -fx-border-color: #848484;
     -fx-border-width: 1;
-    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-radius: 20 20 20 20;
     -fx-text-fill: #848484;
     -fx-prompt-text-fill: #848484;
 }
@@ -26,8 +27,8 @@
 
 .check-box .box {
     -fx-background-color: transparent;
-    -fx-border-color:grey;
-    -fx-border-radius:3px;
+    -fx-border-color: grey;
+    -fx-border-radius: 3px;
 }
 
 .check-box:selected .mark {
@@ -39,7 +40,7 @@
 }
 
 
-.PanePlayer{
+.PanePlayer {
     -fx-background-color: #80808054;
     -fx-background-radius: 30px;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
@@ -49,14 +50,14 @@
     -fx-border-radius: 30px;
 }
 
-.PlayerLabel{
+.PlayerLabel {
     -fx-font-size: 11pt;
     -fx-font-weight: bold;
 }
 
-.button{
+.button {
     -fx-background-radius: 20 20 20 20;
-    -fx-border-radius: 20 20 20 20 ;
+    -fx-border-radius: 20 20 20 20;
     -fx-border-width: 1.5;
     -fx-background-color: #393939;
     -fx-border-color: #848484;
@@ -65,43 +66,44 @@
 }
 
 
-.button:hover{
+.button:hover {
     -fx-background-color: #848484;
     -fx-text-fill: #393939;
 }
-.button:pressed{
+
+.button:pressed {
     -fx-background-color: #949494;
 }
 
-.movingButton{
+.movingButton {
     -fx-border-color: transparent;
     -fx-background-radius: 0px;
 }
 
 
-.arrow-button{
+.arrow-button {
     -fx-background-color: transparent;
     -fx-border-width: 1.5px;
     -fx-padding: 0.25em;
     -fx-shape: "M 0 -3.5 v 7 l 4 -3.5 z";
 }
 
-.previousButton{
+.previousButton {
     -fx-rotate: 180;
 }
 
 
-.nextButton{
+.nextButton {
 
 }
 
-.arrow-button:hover{
+.arrow-button:hover {
     /* Example make the arrow yellow if buttos was hovered*/
     -fx-background-color: #848484;
 
 }
 
-.arrow-button:pressed{
+.arrow-button:pressed {
     /* And red if it was pressed, you can apply different effect
      * like shadow , padding etc inside this rules.
      */

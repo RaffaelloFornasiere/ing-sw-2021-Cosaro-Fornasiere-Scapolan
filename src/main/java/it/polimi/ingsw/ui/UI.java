@@ -58,6 +58,8 @@ public abstract class UI {
 
     public abstract void displayWaitingForPlayerToSetupState(String playerID);
 
+    public abstract void initializeMatchObjects();
+
     //game related
 
 

@@ -192,11 +192,13 @@ public class PreGameController {
 
         //Get the involved players networkData
         HashMap<String, Sender> involvedClientHandlerSenders = new HashMap<>();
-        for(String playerID: playerOrder)
-            involvedClientHandlerSenders.put(playerID, networkData.get(playerID).getClientHandlerSender());
-
         EventRegistry matchEventHandlerRegistry = new EventRegistry();
+        GameStartingEvent gameStartingEvent = new GameStartingEvent(lobby.getLeaderID(), playerOrder);
+
         for (String playerID: playerOrder) {
+            Sender playerSender = networkData.get(playerID).getClientHandlerSender();
+            involvedClientHandlerSenders.put(playerID, playerSender);
+            playerSender.sendObject(gameStartingEvent);
             RequestsElaborator requestsElaborator = networkData.get(playerID);
             requestsElaborator.setMatchEventHandlerRegistry(matchEventHandlerRegistry);
         }

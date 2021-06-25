@@ -74,6 +74,9 @@ public class LobbyController extends Controller implements Initializable {
         }
     }
 
+    public ArrayList<String> getPlayers() {
+        return new ArrayList<>(players);
+    }
 
     public void onStartGame() {
         gui.startGame();

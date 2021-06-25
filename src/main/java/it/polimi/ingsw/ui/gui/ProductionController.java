@@ -88,14 +88,14 @@ public class ProductionController extends Controller implements Initializable {
         selectedDevCards = new ArrayList<>();
         selectedLeaderCards = new ArrayList<>();
         try {
-            for (var deck : gui.playerState.ownedCards) {
+            for (var deck : gui.thisPlayerState().ownedCards) {
                 if (deck.isEmpty())
                     continue;
                 var devCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + deck.get(deck.size() - 1) + ".json")), DevCard.class);
                 devCards.add(devCard);
             }
 
-            for (var card : gui.playerState.leaderCards) {
+            for (var card : gui.thisPlayerState().leaderCards.keySet()) {
                 var leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
                 leaderCards.add(leaderCard);
             }
@@ -103,9 +103,9 @@ public class ProductionController extends Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.strongBox = gui.playerState.strongBox;
-        this.warehouse = gui.playerState.warehouse;
-        this.leaderDepots = gui.playerState.leaderDepots;
+        this.strongBox = gui.thisPlayerState().strongBox;
+        this.warehouse = gui.thisPlayerState().warehouse;
+        this.leaderDepots = gui.thisPlayerState().getLeaderDepots();
         selectedProductions = new ArrayList<>();
     }
 
@@ -180,46 +180,7 @@ public class ProductionController extends Controller implements Initializable {
         }
 
         SelectableImage.setSelectable(root);
-        /*
-        // ************************************************************************************************** //
-        // CREATING SELECTABLE BORDER REGION
-        // ************************************************************************************************** //
-        for (var image : selectableImages) {
-            Region border = new Region();
-            root.getChildren().add(border);
-            double k = Math.min(image.getFitWidth() / image.getImage().getWidth(), image.getFitHeight() / image.getImage().getHeight());
-            double out = 1.05;
-            double width = image.getImage().getWidth() * k;
-            double height = image.getImage().getHeight() * k;
-            double x = image.getLayoutX() - width * (out - 1) / 2;
-            double y = image.getLayoutY() - height * (out - 1) / 2;
-            border.setLayoutX(x);
-            border.setLayoutY(y);
-            border.setPrefSize(width * out, height * out);
-            border.getStyleClass().add("selectableRegion");
-            selectedProductions.add(new Pair<>(image, border));
-            border.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                boolean checked = border.getStyle().contains("-fx-opacity: 1");
-                border.setStyle(checked ? null : "-fx-opacity: 1");
-                String name = image.getImage().getUrl();
-                name = name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
-                System.out.println(name);
-                ArrayList<String> aux = null;
-                if (name.contains("DevCard"))
-                    aux = selectedDevCards;
-                else if (name.contains("LeaderCard"))
-                    aux = selectedLeaderCards;
-                if (aux != null && !checked)
-                    aux.add(name);
-                else if (aux != null)
-                    aux.remove(name);
-                else
-                    personalPower = true;
 
-                //check the validity of the output
-                checkResources();
-            });
-        }*/
     }
 
     public void onProductionClicked(MouseEvent mouseEvent) {
@@ -373,7 +334,7 @@ public class ProductionController extends Controller implements Initializable {
                 .forEach(r -> fromLeadersDepots.put(Resource.valueOf(r.getText()), fromLeadersDepots.getOrDefault(Resource.valueOf(r.getText()), 0) + 1));
 
 
-        gui.playerState.chosenResources = new ChosenResourcesEvent(gui.askUserID(), allResources, fromWareHouse, fromLeadersDepots);
+        gui.thisPlayerState().chosenResources = new ChosenResourcesEvent(gui.askUserID(), allResources, fromWareHouse, fromLeadersDepots);
         gui.addEvent(new ActivateProductionEvent(gui.askUserID(), new ArrayList<>(
                 selectedProductions.stream()
                         .map(Pair::getKey)
@@ -415,7 +376,7 @@ public class ProductionController extends Controller implements Initializable {
         AnchorPane.setRightAnchor(confirm, 20.0);
         AnchorPane.setBottomAnchor(confirm, 10.0);
         String path = new java.io.File(".").getAbsolutePath().replace("\\", "/");
-        path = "file:/" + path.substring(0, path.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/stylesheets/selectresource.css";
+        path = "file:/" + path.substring(0, path.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/stylesheets/selectresourcedialog.css";
         root.getStylesheets().add(path);
         dialog.setScene(scene);
         dialog.showAndWait();
