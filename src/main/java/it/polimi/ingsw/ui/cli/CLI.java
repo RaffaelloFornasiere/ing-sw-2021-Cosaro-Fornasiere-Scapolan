@@ -33,8 +33,7 @@ public class CLI extends UI {
     private ArrayList<String> players;
     private DevCardGridView devCardGridView;
     private MarketView market;
-    private boolean isYourTurn;
-    private Thread thread;
+
 
     public CLI() {
         players = new ArrayList<>();
@@ -111,22 +110,26 @@ public class CLI extends UI {
         out.println("ENTER THE NUMBER OF THE SELECTED ITEMS");
         String inputString;
         ArrayList<Integer> inputs = new ArrayList<>();
+        //  try {
         while (m > 0) {
-                inputString = in.nextLine();
-                if (inputString.matches("-?\\d+")) {
-                    int input = Integer.parseInt(inputString);
-                    if (inputs.contains(input)) {
-                        out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
-                    } else if (input < 1 || input > size) {
-                        out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
-                    } else {
-                        inputs.add(input);
-                        m--;
-                    }
+            inputString = in.nextLine();
+            if (inputString.matches("-?\\d+")) {
+                int input = Integer.parseInt(inputString);
+                if (inputs.contains(input)) {
+                    out.println("YOU HAVE ALREADY CHOSEN THIS");
+                } else if (input < 1 || input > size) {
+                    out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 1 AND " + size);
                 } else {
-                    out.println("PLEASE INSERT A NUMBER");
+                    inputs.add(input);
+                    m--;
+                }
+            } else {
+                out.println("PLEASE INSERT A NUMBER");
             }
         }
+//        }catch(IndexOutOfBoundsException e){
+//            System.out.println(" ");
+//        }
 
         out.println("YOU HAVE CHOSEN: \n");
         StringBuilder builder2 = new StringBuilder();
@@ -136,8 +139,8 @@ public class CLI extends UI {
         out.println(builder2);
 
         out.println("DO YOU AGREE? yes/no");
-        String answer = in.next().toUpperCase();
-        in.nextLine();
+
+        String answer = in.nextLine().toUpperCase();
         if (isAffirmative(answer)) {
             return inputs;
         } else {
@@ -245,7 +248,7 @@ public class CLI extends UI {
             if (inputString.matches("-?\\d+")) {
                 int input = Integer.parseInt(inputString);
                 if (inputs.contains(input)) {
-                    out.println("YOU HAVE ALREADY CHOSEN THIS RESOURCE");
+                    out.println("YOU HAVE ALREADY CHOSEN THIS ");
                 } else if (input < 0 || input > size) {
                     out.println("THIS NUMBER OF CHOICE DOESN'T EXIST, TRY WITH A NUMBER BETWEEN 0 AND " + size);
                 } else if (input == 0) {
@@ -1160,11 +1163,11 @@ public class CLI extends UI {
         Set<String> newLeaderCards = leaderCards.keySet();
 
         Set<String> toRemove = new HashSet<>();
-        for(String leaderCardID: leaderCardsViews.keySet()){
-            if(!newLeaderCards.contains(leaderCardID))
+        for (String leaderCardID : leaderCardsViews.keySet()) {
+            if (!newLeaderCards.contains(leaderCardID))
                 toRemove.add(leaderCardID);
         }
-        for(String s:toRemove)
+        for (String s : toRemove)
             leaderCardsViews.remove(s);
 
         for (String leaderCardID : newLeaderCards) {
@@ -1306,11 +1309,13 @@ public class CLI extends UI {
     @Override
     public String askForLeaderCardToDiscard() throws NotPresentException {
         Collection<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values();
-        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be discarded because you have no leader card");
+        if (leaderCardViews.size() == 0)
+            throw new NotPresentException("No leader card can be discarded because you have no leader card");
 
         leaderCardViews = leaderCardViews.stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
 
-        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be discarded because you're leader cards are already active");
+        if (leaderCardViews.size() == 0)
+            throw new NotPresentException("No leader card can be discarded because you're leader cards are already active");
 
         ArrayList<Pair<String, String>> choices = leaderCardViews.stream().map(LeaderCardView::getIdCard).map(s -> new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
 
@@ -1331,11 +1336,13 @@ public class CLI extends UI {
     @Override
     public String askForLeaderCardToActivate() throws NotPresentException {
         Collection<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values();
-        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be activated because you have no leader card");
+        if (leaderCardViews.size() == 0)
+            throw new NotPresentException("No leader card can be activated because you have no leader card");
 
         leaderCardViews = leaderCardViews.stream().filter(lcv -> !lcv.isActive()).collect(Collectors.toCollection(ArrayList::new));
 
-        if (leaderCardViews.size() == 0) throw new NotPresentException("No leader card can be activated because you're leader cards are already active");
+        if (leaderCardViews.size() == 0)
+            throw new NotPresentException("No leader card can be activated because you're leader cards are already active");
 
         ArrayList<Pair<String, String>> choices = leaderCardViews.stream().map(LeaderCardView::getIdCard).map(s -> new Pair<>(s, Color.reset())).collect(Collectors.toCollection(ArrayList::new));
 
@@ -1372,7 +1379,7 @@ public class CLI extends UI {
                 leaderPowersSelectedState.add(leaderCardView.getSelected(i));
             }
         }
-        if(options.size()==0) throw new NotPresentException("No leader power is selectable");
+        if (options.size() == 0) throw new NotPresentException("No leader power is selectable");
 
         ArrayList<DrawableObject> drawableLeaderCards = leaderCardViews.stream().map(LeaderCardView::toString)
                 .map(s -> new DrawableObject(s, 0, 0)).collect(Collectors.toCollection(ArrayList::new));
@@ -1441,9 +1448,7 @@ public class CLI extends UI {
 
                     out.println("[31;1;4m" + players.get(inputPlayer) + "'S SET OF LEADER CARDS\n" + Color.reset());
                     ArrayList<DrawableObject> objs = new ArrayList<>();
-                    playerStates.get(players.get(inputPlayer)).getLeaderCards().forEach((cardId, cardView) -> {
-                        objs.add(new DrawableObject(cardView.toString(), 0, 0));
-                    });
+                    playerStates.get(players.get(inputPlayer)).getLeaderCards().forEach((cardId, cardView) -> objs.add(new DrawableObject(cardView.toString(), 0, 0)));
                     Panel cardPanel = new Panel(objs, out, true);
                     cardPanel.show();
 
@@ -1483,19 +1488,12 @@ public class CLI extends UI {
 
         ArrayList<Event> events = new ArrayList<>();
         if (!thisPlayer.equals(playerID)) {
-            isYourTurn = false;
-           this.thread= new Thread(() -> {
-                new Timer().scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                       if(isYourTurn) thread.interrupt();
-                    }
-                }, 60 * 1000,  60 * 1000);
-
-                out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
-                displayOthers();
-            });
-           thread.start();
+//            thread.interrupt();
+//            thread= new Thread(() -> {
+//                out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
+//                displayOthers();
+//            });
+//            thread.start();
 //            boolean stopThread = false;
 //            while (!stopThread) {
 //                long startTime = System.currentTimeMillis();
@@ -1518,10 +1516,10 @@ public class CLI extends UI {
 //                    }
 //                }
 //            }).start();
-
+            out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
+            displayOthers();
 
         } else {
-            isYourTurn=true;
             Action selectedAction = null;
             switch (turnState) {
                 case START -> {
@@ -1573,6 +1571,7 @@ public class CLI extends UI {
                         selectedAction = allActions.get(inputIndex);
                         out.println(selectedAction.getDescription());
                     } else {
+
                         events.add(new EndTurnEvent(thisPlayer));
                     }
                     break;
@@ -1580,13 +1579,13 @@ public class CLI extends UI {
 
 
                 case END_OF_TURN -> {
-                    displayOthers();
                     out.println("WOULD YOU LIKE TO SEE SOME OTHER PLAYER'S/ YOUR STATE? Y/N");
                     String response = in.next().toUpperCase();
                     if (isAffirmative(response)) {
                         displayOthers();
                     }
                     out.println("YOUR TURN HAS ENDED");
+
                     events.add(new EndTurnEvent(thisPlayer));
                     break;
                 }
@@ -1790,9 +1789,10 @@ public class CLI extends UI {
         if (!map.isEmpty()) return map.keySet().stream().map(key -> map.get(key) == 0).reduce(true, (a, b) -> a && b);
         else return true;
     }
-    private boolean doCase2InSwitch( Resource res, int chosenNumber, HashMap<Resource,Integer> strongBoxHashMap,HashMap<Resource,Integer> chosenFromStrongbox,HashMap<Resource,Integer> leaderDepositsHashMap,  HashMap<Resource,Integer> allChosen, HashMap<Resource,Integer> required  ){
+
+    private boolean doCase2InSwitch(Resource res, int chosenNumber, HashMap<Resource, Integer> strongBoxHashMap, HashMap<Resource, Integer> chosenFromStrongbox, HashMap<Resource, Integer> leaderDepositsHashMap, HashMap<Resource, Integer> allChosen, HashMap<Resource, Integer> required) {
         DashBoardView thisDashboard = playerStates.get(thisPlayer).getDashBoard();
-boolean successful;
+        boolean successful;
         if (!thisDashboard.getStrongBox().containsKey(res)) {
             out.println(DepotResultMessage.INVALID_RES_STRONGBOX.getMessage());
             successful = DepotResultMessage.INVALID_RES_STRONGBOX.getSuccessful();
@@ -1812,6 +1812,12 @@ boolean successful;
         out.println("WHAT REMAINS IN STRONGBOX:\n");
         out.println(displayResourcesInHashMap(strongBoxHashMap));
         return successful;
+    }
+
+    private boolean leaderDepositContainsResourceType(ArrayList<InfoPower> arrayOfInfoPowers, Resource res) {
+        return arrayOfInfoPowers.stream().map(infoPower -> {
+            return infoPower.getPower().getMaxResources().containsKey(res);
+        }).reduce(false, (a, b) -> a || b);
     }
 
     /**
@@ -1949,111 +1955,114 @@ boolean successful;
             //ask where to take resources from
             ArrayList<Pair<String, String>> depositCategory = new ArrayList<>();
             depositCategory.add(new Pair<>("WAREHOUSE", Color.WHITE.getAnsiCode()));
-            if (thisDepositLeaderPowers.size() > 0)
+            if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(inputs2.get(0))))
                 depositCategory.add(new Pair<>("EXTRA DEPOSITS", Color.WHITE.getAnsiCode()));
-            if (!isEmptyHashMap(strongBoxHashMap))
+            if (!isEmptyHashMap(strongBoxHashMap) && strongBoxHashMap.containsKey(justResources.get(inputs2.get(0))) && strongBoxHashMap.get(justResources.get(inputs2.get(0)))!=0)
                 depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
             ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, depositCategory.size(), "WHERE WOULD YOU LIKE TO TAKE THE RESOURCES FROM?\n ");
             inputs.forEach(input -> {
-                out.print("HAVE A LOOK AT THE CURRENT TOTAL QUANTITY OF RESOURCES IN THE " + depositCategory.get(input).getKey() + "\n");
-
-                switch (input) {
-                    case 0 -> {
-                        out.println(displayResourcesInHashMap(warehouseHashMap));
-                        break;
-                    }
-                    case 1 -> {
-                        if(thisDepositLeaderPowers.size() > 0) out.println(displayResourcesInHashMap(leaderDepositsHashMap));
-                        else out.println(displayResourcesInHashMap(strongBoxHashMap));
-                        break;
-                    }
-                    case 2 -> {
-                        out.println(displayResourcesInHashMap(strongBoxHashMap));
-                        break;
-                    }
-                }
-                inputs2.forEach(index -> {
-                    out.println("HOW MANY " + justResources.get(index).toString() + " WOULD YOU LIKE TO REMOVE FROM THE " + depositCategory.get(input).getKey() + "?  INSERT A NUMBER\n");
-                    int quantityToTake = required.get(justResources.get(index));
-                    boolean successful;
-                    boolean validInput = false;
-                    int chosenNumber = -1;
-                    String inp = in.nextLine();
-                    while (!validInput) {
-                        if (!inp.matches("-?\\d+")) {
-                            out.println("YOU HAVE TO INSERT NUMBERS");
-                            inp = in.nextLine();
-                            continue;
-                        }
-                        chosenNumber = Integer.parseInt(inp);
-                        if (chosenNumber < 0 || quantityToTake - chosenNumber < 0) {
-                            out.println("YOU HAVE " + quantityToTake + " " + finalResourcesOptions.get(index).getKey() + " SO CHOSE A NUMBER BETWEEN 0 AND " + quantityToTake + "\n");
-                            inp = in.nextLine();
-                            continue;
-                        }
-                        validInput = true;
-                    }
+                if(required.containsKey(justResources.get(inputs2.get(0)))) {
+                    out.print("HAVE A LOOK AT THE CURRENT TOTAL QUANTITY OF RESOURCES IN THE " + depositCategory.get(input).getKey() + "\n");
 
                     switch (input) {
-                        case 0 -> {//WAREHOUSE
-
-                            if (!currentDepotStates.stream().map(depot -> depot.getCurrentQuantity() != 0 && depot.getResourceType() == justResources.get(index)).reduce(false, (prev, foll) -> prev || foll)) {
-                                out.println(DepotResultMessage.INVALID_RES_WAREHOUSE.getMessage());
-                                successful = DepotResultMessage.INVALID_RES_WAREHOUSE.getSuccessful();
-                                out.println("QUANTITY OF RESOURCES IN THE WAREHOUSE REMAINS THE SAME\n");
-
-                            } else if (chosenNumber > warehouseHashMap.get(justResources.get(index))) {
-                                out.println(DepotResultMessage.REACHED_MIN_CAP_WAREHOUSE.getMessage());
-                                successful = DepotResultMessage.REACHED_MIN_CAP_WAREHOUSE.getSuccessful();
-                                out.println("QUANTITY OF RESOURCES IN THE WAREHOUSE REMAINS THE SAME\n");
-
-                            } else {
-                                out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
-                                successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
-                                chosenFromWarehouse.put(justResources.get(index), chosenFromWarehouse.get(justResources.get(index)) + chosenNumber);
-                                allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
-                                warehouseHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
-
-                            }
-                            out.println("WHAT REMAINS IN WAREHOUSE:\n");
+                        case 0 -> {
                             out.println(displayResourcesInHashMap(warehouseHashMap));
                             break;
                         }
-                        case 1 -> {//DEPOSIT LEADER POWER
-                            if(thisDepositLeaderPowers.size() > 0) {
-                                if (chosenNumber > leaderDepositsHashMap.get(justResources.get(index))) {
-                                    out.println(DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getMessage());
-                                    successful = DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getSuccessful();
-                                    out.println("QUANTITY OF RESOURCES IN THE LEADER DEPOSITS REMAINS THE SAME\n");
+                        case 1 -> {
+                            if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(inputs2.get(0))))
+                                out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+                            else out.println(displayResourcesInHashMap(strongBoxHashMap));
+                            break;
+                        }
+                        case 2 -> {
+                            out.println(displayResourcesInHashMap(strongBoxHashMap));
+                            break;
+                        }
+                    }
+                    inputs2.forEach(index -> {
+                        out.println("HOW MANY " + justResources.get(index).toString() + " WOULD YOU LIKE TO REMOVE FROM THE " + depositCategory.get(input).getKey() + "?  INSERT A NUMBER\n");
+                        int quantityToTake = required.get(justResources.get(index));
+                        boolean successful;
+                        boolean validInput = false;
+                        int chosenNumber = -1;
+                        String inp = in.nextLine();
+                        while (!validInput) {
+                            if (!inp.matches("-?\\d+")) {
+                                out.println("YOU HAVE TO INSERT NUMBERS");
+                                inp = in.nextLine();
+                                continue;
+                            }
+                            chosenNumber = Integer.parseInt(inp);
+                            if (chosenNumber < 0 || quantityToTake - chosenNumber < 0) {
+                                out.println("YOU HAVE " + quantityToTake + " " + finalResourcesOptions.get(index).getKey() + " SO CHOSE A NUMBER BETWEEN 0 AND " + quantityToTake + "\n");
+                                inp = in.nextLine();
+                                continue;
+                            }
+                            validInput = true;
+                        }
+
+                        switch (input) {
+                            case 0 -> {//WAREHOUSE
+
+                                if (!currentDepotStates.stream().map(depot -> depot.getCurrentQuantity() != 0 && depot.getResourceType() == justResources.get(index)).reduce(false, (prev, foll) -> prev || foll)) {
+                                    out.println(DepotResultMessage.INVALID_RES_WAREHOUSE.getMessage());
+                                    successful = DepotResultMessage.INVALID_RES_WAREHOUSE.getSuccessful();
+                                    out.println("QUANTITY OF RESOURCES IN THE WAREHOUSE REMAINS THE SAME\n");
+
+                                } else if (chosenNumber > warehouseHashMap.get(justResources.get(index))) {
+                                    out.println(DepotResultMessage.REACHED_MIN_CAP_WAREHOUSE.getMessage());
+                                    successful = DepotResultMessage.REACHED_MIN_CAP_WAREHOUSE.getSuccessful();
+                                    out.println("QUANTITY OF RESOURCES IN THE WAREHOUSE REMAINS THE SAME\n");
+
                                 } else {
                                     out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
                                     successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
                                     chosenFromWarehouse.put(justResources.get(index), chosenFromWarehouse.get(justResources.get(index)) + chosenNumber);
                                     allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
-                                    leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+                                    warehouseHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+
                                 }
-                                out.println("WHAT REMAINS IN DEPOSIT LEADER POWER:\n");
-                                out.println(displayResourcesInHashMap(leaderDepositsHashMap));
-                            }else {
-                               successful= doCase2InSwitch(justResources.get(index), chosenNumber,  strongBoxHashMap,chosenFromStrongbox,leaderDepositsHashMap,   allChosen, required   );
+                                out.println("WHAT REMAINS IN WAREHOUSE:\n");
+                                out.println(displayResourcesInHashMap(warehouseHashMap));
+                                break;
                             }
-                            break;
-                        }
-                        case 2 -> {//STRONGBOX
-                            successful= doCase2InSwitch(justResources.get(index), chosenNumber,  strongBoxHashMap,chosenFromStrongbox,leaderDepositsHashMap,   allChosen, required   );
+                            case 1 -> {//DEPOSIT LEADER POWER
+                                if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(inputs2.get(0)))) {
+                                    if (chosenNumber > leaderDepositsHashMap.get(justResources.get(index))) {
+                                        out.println(DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getMessage());
+                                        successful = DepotResultMessage.UNSUCCESSFUL_SUB_FROM_LEADER.getSuccessful();
+                                        out.println("QUANTITY OF RESOURCES IN THE LEADER DEPOSITS REMAINS THE SAME\n");
+                                    } else {
+                                        out.println(DepotResultMessage.SUCCESSFUL_GENERIC.getMessage());
+                                        successful = DepotResultMessage.SUCCESSFUL_GENERIC.getSuccessful();
+                                        chosenFromWarehouse.put(justResources.get(index), chosenFromWarehouse.get(justResources.get(index)) + chosenNumber);
+                                        allChosen.put(justResources.get(index), allChosen.get(justResources.get(index)) + chosenNumber);
+                                        leaderDepositsHashMap.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+                                    }
+                                    out.println("WHAT REMAINS IN DEPOSIT LEADER POWER:\n");
+                                    out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+                                } else {
+                                    successful = doCase2InSwitch(justResources.get(index), chosenNumber, strongBoxHashMap, chosenFromStrongbox, leaderDepositsHashMap, allChosen, required);
+                                }
+                                break;
+                            }
+                            case 2 -> {//STRONGBOX
+                                successful = doCase2InSwitch(justResources.get(index), chosenNumber, strongBoxHashMap, chosenFromStrongbox, leaderDepositsHashMap, allChosen, required);
 
-                            break;
-                        }
+                                break;
+                            }
 
-                        default -> throw new IllegalStateException("Unexpected value: " + input);
-                    }//end of switch
-                    if (successful)
-                        required.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
-                    if (required.get(justResources.get(index)) == 0) required.remove(justResources.get(index));
+                            default -> throw new IllegalStateException("Unexpected value: " + input);
+                        }//end of switch
+                        if (successful)
+                            required.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
+                        if (required.get(justResources.get(index)) == 0) required.remove(justResources.get(index));
 
-                });
-
+                    });
+                }
             });
+
             if (required.keySet().stream().map(resource -> required.get(resource) == 0).reduce(true, (prev, foll) -> prev && foll))
                 out.println("YOU'RE DONE, ALL RESOURCES HAVE BEEN TAKEN\n");
             else {

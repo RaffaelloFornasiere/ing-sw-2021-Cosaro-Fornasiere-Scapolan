@@ -50,8 +50,19 @@ public class Panel {
             drawableObjects = newDrawableObjects;
         }
         else {
-            height = drawableObjects.stream().map(drawableObject -> drawableObject.getY() + drawableObject.getHeight()).max(Integer::compareTo).orElse(0);
-            width = drawableObjects.stream().map(drawableObject -> drawableObject.getX() + drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
+//            height = drawableObjects.stream().map(drawableObject ->  drawableObject.getHeight()).reduce(0, (a,b)->a+b);
+//            width = drawableObjects.stream().map(drawableObject -> drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
+            ArrayList<DrawableObject> newDrawableObjects = new ArrayList<>();
+            width = 0;
+            height = 0;
+            for(DrawableObject drawableObject: drawableObjects){
+                DrawableObject newDrawableObject = new DrawableObject(drawableObject.getTextObject(), 0, height);
+                newDrawableObjects.add(newDrawableObject);
+                height = height + newDrawableObject.getHeight() + 2;
+                if(newDrawableObject.getWidth()>width)
+                    width= newDrawableObject.getWidth();
+            }
+            drawableObjects = newDrawableObjects;
         }
         objects = new ArrayList<>();
         drawableObjects.forEach(this::addItem);

@@ -38,6 +38,7 @@ public class DevCardGridView {
 
     }
 
+
     public static void main(String[] args) {
         System.out.println("\033[31;1;4mGRID OF DEVCARDS\033[0m \n");
         String[][] grid = {
