@@ -599,6 +599,12 @@ public class Controller {
                 return;
             }
 
+            if (!player.getDashBoard().checkSlot(event.getCardSlot(), devCard)) {
+                senders.get(event.getPlayerId()).sendObject(new DevCardSlotError(event.getPlayerId(), event.getDevCardID(), event.getCardSlot()));
+                new MatchStateHandler(senders).update(matchState);
+                return;
+            }
+
             boolean goodChoice = false;
             while(!goodChoice) {
                 try {
@@ -624,10 +630,6 @@ public class Controller {
                             throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too many resources selected from leader powers or warehouse", event));
                         }
                         resourcesFromStrongBox.put(r, resourceQuantity);
-                    }
-
-                    if (!player.getDashBoard().checkSlot(event.getCardSlot(), devCard)) {
-                        throw new HandlerCheckException(new DevCardSlotError(event.getPlayerId(), event.getDevCardID(), event.getCardSlot()));
                     }
 
                     for (Resource r : selectedResourcesFromLeaderPower.keySet()) {
