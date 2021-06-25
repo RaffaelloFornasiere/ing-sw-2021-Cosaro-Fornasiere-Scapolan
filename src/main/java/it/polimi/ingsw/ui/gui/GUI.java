@@ -344,7 +344,7 @@ public class GUI extends UI {
     public void updateFaithTrack(String playerID, int position, HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
         PlayerState playerState = playerStates.get(playerID);
         playerState.setFaithTrackPosition(position);
-        playerState.setPopeFavorCards(popeFavorCards);
+        playerState.setPopeFavorCards(popeFavorCards.get(playerID));
 
         if(playerID.equals(this.playerID.getItem())){
             mainViewController.faithTrackController.setPosition(position);
@@ -440,39 +440,17 @@ public class GUI extends UI {
     //TODO
     @Override
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
-        //Lock all unavailable actions
+        ArrayList<Event> events = new ArrayList<>();
+        //unlock all available actions
 
         //Take next event and put it into the return array
 
-        ArrayList<Event> events = new ArrayList<>();
-        if (playerID.equals(this.playerID.getItem()))
-            return events;
-        Action a;
-        a = actionPerformed.getWaitIfLocked();
-//        return switch (a) {
-//            case MARKET_ACTION -> askForMarketRow();
-//            case DEV_CARD_ACTION -> askForDevCard();
-//            case PRODUCTION_ACTION -> askForProductionPowersToUse();
-//        switch (a) {
-//            case MARKET_ACTION -> {
-//                Direction dir = playerInfo.getBoughtResourcesInfo().getKey();
-//                Integer index = playerInfo.getBoughtResourcesInfo().getValue();
-//                events.add(new BuyResourcesEvent(playerInfo.getPlayerID(), dir, index));
-//                break;
-//            }
-//            case DEV_CARD_ACTION -> {
-//                String devCardId = playerInfo.getBuyDevCardInfo().substring(0, playerInfo.getBuyDevCardInfo().indexOf(":"));
-//                int cardSlot = Integer.parseInt(playerInfo.getBuyDevCardInfo().substring(playerInfo.getBuyDevCardInfo().indexOf(":")));
-//                events.add( new BuyDevCardsEvent(playerInfo.getPlayerID(), devCardId, cardSlot));
-//                break;
-//            }
-//            case PRODUCTION_ACTION -> {
-//                var devCards = playerInfo.getProdPowerDevCards();
-//                var personalPower = playerInfo.isActivatePersonalPower();
-//                events.add( new ActivateProductionEvent(playerInfo.getPlayerID(), devCards, personalPower));
-//                break;
-//            }
-//        };
+        //null is the lockingState
+        events.add(thisPlayerState().event.getWaitIfLocked());
+        thisPlayerState().event.setItem(null);
+
+        //Lock all
+
         return events;
     }
 
