@@ -36,7 +36,8 @@ public class NetworkHandlerReceiver{
         GsonBuilder jsonBuilder = new GsonBuilder();
         jsonBuilder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
         Gson gson = jsonBuilder.create();
-        while (true) {
+        boolean done = false;
+        while (!done) {
             String json;
             try {
                 json = MessageWrapper.unwrap(scanner.nextLine());
@@ -49,8 +50,9 @@ public class NetworkHandlerReceiver{
                 }
             } catch (JsonSyntaxException ignore) {
             } catch (NoSuchElementException | IllegalStateException e){
+                System.out.println("catch");
                 eventRegistry.sendEvent(new ServerDisconnectionEvent(userID));
-                break;
+                done = true;
             }
         }
     }

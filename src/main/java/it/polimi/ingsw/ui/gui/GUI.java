@@ -440,6 +440,9 @@ public class GUI extends UI {
     //TODO
     @Override
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
+        //Lock all unavailable actions
+
+        //Take next event and put it into the return array
 
         ArrayList<Event> events = new ArrayList<>();
         if (playerID.equals(this.playerID.getItem()))
