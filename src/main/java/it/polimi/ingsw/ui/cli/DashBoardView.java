@@ -59,7 +59,7 @@ public class DashBoardView {
         this.strongBox = new HashMap<>(strongBox);
     }
 
-    public DepotResultMessage tryAddResource(Resource r, int n,  DepotState depot) {
+    public DepotResultMessage tryAddResource(Resource r, int n, DepotState depot) {
         if (warehouse.stream().filter(dep -> dep != depot).map(dep -> dep.getCurrentQuantity() == 0 || (dep.getResourceType() != r)).reduce(true, (prev, foll) -> prev && foll)) {
             return depot.tryAddResource(r, n);
         }
@@ -133,6 +133,7 @@ public class DashBoardView {
             m++;
 
         }
+        warehouseBuilder.append(Color.reset()).append("\n");
 
         return warehouseBuilder.toString();
     }
@@ -158,7 +159,7 @@ public class DashBoardView {
         String personalProductionPowerString = personalProductionToString();
         ArrayList<DrawableObject> drawableObjects = new ArrayList<>();
         drawableObjects.add(new DrawableObject("PERSONAL PRODUCTION POWER", 0, 0));
-        drawableObjects.add(new DrawableObject(personalProductionPowerString, 0, 2));
+        drawableObjects.add(new DrawableObject(personalProductionPowerString, 0, 3));
         new Panel(drawableObjects, out, false).show();
     }
 
@@ -210,14 +211,13 @@ public class DashBoardView {
         String strongBoxString = strongBoxToString();
         String personalProductionPowerString = personalProductionToString();
 
-        DrawableObject warehouse = new DrawableObject(warehouseString, 0, 0);
-        DrawableObject strongBox = new DrawableObject(strongBoxString, 0, warehouse.getHeight() + 2);
-        DrawableObject personalProductionPower = new DrawableObject(personalProductionPowerString, 0, warehouse.getHeight() + strongBox.getHeight() + 2);
-        Panel panel = new Panel(400, warehouse.getHeight() + strongBox.getHeight() + personalProductionPower.getHeight() + 4, System.out);
+        ArrayList<DrawableObject> objs= new ArrayList<>();
+      objs.add( new DrawableObject(warehouseString, 0, 0));
+        objs.add(new DrawableObject(strongBoxString, 0, 0));
+       objs.add(new DrawableObject("\033[31;1;4mPERSONAL PRODUCTION POWER\033[0m \n", 0, 0));
+      objs.add(new DrawableObject(personalProductionPowerString, 0, 0));
+        Panel panel = new Panel(objs,System.out, false);
 
-        panel.addItem(warehouse);
-        panel.addItem(strongBox);
-        panel.addItem(personalProductionPower);
         panel.show();
         displayDevCardSlots();
     }
@@ -244,17 +244,18 @@ public class DashBoardView {
 
         String player = "PAOLO";
 
+        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 2, 2, 3);
         DashBoardView d = new DashBoardView(cards, str, totalLevels, player);
-        System.out.println(d.tryAddResource(Resource.COIN,1, d.getWarehouse().get(1)).getMessage());
+        d.setPersonalProductionPower(p);
+        System.out.println(d.tryAddResource(Resource.COIN, 1, d.getWarehouse().get(1)).getMessage());
 
         DepotState depot1 = d.getWarehouse().get(1);
         System.out.println(depot1.getResourceType());
         d.getWarehouse().stream().filter(dep -> dep != depot1).map(dep -> dep.getCurrentQuantity() == 0 || (dep.getResourceType() != depot1.getResourceType())).forEach(System.out::println);
-
+        d.displayPersonalProductionPower(new PrintWriter(System.out));
 
         d.displayAll(player);
     }
-
 
 
 }
