@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
+import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
@@ -14,6 +15,7 @@ import org.javatuples.Triplet;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -156,6 +158,10 @@ public class FaithTrackController {
         setPosition(position - 1);
     }
 
+    public void setPopeFavorCards(HashMap<Integer, PopeFavorCard> popeFavorCards)
+    {
+
+    }
 
 
 }

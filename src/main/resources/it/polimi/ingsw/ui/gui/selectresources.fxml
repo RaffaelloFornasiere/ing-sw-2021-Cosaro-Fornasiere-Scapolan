@@ -10,10 +10,12 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="600.0" prefWidth="469.0" stylesheets="@stylesheets/selectleadercards.css"
-            xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="585.0" prefWidth="533.0"
+            stylesheets="@stylesheets/selectresources.css"
+            xmlns="http://javafx.com/javafx/16"
+            xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox layoutX="44.0" layoutY="13.0" prefHeight="546.0" prefWidth="140.0">
+      <VBox layoutX="14.0" layoutY="17.0">
          <children>
             <Label text="Warehouse" textFill="#393939">
                <VBox.margin>
@@ -32,7 +34,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <ListView fx:id="strongboxList" prefHeight="156.0" prefWidth="145.0" />
+            <ListView fx:id="strongboxList" prefHeight="156.0" prefWidth="200.0" />
             <Label text="Leader card depots" textFill="#393939">
                <VBox.margin>
                   <Insets top="10.0" />
@@ -44,23 +46,23 @@
             <ListView fx:id="leaderDeportsResourcesList" prefHeight="156.0" prefWidth="200.0" />
          </children>
       </VBox>
-      <VBox layoutX="259.0" layoutY="123.0" prefHeight="333.0" prefWidth="129.0">
+      <VBox layoutX="286.0" layoutY="14.0">
          <children>
             <Label text="Resources to use" textFill="#393939">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <ListView fx:id="resourcesToUse" prefHeight="313.0" prefWidth="81.0" />
+            <ListView fx:id="resourcesToUse" prefHeight="289.0" prefWidth="200.0" />
          </children>
       </VBox>
-      <Button layoutX="201.0" layoutY="244.0" mnemonicParsing="false" onAction="#removeFromToUse" prefHeight="34.0" prefWidth="41.0">
+      <Button layoutX="228.0" layoutY="183.0" mnemonicParsing="false" onAction="#removeFromToUse" prefHeight="34.0" prefWidth="41.0">
          <styleClass>
             <String fx:value="arrow-button" />
             <String fx:value="arrow-button-left" />
          </styleClass>
       </Button>
-      <Button layoutX="201.0" layoutY="290.0" mnemonicParsing="false" onAction="#moveIntoToUse" prefHeight="34.0" prefWidth="41.0">
+      <Button layoutX="228.0" layoutY="229.0" mnemonicParsing="false" onAction="#moveIntoToUse" prefHeight="34.0" prefWidth="41.0">
          <styleClass>
             <String fx:value="arrow-button" />
             <String fx:value="arrow-button-right" />
