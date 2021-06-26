@@ -1,19 +1,33 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
+import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenResourcesEvent;
+import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.utilities.LockWrap;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.A;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class SelectResourcesController extends Controller implements Initializable {
 
+    LockWrap<Boolean> dataReady = new LockWrap<>(false, false);
 
     @FXML
     ListView<Label> warehouseList;
@@ -23,33 +37,81 @@ public class SelectResourcesController extends Controller implements Initializab
     ListView<Label> resourcesToUse;
     @FXML
     ListView<Label> leaderDeportsResourcesList;
-
+    @FXML
+    Label warningLabel;
     @FXML
     AnchorPane root;
 
 
-    SelectResourcesController(GUI gui)
-    {
-        super();
+    ArrayList<Resource> resourcesRequired;
+    int resourcesOfChoice;
+
+    SelectResourcesController(GUI gui, HashMap<Resource, Integer> required, int resourcesOfChoice) {
+        super(gui);
+        resourcesRequired = new ArrayList<>(){{
+            required.forEach((key, value) -> {
+                for (int i = 0; i < value; i++)
+                    add(key);
+            });
+        }};
+        this.resourcesOfChoice = resourcesOfChoice;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        dataReady.setItem(false);
+        ArrayList<Label> marbles = (ArrayList<Label>) gui.thisPlayerState().warehouse.stream().flatMap(n -> (new ArrayList<String>() {{
+            for (int i = 0; i < n.getCurrentQuantity(); i++)
+                add(n.getResourceType().name());
+        }}).stream()).map(Label::new).collect(Collectors.toList());
+        warehouseList.getItems().addAll(marbles);
+        warehouseList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        marbles = (ArrayList<Label>) gui.thisPlayerState().strongBox.entrySet().stream().flatMap(n -> new ArrayList<String>() {{
+            for (int i = 0; i < n.getValue(); i++)
+                add(n.getKey().name());
+        }}.stream()).map(Label::new).collect(Collectors.toList());
+        strongboxList.getItems().addAll(marbles);
+        strongboxList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        marbles = (ArrayList<Label>) gui.thisPlayerState().getLeaderDepots().entrySet().stream().flatMap(n -> new ArrayList<String>() {{
+            for (int i = 0; i < n.getValue(); i++)
+                add(n.getKey().name());
+        }}.stream()).map(Label::new).collect(Collectors.toList());
+        leaderDeportsResourcesList.getItems().addAll(marbles);
+        leaderDeportsResourcesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        resourcesToUse.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        checkResources();
     }
 
-
-
+    public ChosenResourcesEvent getResult() {
+        dataReady.getWaitIfLocked();
+        HashMap<Resource, Integer> allResources = new HashMap<>();
+        HashMap<Resource, Integer> fromWareHouse = new HashMap<>();
+        HashMap<Resource, Integer> fromLeadersDepots = new HashMap<>();
+        resourcesToUse.getItems()
+                .forEach(r -> allResources.put(Resource.valueOf(r.getText()),
+                        Objects.requireNonNullElse(allResources.get(Resource.valueOf(r.getText())), 0) + 1));
+        resourcesToUse.getItems().stream().filter(n -> n.getId().contains("warehouseListCell"))
+                .forEach(r -> fromWareHouse.put(Resource.valueOf(r.getText()), fromWareHouse.getOrDefault(Resource.valueOf(r.getText()), 0) + 1));
+        resourcesToUse.getItems().stream().filter(n -> n.getId().contains("leaderCardListCell"))
+                .forEach(r -> fromLeadersDepots.put(Resource.valueOf(r.getText()), fromLeadersDepots.getOrDefault(Resource.valueOf(r.getText()), 0) + 1));
+        return new ChosenResourcesEvent(gui.askUserID(), allResources, fromWareHouse, fromLeadersDepots);
+    }
 
     public void onCancel() {
-        ((Stage)root.getScene().getWindow()).close();
+        ((Stage) root.getScene().getWindow()).close();
     }
 
     public void onNext() {
-//
-//        gui.playerState.events.add(new BuyDevCardsEvent(gui.askUserID(), selected, devCardSlot));
-//        ((Stage)root.getScene().getWindow()).close();
+        dataReady.setItem(true);
+        if (warningLabel.getOpacity() > 0) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "you don't have enough resources to perform action", ButtonType.OK);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+            return;
+        }
 
+        ((Stage) root.getScene().getWindow()).close();
     }
 
     @FXML
@@ -107,36 +169,14 @@ public class SelectResourcesController extends Controller implements Initializab
 
 
     public void checkResources() {
-        /*ArrayList<Resource> resourcesProvided = resourcesToUse.getItems().stream().map(n -> Resource.valueOf(n.getText())).collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<Resource> resourcesRequired = new ArrayList<>();
-        for (var card : selectedDevCards) {
-            ArrayList<Resource> required = devCards.stream()
-                    .filter(c -> c.getCardID().equals(card))
-                    .map(c -> c.getProductionPower().getConsumedResources()).flatMap(p ->
-                            p.entrySet().stream().flatMap(entry -> new ArrayList<Resource>() {{
-                                for (int i = 0; i < entry.getValue(); i++)
-                                    add(entry.getKey());
-                            }}.stream())).collect(Collectors.toCollection(ArrayList::new));
-            resourcesRequired.addAll(required);
-        }
-        for (var card : selectedLeaderCards) {
-            ArrayList<Resource> required = leaderCards.stream()
-                    .filter(c -> c.getCardID().equals(card))
-                    .flatMap(c -> c.getLeaderPowers().stream())
-                    .map(power -> ((ProductionLeaderPower) power).getEffectPower().getConsumedResources())
-                    .flatMap(p -> p.entrySet().stream().flatMap(entry -> new ArrayList<Resource>() {{
-                        for (int i = 0; i < entry.getValue(); i++)
-                            add(entry.getKey());
-                    }}.stream())).collect(Collectors.toCollection(ArrayList::new));
-            resourcesRequired.addAll(required);
-        }
+        ArrayList<Resource> resourcesProvided = resourcesToUse.getItems().stream().map(n -> Resource.valueOf(n.getText())).collect(Collectors.toCollection(ArrayList::new));
+
         int opacity = 1;
-        opacity *= (resourcesProvided.size() >= resourcesRequired.size() + 2 * (personalPower ? 1 : 0)) ? 1 : 0;
+        opacity *= (resourcesProvided.size() >= resourcesRequired.size() + resourcesOfChoice) ? 1 : 0;
         ArrayList<Resource> aux = new ArrayList<>(resourcesProvided);
         opacity *= resourcesRequired.stream().mapToInt(r -> aux.remove(r) ? 1 : 0).reduce(1, (a, b) -> a * b);
         warningLabel.setOpacity(opacity == 1 ? 0 : 1);
 
-        opacity = (((personalPower ? 1 : 0) + selectedLeaderCards.size()) == resourcesOfChoiceList.getItems().size()) ? 0 : 1;
-        warningLabelOfChoice.setOpacity(opacity);*/
+
     }
 }

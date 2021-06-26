@@ -98,6 +98,8 @@ public class MainViewController extends Controller implements Initializable {
         productionStage.initModality(Modality.APPLICATION_MODAL);
         productionStage.setScene(scene);
         productionStage.showAndWait();
+        if(productionStage.isFullScreen())
+            System.out.println("");
     }
 
 

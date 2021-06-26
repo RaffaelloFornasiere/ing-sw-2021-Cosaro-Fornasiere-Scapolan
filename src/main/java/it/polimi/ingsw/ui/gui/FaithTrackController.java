@@ -37,6 +37,7 @@ public class FaithTrackController {
 
     private int position;
     ArrayList<ImageView> popeFavorCards;
+
     ImageView cross;
     GridPane faithTrack;
 

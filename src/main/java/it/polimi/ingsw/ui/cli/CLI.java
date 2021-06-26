@@ -1360,7 +1360,7 @@ public class CLI extends UI {
      * Method to ask the user if they want to select or deselect leader powers in a leader card.
      *
      * @return The array of LeaderPower whose state "selected" has changed
-     * @throws NotPresentException if no leader power  is available since all the cards are not active.
+     * @throws NotPresentException if no leader power is selectable since all the cards are not active.
      */
     @Override
     public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {

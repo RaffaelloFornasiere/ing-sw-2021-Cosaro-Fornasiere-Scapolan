@@ -1,13 +1,17 @@
 package it.polimi.ingsw.ui.gui;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
+import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.LeaderCards.ProductionLeaderPower;
 import it.polimi.ingsw.model.Resource;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
@@ -15,10 +19,15 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -30,15 +39,6 @@ public class DevCardGridController extends Controller implements Initializable {
     GridPane grid;
     String selected;
 
-
-    @FXML
-    ListView<Label> warehouseList;
-    @FXML
-    ListView<Label> strongboxList;
-    @FXML
-    ListView<Label> resourcesToUse;
-    @FXML
-    ListView<Label> leaderDeportsResourcesList;
 
     int devCardSlot;
 
@@ -83,96 +83,28 @@ public class DevCardGridController extends Controller implements Initializable {
         if(selected == null)
             return;
         gui.thisPlayerState().events.add(new BuyDevCardsEvent(gui.askUserID(), selected, devCardSlot));
-        ((Stage)root.getScene().getWindow()).close();
+        DevCard devCard = null;
+        try {
+            devCard = (new Gson()).fromJson(Files.readString(Paths.get("src\\main\\resources\\" + selected + ".json")), DevCard.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HashMap<Resource, Integer> requiredResources = devCard.getCost();
+        requiredResources.entrySet().forEach(n -> System.out.println(n.getKey() + "--" + n.getValue()));
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        SelectResourcesController selectResourcesController = new SelectResourcesController(gui, requiredResources, 0);
+
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectresources.fxml"));
+        loader.setController(selectResourcesController);
+        try {
+            stage.setScene(new Scene(loader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.showAndWait();
+        gui.addEvent(selectResourcesController.getResult());
     }
 
-
-    @FXML
-    public void moveIntoToUse() {
-        ObservableList<Label> resourcesToMove = warehouseList.getSelectionModel().getSelectedItems();
-        for (var resource : resourcesToMove) {
-            Label aux = new Label(resource.getText());
-            aux.setId("warehouseListCell");
-            resourcesToUse.getItems().add(aux);
-        }
-        warehouseList.getItems().removeAll(resourcesToMove);
-        resourcesToMove = strongboxList.getSelectionModel().getSelectedItems();
-        for (var resource : resourcesToMove) {
-            Label aux = new Label(resource.getText());
-            aux.setId("strongboxListCell");
-            resourcesToUse.getItems().add(aux);
-        }
-        strongboxList.getItems().removeAll(resourcesToMove);
-
-        resourcesToMove = leaderDeportsResourcesList.getSelectionModel().getSelectedItems();
-        resourcesToMove.forEach(resource -> {
-            Label aux = new Label(resource.getText());
-            aux.setId("leaderCardListCell");
-            resourcesToUse.getItems().add(aux);
-        });
-        leaderDeportsResourcesList.getItems().removeAll(resourcesToMove);
-
-        deselectLists();
-        checkResources();
-    }
-
-    @FXML
-    public void removeFromToUse() {
-        var resourcesToRemove = resourcesToUse.getSelectionModel().getSelectedItems();
-        for (var resource : resourcesToRemove) {
-            if (resource.getId().contains("warehouseListCell"))
-                warehouseList.getItems().add(new Label(resource.getText()));
-            else if (resource.getId().contains("fromLeadersDepots"))
-                leaderDeportsResourcesList.getItems().add(new Label(resource.getText()));
-            else
-                strongboxList.getItems().add(new Label(resource.getText()));
-
-        }
-        resourcesToUse.getItems().removeAll(resourcesToRemove);
-        deselectLists();
-        checkResources();
-    }
-
-    public void deselectLists() {
-        warehouseList.getSelectionModel().clearSelection();
-        strongboxList.getSelectionModel().clearSelection();
-        resourcesToUse.getSelectionModel().clearSelection();
-        leaderDeportsResourcesList.getSelectionModel().clearSelection();
-    }
-
-
-    public void checkResources() {
-        /*ArrayList<Resource> resourcesProvided = resourcesToUse.getItems().stream().map(n -> Resource.valueOf(n.getText())).collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<Resource> resourcesRequired = new ArrayList<>();
-        for (var card : selectedDevCards) {
-            ArrayList<Resource> required = devCards.stream()
-                    .filter(c -> c.getCardID().equals(card))
-                    .map(c -> c.getProductionPower().getConsumedResources()).flatMap(p ->
-                            p.entrySet().stream().flatMap(entry -> new ArrayList<Resource>() {{
-                                for (int i = 0; i < entry.getValue(); i++)
-                                    add(entry.getKey());
-                            }}.stream())).collect(Collectors.toCollection(ArrayList::new));
-            resourcesRequired.addAll(required);
-        }
-        for (var card : selectedLeaderCards) {
-            ArrayList<Resource> required = leaderCards.stream()
-                    .filter(c -> c.getCardID().equals(card))
-                    .flatMap(c -> c.getLeaderPowers().stream())
-                    .map(power -> ((ProductionLeaderPower) power).getEffectPower().getConsumedResources())
-                    .flatMap(p -> p.entrySet().stream().flatMap(entry -> new ArrayList<Resource>() {{
-                        for (int i = 0; i < entry.getValue(); i++)
-                            add(entry.getKey());
-                    }}.stream())).collect(Collectors.toCollection(ArrayList::new));
-            resourcesRequired.addAll(required);
-        }
-        int opacity = 1;
-        opacity *= (resourcesProvided.size() >= resourcesRequired.size() + 2 * (personalPower ? 1 : 0)) ? 1 : 0;
-        ArrayList<Resource> aux = new ArrayList<>(resourcesProvided);
-        opacity *= resourcesRequired.stream().mapToInt(r -> aux.remove(r) ? 1 : 0).reduce(1, (a, b) -> a * b);
-        warningLabel.setOpacity(opacity == 1 ? 0 : 1);
-
-        opacity = (((personalPower ? 1 : 0) + selectedLeaderCards.size()) == resourcesOfChoiceList.getItems().size()) ? 0 : 1;
-        warningLabelOfChoice.setOpacity(opacity);*/
-    }
 
 }

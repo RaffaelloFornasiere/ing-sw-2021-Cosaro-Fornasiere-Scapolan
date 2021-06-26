@@ -125,7 +125,7 @@ public class NetworkAdapter {
         return true;
     }
     public void stopThread(){
-        stopThread=true;
+        receiver.closeConnection();
     }
 
     private void send(Event e) {
@@ -244,7 +244,6 @@ public class NetworkAdapter {
     public synchronized void GameEndedEventHandler(PropertyChangeEvent evt) {
         GameEndedEvent event = (GameEndedEvent) evt.getNewValue();
         view.displayEndOfGame(event.getFinalPlayerStates());
-        send(new QuitGameEvent(event.getPlayerId()));
         stopThread();
     }
 
