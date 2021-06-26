@@ -1,175 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<AnchorPane fx:id="root" onMouseClicked="#deselectLists" prefHeight="609.0" prefWidth="840.0"
-            stylesheets="@stylesheets/production.css" xmlns="http://javafx.com/javafx/16"
-            xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="550.0" prefWidth="515.0" stylesheets="@stylesheets/production.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox layoutX="320.0" layoutY="35.0">
+        <HBox layoutX="331.0" layoutY="484.0">
             <children>
-                <Label text="Warehouse" textFill="#393939">
-                    <VBox.margin>
-                        <Insets/>
-                    </VBox.margin>
-                    <font>
-                        <Font name="System Bold" size="13.0"/>
-                    </font>
-                </Label>
-                <ListView fx:id="warehouseList" prefHeight="156.0" prefWidth="200.0"/>
-                <Label text="Strongbox" textFill="#393939">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                    <font>
-                        <Font name="System Bold" size="13.0"/>
-                    </font>
-                </Label>
-                <ListView fx:id="strongboxList" prefHeight="156.0" prefWidth="200.0"/>
-                <Label text="Leader card depots" textFill="#393939">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                    <font>
-                        <Font name="System Bold" size="13.0"/>
-                    </font>
-                </Label>
-                <ListView fx:id="leaderDeportsResourcesList" prefHeight="156.0" prefWidth="200.0"/>
-            </children>
-        </VBox>
-        <VBox layoutX="592.0" layoutY="32.0">
-            <children>
-                <Label text="Resources to use" textFill="#393939">
-                    <font>
-                        <Font name="System Bold" size="13.0"/>
-                    </font>
-                </Label>
-                <ListView fx:id="resourcesToUse" prefHeight="289.0" prefWidth="200.0"/>
-            </children>
-        </VBox>
-        <Button layoutX="534.0" layoutY="201.0" mnemonicParsing="false" onAction="#removeFromToUse" prefHeight="34.0"
-                prefWidth="41.0">
-            <styleClass>
-                <String fx:value="arrow-button"/>
-                <String fx:value="arrow-button-left"/>
-            </styleClass>
-        </Button>
-        <Button layoutX="534.0" layoutY="247.0" mnemonicParsing="false" onAction="#moveIntoToUse" prefHeight="34.0"
-                prefWidth="41.0">
-            <styleClass>
-                <String fx:value="arrow-button"/>
-                <String fx:value="arrow-button-right"/>
-            </styleClass>
-        </Button>
-        <HBox layoutX="661.0" layoutY="538.0">
-            <children>
-                <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                        minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0"
-                        prefWidth="65.0" text="Cancel">
+                <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0" prefWidth="65.0" text="Cancel">
                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </HBox.margin>
                     <font>
-                        <Font name="System Bold" size="12.0"/>
+                        <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
-                <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                        minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0"
-                        prefWidth="65.0" text="Next">
+                <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNext" prefHeight="30.0" prefWidth="65.0" text="Next">
                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </HBox.margin>
                     <font>
-                        <Font name="System Bold" size="12.0"/>
+                        <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
             </children>
         </HBox>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="50.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@images/Front/DevCard40.png"/>
+                <Image url="@images/Front/DevCard40.png" />
             </image>
             <styleClass>
-                <String fx:value="devCard"/>
-                <String fx:value="selectable"/>
+                <String fx:value="devCard" />
+                <String fx:value="selectable" />
             </styleClass>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="207.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@images/Front/DevCard21.png"/>
+                <Image url="@images/Front/DevCard21.png" />
             </image>
             <styleClass>
-                <String fx:value="devCard"/>
-                <String fx:value="selectable"/>
+                <String fx:value="devCard" />
+                <String fx:value="selectable" />
             </styleClass>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="363.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="363.0" pickOnBounds="true" preserveRatio="true">
             <styleClass>
-                <String fx:value="selectable"/>
-                <String fx:value="devCard"/>
+                <String fx:value="selectable" />
+                <String fx:value="devCard" />
             </styleClass>
             <image>
-                <Image url="@images/Front/DevCard31.png"/>
+                <Image url="@images/Front/DevCard31.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="50.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
             <styleClass>
-                <String fx:value="selectable"/>
-                <String fx:value="leaderCard"/>
+                <String fx:value="selectable" />
+                <String fx:value="leaderCard" />
             </styleClass>
             <image>
-                <Image url="@images/leaders/LeaderCard16.png"/>
+                <Image url="@images/leaders/LeaderCard16.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="207.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true">
             <styleClass>
-                <String fx:value="selectable"/>
-                <String fx:value="leaderCard"/>
+                <String fx:value="selectable" />
+                <String fx:value="leaderCard" />
             </styleClass>
             <image>
-                <Image url="@images/leaders/LeaderCard8.png"/>
+                <Image url="@images/leaders/LeaderCard8.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="95.0" fitWidth="99.0" layoutX="140.0" layoutY="385.0" pickOnBounds="true"
-                   preserveRatio="true" styleClass="selectable">
+        <ImageView fitHeight="95.0" fitWidth="99.0" layoutX="140.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
             <image>
-                <Image url="@images/BasicProduction.png"/>
+                <Image url="@images/BasicProduction.png" />
             </image>
         </ImageView>
-        <Line endX="-36.6666259765625" endY="281.33331298828125" layoutX="300.0" layoutY="246.0"
-              startX="-36.6666259765625" startY="-226.00001525878906"/>
+        <Line endX="-36.6666259765625" endY="281.33331298828125" layoutX="300.0" layoutY="246.0" startX="-36.6666259765625" startY="-226.00001525878906" />
         <Label layoutX="28.0" layoutY="15.0" text="Select Productions" textFill="#393939">
             <font>
-                <Font name="System Bold" size="13.0"/>
+                <Font name="System Bold" size="13.0" />
             </font>
         </Label>
-        <ListView fx:id="resourcesOfChoiceList" layoutX="592.0" layoutY="406.0" prefHeight="112.0" prefWidth="200.0"/>
-        <Label layoutX="592.0" layoutY="384.0" text="Resources of choice" textFill="#393939">
+        <ListView fx:id="resourcesOfChoiceList" layoutX="286.0" layoutY="50.0" prefHeight="112.0" prefWidth="200.0" />
+        <Label layoutX="286.0" layoutY="24.0" text="Resources of choice" textFill="#393939">
             <font>
-                <Font name="System Bold" size="13.0"/>
+                <Font name="System Bold" size="13.0" />
             </font>
         </Label>
-        <Label id="addResourceOfChoiceButton" layoutX="778.0" layoutY="381.0" onMouseClicked="#onAddResourcesClicked"/>
-        <Label fx:id="warningLabel" layoutX="591.0" layoutY="339.0" style="-fx-opacity: 0;" text="Not enought resources"
-               textFill="#8b1010">
+        <Label id="addResourceOfChoiceButton" layoutX="484.0" layoutY="25.0" onMouseClicked="#onAddResourcesClicked" prefHeight="17.0" prefWidth="1.0" />
+        <Label fx:id="warningLabelOfChoice" layoutX="286.0" layoutY="172.0" style="-fx-opacity: 0;" text="Select resources of choice" textFill="#8b1010">
             <font>
-                <Font name="System Bold" size="13.0"/>
-            </font>
-        </Label>
-        <Label fx:id="warningLabelOfChoice" layoutX="592.0" layoutY="519.0" style="-fx-opacity: 0;"
-               text="Select resources of choice" textFill="#8b1010">
-            <font>
-                <Font name="System Bold" size="13.0"/>
+                <Font name="System Bold" size="13.0" />
             </font>
         </Label>
     </children>
