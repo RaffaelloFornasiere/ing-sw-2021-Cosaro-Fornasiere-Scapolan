@@ -7,6 +7,9 @@ import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.TurnState;
+import it.polimi.ingsw.ui.cli.Action;
+import it.polimi.ingsw.utilities.LockWrap;
 import it.polimi.ingsw.utilities.Pair;
 
 import java.util.ArrayList;
@@ -25,18 +28,22 @@ public class PlayerState {
     ProductionPower personalProductionPower;
 
     private int faithTrackPosition;
-    private HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
+    private HashMap<Integer, PopeFavorCard> popeFavorCards;
 
     HashMap<String, Boolean> leaderCards;
     HashMap<String, ArrayList<Boolean>> leaderPowerStates;
     Integer victoryPoints;
     Integer faithTrackPoints;
-    static Pair<Marble[][], Marble> marketStatus;
-    static String[][] devCardGrid;
+    static Pair<Marble[][], Marble> marketStatus = null;
+    static String[][] devCardGrid = null;
 
     ArrayList<Event> events;
+    LockWrap<Event> event;
     ChosenResourcesEvent chosenResources;
     Resource resourceOfChoice;
+
+    static ArrayList<Action> availableActions = new ArrayList<>();
+    static boolean canPerformActions;
 
     public PlayerState() {
         warehouse = new ArrayList<>();
@@ -54,19 +61,26 @@ public class PlayerState {
         popeFavorCards = new HashMap<>();
         leaderCards = new HashMap<>();
         leaderPowerStates = new HashMap<>();
+        event = new LockWrap<>(null, null);
         events = new ArrayList<>();
         victoryPoints = 0;
         faithTrackPoints = 0;
-        marketStatus = null;
-        devCardGrid = null;
 
+    }
+
+    public int getFaithTrackPosition() {
+        return faithTrackPosition;
     }
 
     public void setFaithTrackPosition(int position) {
         this.faithTrackPosition = position;
     }
 
-    public void setPopeFavorCards(HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+    public HashMap<Integer, PopeFavorCard> getPopeFavorCards() {
+        return new HashMap<>(popeFavorCards);
+    }
+
+    public void setPopeFavorCards(HashMap<Integer, PopeFavorCard> popeFavorCards) {
         this.popeFavorCards = new HashMap<>(popeFavorCards);
     }
 

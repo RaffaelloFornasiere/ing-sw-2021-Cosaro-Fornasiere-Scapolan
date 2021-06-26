@@ -102,12 +102,7 @@ public class NetworkAdapter {
         sender = new NetworkHandlerSender(server);
         receiver = new NetworkHandlerReceiver(server);
 
-        new Thread(() -> {
-            while (!stopThread) {
-                receiver.receive();
-            }
-
-        }).start();
+        new Thread(() -> receiver.receive()).start();
 
 
 
@@ -123,7 +118,7 @@ public class NetworkAdapter {
         return true;
     }
     public void stopThread(){
-        stopThread=true;
+        receiver.closeConnection();
     }
 
     private void send(Event e) {

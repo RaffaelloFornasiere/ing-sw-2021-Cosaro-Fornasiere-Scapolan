@@ -157,11 +157,21 @@ public class LeaderCardView {
         ArrayList<LeaderPower> leaderPowers = card.getLeaderPowers();
         ArrayList<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < leaderPowers.size(); i++) {
+                indexes.add(i);
+        }
+        return indexes;
+    }
+    public ArrayList<Integer> getSelectableDepositPowersIndexes() {
+        ArrayList<LeaderPower> leaderPowers = card.getLeaderPowers();
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < leaderPowers.size(); i++) {
             if (!(leaderPowers.get(i) instanceof DepositLeaderPower))
                 indexes.add(i);
         }
         return indexes;
     }
+
+
 
 
     public ArrayList<LeaderPower> getLeaderPowersActive() {
