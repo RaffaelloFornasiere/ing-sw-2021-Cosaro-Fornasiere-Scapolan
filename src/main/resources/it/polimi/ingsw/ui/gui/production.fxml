@@ -34,7 +34,7 @@
                 </Button>
             </children>
         </HBox>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="50.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@images/Front/DevCard40.png" />
             </image>
@@ -43,7 +43,7 @@
                 <String fx:value="selectable" />
             </styleClass>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="207.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@images/Front/DevCard21.png" />
             </image>
@@ -52,7 +52,7 @@
                 <String fx:value="selectable" />
             </styleClass>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="363.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="363.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true">
             <styleClass>
                 <String fx:value="selectable" />
                 <String fx:value="devCard" />
@@ -61,7 +61,7 @@
                 <Image url="@images/Front/DevCard31.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="50.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true">
             <styleClass>
                 <String fx:value="selectable" />
                 <String fx:value="leaderCard" />
@@ -70,7 +70,7 @@
                 <Image url="@images/leaders/LeaderCard16.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="144.0" layoutY="207.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true">
             <styleClass>
                 <String fx:value="selectable" />
                 <String fx:value="leaderCard" />
@@ -79,7 +79,7 @@
                 <Image url="@images/leaders/LeaderCard8.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="95.0" fitWidth="99.0" layoutX="140.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
+        <ImageView fitHeight="95.0" fitWidth="99.0" layoutX="140.0" layoutY="385.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
             <image>
                 <Image url="@images/BasicProduction.png" />
             </image>
@@ -97,7 +97,7 @@
             </font>
         </Label>
         <Label id="addResourceOfChoiceButton" layoutX="484.0" layoutY="25.0" onMouseClicked="#onAddResourcesClicked" prefHeight="17.0" prefWidth="1.0" />
-        <Label fx:id="warningLabelOfChoice" layoutX="286.0" layoutY="172.0" style="-fx-opacity: 0;" text="Select resources of choice" textFill="#8b1010">
+        <Label fx:id="warningLabelOfChoice" layoutX="286.0" layoutY="172.0" style="-fx-opacity: 0;" text="not enough resources of choice" textFill="#8b1010">
             <font>
                 <Font name="System Bold" size="13.0" />
             </font>

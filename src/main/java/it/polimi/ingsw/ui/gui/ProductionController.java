@@ -2,7 +2,6 @@ package it.polimi.ingsw.ui.gui;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateProductionEvent;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
@@ -13,7 +12,6 @@ import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.Pair;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -214,49 +211,42 @@ public class ProductionController extends Controller implements Initializable {
         stage.close();
     }
 
-    public void checkResources()
-    {
+    public void checkResources() {
         int opacity = (((personalPower ? 1 : 0) + selectedLeaderCards.size()) == resourcesOfChoiceList.getItems().size()) ? 0 : 1;
         warningLabelOfChoice.setOpacity(opacity);
     }
 
+
     @FXML
     public void onNext() {
-        if (selectedProductions.size() == 0)
+        if (getResourcesRequired().size() == 0) {
             ((Stage) root.getScene().getWindow()).close();
+            return;
+        }
 
 
-        gui.addEvent(new ActivateProductionEvent(gui.askUserID(), new ArrayList<>(
-                selectedProductions.stream()
-                        .map(Pair::getKey)
-                        .filter(r -> r.getImage().getUrl().contains("DevCard"))
-                        .map(i -> {
-                            String url = i.getImage().getUrl();
-                            System.out.println(url);
-                            url = url.substring(url.lastIndexOf("/", url.lastIndexOf(".")));
-                            System.out.println(url);
-                            return url;
-                        }).collect(Collectors.toList())), personalPower));
-        Platform.runLater(() -> {
-            HashMap<Resource, Integer> requiredResources = new HashMap<>() {{
-                getResourcesRequired().forEach(n -> put(n, getOrDefault(n, 0) + 1));
-            }};
+        gui.addEvent(new ActivateProductionEvent(gui.askUserID(), selectedDevCards, personalPower));
 
-            Stage stage = new Stage();
-            SelectResourcesController selectResourcesController = new SelectResourcesController(gui, requiredResources, personalPower ? 2 : 0);
-            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectresources.fxml"));
-            loader.setController(selectResourcesController);
-            try {
-                stage.setScene(loader.load());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            stage.showAndWait();
-            gui.addEvent(selectResourcesController.getResult());
-        });
+        HashMap<Resource, Integer> requiredResources = new HashMap<>() {{
+            getResourcesRequired().forEach(n -> put(n, getOrDefault(n, 0) + 1));
+        }};
 
+        Stage stage = new Stage();
 
+        stage.initModality(Modality.APPLICATION_MODAL);
+        SelectResourcesController selectResourcesController = new SelectResourcesController(gui, requiredResources, personalPower ? 2 : 0);
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectresources.fxml"));
+        loader.setController(selectResourcesController);
+        try {
+            stage.setScene(new Scene(loader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.showAndWait();
+        gui.addEvent(selectResourcesController.getResult());
         ((Stage) root.getScene().getWindow()).close();
+
+
     }
 
     @FXML

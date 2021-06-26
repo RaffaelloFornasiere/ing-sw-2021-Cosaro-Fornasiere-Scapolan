@@ -2,24 +2,32 @@ package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenResourcesEvent;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.utilities.LockWrap;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.checkerframework.checker.units.qual.A;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SelectResourcesController extends Controller implements Initializable {
 
+    LockWrap<Boolean> dataReady = new LockWrap<>(false, false);
 
     @FXML
     ListView<Label> warehouseList;
@@ -37,8 +45,9 @@ public class SelectResourcesController extends Controller implements Initializab
 
     ArrayList<Resource> resourcesRequired;
     int resourcesOfChoice;
+
     SelectResourcesController(GUI gui, HashMap<Resource, Integer> required, int resourcesOfChoice) {
-        super();
+        super(gui);
         resourcesRequired = new ArrayList<>(){{
             required.forEach((key, value) -> {
                 for (int i = 0; i < value; i++)
@@ -50,6 +59,8 @@ public class SelectResourcesController extends Controller implements Initializab
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        dataReady.setItem(false);
         ArrayList<Label> marbles = (ArrayList<Label>) gui.thisPlayerState().warehouse.stream().flatMap(n -> (new ArrayList<String>() {{
             for (int i = 0; i < n.getCurrentQuantity(); i++)
                 add(n.getResourceType().name());
@@ -69,9 +80,11 @@ public class SelectResourcesController extends Controller implements Initializab
         leaderDeportsResourcesList.getItems().addAll(marbles);
         leaderDeportsResourcesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         resourcesToUse.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        checkResources();
     }
 
     public ChosenResourcesEvent getResult() {
+        dataReady.getWaitIfLocked();
         HashMap<Resource, Integer> allResources = new HashMap<>();
         HashMap<Resource, Integer> fromWareHouse = new HashMap<>();
         HashMap<Resource, Integer> fromLeadersDepots = new HashMap<>();
@@ -90,12 +103,15 @@ public class SelectResourcesController extends Controller implements Initializab
     }
 
     public void onNext() {
+        dataReady.setItem(true);
         if (warningLabel.getOpacity() > 0) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "you don't have enough resources to perform action", ButtonType.OK);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
             return;
         }
+
+        ((Stage) root.getScene().getWindow()).close();
     }
 
     @FXML
