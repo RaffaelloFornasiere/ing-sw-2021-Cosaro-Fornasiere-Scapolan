@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -29,6 +30,8 @@ public class MarketController extends Controller implements Initializable {
     @FXML
     Button nextButton;
 
+    @FXML
+    AnchorPane root;
     Direction dir;
     int index;
 
@@ -39,32 +42,42 @@ public class MarketController extends Controller implements Initializable {
     String marbleLeft;
 
 
-    MarketController(GUI gui, Marble[][] marketStatus, Marble marbleLeft) {
+    MarketController(GUI gui) {
+
         this.marketStatus = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath() + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
-        for (int i = 0; i < marketStatus.length; i++) {
+        for (int i = 0; i < PlayerState.marketStatus.getKey().length; i++) {
             this.marketStatus.add(new ArrayList<String>());
-            for (int j = 0; j < marketStatus[0].length; j++) {
-                String url = "file:/" + imagePath + marketStatus[i][j].toString().toLowerCase() + "-marble.png";
+            for (int j = 0; j < PlayerState.marketStatus.getKey()[0].length; j++) {
+                String url = "file:/" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
                 System.out.println(url);
                 this.marketStatus.get(i).add(url);
             }
         }
-        this.marbleLeft = "file:/" + imagePath + marbleLeft.toString().toLowerCase() + "-marble.png";
+        this.marbleLeft = "file:/" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
+
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (!PlayerState.canPerformActions) {
+            SelectableImage.getChildrenOf(root).stream().filter(n -> n.getStyleClass().contains("arrow-button"))
+                    .forEach(n -> n.setDisable(true));
+            nextButton.setDisable(true);
+        }
+
         var marbles = gridPane.getChildren()
                 .stream().filter(n -> n instanceof ImageView)
                 .map(i -> (ImageView) i).collect(Collectors.toList());
+
+
         for (var marble : marbles) {
             marble.setImage(new Image(marketStatus.get(marble.getId().charAt(2) - '0')
                     .get(marble.getId().charAt(1) - '0')));
         }
         marbleLeftImage.setImage(new Image(marbleLeft));
-        if (gui == null)
-            nextButton.disabledProperty();
+
 
     }
 
@@ -86,7 +99,7 @@ public class MarketController extends Controller implements Initializable {
     }
 
     public void onCancel() throws IOException {
-        ((Stage)gridPane.getScene().getWindow()).close();
+        ((Stage) gridPane.getScene().getWindow()).close();
     }
 
     public void onNext() {

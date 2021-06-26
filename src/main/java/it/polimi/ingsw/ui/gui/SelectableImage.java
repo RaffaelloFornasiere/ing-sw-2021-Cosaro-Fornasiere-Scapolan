@@ -27,7 +27,7 @@ public class SelectableImage {
      * @param parent starting point
      * @return an array-list of  all sub-nodes
      */
-    private static ArrayList<Node> getChildrenOf(Parent parent) {
+    public static ArrayList<Node> getChildrenOf(Parent parent) {
         ArrayList<Node> nodes = new ArrayList<>();
         for (Node node : parent.getChildrenUnmodifiable()) {
             nodes.add(node);

@@ -1518,7 +1518,6 @@ public class CLI extends UI {
 //            }).start();
             out.println("[31;1;4m" + playerID + " " + turnState.getDescription() + "\033[0m \n\n");
             displayOthers();
-
         } else {
             Action selectedAction = null;
             switch (turnState) {

@@ -3,7 +3,9 @@ package it.polimi.ingsw.ui.gui;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenResourcesEvent;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.LockWrap;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
@@ -27,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class SelectResourcesController extends Controller implements Initializable {
 
-    LockWrap<Boolean> dataReady = new LockWrap<>(false, false);
+    LockWrap<Boolean> dataReady = new LockWrap<>(null, null);
 
     @FXML
     ListView<Label> warehouseList;
@@ -55,12 +58,22 @@ public class SelectResourcesController extends Controller implements Initializab
             });
         }};
         this.resourcesOfChoice = resourcesOfChoice;
+
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Platform.runLater(() -> {
+            root.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent we) {
+                    dataReady.setItem(false);
+                }
+            });
+        });
 
-        dataReady.setItem(false);
+        dataReady.setItem(null);
+
         ArrayList<Label> marbles = (ArrayList<Label>) gui.thisPlayerState().warehouse.stream().flatMap(n -> (new ArrayList<String>() {{
             for (int i = 0; i < n.getCurrentQuantity(); i++)
                 add(n.getResourceType().name());
@@ -84,7 +97,9 @@ public class SelectResourcesController extends Controller implements Initializab
     }
 
     public ChosenResourcesEvent getResult() {
-        dataReady.getWaitIfLocked();
+
+        if(!dataReady.getWaitIfLocked())
+            return null;
         HashMap<Resource, Integer> allResources = new HashMap<>();
         HashMap<Resource, Integer> fromWareHouse = new HashMap<>();
         HashMap<Resource, Integer> fromLeadersDepots = new HashMap<>();
@@ -103,13 +118,13 @@ public class SelectResourcesController extends Controller implements Initializab
     }
 
     public void onNext() {
-        dataReady.setItem(true);
         if (warningLabel.getOpacity() > 0) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "you don't have enough resources to perform action", ButtonType.OK);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
             return;
         }
+        dataReady.setItem(true);
 
         ((Stage) root.getScene().getWindow()).close();
     }
@@ -176,7 +191,5 @@ public class SelectResourcesController extends Controller implements Initializab
         ArrayList<Resource> aux = new ArrayList<>(resourcesProvided);
         opacity *= resourcesRequired.stream().mapToInt(r -> aux.remove(r) ? 1 : 0).reduce(1, (a, b) -> a * b);
         warningLabel.setOpacity(opacity == 1 ? 0 : 1);
-
-
     }
 }

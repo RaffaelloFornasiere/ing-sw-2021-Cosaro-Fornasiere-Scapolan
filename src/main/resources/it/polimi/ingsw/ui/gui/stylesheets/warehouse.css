@@ -6,40 +6,6 @@
 }
 
 
-.list-view {
-    -fx-background-color: #ffffff10;
-}
-
-
-.list-cell > .label {
-    -fx-text-fill: black; /* 5 */
-}
-
-.list-cell:odd {
-    -fx-background-color: rgba(83, 83, 83, 0.25); /* 1 */
-}
-
-.list-cell:even {
-    -fx-background-color: rgba(113, 113, 113, 0.25); /* for information */
-}
-
-.list-cell:selected {
-    -fx-background-color: rgba(147, 147, 198, 0.57);
-}
-
-#warehouseListCell {
-    -fx-background-color: rgba(147, 147, 198, 0.57);
-}
-
-#strongboxListCell {
-    -fx-background-color: rgba(198, 147, 147, 0.57);
-}
-
-#leaderCardListCell {
-    -fx-background-color: rgba(171, 198, 147, 0.57);
-}
-
-
 .button {
     -fx-background-radius: 20 20 20 20;
     -fx-border-radius: 20 20 20 20;
@@ -94,11 +60,32 @@ arrow-button-left {
     -fx-border-color: #dba76d;
 }
 
-
 .selectable {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
 
 .hoverBorder {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+}
+
+
+.Coin {
+    -fx-image: url(../images/coin.png);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
+
+}
+
+.Servant {
+    -fx-image: url(../images/servant.png);
+
+}
+
+.Rock {
+    -fx-image: url(../images/stone.png);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
+
+}
+
+.Shield {
+    -fx-image: url(../images/shield.png);
 }
