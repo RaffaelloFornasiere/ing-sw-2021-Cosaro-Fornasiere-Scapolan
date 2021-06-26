@@ -72,7 +72,7 @@ public class MainViewController extends Controller implements Initializable {
     public void openMarket() throws IOException {
         Stage marketStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("market.fxml"));
-        fxmlLoader.setController(new MarketController(gui, PlayerState.marketStatus.getKey(), PlayerState.marketStatus.getValue()));
+        fxmlLoader.setController(new MarketController(gui));
         Scene scene = new Scene(fxmlLoader.load());
         marketStage.initModality(Modality.APPLICATION_MODAL);
         marketStage.setScene(scene);
@@ -80,7 +80,6 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openCardGrid(MouseEvent event) throws IOException {
-        //System.out.println(((Node)event.getSource()).getId());
         Stage gridStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("devcardgrid.fxml"));
         fxmlLoader.setController(new DevCardGridController(gui));
@@ -91,6 +90,9 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openProduction() throws IOException {
+        if(!PlayerState.canPerformActions)
+            return;
+
         Stage productionStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("production.fxml"));
         fxmlLoader.setController(new ProductionController(gui));

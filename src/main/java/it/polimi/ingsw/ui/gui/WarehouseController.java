@@ -16,10 +16,6 @@ public class WarehouseController {
         depots.add(new ArrayList<>(){{add("");}});
         depots.add(new ArrayList<>(){{add(""); add("");}});
         depots.add(new ArrayList<>(){{add(""); add(""); add("");}});
-
-
-
-
     }
 
 }

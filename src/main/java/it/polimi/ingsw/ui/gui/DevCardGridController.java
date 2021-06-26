@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -19,6 +20,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -35,6 +37,8 @@ public class DevCardGridController extends Controller implements Initializable {
     GridPane grid;
     String selected;
 
+    @FXML
+    Button nextButton;
 
     int devCardSlot;
 
@@ -54,7 +58,10 @@ public class DevCardGridController extends Controller implements Initializable {
             images.get(i).setImage(new Image(imageUrl +
                     PlayerState.devCardGrid[2-i % 3][i / 3] + ".png"));
         }
-
+        if(!PlayerState.canPerformActions)
+        {
+            nextButton.setDisable(true);
+        }
         SelectableImage.setSelectable(root);
     }
 
@@ -115,7 +122,6 @@ public class DevCardGridController extends Controller implements Initializable {
         if(res != null) {
             gui.addEvent(new BuyDevCardsEvent(gui.askUserID(), selected, devCardSlot));
             gui.addEvent(res);
-
         }((Stage) root.getScene().getWindow()).close();
     }
 

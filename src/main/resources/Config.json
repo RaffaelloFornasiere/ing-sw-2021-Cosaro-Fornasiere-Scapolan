@@ -13,8 +13,8 @@
     2,
     3
   ],
-  "marketRows": 4,
-  "marketColumns": 3,
+  "marketRows": 3,
+  "marketColumns": 4,
   "marbles": {
     "BLUE": 2,
     "RED": 1,

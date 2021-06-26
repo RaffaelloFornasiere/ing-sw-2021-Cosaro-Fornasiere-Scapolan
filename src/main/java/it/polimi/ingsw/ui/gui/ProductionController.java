@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.ProductionLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.ui.cli.Action;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.Pair;
@@ -37,10 +38,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProductionController extends Controller implements Initializable {
@@ -92,11 +90,11 @@ public class ProductionController extends Controller implements Initializable {
                 var devCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + deck.get(deck.size() - 1) + ".json")), DevCard.class);
                 devCards.add(devCard);
             }
-
-            for (var card : gui.thisPlayerState().leaderCards.keySet()) {
-                var leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
-                leaderCards.add(leaderCard);
-            }
+            if (PlayerState.availableActions.contains(Action.LEADER_ACTION))
+                for (var card : gui.thisPlayerState().leaderCards.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toList())) {
+                    var leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                    leaderCards.add(leaderCard);
+                }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -244,7 +242,7 @@ public class ProductionController extends Controller implements Initializable {
         }
         stage.showAndWait();
         var res = selectResourcesController.getResult();
-        if(res != null)
+        if (res != null)
             gui.addEvent(res);
         ((Stage) root.getScene().getWindow()).close();
 
