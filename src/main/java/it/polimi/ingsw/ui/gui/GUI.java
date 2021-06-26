@@ -164,9 +164,9 @@ public class GUI extends UI {
                     PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
 
                     Stage stage = new Stage();
-                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainview.fxml"));
-                    MainViewController mainViewController = new MainViewController(aux);
-                    fxmlLoader.setController(mainViewController);
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("warehouse.fxml"));
+                    WarehouseController warehouseController= new WarehouseController(aux);
+                    fxmlLoader.setController(warehouseController);
                     try {
                         stage.setScene(new Scene(fxmlLoader.load()));
                     } catch (IOException e) {

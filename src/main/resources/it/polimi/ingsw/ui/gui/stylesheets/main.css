@@ -6,6 +6,9 @@
 
 }
 
+.Resource{
+
+}
 
 .Coin {
     -fx-image: url(../images/coin.png);
