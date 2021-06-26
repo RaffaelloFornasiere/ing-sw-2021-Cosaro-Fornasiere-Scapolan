@@ -243,7 +243,9 @@ public class ProductionController extends Controller implements Initializable {
             e.printStackTrace();
         }
         stage.showAndWait();
-        gui.addEvent(selectResourcesController.getResult());
+        var res = selectResourcesController.getResult();
+        if(res != null)
+            gui.addEvent(res);
         ((Stage) root.getScene().getWindow()).close();
 
 

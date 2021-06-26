@@ -5,13 +5,10 @@ import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.DevCards.DevCardGrid;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
-import it.polimi.ingsw.ui.cli.Action;
 import it.polimi.ingsw.utilities.LockWrap;
 import it.polimi.ingsw.utilities.Pair;
 import javafx.application.Application;
@@ -26,10 +23,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 
 public class GUI extends UI {
@@ -58,7 +53,7 @@ public class GUI extends UI {
 
     HashMap<String, PlayerState> playerStates;
 
-    public PlayerState thisPlayerState(){
+    public PlayerState thisPlayerState() {
         return playerStates.get(playerID.getItem());
     }
 
@@ -115,22 +110,41 @@ public class GUI extends UI {
 
                     aux.thisPlayerState().leaderCards.put("LeaderCard15", false);
                     aux.thisPlayerState().updateLeaderCardDepositState("LeaderCard15", 0,
-                            new HashMap<>(){{
+                            new HashMap<>() {{
                                 put(Resource.COIN, 2);
                                 put(Resource.SERVANT, 1);
-                    }});
+                            }});
                     aux.thisPlayerState().warehouse = warehouse;
                     aux.thisPlayerState().strongBox = strongBox;
                     aux.thisPlayerState().faithTrackPoints = 4;
                     aux.thisPlayerState().victoryPoints = 15;
+                    ArrayList<ArrayList<Integer>> indexes = new ArrayList<>();
+                    for (int i = 0; i < 3; i++) {
+                        int finalI = i;
+                        indexes.add(new ArrayList<>() {{
+                            int base = (finalI)*16 ;
+                            add(1 + base);
+                            add(2 + base);
+                            add(3 + base);
+                            add(4 + base);
+                        }});
+                    }
 
-                    int rows = 3; int cols = 4;
+                    PlayerState.devCardGrid = new String[3][4];
+                    for (int i = 0; i < PlayerState.devCardGrid.length; i++) {
+                        for (int j = 0; j < PlayerState.devCardGrid[0].length; j++) {
+                            int index = indexes.get(i).get(j);
+                            PlayerState.devCardGrid[i][j] = "DevCard" + index;
+                        }
+                    }
+
+
+                    int rows = 3;
+                    int cols = 4;
                     PlayerState.devCardGrid = new String[rows][cols];
-                    for(int i = 0; i < rows; i++)
-                    {
-                        for(int j = 0; j < cols; j++)
-                        {
-                            int level = i*16+1;
+                    for (int i = 0; i < rows; i++) {
+                        for (int j = 0; j < cols; j++) {
+                            int level = i * 16 + 1;
                             PlayerState.devCardGrid[i][j] = "DevCard" + (level + j);
                             //System.out.println(aux.playerState.devCardGrid[i][j]);
                         }
@@ -305,7 +319,7 @@ public class GUI extends UI {
 
     @Override
     public void initializeMatchObjects() {
-        for(String playerID: lobbyController.getPlayers()){
+        for (String playerID : lobbyController.getPlayers()) {
             playerStates.put(playerID, new PlayerState());
         }
     }
@@ -347,7 +361,7 @@ public class GUI extends UI {
         playerState.setFaithTrackPosition(position);
         playerState.setPopeFavorCards(popeFavorCards.get(playerID));
 
-        if(playerID.equals(this.playerID.getItem())){
+        if (playerID.equals(this.playerID.getItem())) {
             mainViewController.faithTrackController.setPosition(position);
             mainViewController.faithTrackController.setPopeFavorCards(popeFavorCards);
         }
@@ -357,10 +371,10 @@ public class GUI extends UI {
     public void updateDashboard(String playerID, ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse) {
         PlayerState playerState = playerStates.get(playerID);
 
-        for(int i=0; i<Math.min(topDevCards.size(), 3); i++){
+        for (int i = 0; i < Math.min(topDevCards.size(), 3); i++) {
             String dcID = topDevCards.get(i);
             ArrayList<String> slot = playerState.ownedCards.get(i);
-            if(!slot.get(slot.size()-1).equals(dcID))
+            if (!slot.get(slot.size() - 1).equals(dcID))
                 slot.add(dcID);
         }
 
@@ -374,7 +388,7 @@ public class GUI extends UI {
     public void updateLeaderCardsState(String playerID, HashMap<String, Boolean> leaderCards) {
         PlayerState playerState = playerStates.get(playerID);
         playerState.leaderCards = new HashMap<>(leaderCards);
-        for(String lcID: leaderCards.keySet())
+        for (String lcID : leaderCards.keySet())
             playerState.leaderPowerStates.putIfAbsent(lcID, new ArrayList<>());
     }
 
@@ -394,7 +408,7 @@ public class GUI extends UI {
         PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.TAKE_RESOURCES_FROM_MARKET);
 
         PlayerState.canPerformActions = true;
-        BuyResourcesEvent e = (BuyResourcesEvent)thisPlayerState().event.getWaitIfLocked();
+        BuyResourcesEvent e = (BuyResourcesEvent) thisPlayerState().event.getWaitIfLocked();
         thisPlayerState().event.setItem(null);
         //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
         PlayerState.canPerformActions = false;
@@ -408,7 +422,7 @@ public class GUI extends UI {
         PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.BUY_DEVCARD);
 
         PlayerState.canPerformActions = true;
-        BuyDevCardsEvent e = (BuyDevCardsEvent)thisPlayerState().event.getWaitIfLocked();
+        BuyDevCardsEvent e = (BuyDevCardsEvent) thisPlayerState().event.getWaitIfLocked();
         thisPlayerState().event.setItem(null);
         //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
         PlayerState.canPerformActions = false;
@@ -422,7 +436,7 @@ public class GUI extends UI {
         PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.PRODUCE);
 
         PlayerState.canPerformActions = true;
-        ActivateProductionEvent e = (ActivateProductionEvent)thisPlayerState().event.getWaitIfLocked();
+        ActivateProductionEvent e = (ActivateProductionEvent) thisPlayerState().event.getWaitIfLocked();
         thisPlayerState().event.setItem(null);
         //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
         PlayerState.canPerformActions = false;
@@ -432,13 +446,14 @@ public class GUI extends UI {
 
     //TODO missing a way to differentiate it with activate
     @Override
-    public String askForLeaderCardToDiscard() throws NotPresentException{
-        if(!thisPlayerState().leaderCards.containsValue(false)) throw new NotPresentException("No leader card can be discarded");
+    public String askForLeaderCardToDiscard() throws NotPresentException {
+        if (!thisPlayerState().leaderCards.containsValue(false))
+            throw new NotPresentException("No leader card can be discarded");
         PlayerState.availableActions = new ArrayList<>();
         PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.LEADER_ACTION);
 
         PlayerState.canPerformActions = true;
-        String leaderCardID = ((ActivateLeaderCardEvent)thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
+        String leaderCardID = ((ActivateLeaderCardEvent) thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
         thisPlayerState().event.setItem(null);
         //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
         PlayerState.canPerformActions = false;
@@ -448,13 +463,14 @@ public class GUI extends UI {
 
     //TODO missing a way to differentiate it with discard
     @Override
-    public String askForLeaderCardToActivate() throws NotPresentException{
-        if(!thisPlayerState().leaderCards.containsValue(false)) throw new NotPresentException("No leader card can be activated");
+    public String askForLeaderCardToActivate() throws NotPresentException {
+        if (!thisPlayerState().leaderCards.containsValue(false))
+            throw new NotPresentException("No leader card can be activated");
         PlayerState.availableActions = new ArrayList<>();
         PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.LEADER_ACTION);
 
         PlayerState.canPerformActions = true;
-        String leaderCardID = ((ActivateLeaderCardEvent)thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
+        String leaderCardID = ((ActivateLeaderCardEvent) thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
         thisPlayerState().event.setItem(null);
         //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
         PlayerState.canPerformActions = false;
@@ -465,12 +481,13 @@ public class GUI extends UI {
     @Override
     public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
         ArrayList<LeaderPowerSelectStateEvent> events = new ArrayList<>();
-        if(!thisPlayerState().leaderCards.containsValue(true)) throw new NotPresentException("No leader card is active");
+        if (!thisPlayerState().leaderCards.containsValue(true))
+            throw new NotPresentException("No leader card is active");
         PlayerState.availableActions = new ArrayList<>();
         PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.SELECT_LEADER_CARD);
 
         PlayerState.canPerformActions = true;
-        events.add((LeaderPowerSelectStateEvent)thisPlayerState().event.getWaitIfLocked());
+        events.add((LeaderPowerSelectStateEvent) thisPlayerState().event.getWaitIfLocked());
         thisPlayerState().event.setItem(null);
         //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
         PlayerState.canPerformActions = false;
@@ -482,7 +499,7 @@ public class GUI extends UI {
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
         ArrayList<Event> events = new ArrayList<>();
         PlayerState.availableActions = new ArrayList<>();
-        switch(turnState){
+        switch (turnState) {
             case START -> {
                 PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.TAKE_RESOURCES_FROM_MARKET);
                 PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.BUY_DEVCARD);
@@ -504,7 +521,7 @@ public class GUI extends UI {
                 PlayerState.availableActions.add(it.polimi.ingsw.ui.cli.Action.END_TURN);
             }
         }
-        if(playerID.equals(this.playerID.getItem())) {
+        if (playerID.equals(this.playerID.getItem())) {
             PlayerState.canPerformActions = true;
             //null is the lockingState
             events.add(thisPlayerState().event.getWaitIfLocked());
