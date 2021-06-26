@@ -6,6 +6,7 @@ import it.polimi.ingsw.controller.EventRegistry;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
+import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.HeartbeatEvent;
@@ -106,6 +107,7 @@ public class NetworkAdapter {
             while (!stopThread) {
                 receiver.receive();
             }
+            System.out.println("Stopped thread");
 
         }).start();
 
@@ -242,6 +244,7 @@ public class NetworkAdapter {
     public synchronized void GameEndedEventHandler(PropertyChangeEvent evt) {
         GameEndedEvent event = (GameEndedEvent) evt.getNewValue();
         view.displayEndOfGame(event.getFinalPlayerStates());
+        send(new QuitGameEvent(event.getPlayerId()));
         stopThread();
     }
 

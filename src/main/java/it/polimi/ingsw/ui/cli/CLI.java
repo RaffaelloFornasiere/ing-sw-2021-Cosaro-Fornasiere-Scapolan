@@ -1259,8 +1259,10 @@ public class CLI extends UI {
         ArrayList<Pair<String, String>> gridSelection = new ArrayList<>();
         String[][] grid = devCardGridView.getTopDevCardIDs();
         for (String[] strings : grid) {
-            for (int j = 0; j < grid[0].length; j++) {
-                gridSelection.add(new Pair<>(strings[j], Color.WHITE.getAnsiCode()));
+                for (int j = 0; j < grid[0].length; j++) {
+                    if (strings[j]!=null){
+                    gridSelection.add(new Pair<>(strings[j], Color.WHITE.getAnsiCode()));
+                }
             }
         }
         int input1 = displaySelectionForm(gridSelection, null, 1, "DEVELOPMENT CARDS AVAILABLE : \n").get(0);
@@ -1414,15 +1416,14 @@ public class CLI extends UI {
                 }
                 case DISPLAY_DASHBOARD -> {
                     int inputPlayer;
-                    if(players.size()!=1) {
+                    if (players.size() != 1) {
                         ArrayList<Pair<String, String>> allPlayers;
                         allPlayers = players.stream().map(player -> {
                             if (player.equals(thisPlayer)) return "YOURS";
                             else return player;
                         }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
                         inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE DASHBOARD WOULD YOU LIKE TO SEE? \n").get(0);
-                    }
-                    else{
+                    } else {
                         inputPlayer = 0;
                     }
                     playerStates.get(players.get(inputPlayer)).getDashBoard().displayAll(players.get(inputPlayer));
@@ -1434,15 +1435,14 @@ public class CLI extends UI {
                 }
                 case DISPLAY_LEADER_CARD -> {
                     int inputPlayer;
-                    if(players.size()!=1) {
+                    if (players.size() != 1) {
                         ArrayList<Pair<String, String>> allPlayers;
                         allPlayers = players.stream().map(player -> {
                             if (player.equals(thisPlayer)) return "YOURS";
                             else return player;
                         }).map(player -> new Pair<>(player, Color.WHITE.getAnsiCode())).collect(Collectors.toCollection(ArrayList::new));
                         inputPlayer = displaySelectionForm(allPlayers, null, 1, "WHOSE LEADER CARDS WOULD YOU LIKE TO SEE? \n").get(0);
-                    }
-                    else{
+                    } else {
                         inputPlayer = 0;
                     }
 
@@ -1706,6 +1706,12 @@ public class CLI extends UI {
         builder.append(buildBorderOfLength(maxNameLength + 2, "╔", "╦"));
         builder.append(buildBorderOfLength("Total Scores".length() + 1, "═", "╦"));
         builder.append(buildBorderOfLength("Total Resources".length() + 1, "═", "╗\n"));
+
+        builder.append("║ ").append(buildContent(maxNameLength, "")).append(" ║ Total Scores ║ Total Resources ║\n");
+        builder.append(buildBorderOfLength(maxNameLength + 2, "╠", "╬"));
+        builder.append(buildBorderOfLength("Total Scores".length() + 1, "═", "╬"));
+        builder.append(buildBorderOfLength("Total Resources".length() + 1, "═", "╣\n"));
+
         for (int i = 0; i < finalPlayerStates.size() - 1; i++) {
             FinalPlayerState FPstate = finalPlayerStates.get(i);
             builder.append("║ ").append(buildContent(maxNameLength, FPstate.getPlayerID()));
@@ -1738,9 +1744,11 @@ public class CLI extends UI {
 
         out.println("WHEN YOU WANT TO QUIT THE GAME, TYPE 'QUIT'\n");
         String answer = in.nextLine();
-        while (answer.equalsIgnoreCase("QUIT")) {
+        while (!answer.equalsIgnoreCase("QUIT")) {
             answer = in.nextLine();
         }
+        System.out.println("Game Ended");
+
     }
 
     /**
@@ -1815,9 +1823,7 @@ public class CLI extends UI {
     }
 
     private boolean leaderDepositContainsResourceType(ArrayList<InfoPower> arrayOfInfoPowers, Resource res) {
-        return arrayOfInfoPowers.stream().map(infoPower -> {
-            return infoPower.getPower().getMaxResources().containsKey(res);
-        }).reduce(false, (a, b) -> a || b);
+        return arrayOfInfoPowers.stream().map(infoPower -> infoPower.getPower().getMaxResources().containsKey(res)).reduce(false, (a, b) -> a || b);
     }
 
     /**
@@ -1957,11 +1963,11 @@ public class CLI extends UI {
             depositCategory.add(new Pair<>("WAREHOUSE", Color.WHITE.getAnsiCode()));
             if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(inputs2.get(0))))
                 depositCategory.add(new Pair<>("EXTRA DEPOSITS", Color.WHITE.getAnsiCode()));
-            if (!isEmptyHashMap(strongBoxHashMap) && strongBoxHashMap.containsKey(justResources.get(inputs2.get(0))) && strongBoxHashMap.get(justResources.get(inputs2.get(0)))!=0)
+            if (!isEmptyHashMap(strongBoxHashMap) && strongBoxHashMap.containsKey(justResources.get(inputs2.get(0))) && strongBoxHashMap.get(justResources.get(inputs2.get(0))) != 0)
                 depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
             ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, depositCategory.size(), "WHERE WOULD YOU LIKE TO TAKE THE RESOURCES FROM?\n ");
             inputs.forEach(input -> {
-                if(required.containsKey(justResources.get(inputs2.get(0)))) {
+                if (required.containsKey(justResources.get(inputs2.get(0)))) {
                     out.print("HAVE A LOOK AT THE CURRENT TOTAL QUANTITY OF RESOURCES IN THE " + depositCategory.get(input).getKey() + "\n");
 
                     switch (input) {
@@ -2771,20 +2777,6 @@ public class CLI extends UI {
     }*/
 
     // displayEndOfGame
-//    public static void main(String[] args) {
-//        ArrayList<FinalPlayerState> finals= new ArrayList<>();
-//        FinalPlayerState f1= new FinalPlayerState("Gigi", 2, 4);
-//        FinalPlayerState f2= new FinalPlayerState("Paolo", 4, 10);
-//        FinalPlayerState f3= new FinalPlayerState("Gigi123", 31, 4);
-//        FinalPlayerState f4= new FinalPlayerState("Giorgia", 22, 14);
-//        FinalPlayerState f5= new FinalPlayerState("Federico", 2, 4);
-//        finals.add(f1);
-//        finals.add(f2);
-//        finals.add(f3);
-//        finals.add(f4);
-//        finals.add(f5);
-//
-//    }
 
 
 }

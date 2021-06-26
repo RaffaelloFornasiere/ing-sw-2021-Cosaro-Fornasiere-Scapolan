@@ -59,7 +59,7 @@ public class FaithTrackData extends Observable {
      * @param card is a popeFavorCard to add
      */
     public void addPopeFavorCard(int n, PopeFavorCard card)  {
-        if(!(FaithTrack.getArrayOfCells().get(n) instanceof PopeCell)) throw  new IllegalArgumentException("Wrong key in the hashMap of Favor Pope Cars, because for that index index there is no PopeCell in the FaithTrack");
+        if(!(FaithTrack.getArrayOfCells().get(n) instanceof PopeCell)) throw  new IllegalArgumentException("Wrong key in the hashMap of Favor Pope Cars, because for that index there is no PopeCell in the FaithTrack");
         acquiredPopeFavorCards.put(n, card);
         notifyObservers();
     }

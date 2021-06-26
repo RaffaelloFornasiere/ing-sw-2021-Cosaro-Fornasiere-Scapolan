@@ -5,10 +5,8 @@ import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.DevCards.DevCardGrid;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.utilities.LockWrap;
@@ -25,10 +23,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 
 public class GUI extends UI {
@@ -484,11 +480,11 @@ public class GUI extends UI {
         playerStates.get(playerID).leaderPowerStates.put(leaderCardID, new ArrayList<>(powerSelectedStates));
     }
 
-    //TODO
     @Override
     public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
 
     }
+
 
     //TODO
     @Override

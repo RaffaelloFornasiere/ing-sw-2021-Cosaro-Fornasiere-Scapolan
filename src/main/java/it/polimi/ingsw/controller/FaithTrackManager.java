@@ -30,7 +30,14 @@ public class FaithTrackManager {
         try {
             ft.incrementPosition(n);
         } catch (OutOfBoundException e) {
-            e.printStackTrace();
+           System.out.println(p+" reached the end of faithTrack");
+            try {
+                ft.setPosition(FaithTrack.size()-1);
+                IntStream.range(beforePosition, FaithTrack.size()).forEach(i -> FaithTrack.getArrayOfCells().get(i).activateEffect(this.matchState));
+                this.matchState.setLastRound();
+            } catch (OutOfBoundException outOfBoundException) {
+                outOfBoundException.printStackTrace();
+            }
         }
         int afterPosition = ft.getPosition();
         IntStream.range(beforePosition, afterPosition + 1).forEach(i -> FaithTrack.getArrayOfCells().get(i).activateEffect(this.matchState));

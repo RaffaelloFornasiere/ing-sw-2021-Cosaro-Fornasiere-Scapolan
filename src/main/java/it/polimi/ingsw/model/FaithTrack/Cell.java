@@ -44,4 +44,6 @@ public class Cell extends AbstractCell implements Serializable {
         return victoryPoints;
     }
 
+
+
 }

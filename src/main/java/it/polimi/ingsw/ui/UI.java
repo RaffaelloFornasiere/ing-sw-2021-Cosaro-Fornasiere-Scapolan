@@ -102,10 +102,11 @@ public abstract class UI {
 
     public abstract void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates);
 
+
     /**
      * Asks the user to give the displacement of marbles USED
      *
-     * @param resources resources to put in whareouse
+     * @param resources resources to put in wareouse
      * @return 3 arraylist with the marbles
      */
     abstract public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources);
