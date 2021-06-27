@@ -100,8 +100,21 @@ public class MainViewController extends Controller implements Initializable {
         productionStage.initModality(Modality.APPLICATION_MODAL);
         productionStage.setScene(scene);
         productionStage.showAndWait();
-        if (productionStage.isFullScreen())
-            System.out.println("");
+
+    }
+
+    public void openDepots() throws IOException {
+        if (!PlayerState.canPerformActions)
+            return;
+
+        Stage depotsStage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("warehouse.fxml"));
+        fxmlLoader.setController(new WarehouseController(gui));
+        Scene scene = new Scene(fxmlLoader.load());
+        depotsStage.initModality(Modality.APPLICATION_MODAL);
+        depotsStage.setScene(scene);
+        depotsStage.showAndWait();
+
     }
 
 

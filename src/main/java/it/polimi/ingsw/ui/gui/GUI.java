@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
@@ -167,9 +168,9 @@ public class GUI extends UI {
                     PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
 
                     Stage stage = new Stage();
-                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("warehouse.fxml"));
-                    WarehouseController warehouseController = new WarehouseController(aux);
-                    fxmlLoader.setController(warehouseController);
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainview.fxml"));
+                    MainViewController mainViewController = new MainViewController(aux);
+                    fxmlLoader.setController(mainViewController);
                     try {
                         stage.setScene(new Scene(fxmlLoader.load()));
                     } catch (IOException e) {

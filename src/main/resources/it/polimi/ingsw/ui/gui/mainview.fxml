@@ -25,7 +25,7 @@
     <left>
         <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="178.0" stylesheets="@stylesheets/main.css" BorderPane.alignment="CENTER">
             <children>
-                <AnchorPane>
+                <AnchorPane onMouseClicked="#openDepots">
                     <children>
                         <ImageView fitHeight="224.0" fitWidth="213.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0">
                             <image>
@@ -67,7 +67,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
                 </AnchorPane>
-            <AnchorPane prefHeight="119.0" prefWidth="178.0">
+            <AnchorPane onMouseClicked="#openDepots" prefHeight="119.0" prefWidth="178.0">
                <children>
                   <ImageView fitHeight="129.0" fitWidth="120.0" layoutX="29.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
                      <image>
