@@ -105,6 +105,7 @@ public class ServerSettingsController extends Controller implements Initializabl
         System.out.println(ip);
         try {
             serverAddress = InetAddress.getByName(ip);
+            gui.setServerAddress(serverAddress);
         } catch (UnknownHostException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Hostname is unreachable ", ButtonType.OK);
             alert.showAndWait();

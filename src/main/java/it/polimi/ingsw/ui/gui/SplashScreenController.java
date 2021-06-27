@@ -11,6 +11,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -62,6 +63,7 @@ public class SplashScreenController extends Controller implements Initializable 
 
 
     public void switchToLogin() throws IOException {
+        gui.setServerAddress(InetAddress.getByName("127.0.0.1"));
         MainApplication.setScene("login", super.gui.loginController);
     }
 

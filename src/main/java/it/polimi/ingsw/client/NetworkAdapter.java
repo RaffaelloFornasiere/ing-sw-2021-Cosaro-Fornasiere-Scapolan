@@ -46,12 +46,14 @@ public class NetworkAdapter {
 
         for (var event : events) {
             try {
+
                 Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
                         PropertyChangeEvent.class);
                 receiver.getEventRegistry().addPropertyChangeListener(event.getSimpleName(), x -> {
                     try {
                         method.invoke(this, x);
                     } catch (IllegalAccessException | InvocationTargetException e) {
+                        System.out.println(event.getSimpleName());
                         e.printStackTrace();
                     }
                 });

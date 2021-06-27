@@ -88,9 +88,15 @@ public class WarehouseController extends Controller implements Initializable {
             add(resources.get(5));
         }});
 
+
+        Resource leaderDepotType1 = Resource.COIN;
 //        ((AnchorPane)leaderDepots.getChildren().get(0)).getChildren().stream().filter(n -> n.getStyleClass().contains("Resource"))
 //                .map(n -> (ImageView)n)
-
+        String imageName = leaderDepotType1.toString().toLowerCase() + ".png";
+        imageName = "LeaderDepot" + String.valueOf(imageName.charAt(0)).toUpperCase() + imageName.substring(1);
+        ((AnchorPane)leaderDepots.getChildren().get(0)).getChildren().stream().filter(n -> !n.getStyleClass().contains("Resource"))
+                .map(n -> (ImageView)n)
+                .collect(Collectors.toList()).get(0).setImage(new Image(imagePath + imageName + ".png"));
 
     }
 
@@ -232,17 +238,6 @@ public class WarehouseController extends Controller implements Initializable {
     }
 
 
-    public void onCancel() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
-
-    public void onNext() {
-        ArrayList<DepotState> depots = new ArrayList<>();
-        ArrayList<DepositLeaderPowerStateEvent> leaderDepots = new ArrayList<>();
-
-        gui.addEvent(new NewResourcesOrganizationEvent(gui.askUserID(), depots, leaderDepots, discardResources));
-    }
-
 
     public void openBin(DragEvent event) {
         AnchorPane target = (AnchorPane) event.getTarget();
@@ -284,4 +279,18 @@ public class WarehouseController extends Controller implements Initializable {
 
         event.consume();
     }
+
+
+
+    public void onCancel() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
+
+    public void onNext() {
+        ArrayList<DepotState> depots = new ArrayList<>();
+        ArrayList<DepositLeaderPowerStateEvent> leaderDepots = new ArrayList<>();
+
+        gui.addEvent(new NewResourcesOrganizationEvent(gui.askUserID(), depots, leaderDepots, discardResources));
+    }
+
 }

@@ -86,7 +86,7 @@ public class GUI extends UI {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    playerID.setItem("paolo");
+                    /*playerID.setItem("paolo");
                     playerStates.put(playerID.getItem(), new PlayerState());
 
                     HashMap<Resource, Integer> strongBox = new HashMap<>() {{
@@ -172,7 +172,7 @@ public class GUI extends UI {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    stage.show();
+                    stage.show();*/
 
 
                 }
