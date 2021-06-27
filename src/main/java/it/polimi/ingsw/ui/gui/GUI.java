@@ -86,7 +86,7 @@ public class GUI extends UI {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    /*playerID.setItem("paolo");
+                    playerID.setItem("paolo");
                     playerStates.put(playerID.getItem(), new PlayerState());
 
                     HashMap<Resource, Integer> strongBox = new HashMap<>() {{
@@ -109,8 +109,11 @@ public class GUI extends UI {
                     aux.thisPlayerState().ownedCards.get(2).add("DevCard26");
                     aux.thisPlayerState().ownedCards.get(2).add("DevCard35");
 
-                    aux.thisPlayerState().leaderCards.put("LeaderCard15", true);
-                    aux.thisPlayerState().leaderCards.put("LeaderCard10", false);
+                    aux.thisPlayerState().leaderCards.put("LeaderCard5", true);
+                    aux.thisPlayerState().leaderCards.put("LeaderCard6", false);
+                    aux.thisPlayerState().leaderCards.put("LeaderCard7", false);
+                    aux.thisPlayerState().leaderCards.put("LeaderCard8", false);
+
 
                     aux.thisPlayerState().updateLeaderCardDepositState("LeaderCard15", 0,
                             new HashMap<>() {{
@@ -172,7 +175,7 @@ public class GUI extends UI {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    stage.show();*/
+                    stage.show();
 
 
                 }

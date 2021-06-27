@@ -71,3 +71,34 @@ arrow-button-left {
 .bin {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.7), 5, 0, 0, 0);
 }
+
+
+
+
+
+#leaderDepotCoin{
+    -fx-background-image: url(../images/LeaderDepotCoin.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+#leaderDepotRock{
+    -fx-background-image: url(../images/LeaderDepotRock.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+#leaderDepotShield{
+    -fx-background-image: url(../images/LeaderDepotShield.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+#leaderDepotServant{
+    -fx-background-image: url(../images/LeaderDepotServant.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}

@@ -1,20 +1,34 @@
 package it.polimi.ingsw.ui.gui;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
+import it.polimi.ingsw.model.LeaderCards.LeaderCard;
+import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
+import it.polimi.ingsw.utilities.GsonPairAdapter;
+import it.polimi.ingsw.utilities.Pair;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -27,8 +41,10 @@ public class WarehouseController extends Controller implements Initializable {
     AnchorPane root;
     HashMap<Resource, Integer> discardResources;
 
+
     @FXML
-    AnchorPane leaderDepots;
+    ArrayList<ArrayList<ImageView>> leaderDepotsResources;
+
     @FXML
     AnchorPane warehouse;
 
@@ -36,26 +52,13 @@ public class WarehouseController extends Controller implements Initializable {
     AnchorPane mainViewWarehouse;
 
 
-    ArrayList<ArrayList<String>> resourcesImages;
     ArrayList<ArrayList<ImageView>> depots;
+
+    ArrayList<DepotState> leaderDepots;
 
     public WarehouseController(GUI gui) {
         super(gui);
-        resourcesImages = new ArrayList<>(3);
-        resourcesImages.add(new ArrayList<>() {{
-            add("");
-        }});
-        resourcesImages.add(new ArrayList<>() {{
-            add("");
-            add("");
-        }});
-        resourcesImages.add(new ArrayList<>() {{
-            add("");
-            add("");
-            add("");
-        }});
-
-
+        discardResources = new HashMap<>();
     }
 
     @Override
@@ -89,58 +92,94 @@ public class WarehouseController extends Controller implements Initializable {
         }});
 
 
-        Resource leaderDepotType1 = Resource.COIN;
-//        ((AnchorPane)leaderDepots.getChildren().get(0)).getChildren().stream().filter(n -> n.getStyleClass().contains("Resource"))
-//                .map(n -> (ImageView)n)
-        String imageName = leaderDepotType1.toString().toLowerCase() + ".png";
-        imageName = "LeaderDepot" + String.valueOf(imageName.charAt(0)).toUpperCase() + imageName.substring(1);
-        ((AnchorPane)leaderDepots.getChildren().get(0)).getChildren().stream().filter(n -> !n.getStyleClass().contains("Resource"))
-                .map(n -> (ImageView)n)
-                .collect(Collectors.toList()).get(0).setImage(new Image(imagePath + imageName + ".png"));
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
+        Gson gson = builder.create();
+
+
+        HashMap<Resource, Integer> depotsInfo = new HashMap<>();
+        gui.thisPlayerState().leaderCards.forEach((key1, value1) -> {
+            try {
+                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + key1 + ".json")), LeaderCard.class);
+                leaderCard.getLeaderPowers().stream().filter(card -> card instanceof DepositLeaderPower)
+                        .forEach(power -> ((DepositLeaderPower) power).getMaxResources()
+                                .forEach((key, value) -> depotsInfo.put(key, depotsInfo.getOrDefault(key, 0) + value))
+                        );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        leaderDepots = new ArrayList<>() {{
+            for (Resource r : Resource.values())
+                add(new DepotState(r, depotsInfo.getOrDefault(r, 0), 0));
+        }};
+
 
     }
 
     public void onDragDetected(MouseEvent event) {
-        ImageView source = (ImageView) event.getSource();
-        /* drag was detected, start a drag-and-drop gesture*/
-        /* allow any transfer mode */
-        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
 
-        /* Put a string on a dragboard */
-        ClipboardContent content = new ClipboardContent();
-        content.putString(source.getImage().getUrl());
-        db.setContent(content);
+        if(event.getSource() instanceof ImageView) {
+            ImageView source = (ImageView) event.getSource();
+            Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+
+            /* Put a string on a dragboard */
+            ClipboardContent content = new ClipboardContent();
+            content.putString(source.getImage().getUrl());
+            db.setContent(content);
+            event.consume();
+        }
+        else if (event.getSource() instanceof AnchorPane)
+        {
+
+        }
+    }
+
+    public void onDragDroppedOnLeader(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        if (db.hasString()) {
+            AnchorPane target = ((AnchorPane) ((Node) event.getTarget()).getParent());
+            Resource res = Resource.valueOf(target.getId().replace("leaderDepot", "").toUpperCase());
+            DepotState depotState = leaderDepots.stream().filter(n -> n.getResourceType() == res).collect(Collectors.toList()).get(0);
+            depotState.tryAddResource(res, 1);
+            Label count = target.getChildren().stream().filter(n -> n instanceof Label)
+                    .map(n -> (Label) n)
+                    .collect(Collectors.toList()).get(0);
+            count.setText(String.valueOf(depotState.getCurrentQuantity()));
+            success = true;
+        }
+
+        event.setDropCompleted(success);
         event.consume();
     }
 
     public void onDragDropped(DragEvent event) {
-        /* data dropped */
-        /* if there is a string data on dragboard, read it and use it */
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (db.hasString()) {
             ((ImageView) event.getTarget()).setImage(new Image(db.getString()));
             success = true;
         }
-        /* let the source know whether the string was successfully
-         * transferred and used */
         event.setDropCompleted(success);
         event.consume();
     }
 
     public void onDragDroppedOnBin(DragEvent event) {
-        /* data dropped */
-        /* if there is a string data on dragboard, read it and use it */
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (db.hasString()) {
             String s = db.getString();
             s = s.substring(s.lastIndexOf("/") + 1, s.lastIndexOf(".")).toUpperCase();
-            discardResources.put(Resource.valueOf(s), discardResources.getOrDefault(s, 0));
+            s = s.substring(0, s.length() - 1);
+            System.out.println(s);
+            Resource r = Resource.valueOf(s);
+            discardResources.put(r, discardResources.getOrDefault(r, 0) + 1);
             success = true;
         }
-        /* let the source know whether the string was successfully
-         * transferred and used */
+
         event.setDropCompleted(success);
         event.consume();
     }
@@ -154,33 +193,45 @@ public class WarehouseController extends Controller implements Initializable {
     }
 
     public void onDragOver(DragEvent event) {
-        Node target = (Node) event.getSource();
-        /* data is dragged over the target */
-        /* accept it only if it is not dragged from the same node
-         * and if it has a string data */
+        Node target = (Node) event.getTarget();
         if (event.getGestureSource() != target) {
-            var styleClass = target.getParent().getStyleClass().stream().filter(n -> n.contains("leader")).findFirst().orElse(null);
-            if (styleClass != null) {
-                String type = styleClass.replace("leaderDepot", "");
+            Parent parent = target.getParent();
+            // if it is hovering a leader depot
+
+            if (parent instanceof AnchorPane &&
+                    parent.getId() != null &&
+                    parent.getId().contains("leader")) {
+                String type = parent.getId().replace("leaderDepot", "");
                 type = type.toUpperCase();
-                Resource resourceType = Resource.valueOf(type);
                 String url = event.getDragboard().getString();
+                // check the compatibility of the resource dragged
+                // with the one of the leader depot
                 if (url.toUpperCase().contains(type)) {
-                    event.acceptTransferModes(TransferMode.MOVE);
+                    Resource resource = Resource.valueOf(type);
+                    //if exist some free compatible depot
+                    if (leaderDepots.stream().anyMatch(depot -> depot.getResourceType().equals(resource)
+                            && depot.getCurrentQuantity() < depot.getMaxQuantity()))
+                        event.acceptTransferModes(TransferMode.MOVE);
                 }
-            } else if (target instanceof AnchorPane && target.getId().equals("bin")) {
+            }
+            // of is hovering the trash bin
+            else if (parent instanceof AnchorPane &&
+                    parent.getId() != null &&
+                    parent.getId().equals("bin")) {
                 event.acceptTransferModes(TransferMode.MOVE);
-            } else {
+            }
+            // if it is hovering a warehouse depot
+            else if (event.getSource() instanceof ImageView) {
                 ImageView source = (ImageView) event.getSource();
                 if (source.getImage() == null) {
-                    AnchorPane parent = ((AnchorPane) source.getParent());
-                    int i = parent.getChildren().indexOf(source);
+                    AnchorPane parent2 = ((AnchorPane) source.getParent());
+                    int i = parent2.getChildren().indexOf(source);
                     String type = event.getDragboard().getString();
                     System.out.println("sourceres: " + type);
                     switch (i) {
                         case 1 -> event.acceptTransferModes(TransferMode.MOVE);
                         case 2 -> {
-                            ImageView sibling = (ImageView) parent.getChildren().get(i + 1);
+                            ImageView sibling = (ImageView) parent2.getChildren().get(i + 1);
                             if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
                             if (sibling.getImage() == null ||
@@ -188,7 +239,7 @@ public class WarehouseController extends Controller implements Initializable {
                                 event.acceptTransferModes(TransferMode.MOVE);
                         }
                         case 3 -> {
-                            ImageView sibling = (ImageView) parent.getChildren().get(i - 1);
+                            ImageView sibling = (ImageView) parent2.getChildren().get(i - 1);
                             if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
                             if (sibling.getImage() == null ||
@@ -196,47 +247,50 @@ public class WarehouseController extends Controller implements Initializable {
                                 event.acceptTransferModes(TransferMode.MOVE);
                         }
                         case 4 -> {
-                            ImageView sibling = (ImageView) parent.getChildren().get(i + 1);
-                            ImageView sibling2 = (ImageView) parent.getChildren().get(i + 2);
+                            ImageView sibling = (ImageView) parent2.getChildren().get(i + 1);
+                            ImageView sibling2 = (ImageView) parent2.getChildren().get(i + 2);
                             if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
                             if (sibling2.getImage() != null)
                                 System.out.println("siblings2: " + sibling2.getImage().getUrl());
                             if ((sibling.getImage() == null && sibling2.getImage() == null) ||
-                                    Objects.requireNonNullElse(sibling, sibling2).getImage().getUrl().contains(type))
+                                    Objects.requireNonNullElse(sibling.getImage(), sibling2.getImage()).getUrl().contains(type))
                                 event.acceptTransferModes(TransferMode.MOVE);
                         }
                         case 5 -> {
-                            ImageView sibling = (ImageView) parent.getChildren().get(i + 1);
-                            ImageView sibling2 = (ImageView) parent.getChildren().get(i - 1);
+                            ImageView sibling = (ImageView) parent2.getChildren().get(i + 1);
+                            ImageView sibling2 = (ImageView) parent2.getChildren().get(i - 1);
+
                             if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
                             if (sibling2.getImage() != null)
                                 System.out.println("siblings2: " + sibling2.getImage().getUrl());
+
                             if ((sibling.getImage() == null && sibling2.getImage() == null) ||
-                                    Objects.requireNonNullElse(sibling, sibling2).getImage().getUrl().contains(type))
+                                    Objects.requireNonNullElse(sibling.getImage(), sibling2.getImage()).getUrl().contains(type))
                                 event.acceptTransferModes(TransferMode.MOVE);
+
                         }
                         case 6 -> {
-                            ImageView sibling = (ImageView) parent.getChildren().get(i - 1);
-                            ImageView sibling2 = (ImageView) parent.getChildren().get(i - 1);
+                            ImageView sibling = (ImageView) parent2.getChildren().get(i - 1);
+                            ImageView sibling2 = (ImageView) parent2.getChildren().get(i - 1);
                             if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
                             if (sibling2.getImage() != null)
                                 System.out.println("siblings2: " + sibling2.getImage().getUrl());
                             if ((sibling.getImage() == null && sibling2.getImage() == null) ||
-                                    Objects.requireNonNullElse(sibling, sibling2).getImage().getUrl().contains(type))
+                                    Objects.requireNonNullElse(sibling.getImage(), sibling2.getImage()).getUrl().contains(type))
                                 event.acceptTransferModes(TransferMode.MOVE);
                         }
                     }
                 }
+
             }
 
         }
 
         event.consume();
     }
-
 
 
     public void openBin(DragEvent event) {
@@ -247,6 +301,8 @@ public class WarehouseController extends Controller implements Initializable {
                     return true;
                 return false;
             }).findFirst().orElse(null);
+            if (image == null)
+                return;
             double k = Math.min(image.getFitWidth() / image.getImage().getWidth(), image.getFitHeight() / image.getImage().getHeight());
             double width = image.getImage().getWidth() * k;
             double height = image.getImage().getHeight() * k;
@@ -262,24 +318,23 @@ public class WarehouseController extends Controller implements Initializable {
 
     public void closeBin(DragEvent event) {
         AnchorPane target = (AnchorPane) event.getTarget();
-        if (event.getGestureSource() != target) {
-            ImageView image = (ImageView) target.getChildren().stream().filter(n -> {
-                if (n.getId() != null && n.getId().equals("binTop"))
-                    return true;
-                return false;
-            }).findFirst().orElse(null);
+        ImageView image = (ImageView) target.getChildren().stream().filter(n -> {
+            if (n.getId() != null && n.getId().equals("binTop"))
+                return true;
+            return false;
+        }).findFirst().orElse(null);
+        if (image == null)
+            return;
+        double k = Math.min(image.getFitWidth() / image.getImage().getWidth(), image.getFitHeight() / image.getImage().getHeight());
+        double width = image.getImage().getWidth() * k;
+        double height = image.getImage().getHeight() * k;
+        image.setRotate(0);
+        image.setTranslateX(0);
+        image.setTranslateY(0);
 
-            double k = Math.min(image.getFitWidth() / image.getImage().getWidth(), image.getFitHeight() / image.getImage().getHeight());
-            double width = image.getImage().getWidth() * k;
-            double height = image.getImage().getHeight() * k;
-            image.setRotate(0);
-            image.setTranslateX(0);
-            image.setTranslateY(0);
-        }
 
         event.consume();
     }
-
 
 
     public void onCancel() {

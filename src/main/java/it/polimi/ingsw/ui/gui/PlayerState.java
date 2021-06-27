@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.cli.Action;
 import it.polimi.ingsw.utilities.LockWrap;
+import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Pair;
 
 import java.util.ArrayList;
@@ -19,18 +20,25 @@ public class PlayerState {
     ArrayList<DepotState> warehouse;
     HashMap<Resource, Integer> strongBox;
 
+    //for buying
     private final HashMap<Resource, Integer> leaderDepots;
+
+
+
     private final HashMap<String, ArrayList<HashMap<Resource, Integer>>> leaderDepotsState;
 
     ArrayList<ArrayList<String>> ownedCards;
-
     ProductionPower personalProductionPower;
 
     private int faithTrackPosition;
     private HashMap<Integer, PopeFavorCard> popeFavorCards;
 
     HashMap<String, Boolean> leaderCards;
-    HashMap<String, ArrayList<Boolean>> leaderPowerStates;
+    HashMap<String, ArrayList<Boolean>> leaderPowerStates; // perché un array di booleani?
+
+
+
+
     Integer victoryPoints;
     Integer faithTrackPoints;
     static Pair<Marble[][], Marble> marketStatus = null;
@@ -64,7 +72,6 @@ public class PlayerState {
         events = new ArrayList<>();
         victoryPoints = 0;
         faithTrackPoints = 0;
-
     }
 
     public int getFaithTrackPosition() {
