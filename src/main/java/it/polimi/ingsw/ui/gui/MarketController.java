@@ -103,9 +103,9 @@ public class MarketController extends Controller implements Initializable {
     }
 
     public void onNext() {
-        if (gui != null) {
+
             gui.addEvent(new BuyResourcesEvent(gui.askUserID(), dir, index));
-        }
+
     }
 
 

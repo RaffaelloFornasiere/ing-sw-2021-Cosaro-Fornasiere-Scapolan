@@ -68,24 +68,6 @@ arrow-button-left {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
 
-
-.Coin {
-    -fx-image: url(../images/coin.png);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
-
-}
-
-.Servant {
-    -fx-image: url(../images/servant.png);
-
-}
-
-.Rock {
-    -fx-image: url(../images/stone.png);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
-
-}
-
-.Shield {
-    -fx-image: url(../images/shield.png);
+.bin{
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.7), 5, 0, 0, 0);
 }

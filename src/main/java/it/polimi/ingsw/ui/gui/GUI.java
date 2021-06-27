@@ -98,7 +98,7 @@ public class GUI extends UI {
                     ArrayList<DepotState> warehouse = new ArrayList<>() {{
                         add(new DepotState(Resource.COIN, 1, 1));
                         add(new DepotState(Resource.SHIELD, 2, 2));
-                        add(new DepotState(Resource.ROCK, 3, 3));
+                        add(new DepotState(Resource.SERVANT, 3, 3));
 
                     }};
 
