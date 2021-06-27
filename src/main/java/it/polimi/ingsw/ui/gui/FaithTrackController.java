@@ -51,6 +51,7 @@ public class FaithTrackController {
      * and the node of the cell.
      * Then it calculates the zero position of the
      * player's cross and place it there.
+     *
      * @param faithTrack
      */
     FaithTrackController(GridPane faithTrack) {
@@ -95,10 +96,11 @@ public class FaithTrackController {
      * update the current position of the player to his new position
      * and executes the animation to move the player's cross in
      * the new player's position on the faith track
+     *
      * @param newPosition the new position of the player
      */
     public void setPosition(int newPosition) {
-        if(newPosition == position)
+        if (newPosition == position)
             return;
 
         ArrayList<TranslateTransition> path = new ArrayList<>();

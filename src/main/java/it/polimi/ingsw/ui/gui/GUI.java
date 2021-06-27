@@ -165,7 +165,7 @@ public class GUI extends UI {
 
                     Stage stage = new Stage();
                     FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("warehouse.fxml"));
-                    WarehouseController warehouseController= new WarehouseController(aux);
+                    WarehouseController warehouseController = new WarehouseController(aux);
                     fxmlLoader.setController(warehouseController);
                     try {
                         stage.setScene(new Scene(fxmlLoader.load()));

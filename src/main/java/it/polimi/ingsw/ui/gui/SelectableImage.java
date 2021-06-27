@@ -7,11 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 
@@ -24,6 +21,7 @@ public class SelectableImage {
 
     /**
      * retrieves all sub-nodes of a given parent
+     *
      * @param parent starting point
      * @return an array-list of  all sub-nodes
      */
@@ -39,6 +37,7 @@ public class SelectableImage {
 
     /**
      * set a border for sub-nodes of root market as selectable or hoverBorder
+     *
      * @param root starting point
      */
     static public void setSelectable(Parent root) {
@@ -71,7 +70,7 @@ public class SelectableImage {
             String css =
                     "    -fx-border-color: rgba(0, 176, 255, 0.85);\n" +
                             "    -fx-border-width: 7px;\n" +
-                            "    -fx-border-radius: " + width*0.1 + "px;" +
+                            "    -fx-border-radius: " + width * 0.1 + "px;" +
                             "    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);\n";
 
             border.setStyle(css);
@@ -90,7 +89,7 @@ public class SelectableImage {
 
 
             //controls the border
-           // System.out.println(image.getImage().getUrl());
+            // System.out.println(image.getImage().getUrl());
             if (image.getStyleClass().contains("selectable")) {
                 image.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
                     if (!border.getId().contains("selected")) {

@@ -7,8 +7,7 @@ public abstract class Controller {
     protected boolean confirmable;
     Scene previousScene;
 
-    public void setPreviousScene(Scene previousScene)
-    {
+    public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
     }
 

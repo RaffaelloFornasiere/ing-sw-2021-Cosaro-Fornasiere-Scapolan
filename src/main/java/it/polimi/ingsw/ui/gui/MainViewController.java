@@ -90,7 +90,7 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openProduction() throws IOException {
-        if(!PlayerState.canPerformActions)
+        if (!PlayerState.canPerformActions)
             return;
 
         Stage productionStage = new Stage();
@@ -100,7 +100,7 @@ public class MainViewController extends Controller implements Initializable {
         productionStage.initModality(Modality.APPLICATION_MODAL);
         productionStage.setScene(scene);
         productionStage.showAndWait();
-        if(productionStage.isFullScreen())
+        if (productionStage.isFullScreen())
             System.out.println("");
     }
 

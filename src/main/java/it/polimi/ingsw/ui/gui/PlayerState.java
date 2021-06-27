@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.ui.cli.Action;
 import it.polimi.ingsw.utilities.LockWrap;
 import it.polimi.ingsw.utilities.Pair;
@@ -49,7 +48,7 @@ public class PlayerState {
         warehouse = new ArrayList<>();
         strongBox = new HashMap<>();
         leaderDepots = new HashMap<>();
-        for(Resource r: Resource.values()){
+        for (Resource r : Resource.values()) {
             leaderDepots.put(r, 0);
         }
         leaderDepotsState = new HashMap<>();
@@ -93,18 +92,17 @@ public class PlayerState {
         ArrayList<HashMap<Resource, Integer>> leaderPowersDeposit = leaderDepotsState.get(leaderCardID);
 
 
-        if(leaderPowerIndex<leaderPowersDeposit.size()){
+        if (leaderPowerIndex < leaderPowersDeposit.size()) {
             HashMap<Resource, Integer> oldStoredResources = leaderPowersDeposit.get(leaderPowerIndex);
-            for(Resource r: Resource.values()){
+            for (Resource r : Resource.values()) {
                 leaderDepots.put(r, leaderDepots.get(r) - oldStoredResources.getOrDefault(r, 0) + storedResources.getOrDefault(r, 0));
             }
             leaderPowersDeposit.set(leaderPowerIndex, storedResources);
-        }
-        else{
-            for(Resource r: storedResources.keySet()){
+        } else {
+            for (Resource r : storedResources.keySet()) {
                 leaderDepots.put(r, leaderDepots.get(r) + storedResources.get(r));
             }
-            for(int i = leaderPowersDeposit.size(); i<leaderPowerIndex; i++) {
+            for (int i = leaderPowersDeposit.size(); i < leaderPowerIndex; i++) {
                 leaderPowersDeposit.add(new HashMap<>());
             }
             leaderPowersDeposit.add(storedResources);

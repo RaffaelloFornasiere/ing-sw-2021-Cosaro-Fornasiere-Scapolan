@@ -20,7 +20,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -56,10 +55,9 @@ public class DevCardGridController extends Controller implements Initializable {
         imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
         for (int i = 0; i < images.size(); i++) {
             images.get(i).setImage(new Image(imageUrl +
-                    PlayerState.devCardGrid[2-i % 3][i / 3] + ".png"));
+                    PlayerState.devCardGrid[2 - i % 3][i / 3] + ".png"));
         }
-        if(!PlayerState.canPerformActions)
-        {
+        if (!PlayerState.canPerformActions) {
             nextButton.setDisable(true);
         }
         SelectableImage.setSelectable(root);
@@ -119,10 +117,11 @@ public class DevCardGridController extends Controller implements Initializable {
         }
         stage.showAndWait();
         var res = selectResourcesController.getResult();
-        if(res != null) {
+        if (res != null) {
             gui.addEvent(new BuyDevCardsEvent(gui.askUserID(), selected, devCardSlot));
             gui.addEvent(res);
-        }((Stage) root.getScene().getWindow()).close();
+        }
+        ((Stage) root.getScene().getWindow()).close();
     }
 
 

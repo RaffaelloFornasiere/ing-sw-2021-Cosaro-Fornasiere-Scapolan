@@ -2,7 +2,6 @@ package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.model.Direction;
-import it.polimi.ingsw.model.Marble;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -104,7 +103,7 @@ public class MarketController extends Controller implements Initializable {
 
     public void onNext() {
 
-            gui.addEvent(new BuyResourcesEvent(gui.askUserID(), dir, index));
+        gui.addEvent(new BuyResourcesEvent(gui.askUserID(), dir, index));
 
     }
 

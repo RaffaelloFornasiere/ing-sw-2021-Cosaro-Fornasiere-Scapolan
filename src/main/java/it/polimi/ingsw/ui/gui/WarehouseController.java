@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.checkerframework.checker.units.qual.A;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class WarehouseController extends Controller implements Initializable {
 
     @FXML
     AnchorPane mainViewWarehouse;
-
 
 
     ArrayList<ArrayList<String>> resourcesImages;
@@ -64,18 +62,17 @@ public class WarehouseController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         depots = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath();
-        imagePath = "file:/" + imagePath.substring(0, imagePath.length()-2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imagePath = "file:/" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         String finalImagePath = imagePath;
-        var images = gui.thisPlayerState().warehouse.stream().flatMap(n -> new ArrayList<Image>(){{
-            for(int i =0; i<n.getCurrentQuantity(); i++) {
+        var images = gui.thisPlayerState().warehouse.stream().flatMap(n -> new ArrayList<Image>() {{
+            for (int i = 0; i < n.getCurrentQuantity(); i++) {
                 add(new Image(finalImagePath + n.getResourceType().toString().toLowerCase() + "2.png"));
             }
         }}.stream()).collect(Collectors.toList());
 
-        var resources  = warehouse.getChildren().stream().filter(n -> n.getStyleClass().contains("Resource")).map(n -> (ImageView)n).collect(Collectors.toList());
+        var resources = warehouse.getChildren().stream().filter(n -> n.getStyleClass().contains("Resource")).map(n -> (ImageView) n).collect(Collectors.toList());
         assert resources.size() == images.size();
-        for(int i =0; i < images.size(); i++)
-        {
+        for (int i = 0; i < images.size(); i++) {
             resources.get(i).setImage(images.get(i));
         }
         depots.add(new ArrayList<>() {{
@@ -93,7 +90,6 @@ public class WarehouseController extends Controller implements Initializable {
 
 //        ((AnchorPane)leaderDepots.getChildren().get(0)).getChildren().stream().filter(n -> n.getStyleClass().contains("Resource"))
 //                .map(n -> (ImageView)n)
-
 
 
     }
@@ -126,15 +122,14 @@ public class WarehouseController extends Controller implements Initializable {
         event.consume();
     }
 
-    public void onDragDroppedOnBin(DragEvent event)
-    {
+    public void onDragDroppedOnBin(DragEvent event) {
         /* data dropped */
         /* if there is a string data on dragboard, read it and use it */
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (db.hasString()) {
             String s = db.getString();
-            s = s.substring(s.lastIndexOf("/")+1, s.lastIndexOf(".")).toUpperCase();
+            s = s.substring(s.lastIndexOf("/") + 1, s.lastIndexOf(".")).toUpperCase();
             discardResources.put(Resource.valueOf(s), discardResources.getOrDefault(s, 0));
             success = true;
         }
@@ -167,11 +162,9 @@ public class WarehouseController extends Controller implements Initializable {
                 if (url.toUpperCase().contains(type)) {
                     event.acceptTransferModes(TransferMode.MOVE);
                 }
-            }
-            else if (target instanceof AnchorPane && target.getId().equals("bin")) {
+            } else if (target instanceof AnchorPane && target.getId().equals("bin")) {
                 event.acceptTransferModes(TransferMode.MOVE);
-            }
-            else {
+            } else {
                 ImageView source = (ImageView) event.getSource();
                 if (source.getImage() == null) {
                     AnchorPane parent = ((AnchorPane) source.getParent());
@@ -182,7 +175,7 @@ public class WarehouseController extends Controller implements Initializable {
                         case 1 -> event.acceptTransferModes(TransferMode.MOVE);
                         case 2 -> {
                             ImageView sibling = (ImageView) parent.getChildren().get(i + 1);
-                            if(sibling.getImage() != null)
+                            if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
                             if (sibling.getImage() == null ||
                                     sibling.getImage().getUrl().contains(type))
@@ -190,7 +183,7 @@ public class WarehouseController extends Controller implements Initializable {
                         }
                         case 3 -> {
                             ImageView sibling = (ImageView) parent.getChildren().get(i - 1);
-                            if(sibling.getImage() != null)
+                            if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
                             if (sibling.getImage() == null ||
                                     sibling.getImage().getUrl().contains(type))
@@ -199,9 +192,9 @@ public class WarehouseController extends Controller implements Initializable {
                         case 4 -> {
                             ImageView sibling = (ImageView) parent.getChildren().get(i + 1);
                             ImageView sibling2 = (ImageView) parent.getChildren().get(i + 2);
-                            if(sibling.getImage() != null)
+                            if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
-                            if(sibling2.getImage() != null)
+                            if (sibling2.getImage() != null)
                                 System.out.println("siblings2: " + sibling2.getImage().getUrl());
                             if ((sibling.getImage() == null && sibling2.getImage() == null) ||
                                     Objects.requireNonNullElse(sibling, sibling2).getImage().getUrl().contains(type))
@@ -210,9 +203,9 @@ public class WarehouseController extends Controller implements Initializable {
                         case 5 -> {
                             ImageView sibling = (ImageView) parent.getChildren().get(i + 1);
                             ImageView sibling2 = (ImageView) parent.getChildren().get(i - 1);
-                            if(sibling.getImage() != null)
+                            if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
-                            if(sibling2.getImage() != null)
+                            if (sibling2.getImage() != null)
                                 System.out.println("siblings2: " + sibling2.getImage().getUrl());
                             if ((sibling.getImage() == null && sibling2.getImage() == null) ||
                                     Objects.requireNonNullElse(sibling, sibling2).getImage().getUrl().contains(type))
@@ -221,9 +214,9 @@ public class WarehouseController extends Controller implements Initializable {
                         case 6 -> {
                             ImageView sibling = (ImageView) parent.getChildren().get(i - 1);
                             ImageView sibling2 = (ImageView) parent.getChildren().get(i - 1);
-                            if(sibling.getImage() != null)
+                            if (sibling.getImage() != null)
                                 System.out.println("siblings1: " + sibling.getImage().getUrl());
-                            if(sibling2.getImage() != null)
+                            if (sibling2.getImage() != null)
                                 System.out.println("siblings2: " + sibling2.getImage().getUrl());
                             if ((sibling.getImage() == null && sibling2.getImage() == null) ||
                                     Objects.requireNonNullElse(sibling, sibling2).getImage().getUrl().contains(type))
@@ -240,7 +233,7 @@ public class WarehouseController extends Controller implements Initializable {
 
 
     public void onCancel() {
-        ((Stage)root.getScene().getWindow()).close();
+        ((Stage) root.getScene().getWindow()).close();
     }
 
     public void onNext() {
@@ -249,7 +242,6 @@ public class WarehouseController extends Controller implements Initializable {
 
         gui.addEvent(new NewResourcesOrganizationEvent(gui.askUserID(), depots, leaderDepots, discardResources));
     }
-
 
 
     public void openBin(DragEvent event) {
