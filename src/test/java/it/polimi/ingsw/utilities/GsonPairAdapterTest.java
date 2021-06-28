@@ -2,7 +2,6 @@ package it.polimi.ingsw.utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

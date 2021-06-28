@@ -6,7 +6,6 @@ import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.controller.EventRegistry;
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.events.ClientEvents.GameStartingEvent;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.ui.cli.CLI;
 import it.polimi.ingsw.ui.gui.GUI;

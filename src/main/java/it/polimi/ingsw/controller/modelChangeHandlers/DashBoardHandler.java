@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.Depot;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.ArrayList;
 import java.util.HashMap;
