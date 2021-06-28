@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
-import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;

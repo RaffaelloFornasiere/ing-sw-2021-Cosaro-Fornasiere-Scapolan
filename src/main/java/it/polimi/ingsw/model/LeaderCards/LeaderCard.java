@@ -1,20 +1,11 @@
 package it.polimi.ingsw.model.LeaderCards;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
-import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Pair;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Class that represents a leader card
