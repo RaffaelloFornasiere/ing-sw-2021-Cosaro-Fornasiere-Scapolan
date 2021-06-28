@@ -578,6 +578,7 @@ public class Controller {
             DevCard devCard = devCardGrid.topCard(devDeckIndexes);
             HashMap<Resource, Integer> cardCost = devCard.getCost();
             ArrayList<LeaderPower> leaderPowers = leaderCardManager.getSelectedPowers(player, DiscountLeaderPower.class);
+            HashMap<Resource, Integer> allPlayerResourcesWithDiscount = player.getAllPayerResources();
             for(LeaderPower lp: leaderPowers){
                 DiscountLeaderPower dlp = (DiscountLeaderPower) lp;
                 HashMap<Resource, Integer> discount = dlp.getDiscount();
@@ -585,15 +586,17 @@ public class Controller {
                     if(cardCost.containsKey(r)){
                         cardCost.put(r, Math.min(cardCost.get(r) - discount.get(r), 0));
                     }
+                    if(allPlayerResourcesWithDiscount.containsKey(r)){
+                        allPlayerResourcesWithDiscount.put(r, allPlayerResourcesWithDiscount.get(r) + discount.get(r));
+                    }
                 }
             }
 
-            HashMap<Resource, Integer> allPlayerResources = player.getAllPayerResources();
             HashMap<Resource, Integer> leaderPowerResources = player.getLeaderCardsResources();
             HashMap<Resource, Integer> selectedResourcesFromLeaderPower = new HashMap<>();
             HashMap<Resource, Integer> selectedResourcesFromWarehouse = new HashMap<>();
             HashMap<Resource, Integer> resourcesFromStrongBox = new HashMap<>();
-            if (!devCard.checkCost(allPlayerResources)) {
+            if (!devCard.checkCost(allPlayerResourcesWithDiscount)) {
                 senders.get(event.getPlayerId()).sendObject(new CantAffordError(event.getPlayerId(), event.getDevCardID()));
                 new MatchStateHandler(senders).update(matchState);
                 return;
