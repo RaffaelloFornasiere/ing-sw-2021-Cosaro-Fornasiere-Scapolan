@@ -233,7 +233,7 @@ public class ProductionController extends Controller implements Initializable {
 
         stage.initModality(Modality.APPLICATION_MODAL);
         SelectResourcesController selectResourcesController = new SelectResourcesController(gui, requiredResources, personalPower ? 2 : 0);
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectresources.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectResourcesToUse.fxml"));
         loader.setController(selectResourcesController);
         try {
             stage.setScene(new Scene(loader.load()));
@@ -301,7 +301,6 @@ public class ProductionController extends Controller implements Initializable {
             resourcesOfChoiceList.getItems().add(hBox);
             System.out.println(list.getSelectionModel().getSelectedItem().getText());
         }
-        //checkResources();
     }
 
 

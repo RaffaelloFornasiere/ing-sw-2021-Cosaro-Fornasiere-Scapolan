@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class LobbyController extends Controller implements Initializable {
     GridPane playersGrid;
     @FXML
     Button startGameButton;
+    @FXML
+    AnchorPane root;
 
     public LobbyController(GUI gui, String leader, ArrayList<String> players, boolean isLeader) {
         super(gui);
@@ -55,14 +58,14 @@ public class LobbyController extends Controller implements Initializable {
                 .get(0).setStyle("    -fx-text-fill: #6a0a0a;");
 
         var children = playersGrid.getChildren();
-        for (int i = 0; i < children.size(); i++) {
+        for (int i = 0; i < playersList.getItems().size(); i++) {
             Label playerName =
                     ((Label) ((AnchorPane) children.get(i)).getChildren()
                             .stream().filter(n -> n instanceof Label)
                             .collect(Collectors.toList()).get(0));
             playerName.setText(players.get(i));
             if (players.get(i).equals(leader))
-                playerName.setStyle("    -fx-text-fill: #6a0a0a; -fx-background-color: transparent");
+                playerName.setStyle("    -fx-text-fill: #6a0a0a;");
         }
     }
 
@@ -80,5 +83,10 @@ public class LobbyController extends Controller implements Initializable {
 
     public void onStartGame() {
         gui.startGame();
+    }
+
+    public void close()
+    {
+        ((Stage)root.getScene().getWindow()).close();
     }
 }

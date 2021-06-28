@@ -108,7 +108,7 @@ public class DevCardGridController extends Controller implements Initializable {
         stage.initModality(Modality.APPLICATION_MODAL);
         SelectResourcesController selectResourcesController = new SelectResourcesController(gui, requiredResources, 0);
 
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectresources.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectResourcesToUse.fxml"));
         loader.setController(selectResourcesController);
         try {
             stage.setScene(new Scene(loader.load()));

@@ -99,22 +99,29 @@ public class WarehouseController extends Controller implements Initializable {
         Gson gson = builder.create();
 
 
-        HashMap<Resource, Integer> depotsInfo = new HashMap<>();
+
+
+        HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>();
         gui.thisPlayerState().leaderCards.forEach((key1, value1) -> {
             try {
                 LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + key1 + ".json")), LeaderCard.class);
                 leaderCard.getLeaderPowers().stream().filter(card -> card instanceof DepositLeaderPower)
                         .forEach(power -> ((DepositLeaderPower) power).getMaxResources()
-                                .forEach((key, value) -> depotsInfo.put(key, depotsInfo.getOrDefault(key, 0) + value))
+                                .forEach((key, value) -> depotsInfo.put(key, new Pair<>(depotsInfo.getOrDefault(key, new Pair<>(0,0)).getKey() + value, 0)))
                         );
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+        for(var entry : gui.thisPlayerState().getLeaderDepots().entrySet()){
+            depotsInfo.put(entry.getKey(), new Pair<>(depotsInfo.get(entry.getKey()).getKey(), entry.getValue()));
+
+        }
+
 
         leaderDepots = new ArrayList<>() {{
             for (Resource r : Resource.values())
-                add(new DepotState(r, depotsInfo.getOrDefault(r, 0), 0));
+                add(new DepotState(r, depotsInfo.getOrDefault(r, new Pair<>(0,0)).getKey(), depotsInfo.getOrDefault(r, new Pair<>(0,0)).getValue()));
         }};
 
         leaderDepotsAnchorPane.getChildren().stream().map(n -> (AnchorPane) n).forEach(n -> {

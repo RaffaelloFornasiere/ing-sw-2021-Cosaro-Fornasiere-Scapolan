@@ -1,5 +1,7 @@
 package it.polimi.ingsw.ui.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -8,13 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class LoginController extends Controller implements Initializable {
 
@@ -51,6 +54,8 @@ public class LoginController extends Controller implements Initializable {
     Label noPlayerIDLabel;
     @FXML
     TextField leaderIdTextField;
+    @FXML
+    AnchorPane root;
 
     public void onCheckBoxStatusChanged() {
         if (createMatchCheckBox.isSelected())
@@ -65,6 +70,24 @@ public class LoginController extends Controller implements Initializable {
             playerImage.setImage(new Image(currentImage.next()));
         else
             playerImage.setImage(new Image(gui.getPlayerImage()));
+
+
+        playerIdTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue) {
+                    System.out.println("Focusing out from player");
+                }
+            }
+        });
+        leaderIdTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue) {
+                    System.out.println("Focusing out from leader");
+                }
+            }
+        });
     }
 
     public void nextImage() {
@@ -97,7 +120,7 @@ public class LoginController extends Controller implements Initializable {
 
 
     public void onCancel() throws IOException {
-        MainApplication.setPreviousScene();
+        MainApplication.setScene(previousScene);
     }
 
     public void onNext() throws IOException {
@@ -105,9 +128,15 @@ public class LoginController extends Controller implements Initializable {
             noPlayerIDLabel.setOpacity(1);
         else {
             noPlayerIDLabel.setOpacity(0);
-            gui.setLoginData(playerIdTextField.getText(), leaderIdTextField.getText());
+            gui.setLoginData(playerIdTextField.getText(), Objects.requireNonNullElse(leaderIdTextField.getText(), ""));
             gui.setPlayerImage(playerImage.getImage().getUrl());
         }
+        ((Stage)root.getScene().getWindow()).close();
+    }
+
+    public void onTextChanged()
+    {
+        System.out.println();
     }
 
     public void UsernameAlreadyTaken() {

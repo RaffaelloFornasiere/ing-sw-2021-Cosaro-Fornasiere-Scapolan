@@ -77,6 +77,7 @@ public class SelectableImage {
             border.setMouseTransparent(true);
             border.setId("");
             border.setOpacity(0);
+            border.getStyleClass().add("border");
 
             // attach the border to the parent
             try {
@@ -115,6 +116,11 @@ public class SelectableImage {
                 image.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> border.setOpacity(0));
             }
         }
+    }
+
+    public static void cleanRoot(Parent root)
+    {
+        getChildrenOf(root).stream().filter(n -> n.getStyleClass().contains("border")).collect(Collectors.toList()).clear();
     }
 
 }

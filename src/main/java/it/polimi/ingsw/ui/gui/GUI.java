@@ -1,13 +1,15 @@
 package it.polimi.ingsw.ui.gui;
 
-import com.sun.tools.javac.Main;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Marble;
+import it.polimi.ingsw.model.ProductionPower;
+import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.TurnState;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.ui.cli.Action;
@@ -19,7 +21,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -59,133 +60,54 @@ public class GUI extends UI {
         return playerStates.get(playerID.getItem());
     }
 
+    public synchronized void close() {
+        System.exit(0);
+    }
+
 
     public GUI() {
 
         serverSettingsController = new ServerSettingsController(this);
         loginController = new LoginController(this);
         splashScreenController = new SplashScreenController(this);
-        mainViewController = new MainViewController(this);
+        //
 
 
-        MainApplication.setGui(this);
-        MainApplication.setFirstScene("splashscreen", splashScreenController);
         new Thread() {
-
             @Override
             public void run() {
                 super.run();
                 Application.launch(MainApplication.class);
-
             }
         }.start();
+
+
         playerStates = new HashMap<>();
         var aux = this;
         try {
             TimeUnit.SECONDS.sleep(1);
 
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    playerID.setItem("paolo");
-                    playerStates.put(playerID.getItem(), new PlayerState());
-
-                    HashMap<Resource, Integer> strongBox = new HashMap<>() {{
-                        put(Resource.COIN, 4);
-                        put(Resource.SHIELD, 2);
-                        put(Resource.SERVANT, 5);
-                        put(Resource.ROCK, 3);
-                    }};
-                    ArrayList<DepotState> warehouse = new ArrayList<>() {{
-                        add(new DepotState(Resource.COIN, 1, 1));
-                        add(new DepotState(Resource.SHIELD, 2, 2));
-                        add(new DepotState(Resource.SERVANT, 3, 3));
-
-                    }};
-
-                    aux.thisPlayerState().ownedCards.get(0).add("DevCard1");
-                    aux.thisPlayerState().ownedCards.get(0).add("DevCard23");
-                    aux.thisPlayerState().ownedCards.get(1).add("DevCard4");
-                    aux.thisPlayerState().ownedCards.get(2).add("DevCard8");
-                    aux.thisPlayerState().ownedCards.get(2).add("DevCard26");
-                    aux.thisPlayerState().ownedCards.get(2).add("DevCard35");
-
-                    aux.thisPlayerState().leaderCards.put("LeaderCard5", true);
-                    aux.thisPlayerState().leaderCards.put("LeaderCard6", false);
-                    aux.thisPlayerState().leaderCards.put("LeaderCard7", false);
-                    aux.thisPlayerState().leaderCards.put("LeaderCard8", false);
+            Platform.runLater(() -> {
 
 
-                    aux.thisPlayerState().updateLeaderCardDepositState("LeaderCard15", 0,
-                            new HashMap<>() {{
-                                put(Resource.COIN, 2);
-                                put(Resource.SERVANT, 1);
-                            }});
-                    aux.thisPlayerState().warehouse = warehouse;
-                    aux.thisPlayerState().strongBox = strongBox;
-                    aux.thisPlayerState().faithTrackPoints = 4;
-                    aux.thisPlayerState().victoryPoints = 15;
-                    ArrayList<ArrayList<Integer>> indexes = new ArrayList<>();
-                    for (int i = 0; i < 3; i++) {
-                        int finalI = i;
-                        indexes.add(new ArrayList<>() {{
-                            int base = (finalI) * 16;
-                            add(1 + base);
-                            add(2 + base);
-                            add(3 + base);
-                            add(4 + base);
-                        }});
-                    }
-
-                    PlayerState.devCardGrid = new String[3][4];
-                    for (int i = 0; i < PlayerState.devCardGrid.length; i++) {
-                        for (int j = 0; j < PlayerState.devCardGrid[0].length; j++) {
-                            int index = indexes.get(i).get(j);
-                            PlayerState.devCardGrid[i][j] = "DevCard" + index;
-                        }
-                    }
-
-
-                    int rows = 3;
-                    int cols = 4;
-                    PlayerState.devCardGrid = new String[rows][cols];
-                    for (int i = 0; i < rows; i++) {
-                        for (int j = 0; j < cols; j++) {
-                            int level = i * 16 + 1;
-                            PlayerState.devCardGrid[i][j] = "DevCard" + (level + j);
-                            //System.out.println(aux.playerState.devCardGrid[i][j]);
-                        }
-                    }
-                    HashMap<Marble, Integer> marbles = new HashMap<>() {{
-                        put(Marble.GRAY, 2);
-                        put(Marble.YELLOW, 2);
-                        put(Marble.PURPLE, 2);
-                        put(Marble.BLUE, 2);
-                        put(Marble.WHITE, 4);
-                        put(Marble.RED, 1);
-                    }};
-                    Market market = new Market(3, 4, marbles);
-                    PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
-
+                try {
                     Stage stage = new Stage();
-                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainview.fxml"));
-                    MainViewController mainViewController = new MainViewController(aux);
-                    fxmlLoader.setController(mainViewController);
-                    try {
-                        stage.setScene(new Scene(fxmlLoader.load()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    stage.show();
 
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Splashscreen.fxml"));
+                    Controller controller = new SplashScreenController(aux);
+                    fxmlLoader.setController(controller);
+                    stage.setScene(new Scene(fxmlLoader.load()));
+                    stage.showAndWait();
 
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
             });
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     public Pair<Marble[][], Marble> getMarketStatus() {
@@ -197,13 +119,6 @@ public class GUI extends UI {
     }
 
     public void addEvent(Event event) {
-        /*if (event instanceof BuyResourcesEvent) {
-            actionPerformed.setItem(Action.MARKET_ACTION);
-        } else if (event instanceof BuyDevCardsEvent) {
-            actionPerformed.setItem(Action.DEV_CARD_ACTION);
-        } else if (event instanceof ActivateProductionEvent) {
-            actionPerformed.setItem(Action.PRODUCTION_ACTION);
-        }*/
         thisPlayerState().events.add(event);
     }
 
@@ -217,8 +132,10 @@ public class GUI extends UI {
     }
 
     public void setLoginData(String playerID, String leaderID) {
+
         this.playerID.setItem(playerID);
         this.leaderID.setItem(leaderID);
+        playerStates.put(this.playerID.getItem(), new PlayerState());
     }
 
     public InetAddress getServerAddress() {
@@ -251,21 +168,28 @@ public class GUI extends UI {
     @Override
     // this gets what's wrong
     public void printMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
-        alert.showAndWait();
+        new Thread(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+            alert.showAndWait();
+        }).start();
     }
 
     @Override
     public void printError(String error) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, error, ButtonType.OK);
-        alert.showAndWait();
+        new Thread(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR, error, ButtonType.OK);
+            alert.showAndWait();
+        }).start();
     }
 
     @Override
     public void printWarning(String warning) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, warning, ButtonType.OK);
-        alert.showAndWait();
+        new Thread(() -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING, warning, ButtonType.OK);
+            alert.showAndWait();
+        }).start();
     }
+
 
     //TODO
     @Override
@@ -280,7 +204,7 @@ public class GUI extends UI {
 
     @Override
     public boolean askIfNewLobby() {
-        return leaderID.getItem() == null;
+        return leaderID.getWaitIfLocked().equals("");
     }
 
     @Override
@@ -301,17 +225,29 @@ public class GUI extends UI {
     //TODO?
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
-        try {
-            if (lobbyController != null)
-                lobbyController.updatePlayerList(leaderID, otherPLayersID);
-            else {
-                LobbyController lobbyController = new LobbyController(this, leaderID, otherPLayersID,
-                        this.playerID.getItem().equals(leaderID));
-                MainApplication.setScene("lobby", lobbyController);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        otherPLayersID.add(leaderID);
+
+        if (lobbyController != null) {
+            lobbyController.updatePlayerList(leaderID, otherPLayersID);
+        } else {
+            lobbyController = new LobbyController(this, leaderID, otherPLayersID,
+                    this.playerID.getItem().equals(leaderID));
+            new Thread(() -> {
+                try {
+                    Stage stage = new Stage();
+                    Scene scene = MainApplication.createScene("lobby", lobbyController);
+                    stage.setScene(scene);
+                    stage.showAndWait();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
         }
+        for (var player : otherPLayersID) {
+            playerStates.put(player, new PlayerState());
+        }
+
     }
 
     void startGame() {
@@ -326,6 +262,22 @@ public class GUI extends UI {
 
     @Override
     public void initializeMatchObjects() {
+        mainViewController = new MainViewController(this);
+
+        lobbyController.close();
+        new Thread(() -> {
+            try {
+                Stage stage = new Stage();
+                Scene scene = MainApplication.createScene("mainview", mainViewController);
+                stage.setScene(scene);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mainViewController.waitForReady();
+            System.out.println("ready");
+        }).start();
+
         for (String playerID : lobbyController.getPlayers()) {
             playerStates.put(playerID, new PlayerState());
         }
@@ -334,27 +286,48 @@ public class GUI extends UI {
     //TODO?
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
-        Stage popUp = new Stage();
+
         ArrayList<String> res = new ArrayList<>();
         SelectLeaderCardsController controller = new SelectLeaderCardsController(leaderCardsIDs, numberOFLeaderCardsToChose);
-        try {
-            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("selectleadercards.fxml"));
+
+        new Thread(() -> {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectLeaderCards.fxml"));
             loader.setController(controller);
-            Scene scene = new Scene(loader.load());
-            popUp.initModality(Modality.APPLICATION_MODAL);
-            popUp.setScene(scene);
-            popUp.showAndWait();
-            res = controller.getSelected();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Scene scene = null;
+            try {
+                scene = new Scene(loader.load());
+                stage.setScene(scene);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        res = controller.getSelected();
         return res;
     }
 
     //TODO
     @Override
     public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
-        return null;
+
+        HashMap<Resource, Integer> res = new HashMap<>();
+        ChoseResourcesController controller = new ChoseResourcesController(this, resourceType, numberOFResources);
+        new Thread(() -> {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectLeaderCards.fxml"));
+            loader.setController(controller);
+            Scene scene = null;
+            try {
+                scene = new Scene(loader.load());
+                stage.setScene(scene);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        res = controller.getChosen();
+        return res;
     }
 
     @Override
@@ -369,24 +342,24 @@ public class GUI extends UI {
         playerState.setPopeFavorCards(popeFavorCards.get(playerID));
 
         if (playerID.equals(this.playerID.getItem())) {
-            mainViewController.faithTrackController.setPosition(position);
-            mainViewController.faithTrackController.setPopeFavorCards(popeFavorCards);
+            mainViewController.setFaithTrackPosition(position);
+            //mainViewController.faithTrackController.setPopeFavorCards(popeFavorCards);
         }
     }
 
     @Override
     public void updateDashboard(String playerID, ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse) {
         PlayerState playerState = playerStates.get(playerID);
-
+        topDevCards.forEach(System.out::println);
         for (int i = 0; i < Math.min(topDevCards.size(), 3); i++) {
-            String dcID = topDevCards.get(i);
+            String devCardID = topDevCards.get(i);
+            if (devCardID == null)
+                continue;
             ArrayList<String> slot = playerState.ownedCards.get(i);
-            if (!slot.get(slot.size() - 1).equals(dcID))
-                slot.add(dcID);
+            if (!slot.get(slot.size() - 1).equals(devCardID))
+                slot.add(devCardID);
         }
-
         playerState.strongBox = new HashMap<>(strongBox);
-
         playerState.warehouse = new ArrayList<>(warehouse);
 
     }
@@ -506,7 +479,7 @@ public class GUI extends UI {
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
         ArrayList<Event> events = new ArrayList<>();
         PlayerState.availableActions = new ArrayList<>();
-        if (playerID.equals(this.playerID.getItem()))
+        if (!playerID.equals(this.playerID.getItem()))
             return events;
         switch (turnState) {
             case START -> {

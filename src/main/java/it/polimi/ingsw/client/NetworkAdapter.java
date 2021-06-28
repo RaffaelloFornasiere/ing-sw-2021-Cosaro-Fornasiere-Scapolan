@@ -275,7 +275,6 @@ public class NetworkAdapter {
     public synchronized void LobbyErrorHandler(PropertyChangeEvent evt) {
         LobbyError event = (LobbyError) evt.getNewValue();
 
-
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);
     }

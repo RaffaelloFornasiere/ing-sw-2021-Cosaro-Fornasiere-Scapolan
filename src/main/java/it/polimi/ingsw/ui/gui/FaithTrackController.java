@@ -71,7 +71,7 @@ public class FaithTrackController {
         String imageUrl = new java.io.File(".").getAbsolutePath();
         imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/crocePlayer.png";
         cross = new ImageView(new Image(imageUrl));
-        System.out.println(imageUrl);
+        //System.out.println(imageUrl);
         cross.setFitWidth(45);
         cross.setFitHeight(55);
         ((StackPane) faithTrack.getParent()).getChildren().add(cross);
@@ -82,7 +82,7 @@ public class FaithTrackController {
                 .collect(Collectors.toList())
                 .get(0).getFitHeight() + 5;
         cellsize = faithTrack.getWidth() / 19;
-        System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
+       // System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
         cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
         cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
         cross.setTranslateY(zeroPos.y * 1.2);

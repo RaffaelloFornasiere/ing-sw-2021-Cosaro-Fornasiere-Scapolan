@@ -74,6 +74,7 @@ public class ClientApp {
         } else {
             playerID = ui.askUserID();
             leaderID = ui.askLeaderID();
+            System.out.println(leaderID + " " + playerID);
             networkAdapter.enterMatch(playerID, leaderID);
         }
     }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@stylesheets/splashScreen.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Group fx:id="TitleGroup" layoutX="53.0" layoutY="47.0">
+            <children>
+                <Label layoutX="172.0" text="Welcome to ">
+                    <font>
+                        <Font name="System Bold" size="25.0" />
+                    </font>
+                </Label>
+                <Label layoutY="36.0" stylesheets="@stylesheets/splashScreen.css" text="Masters of Renaissance">
+                    <font>
+                        <Font name="System Bold" size="45.0" />
+                    </font>
+                </Label>
+            </children>
+        </Group>
+        <Group fx:id="ButtonsGroup" layoutX="205.0" layoutY="240.0" styleClass="ButtonsGroup">
+            <children>
+                <Label layoutX="36.0" layoutY="-33.0" prefHeight="20.0" prefWidth="117.0" text="Select server type">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+                <Button fx:id="button1" layoutX="4.100006103515625" layoutY="3.100006103515625" mnemonicParsing="false" onAction="#switchToLogin" prefHeight="30.0" prefWidth="180.0" stylesheets="@stylesheets/splashScreen.css" text="Connect to default server">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Button>
+                <Button fx:id="button2" layoutX="4.100006103515625" layoutY="46.100006103515625" mnemonicParsing="false" onAction="#switchToServerSettings" prefHeight="30.0" prefWidth="180.0" styleClass="Button" stylesheets="@stylesheets/splashScreen.css" text="Connect to custom ip">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Button>
+            </children>
+        </Group>
+    </children>
+</AnchorPane>

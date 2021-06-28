@@ -24,7 +24,7 @@ public class PlayerState {
     private final HashMap<Resource, Integer> leaderDepots;
 
 
-
+    // resources contained in leader depots
     private final HashMap<String, ArrayList<HashMap<Resource, Integer>>> leaderDepotsState;
 
     ArrayList<ArrayList<String>> ownedCards;
@@ -34,7 +34,7 @@ public class PlayerState {
     private HashMap<Integer, PopeFavorCard> popeFavorCards;
 
     HashMap<String, Boolean> leaderCards;
-    HashMap<String, ArrayList<Boolean>> leaderPowerStates; // perché un array di booleani?
+    HashMap<String, ArrayList<Boolean>> leaderPowerStates;
 
 
 
@@ -70,9 +70,10 @@ public class PlayerState {
         leaderPowerStates = new HashMap<>();
         event = new LockWrap<>(null, null);
         events = new ArrayList<>();
-        victoryPoints = 0;
+        victoryPoints = 45;
         faithTrackPoints = 0;
     }
+
 
     public int getFaithTrackPosition() {
         return faithTrackPosition;

@@ -1,21 +1,27 @@
 package it.polimi.ingsw.ui.gui;
 
+import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.utilities.LockWrap;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -33,9 +39,11 @@ public class SelectLeaderCardsController extends Controller implements Initializ
     @FXML
     GridPane gridPane;
 
+    LockWrap<Boolean> done = new LockWrap<>(false, false);
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        done.setItem(false);
         String imageUrl = new java.io.File(".").getAbsolutePath().replace("\\", "/");
         imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
         var images = gridPane.getChildren().stream()
@@ -83,11 +91,14 @@ public class SelectLeaderCardsController extends Controller implements Initializ
             alert.showAndWait();
             return;
         }
+        done.setItem(true);
         Stage stage = (Stage) (((Node) mouseEvent.getSource()).getScene()).getWindow();
         stage.close();
     }
 
-    public ArrayList<String> getSelected() {
+    public ArrayList<String> getSelected()
+    {
+        done.getWaitIfLocked();
         return new ArrayList<>(selected);
     }
 
@@ -96,8 +107,7 @@ public class SelectLeaderCardsController extends Controller implements Initializ
         alert.showAndWait();
     }
 
-    public void onCardSelected(MouseEvent mouseEvent) {
-        //((Group)mouseEvent.getSource()).getChildren().stream().filter(n -> n -> n instanceof Region).
-    }
+
+
 
 }

@@ -9,7 +9,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
+import javax.swing.event.AncestorEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
@@ -28,6 +31,9 @@ public class ServerSettingsController extends Controller implements Initializabl
     Label portErrorLabel;
     @FXML
     Label invalidAddress;
+
+    @FXML
+    AnchorPane root;
 
     @FXML
     TextField hostnameTextField;
@@ -84,7 +90,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onCancel() throws IOException {
-        MainApplication.setPreviousScene();
+        MainApplication.setScene(previousScene);
     }
 
     public void onNext() throws IOException {
@@ -94,7 +100,7 @@ public class ServerSettingsController extends Controller implements Initializabl
             invalidAddress.setOpacity(1);
             return;
         }
-        MainApplication.setScene("login", gui.loginController);
+        ((Stage)root.getScene().getWindow()).close();
     }
 
     public void onServerChanged(ActionEvent event) {
