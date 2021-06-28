@@ -141,48 +141,74 @@ public class Controller {
                 return;
             }
 
-            GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
-            builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
-            builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
-            Gson gson = builder.create();
-            ArrayList<LeaderCard> leaderCards = new ArrayList<>();
-            LeaderCardHandler leaderCardHandler = new LeaderCardHandler(this.senders, player);
-            DepositLeaderPowerHandler depositLeaderPowerHandler = new DepositLeaderPowerHandler(this.senders, player);
-            for (String leaderCardID : event.getChosenLeaderCardIDs()) {
-                String leaderCardJSON;
-                if (Config.getInstance().isLeaderCardDefault())
-                    leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\default\\" + leaderCardID + ".json"));
-                else
-                    leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
-                LeaderCard lc = gson.fromJson(leaderCardJSON, LeaderCard.class);
-                lc.addObserver(leaderCardHandler);
-                for (LeaderPower lp : lc.getLeaderPowers()) {
-                    if (lp.getClass() == DepositLeaderPower.class)
-                        lp.addObserver(depositLeaderPowerHandler);
-                }
-                leaderCards.add(lc);
-            }
-            this.leaderCardManager.assignLeaderCards(player, leaderCards);
+            this.leaderCardManager.assignLeaderCards(player, loadLeaderCards(event.getChosenLeaderCardIDs(), player));
 
             organizeResources(event.getChosenResources(), player);
 
-            setuppedPlayers.add(event.getPlayerId());
-            for (Sender sender : senders.values())
-                sender.sendObject(new SetupDoneEvent(event.getPlayerId()));
-
-            //CHEATS
-
-            //END_CHEATS
-
-            if (setuppedPlayers.size() == matchState.getPlayers().size())
-                matchState.beginMatch();
+            notifyPlayerDoneWithInitialDecisions(event.getPlayerId());
         } catch (IOException e) {
             senders.get(event.getPlayerId()).sendObject(new BadRequestEvent(event.getPlayerId(), "Invalid leader card ID(s)", event));
         } catch (NotPresentException notPresentException) {
             notPresentException.printStackTrace();
             //impossible
         }
+    }
+
+    private synchronized ArrayList<LeaderCard> loadLeaderCards(ArrayList<String> leaderCardIDs, Player player) throws IOException {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
+        Gson gson = builder.create();
+        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
+        LeaderCardHandler leaderCardHandler = new LeaderCardHandler(this.senders, player);
+        DepositLeaderPowerHandler depositLeaderPowerHandler = new DepositLeaderPowerHandler(this.senders, player);
+        for (String leaderCardID : leaderCardIDs) {
+            String leaderCardJSON;
+            if (Config.getInstance().isLeaderCardDefault())
+                leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\default\\" + leaderCardID + ".json"));
+            else
+                leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
+            LeaderCard lc = gson.fromJson(leaderCardJSON, LeaderCard.class);
+            lc.addObserver(leaderCardHandler);
+            for (LeaderPower lp : lc.getLeaderPowers()) {
+                if (lp.getClass() == DepositLeaderPower.class)
+                    lp.addObserver(depositLeaderPowerHandler);
+            }
+            leaderCards.add(lc);
+        }
+        return leaderCards;
+    }
+
+    private synchronized void notifyPlayerDoneWithInitialDecisions(String playerID){
+        setuppedPlayers.add(playerID);
+        for (Sender sender : senders.values())
+            sender.sendObject(new SetupDoneEvent(playerID));
+
+        //CHEATS
+
+        //END_CHEATS
+
+        if (setuppedPlayers.size() == matchState.getPlayers().size())
+            matchState.beginMatch();
+    }
+
+    private synchronized void setDefaultInitialDecisions(Player player) {
+        InitialChoicesEvent initialChoicesEvent = initialChoices.get(player.getPlayerId());
+        if(initialChoicesEvent == null) return;
+        ArrayList<String> leaderCardsIDs = new ArrayList<>();
+        ArrayList<String> allLeaderCardsIDs = initialChoicesEvent.getLeaderCards();
+        for(int i=0; i<Config.getInstance().getLeaderCardPerPlayerToChoose(); i++){
+            leaderCardsIDs.add(allLeaderCardsIDs.get(i));
+        }
+        try {
+            this.leaderCardManager.assignLeaderCards(player, loadLeaderCards(leaderCardsIDs, player));
+        } catch (IOException e) {
+            //impossible
+            e.printStackTrace();
+        }
+
+        notifyPlayerDoneWithInitialDecisions(player.getPlayerId());
     }
 
     /**
@@ -1107,7 +1133,9 @@ public class Controller {
             senders.remove(event.getPlayerId());
             try {
                 Player disconnectedPlayer = matchState.getPlayerFromID(event.getPlayerId());
-                System.out.println("aaaaaaaaaaa");
+                if(!setuppedPlayers.contains(event.getPlayerId())){
+                    setDefaultInitialDecisions(disconnectedPlayer);
+                }
                 if(disconnectedPlayer == matchState.getPlayers().get(matchState.getCurrentPlayerIndex()))
                     nextTurn(disconnectedPlayer);
             } catch (NotPresentException notPresentException) {
@@ -1115,4 +1143,5 @@ public class Controller {
             }
         }
     }
+
 }
