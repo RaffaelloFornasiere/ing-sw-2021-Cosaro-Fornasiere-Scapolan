@@ -973,10 +973,9 @@ public class Controller {
             for(Player p: matchState.getPlayers()) {
                 if (allAFK) allAFK = disconnected.getOrDefault(p.getPlayerId(), true);
             }
-
             if(allAFK) endGame(); //TODO For now, maybe FA
 
-            if (matchState.isLastRound() && matchState.getCurrentPlayerIndex() == matchState.getPlayers().size() - 1)
+            if (allAFK || (matchState.isLastRound() && matchState.getCurrentPlayerIndex() == matchState.getPlayers().size() - 1))
                 endGame();
             else {
                 do {
@@ -1083,22 +1082,24 @@ public class Controller {
     /**
      * Handler for QuitGameEvent
      */
-    public synchronized void QuitGameEventHandler(PropertyChangeEvent evt){
+    public void QuitGameEventHandler(PropertyChangeEvent evt){
         QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
 
-        synchronized (waitingForSimpleResourcesLock){
-            simpleChosenResourcesEvent = null;
-            waitingForSimpleResourcesLock.notifyAll();
-        }
+        if(event.getPlayerId().equals(matchState.getPlayers().get(matchState.getCurrentPlayerIndex()).getPlayerId())) {
+            synchronized (waitingForSimpleResourcesLock) {
+                simpleChosenResourcesEvent = null;
+                waitingForSimpleResourcesLock.notifyAll();
+            }
 
-        synchronized (waitingForResourcesLock){
-            chosenResourcesEvent = null;
-            waitingForResourcesLock.notifyAll();
-        }
+            synchronized (waitingForResourcesLock) {
+                chosenResourcesEvent = null;
+                waitingForResourcesLock.notifyAll();
+            }
 
-        synchronized (waitingForResourceOrganizationLock){
-            newResourcesOrganizationEvent = null;
-            waitingForResourceOrganizationLock.notifyAll();
+            synchronized (waitingForResourceOrganizationLock) {
+                newResourcesOrganizationEvent = null;
+                waitingForResourceOrganizationLock.notifyAll();
+            }
         }
 
         synchronized (this) {
@@ -1106,6 +1107,7 @@ public class Controller {
             senders.remove(event.getPlayerId());
             try {
                 Player disconnectedPlayer = matchState.getPlayerFromID(event.getPlayerId());
+                System.out.println("aaaaaaaaaaa");
                 if(disconnectedPlayer == matchState.getPlayers().get(matchState.getCurrentPlayerIndex()))
                     nextTurn(disconnectedPlayer);
             } catch (NotPresentException notPresentException) {

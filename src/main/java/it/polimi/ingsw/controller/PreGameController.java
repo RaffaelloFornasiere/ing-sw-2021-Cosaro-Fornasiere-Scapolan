@@ -306,7 +306,7 @@ public class PreGameController {
 
         Lobby lobby = lobbies.get(searchLobby(event.getPlayerId()));
         removeLobbyIfEmpty(lobby);
-
+        System.out.println("Match turn");
         EventRegistry matchEventRegistry = requestsElaborator.getMatchEventHandlerRegistry();
         if(matchEventRegistry==null){
             if(lobby.removePlayer(event.getPlayerId()) == 0)
@@ -314,8 +314,9 @@ public class PreGameController {
         }
         else
             matchEventRegistry.sendEvent(event);
-
+        System.out.println("Closing connection");
         requestsElaborator.closeConnection();
+        System.out.println("finished with " + event.getPlayerId());
     }
 
     /**
