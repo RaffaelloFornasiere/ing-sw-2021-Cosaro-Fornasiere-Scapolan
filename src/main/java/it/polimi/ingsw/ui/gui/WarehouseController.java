@@ -111,10 +111,12 @@ public class WarehouseController extends Controller implements Initializable {
                 e.printStackTrace();
             }
         });
+
         leaderDepots = new ArrayList<>() {{
             for (Resource r : Resource.values())
                 add(new DepotState(r, depotsInfo.getOrDefault(r, 0), 0));
         }};
+
         leaderDepotsAnchorPane.getChildren().stream().map(n -> (AnchorPane) n).forEach(n -> {
             Resource r = Resource.valueOf(n.getId().replace("leaderDepot", "").toUpperCase());
 
@@ -168,7 +170,7 @@ public class WarehouseController extends Controller implements Initializable {
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (db.hasString()) {
-            AnchorPane target = ((AnchorPane) ((Node) event.getTarget()).getParent());
+            AnchorPane target = ((AnchorPane) event.getTarget());
             Resource res = Resource.valueOf(target.getId().replace("leaderDepot", "").toUpperCase());
             DepotState depotState = leaderDepots.stream().filter(n -> n.getResourceType() == res).collect(Collectors.toList()).get(0);
             depotState.tryAddResource(res, 1);
@@ -243,10 +245,10 @@ public class WarehouseController extends Controller implements Initializable {
             Parent parent = target.getParent();
             // if it is hovering a leader depot
 
-            if (parent instanceof AnchorPane &&
-                    parent.getId() != null &&
-                    parent.getId().contains("leader")) {
-                String type = parent.getId().replace("leaderDepot", "");
+            if (target instanceof AnchorPane &&
+                    target.getId() != null &&
+                    target.getId().contains("leader")) {
+                String type = target.getId().replace("leaderDepot", "");
                 type = type.toUpperCase();
                 String url = event.getDragboard().getString();
                 // check the compatibility of the resource dragged
