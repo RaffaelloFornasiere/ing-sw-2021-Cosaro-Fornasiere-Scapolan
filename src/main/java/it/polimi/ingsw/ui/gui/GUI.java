@@ -1,6 +1,5 @@
 package it.polimi.ingsw.ui.gui;
 
-import com.sun.tools.javac.Main;
 import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;

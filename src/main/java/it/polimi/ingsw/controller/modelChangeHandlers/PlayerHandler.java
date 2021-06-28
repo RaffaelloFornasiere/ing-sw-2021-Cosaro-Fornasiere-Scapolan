@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.ClientEvents.PlayerStateEvent;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 

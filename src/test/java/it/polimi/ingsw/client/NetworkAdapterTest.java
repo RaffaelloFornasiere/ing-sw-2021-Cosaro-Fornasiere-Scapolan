@@ -1,14 +1,6 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
-import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.utilities.PropertyChangeSubject;
 import junit.framework.TestCase;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.IOException;
-import java.net.InetAddress;
 
 public class NetworkAdapterTest extends TestCase {
 

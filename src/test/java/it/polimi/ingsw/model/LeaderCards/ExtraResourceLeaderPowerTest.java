@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.LeaderCards;
 
 import it.polimi.ingsw.model.Resource;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
 import java.util.ArrayList;

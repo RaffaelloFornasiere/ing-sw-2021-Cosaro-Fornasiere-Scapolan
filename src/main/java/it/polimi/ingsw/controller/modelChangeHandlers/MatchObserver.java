@@ -3,7 +3,6 @@ package it.polimi.ingsw.controller.modelChangeHandlers;
 import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.utilities.Observer;
-import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 

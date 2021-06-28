@@ -2,12 +2,9 @@ package it.polimi.ingsw.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.events.ControllerEvents.ControllerEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.exceptions.IllegalOperation;
-import it.polimi.ingsw.model.LeaderCards.LeaderPower;
-import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.MessageWrapper;
 
