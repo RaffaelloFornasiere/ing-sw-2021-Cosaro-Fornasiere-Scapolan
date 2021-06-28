@@ -95,7 +95,7 @@
                 </ImageView>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="leaderDepots" layoutX="439.0" layoutY="152.0" prefHeight="188.0" prefWidth="185.0" AnchorPane.rightAnchor="110.66666666666666">
+        <AnchorPane fx:id="leaderDepotsAnchorPane" layoutX="439.0" layoutY="152.0" prefHeight="188.0" prefWidth="185.0" AnchorPane.rightAnchor="110.66666666666666">
             <children>
             <AnchorPane id="leaderDepotServant" layoutX="9.0" layoutY="10.0" onDragDetected="#onDragDetected" onDragDone="#onDragDone" onDragDropped="#onDragDroppedOnLeader" prefHeight="83.0" prefWidth="83.0">
                <children>
