@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WarehouseController extends Controller implements Initializable {
@@ -79,9 +76,12 @@ public class WarehouseController extends Controller implements Initializable {
         }}.stream()).collect(Collectors.toList());
 
         var resources = warehouse.getChildren().stream().filter(n -> n.getStyleClass().contains("Resource")).map(n -> (ImageView) n).collect(Collectors.toList());
-        assert resources.size() == images.size();
-        for (int i = 0; i < images.size(); i++) {
-            resources.get(i).setImage(images.get(i));
+
+        for (int i = 0; i < resources.size(); i++) {
+            if (i < images.size())
+                resources.get(i).setImage(images.get(i));
+            else
+                resources.get(i).setImage(null);
         }
         depots.add(new ArrayList<>() {{
             add(resources.get(0));
@@ -104,7 +104,11 @@ public class WarehouseController extends Controller implements Initializable {
         Gson gson = builder.create();
 
 
-        HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>();
+        HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>() {{
+            Arrays.stream(Resource.values()).forEach(r ->
+                    put(r, new Pair<>(0, 0))
+            );
+        }};
         gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
             try {
                 LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
@@ -120,8 +124,6 @@ public class WarehouseController extends Controller implements Initializable {
                                                                 && gui.thisPlayerState().leaderPowerStates.get(card).get(powerIndex)
                                                         )
                                                             depotsInfo.put(key, new Pair<>(depotsInfo.getOrDefault(key, new Pair<>(0, 0)).getKey() + value, 0));
-                                                        else
-                                                            depotsInfo.put(key, new Pair<>(0, 0));
                                                     }
                                             );
 
@@ -161,10 +163,11 @@ public class WarehouseController extends Controller implements Initializable {
             Resource r = Resource.valueOf(n.getId().replace("ToDiscard", "").toUpperCase());
 
             Label label = (Label) n.getChildren().stream().filter(l -> l instanceof Label).findFirst().orElse(null);
-            label.setText(String.valueOf(discardResources.get(r)));
+            label.setText(String.valueOf(discardResources.getOrDefault(r, 0)));
             ImageView image = (ImageView) n.getChildren().stream().filter(l -> l instanceof ImageView).findFirst().orElse(null);
             image.setImage(new Image(finalImagePath + r.toString().toLowerCase() + "2.png"));
-            if (discardResources.get(r) == 0) {
+            //System.out.println("Res: " + r);
+            if (discardResources.getOrDefault(r, 0) == 0) {
                 image.setOpacity(0.5);
             }
         });
@@ -456,8 +459,8 @@ public class WarehouseController extends Controller implements Initializable {
     public void onNext() {
         ArrayList<DepotState> depots = new ArrayList<>();
         ArrayList<DepositLeaderPowerStateEvent> leaderDepots = new ArrayList<>();
-
         gui.addEvent(new NewResourcesOrganizationEvent(gui.askUserID(), depots, leaderDepots, discardResources));
+        ((Stage) root.getScene().getWindow()).close();
     }
 
 }

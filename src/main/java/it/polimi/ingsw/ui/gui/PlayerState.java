@@ -12,6 +12,7 @@ import it.polimi.ingsw.utilities.LockWrap;
 import it.polimi.ingsw.utilities.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class PlayerState {
@@ -54,7 +55,11 @@ public class PlayerState {
     public PlayerState() {
         warehouse = new ArrayList<>();
         strongBox = new HashMap<>();
-        leaderDepots = new HashMap<>();
+        leaderDepots = new HashMap<>(){{
+           Arrays.stream(Resource.values()).forEach(n ->
+                   put(n, 0));
+        }};
+
         for (Resource r : Resource.values()) {
             leaderDepots.put(r, 0);
         }

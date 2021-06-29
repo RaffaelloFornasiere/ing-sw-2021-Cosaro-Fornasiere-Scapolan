@@ -38,13 +38,14 @@ public class GUI extends UI {
 
     // private final LockWrap<Action> actionPerformed = new LockWrap<>(null);
 
-    private final LockWrap<String> leaderID = new LockWrap<>(null);
-    private final LockWrap<String> playerID = new LockWrap<>(null);
-    private final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
-    private final LockWrap<Integer> serverPort = new LockWrap<>(null);
+    protected final LockWrap<String> leaderID = new LockWrap<>(null);
+    protected final LockWrap<String> playerID = new LockWrap<>(null);
+    protected final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
+    protected final LockWrap<Integer> serverPort = new LockWrap<>(null);
+    protected final LockWrap<Boolean> singlePlayer = new LockWrap<>(null);
 
 
-    private String PlayerImage;
+    protected String PlayerImage;
 
     ServerSettingsController serverSettingsController;
     LoginController loginController;
@@ -100,11 +101,9 @@ public class GUI extends UI {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             });
 
-
-
+//
 //            playerID.setItem("paolo");
 //            playerStates.put(playerID.getItem(), new PlayerState());
 //
@@ -115,10 +114,9 @@ public class GUI extends UI {
 //                put(Resource.ROCK, 3);
 //            }};
 //            ArrayList<DepotState> warehouse = new ArrayList<>() {{
-//                add(new DepotState(Resource.COIN, 1, 1));
-//                add(new DepotState(Resource.SHIELD, 2, 2));
-//                add(new DepotState(Resource.SERVANT, 3, 3));
-//
+////                add(new DepotState(Resource.COIN, 1, 1));
+////                add(new DepotState(Resource.SHIELD, 2, 2));
+////                add(new DepotState(Resource.SERVANT, 3, 3));
 //            }};
 //
 //            aux.thisPlayerState().ownedCards.get(0).add("DevCard1");
@@ -213,37 +211,8 @@ public class GUI extends UI {
 //                }
 //            });
 //            PlayerState.canPerformActions = true;
-
 //
-//            ArrayList<String> res;
-//            ArrayList<String> leaderCardsIDs = new ArrayList<>() {{
-//                add("LeaderCard1");
-//                add("LeaderCard6");
-//                add("LeaderCard11");
-//                add("LeaderCard12");
-//            }};
-//            SelectLeaderCardsController controller = new SelectLeaderCardsController(this, leaderCardsIDs, 2);
-//            Platform.runLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectLeaderCards.fxml"));
-//                    loader.setController(controller);
-//                    Scene scene = null;
-//                    try {
-//                        scene = new Scene(loader.load());
-//                        stage.setScene(scene);
-//                        stage.show();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
-//            System.out.println("wating for res");
-//            res = controller.getSelected();
-//            System.out.println("Res arrived: ");
-//            res.forEach(System.out::print);
 //
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -386,7 +355,6 @@ public class GUI extends UI {
         playerID.setItem(null);
     }
 
-    //TODO?
     @Override
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
         otherPLayersID.add(leaderID);
@@ -422,7 +390,6 @@ public class GUI extends UI {
         client.startMatch();
     }
 
-    //TODO
     @Override
     public void displayWaitingForPlayerToSetupState(String playerID) {
 
@@ -455,7 +422,6 @@ public class GUI extends UI {
         }
     }
 
-    //TODO?
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
 
@@ -485,7 +451,7 @@ public class GUI extends UI {
         return res;
     }
 
-    //TODO
+
     @Override
     public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
 
@@ -648,6 +614,7 @@ public class GUI extends UI {
         return leaderCardID;
     }
 
+
     @Override
     public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
         ArrayList<LeaderPowerSelectStateEvent> events = new ArrayList<>();
@@ -723,9 +690,11 @@ public class GUI extends UI {
 
     }
 
-    //TODO
+
     @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources) {
+        System.out.println(resources);
+        resources.entrySet().stream().map(n -> new Pair(n.getKey(), n.getValue())).forEach(System.out::print);
         WarehouseController controller = new WarehouseController(this, resources);
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("Warehouse.fxml"));
@@ -733,8 +702,7 @@ public class GUI extends UI {
             try {
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
-                Scene scene = null;
-                scene = new Scene(loader.load());
+                Scene scene = new Scene(loader.load());
                 stage.setScene(scene);
                 stage.showAndWait();
             } catch (IOException e) {
@@ -757,6 +725,8 @@ public class GUI extends UI {
     @Override
     public HashMap<Resource, Integer> chooseResources(int requiredResourcesOFChoice, ArrayList<
             Resource> allowedResourcesTypes) {
+
+
         return null;
     }
 

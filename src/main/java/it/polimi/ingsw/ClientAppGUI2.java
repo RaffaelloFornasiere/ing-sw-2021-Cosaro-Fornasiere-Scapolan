@@ -9,6 +9,7 @@ import it.polimi.ingsw.events.ClientEvents.GameStartingEvent;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.ui.cli.CLI;
 import it.polimi.ingsw.ui.gui.GUI;
+import it.polimi.ingsw.ui.gui.GUIFar;
 import it.polimi.ingsw.ui.gui.GUIRaf;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.Scanner;
 /**
  * Hello world!
  */
-public class ClientAppGUI {
+public class ClientAppGUI2 {
     public static void main(String[] args) {
         //UI ui = new GUI();
         UI ui = selectUI();
@@ -51,18 +52,7 @@ public class ClientAppGUI {
     }
 
     private static UI selectUI() {
-        System.out.println("Write C for CLI, G for GUI");
-        Scanner in = new Scanner(System.in);
-        String input = in.nextLine().toUpperCase();
-        while (!input.startsWith("C") && !input.startsWith("G")) {
-            System.out.println("Insert a valid input");
-            System.out.println("Write C for CLI, G for GUI");
-            input = in.nextLine().toUpperCase();
-        }
-        if (input.startsWith("C"))
-            return new CLI();
-        else
-            return new GUIRaf();
+            return new GUIFar();
     }
 
     public static void joinLobby(UI ui, NetworkAdapter networkAdapter) {
