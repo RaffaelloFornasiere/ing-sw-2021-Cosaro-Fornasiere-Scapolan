@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
+import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -50,15 +51,22 @@ public class MainApplication extends Application {
     static Stack<String> scenes;
     static Stack<Controller> controllers;
 
+    public static Stage getStage()
+    {
+        return stage;
+    }
+
+
+    private static final LockWrap<Boolean> isReady = new LockWrap<>(false, false);
+    public static boolean isReady()
+    {
+        return isReady.getWaitIfLocked();
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         MainApplication.stage = stage;
-        /*FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(scenes.peek() + ".fxml"));
-        loader.setController(controllers.peek());
-        Parent parent = loader.load();
-        scene = new Scene(parent);
-        stage.setScene(scene);*/
-        //stage.show();
+        isReady.setItem(true);
     }
 
     static void setScene(Scene scene) throws IOException {
@@ -76,7 +84,7 @@ public class MainApplication extends Application {
     }
 
     static Scene createScene(String fxml, Controller controller) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml ));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml));
         fxmlLoader.setController(controller);
         return new Scene((fxmlLoader.load()));
     }
@@ -99,7 +107,6 @@ public class MainApplication extends Application {
     public void stop() throws Exception {
         super.stop();
         System.out.println("stop");
-        gui.close();
     }
 
 }

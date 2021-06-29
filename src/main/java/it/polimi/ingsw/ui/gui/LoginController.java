@@ -131,7 +131,7 @@ public class LoginController extends Controller implements Initializable {
             gui.setLoginData(playerIdTextField.getText(), Objects.requireNonNullElse(leaderIdTextField.getText(), ""));
             gui.setPlayerImage(playerImage.getImage().getUrl());
         }
-        ((Stage)root.getScene().getWindow()).close();
+
     }
 
     public void onTextChanged()

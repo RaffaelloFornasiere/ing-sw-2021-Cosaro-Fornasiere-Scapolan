@@ -121,7 +121,7 @@ public class MainViewController extends Controller implements Initializable {
 
         Stage depotsStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Warehouse.fxml"));
-        fxmlLoader.setController(new WarehouseController(gui));
+        fxmlLoader.setController(new WarehouseController(gui, new HashMap<>()));
         Scene scene = new Scene(fxmlLoader.load());
         depotsStage.initModality(Modality.APPLICATION_MODAL);
         depotsStage.setScene(scene);

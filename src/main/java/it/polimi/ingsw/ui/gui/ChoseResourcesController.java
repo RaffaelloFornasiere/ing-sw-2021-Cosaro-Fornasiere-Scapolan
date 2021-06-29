@@ -34,7 +34,8 @@ public class ChoseResourcesController extends Controller implements Initializabl
     ListView<HBox> resourcesOfChoiceList;
     @FXML
     Label warningLabelOfChoice;
-
+    @FXML
+    Label label;
     @FXML
     Label addLabel;
 
@@ -58,6 +59,10 @@ public class ChoseResourcesController extends Controller implements Initializabl
     public void initialize(URL url, ResourceBundle resourceBundle) {
         done.setItem(false);
         checkResources();
+        if(numberOFResources == 1)
+            label.setText("Select one resource");
+        else
+            label.setText("Select " + String.valueOf(numberOFResources) + " resources");
     }
 
     public HashMap<Resource, Integer> getChosen() {
@@ -66,6 +71,8 @@ public class ChoseResourcesController extends Controller implements Initializabl
         resourcesOfChoiceList.getItems().stream().map( n-> Resource.valueOf(((Label)n.getChildren().get(0)).getText())).forEach( r ->
                 res.put(r, res.getOrDefault(r, 0) + 1)
         );
+
+
         return res;
     }
 

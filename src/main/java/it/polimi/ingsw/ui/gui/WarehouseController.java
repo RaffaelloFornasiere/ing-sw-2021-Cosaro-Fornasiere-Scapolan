@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +42,8 @@ public class WarehouseController extends Controller implements Initializable {
     AnchorPane root;
     HashMap<Resource, Integer> discardResources;
 
+    @FXML
+    Button nextButton;
 
     @FXML
     ArrayList<ArrayList<ImageView>> leaderDepotsResources;
@@ -50,15 +53,17 @@ public class WarehouseController extends Controller implements Initializable {
 
     @FXML
     AnchorPane leaderDepotsAnchorPane;
-
+    @FXML
+    AnchorPane toDiscardAnchorPane;
 
     ArrayList<ArrayList<ImageView>> depots;
 
     ArrayList<DepotState> leaderDepots;
 
-    public WarehouseController(GUI gui) {
+
+    public WarehouseController(GUI gui, HashMap<Resource, Integer> resourcesToPlace) {
         super(gui);
-        discardResources = new HashMap<>();
+        discardResources = resourcesToPlace;
     }
 
     @Override
@@ -99,29 +104,40 @@ public class WarehouseController extends Controller implements Initializable {
         Gson gson = builder.create();
 
 
-
-
         HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>();
-        gui.thisPlayerState().leaderCards.forEach((key1, value1) -> {
+        gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
             try {
-                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + key1 + ".json")), LeaderCard.class);
-                leaderCard.getLeaderPowers().stream().filter(card -> card instanceof DepositLeaderPower)
-                        .forEach(power -> ((DepositLeaderPower) power).getMaxResources()
-                                .forEach((key, value) -> depotsInfo.put(key, new Pair<>(depotsInfo.getOrDefault(key, new Pair<>(0,0)).getKey() + value, 0)))
+                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
+                        .forEach(power -> {
+                                    int powerIndex = leaderCard.getLeaderPowers().indexOf(power);
+                                    ((DepositLeaderPower) power).getMaxResources()
+                                            .forEach((key, value) ->
+                                                    {
+                                                        if (cardActive
+                                                                &&
+                                                                gui.thisPlayerState().leaderPowerStates.get(card) != null
+                                                                && gui.thisPlayerState().leaderPowerStates.get(card).get(powerIndex)
+                                                        )
+                                                            depotsInfo.put(key, new Pair<>(depotsInfo.getOrDefault(key, new Pair<>(0, 0)).getKey() + value, 0));
+                                                        else
+                                                            depotsInfo.put(key, new Pair<>(0, 0));
+                                                    }
+                                            );
+
+                                }
                         );
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-        for(var entry : gui.thisPlayerState().getLeaderDepots().entrySet()){
+        for (var entry : gui.thisPlayerState().getLeaderDepots().entrySet()) {
             depotsInfo.put(entry.getKey(), new Pair<>(depotsInfo.get(entry.getKey()).getKey(), entry.getValue()));
-
         }
-
 
         leaderDepots = new ArrayList<>() {{
             for (Resource r : Resource.values())
-                add(new DepotState(r, depotsInfo.getOrDefault(r, new Pair<>(0,0)).getKey(), depotsInfo.getOrDefault(r, new Pair<>(0,0)).getValue()));
+                add(new DepotState(r, depotsInfo.getOrDefault(r, new Pair<>(0, 0)).getKey(), depotsInfo.getOrDefault(r, new Pair<>(0, 0)).getValue()));
         }};
 
         leaderDepotsAnchorPane.getChildren().stream().map(n -> (AnchorPane) n).forEach(n -> {
@@ -138,10 +154,24 @@ public class WarehouseController extends Controller implements Initializable {
             if (depot.getCurrentQuantity() == 0) {
                 image.setOpacity(0);
             }
-
-
         });
 
+        //discardResources.entrySet().stream().map(e -> new Pair(e.getKey(), e.getValue())).forEach(System.out::print);
+        toDiscardAnchorPane.getChildren().stream().map(n -> (AnchorPane) n).forEach(n -> {
+            Resource r = Resource.valueOf(n.getId().replace("ToDiscard", "").toUpperCase());
+
+            Label label = (Label) n.getChildren().stream().filter(l -> l instanceof Label).findFirst().orElse(null);
+            label.setText(String.valueOf(discardResources.get(r)));
+            ImageView image = (ImageView) n.getChildren().stream().filter(l -> l instanceof ImageView).findFirst().orElse(null);
+            image.setImage(new Image(finalImagePath + r.toString().toLowerCase() + "2.png"));
+            if (discardResources.get(r) == 0) {
+                image.setOpacity(0.5);
+            }
+        });
+
+
+        if (!PlayerState.canPerformActions)
+            nextButton.setDisable(true);
 
     }
 
@@ -158,12 +188,16 @@ public class WarehouseController extends Controller implements Initializable {
                 db.setContent(content);
                 event.consume();
             }
-        } else if (event.getSource() instanceof AnchorPane && ((AnchorPane) event.getSource()).getId() != null
-                && ((AnchorPane) event.getSource()).getId().contains("leaderDepot")) {
+        } else if (event.getSource() instanceof AnchorPane && ((AnchorPane) event.getSource()).getId() != null) {
             AnchorPane source = ((AnchorPane) event.getSource());
             ImageView image = ((ImageView) source.getChildren().stream().filter(n -> n instanceof ImageView).collect(Collectors.toList()).get(0));
-            if (leaderDepots.stream().filter(n -> image.getImage().getUrl().toUpperCase().contains(n.getResourceType().toString())).collect(Collectors.toList()).get(0)
-                    .getCurrentQuantity() != 0) {
+            Resource res = Resource.valueOf(source.getId().replace("leaderDepot", "").replace("ToDiscard", "").toUpperCase());
+            if ((source.getId().contains("leaderDepot") &&
+                    (leaderDepots.stream().filter(n -> image.getImage().getUrl().toUpperCase().contains(n.getResourceType().toString())).collect(Collectors.toList()).get(0)
+                            .getCurrentQuantity() != 0))
+                    ||
+                    (source.getId().contains("ToDiscard") && discardResources.get(res) != 0)
+            ) {
                 Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
                 content.putString(image.getImage().getUrl());
@@ -172,6 +206,7 @@ public class WarehouseController extends Controller implements Initializable {
             }
         }
     }
+
 
     public void onDragDroppedOnLeader(DragEvent event) {
         Dragboard db = event.getDragboard();
@@ -207,16 +242,21 @@ public class WarehouseController extends Controller implements Initializable {
         event.consume();
     }
 
-    public void onDragDroppedOnBin(DragEvent event) {
+    public void onDragDroppedOnToDiscard(DragEvent event) {
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (db.hasString()) {
-            String s = db.getString();
-            s = s.substring(s.lastIndexOf("/") + 1, s.lastIndexOf(".")).toUpperCase();
-            s = s.substring(0, s.length() - 1);
-            //System.out.println(s);
-            Resource r = Resource.valueOf(s);
-            discardResources.put(r, discardResources.getOrDefault(r, 0) + 1);
+            AnchorPane target = ((AnchorPane) event.getTarget());
+            Resource res = Resource.valueOf(target.getId().replace("ToDiscard", "").toUpperCase());
+            discardResources.put(res, discardResources.getOrDefault(res, 0) + 1);
+
+            target.getChildren().stream().filter(n -> n instanceof Label)
+                    .map(n -> (Label) n)
+                    .collect(Collectors.toList()).get(0).setText(String.valueOf(discardResources.get(res)));
+            if (discardResources.get(res) >= 1)
+                target.getChildren().stream().filter(n -> n instanceof ImageView)
+                        .map(n -> (ImageView) n)
+                        .collect(Collectors.toList()).get(0).setOpacity(1);
             success = true;
         }
 
@@ -231,14 +271,25 @@ public class WarehouseController extends Controller implements Initializable {
             }
         } else if (event.getSource() instanceof AnchorPane) {
             if (event.getTransferMode() == TransferMode.MOVE) {
-                Label l = (Label) ((AnchorPane) event.getSource()).getChildren().stream().filter(n -> n instanceof Label).collect(Collectors.toList()).get(0);
-                ImageView im = (ImageView) ((AnchorPane) event.getSource()).getChildren().stream().filter(n -> n instanceof ImageView).collect(Collectors.toList()).get(0);
+                AnchorPane target = (AnchorPane) event.getSource();
+                if (target.getId() != null && target.getId().contains("leader")) {
+                    Label l = (Label) ((AnchorPane) event.getSource()).getChildren().stream().filter(n -> n instanceof Label).collect(Collectors.toList()).get(0);
+                    ImageView im = (ImageView) ((AnchorPane) event.getSource()).getChildren().stream().filter(n -> n instanceof ImageView).collect(Collectors.toList()).get(0);
 
-                DepotState depot = leaderDepots.stream().filter(n -> im.getImage().getUrl().toUpperCase().contains(n.getResourceType().toString())).collect(Collectors.toList()).get(0);
-                depot.trySubResource(depot.getResourceType(), 1);
-                l.setText(String.valueOf(depot.getCurrentQuantity()));
-                if (depot.getCurrentQuantity() == 0) {
-                    im.setOpacity(0);
+                    DepotState depot = leaderDepots.stream().filter(n -> im.getImage().getUrl().toUpperCase().contains(n.getResourceType().toString())).collect(Collectors.toList()).get(0);
+                    depot.trySubResource(depot.getResourceType(), 1);
+                    l.setText(String.valueOf(depot.getCurrentQuantity()));
+                    if (depot.getCurrentQuantity() == 0) {
+                        im.setOpacity(0);
+                    }
+                } else if (target.getId() != null && target.getId().contains("ToDiscard")) {
+                    Label l = (Label) ((AnchorPane) event.getSource()).getChildren().stream().filter(n -> n instanceof Label).collect(Collectors.toList()).get(0);
+                    ImageView im = (ImageView) ((AnchorPane) event.getSource()).getChildren().stream().filter(n -> n instanceof ImageView).collect(Collectors.toList()).get(0);
+                    Resource type = Resource.valueOf(target.getId().replace("ToDiscard", "").toUpperCase());
+                    discardResources.put(type, discardResources.get(type) - 1);
+                    l.setText(String.valueOf(discardResources.get(type)));
+                    if (discardResources.get(type) == 0)
+                        im.setOpacity(0.5);
                 }
             }
         }
@@ -253,26 +304,33 @@ public class WarehouseController extends Controller implements Initializable {
             // if it is hovering a leader depot
 
             if (target instanceof AnchorPane &&
-                    target.getId() != null &&
-                    target.getId().contains("leader")) {
-                String type = target.getId().replace("leaderDepot", "");
-                type = type.toUpperCase();
-                String url = event.getDragboard().getString();
-                // check the compatibility of the resource dragged
-                // with the one of the leader depot
-                if (url.toUpperCase().contains(type)) {
-                    Resource resource = Resource.valueOf(type);
-                    //if exist some free compatible depot
-                    if (leaderDepots.stream().anyMatch(depot -> depot.getResourceType().equals(resource)
-                            && depot.getCurrentQuantity() < depot.getMaxQuantity()))
+                    target.getId() != null) {
+                String type;
+                if (target.getId().contains("leader")) {
+                    type = target.getId().replace("leaderDepot", "");
+                    type = type.toUpperCase();
+                    String url = event.getDragboard().getString();
+                    // check the compatibility of the resource dragged
+                    // with the one of the leader depot
+                    if (url.toUpperCase().contains(type)) {
+                        Resource resource = Resource.valueOf(type);
+                        //if exist some free compatible depot
+                        if (leaderDepots.stream().anyMatch(depot -> depot.getResourceType().equals(resource)
+                                && depot.getCurrentQuantity() < depot.getMaxQuantity()))
+                            event.acceptTransferModes(TransferMode.MOVE);
+                    }
+                } else {
+                    type = target.getId().replace("ToDiscard", "").toUpperCase();
+                    String url = event.getDragboard().getString();
+                    // check the compatibility of the resource dragged
+                    // with the one of the leader depot
+                    if (url.toUpperCase().contains(type)) {
+
                         event.acceptTransferModes(TransferMode.MOVE);
+                    }
                 }
-            }
-            // of is hovering the trash bin
-            else if (parent instanceof AnchorPane &&
-                    parent.getId() != null &&
-                    parent.getId().equals("bin")) {
-                event.acceptTransferModes(TransferMode.MOVE);
+
+
             }
             // if it is hovering a warehouse depot
             else if (event.getSource() instanceof ImageView) {

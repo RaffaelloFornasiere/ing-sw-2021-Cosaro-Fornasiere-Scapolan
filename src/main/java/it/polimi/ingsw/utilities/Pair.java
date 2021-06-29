@@ -54,4 +54,13 @@ public class Pair<K, V> {
     public V getValue() {
         return value;
     }
+
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+                "key=" + key +
+                ", value=" + value +
+                '}';
+    }
 }

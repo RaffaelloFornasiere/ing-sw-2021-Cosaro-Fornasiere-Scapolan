@@ -85,8 +85,5 @@ public class LobbyController extends Controller implements Initializable {
         gui.startGame();
     }
 
-    public void close()
-    {
-        ((Stage)root.getScene().getWindow()).close();
-    }
+
 }

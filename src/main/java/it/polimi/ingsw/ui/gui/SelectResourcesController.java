@@ -38,6 +38,9 @@ public class SelectResourcesController extends Controller implements Initializab
     @FXML
     AnchorPane root;
 
+    @FXML
+    Button nextButton;
+
 
     ArrayList<Resource> resourcesRequired;
     int resourcesOfChoice;
@@ -87,6 +90,10 @@ public class SelectResourcesController extends Controller implements Initializab
         leaderDeportsResourcesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         resourcesToUse.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         checkResources();
+
+
+        if (!PlayerState.canPerformActions)
+            nextButton.setDisable(true);
     }
 
     public ChosenResourcesEvent getResult() {
@@ -118,7 +125,6 @@ public class SelectResourcesController extends Controller implements Initializab
             return;
         }
         dataReady.setItem(true);
-
         ((Stage) root.getScene().getWindow()).close();
     }
 
