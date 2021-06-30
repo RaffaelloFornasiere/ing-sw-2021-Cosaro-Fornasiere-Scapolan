@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.utilities.NetworkConfiguration;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,7 +13,7 @@ import java.net.Socket;
  * The class containing the logic to start the server
  */
 public class MainServer{
-    public static final int SERVER_PORT = 50885;
+    public static final int SERVER_PORT = NetworkConfiguration.getInstance().getPORT();
     private final EventRegistry mainEventHandlerRegistry;
 
     /**
