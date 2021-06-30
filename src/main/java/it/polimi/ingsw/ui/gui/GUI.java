@@ -521,7 +521,7 @@ public class GUI extends UI {
                 }
             }
         });
-        //System.out.println("wating for res");
+        //System.out.println("waiting for res");
         res = controller.getSelected();
         //System.out.println("Res arrived: ");
         //res.forEach(System.out::print);
@@ -556,7 +556,7 @@ public class GUI extends UI {
                 }
             }
         });
-        //System.out.println("wating for res");
+        //System.out.println("waiting for res");
         res = controller.getChosen();
         //System.out.println("Res arrived: ");
         //res.entrySet().stream().map(n -> new Pair(n.getKey(), n.getValue())).forEach(System.out::print);
