@@ -953,6 +953,11 @@ public class CLI extends UI {
         faithTrack = new FaithTrackView(players);
     }
 
+    @Override
+    public void invalidateUsername() {
+
+    }
+
     /**
      * Method which asks the user to choose among a set of leader cards in the setup fase.
      *
@@ -1209,7 +1214,6 @@ public class CLI extends UI {
      *
      * @return The BuyResourcesEvent containing all the information about the result of user's choice.
      */
-    @Override
     public BuyResourcesEvent askForMarketRow() {
         Direction dir = null;
         int index = 0;
@@ -1250,7 +1254,6 @@ public class CLI extends UI {
      *
      * @return BuyDevCardEvent containing the information required to by the card.
      */
-    @Override
     public BuyDevCardsEvent askForDevCard() {
         int slot;
         String devCard;
@@ -1284,7 +1287,6 @@ public class CLI extends UI {
      *
      * @return ActivateProductionEvent  with all the information required to activate production.
      */
-    @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
         playerStates.get(thisPlayer).getDashBoard().displayPersonalProductionPower(out);
         playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
@@ -1306,7 +1308,6 @@ public class CLI extends UI {
      * @return The id of the card to discard.
      * @throws NotPresentException If there aren't leader cards to discard.
      */
-    @Override
     public String askForLeaderCardToDiscard() throws NotPresentException {
         Collection<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values();
         if (leaderCardViews.size() == 0)
@@ -1333,7 +1334,6 @@ public class CLI extends UI {
      * @return The id of the card to activate.
      * @throws NotPresentException If there aren't any cards or all the leader card are already active.
      */
-    @Override
     public String askForLeaderCardToActivate() throws NotPresentException {
         Collection<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values();
         if (leaderCardViews.size() == 0)
@@ -1360,7 +1360,6 @@ public class CLI extends UI {
      * @return The array of LeaderPower whose state "selected" has changed
      * @throws NotPresentException if no leader power is selectable since all the cards are not active.
      */
-    @Override
     public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
         ArrayList<LeaderCardView> leaderCardViews = playerStates.get(thisPlayer).getLeaderCards().values().stream().filter(LeaderCardView::isActive).collect(Collectors.toCollection(ArrayList::new));
 

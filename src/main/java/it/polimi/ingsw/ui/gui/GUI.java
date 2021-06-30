@@ -631,8 +631,7 @@ public class GUI extends UI {
 
     }
 
-    @Override
-    public BuyResourcesEvent askForMarketRow() {
+    /*public BuyResourcesEvent askForMarketRow() {
         PlayerState.availableActions = new ArrayList<>();
 
         PlayerState.availableActions.add(Action.TAKE_RESOURCES_FROM_MARKET);
@@ -646,7 +645,6 @@ public class GUI extends UI {
         return e;
     }
 
-    @Override
     public BuyDevCardsEvent askForDevCard() {
         PlayerState.availableActions = new ArrayList<>();
         PlayerState.availableActions.add(Action.BUY_DEVCARD);
@@ -660,7 +658,6 @@ public class GUI extends UI {
         return e;
     }
 
-    @Override
     public ActivateProductionEvent askForProductionPowersToUse() {
         PlayerState.availableActions = new ArrayList<>();
         PlayerState.availableActions.add(Action.PRODUCE);
@@ -674,8 +671,6 @@ public class GUI extends UI {
         return e;
     }
 
-    //TODO missing a way to differentiate it with activate
-    @Override
     public String askForLeaderCardToDiscard() throws NotPresentException {
         if (!thisPlayerState().leaderCards.containsValue(false))
             throw new NotPresentException("No leader card can be discarded");
@@ -692,7 +687,6 @@ public class GUI extends UI {
     }
 
 
-    @Override
     public String askForLeaderCardToActivate() throws NotPresentException {
         if (!thisPlayerState().leaderCards.containsValue(false))
             throw new NotPresentException("No leader card can be activated");
@@ -709,7 +703,6 @@ public class GUI extends UI {
     }
 
 
-    @Override
     public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
         ArrayList<LeaderPowerSelectStateEvent> events = new ArrayList<>();
         if (!thisPlayerState().leaderCards.containsValue(true))
@@ -723,7 +716,7 @@ public class GUI extends UI {
 
         PlayerState.canPerformActions = false;
         return events;
-    }
+    }*/
 
     @Override
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
