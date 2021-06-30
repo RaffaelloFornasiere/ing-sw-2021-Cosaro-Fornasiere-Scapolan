@@ -83,129 +83,129 @@ public class GUI extends UI {
             TimeUnit.SECONDS.sleep(1);
 
 
-//            Platform.runLater(() -> {
-//                try {
-//                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Splashscreen.fxml"));
-//                    Controller controller = new SplashScreenController(aux);//, allowed, 2);
-//                    fxmlLoader.setController(controller);
-//                    stage.setScene(new Scene(fxmlLoader.load()));
-//                    stage.show();
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-
-
-//
-////
-////
-////
-////            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent","INSTANCE":{"lobbyLeaderID":"Raf","playerId":"Raf"}}
-////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":[]}}
-////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":["far"]}}
-////            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.StartMatchEvent","INSTANCE":{"playerId":"Raf"}}
-////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.GameStartingEvent","INSTANCE":{"playerIDs":["far","Raf"],"playerId":"Raf"}}
-            HashMap<Resource, Integer> strongBox = new HashMap<>() {{
-//                put(Resource.COIN, 4);
-//                put(Resource.SHIELD, 2);
-//                put(Resource.SERVANT, 5);
-//                put(Resource.ROCK, 3);
-            }};
-            ArrayList<DepotState> warehouse = new ArrayList<>() {{
-//                add(new DepotState(Resource.COIN, 1, 1));
-//                add(new DepotState(Resource.SHIELD, 2, 2));
-//                add(new DepotState(Resource.SERVANT, 3, 3));
-            }};
-            playerID.setItem("paolo");
-            playerStates.put(playerID.getItem(), new PlayerState());
-
-            thisPlayerState().ownedCards.get(0).add("DevCard1");
-            thisPlayerState().ownedCards.get(0).add("DevCard23");
-            thisPlayerState().ownedCards.get(1).add("DevCard4");
-            thisPlayerState().ownedCards.get(2).add("DevCard8");
-            thisPlayerState().ownedCards.get(2).add("DevCard26");
-            thisPlayerState().ownedCards.get(2).add("DevCard35");
-
-            thisPlayerState().leaderCards.put("LeaderCard5", true);
-            thisPlayerState().leaderCards.put("LeaderCard6", false);
-
-
-            thisPlayerState().updateLeaderCardDepositState("LeaderCard5", 0,
-                    new HashMap<>() {{
-
-                    }});
-            thisPlayerState().leaderPowerStates.put("LeaderCard5", new ArrayList<>() {{
-                add(true);
-            }});
-
-
-            thisPlayerState().warehouse = warehouse;
-            thisPlayerState().strongBox = strongBox;
-            thisPlayerState().faithTrackPoints = 4;
-            thisPlayerState().victoryPoints = 15;
-            ArrayList<ArrayList<Integer>> indexes = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                int finalI = i;
-                indexes.add(new ArrayList<>() {{
-                    int base = (finalI) * 16;
-                    add(1 + base);
-                    add(2 + base);
-                    add(3 + base);
-                    add(4 + base);
-                }});
-            }
-
-            PlayerState.devCardGrid = new String[3][4];
-            for (int i = 0; i < PlayerState.devCardGrid.length; i++) {
-                for (int j = 0; j < PlayerState.devCardGrid[0].length; j++) {
-                    int index = indexes.get(i).get(j);
-                    PlayerState.devCardGrid[i][j] = "DevCard" + index;
-                }
-            }
-
-
-            int rows = 3;
-            int cols = 4;
-            PlayerState.devCardGrid = new String[rows][cols];
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    int level = i * 16 + 1;
-                    PlayerState.devCardGrid[i][j] = "DevCard" + (level + j);
-                }
-            }
-            HashMap<Marble, Integer> marbles = new HashMap<>() {{
-                put(Marble.GRAY, 2);
-                put(Marble.YELLOW, 2);
-                put(Marble.PURPLE, 2);
-                put(Marble.BLUE, 2);
-                put(Marble.WHITE, 4);
-                put(Marble.RED, 1);
-            }};
-            Market market = new Market(3, 4, marbles);
-            PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
-            HashMap<Resource, Integer> resources = new HashMap<>() {{
-                put(Resource.ROCK, 1);
-                put(Resource.SHIELD, 1);
-
-            }};
-
-            LeaderCardActionController controller = new LeaderCardActionController(this);
             Platform.runLater(() -> {
-                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("LeaderCardAction.fxml"));
-                loader.setController(controller);
                 try {
-                    Stage stage = new Stage();
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    Scene scene = new Scene(loader.load());
-                    stage.setScene(scene);
-                    stage.showAndWait();
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Splashscreen.fxml"));
+                    Controller controller = new SplashScreenController(aux);//, allowed, 2);
+                    fxmlLoader.setController(controller);
+                    stage.setScene(new Scene(fxmlLoader.load()));
+                    stage.show();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
-            PlayerState.canPerformActions = true;
-            thisPlayerState().event.setItem(null);
+
+//
+////
+//////
+//////
+//////
+//////            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent","INSTANCE":{"lobbyLeaderID":"Raf","playerId":"Raf"}}
+//////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":[]}}
+//////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":["far"]}}
+//////            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.StartMatchEvent","INSTANCE":{"playerId":"Raf"}}
+//////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.GameStartingEvent","INSTANCE":{"playerIDs":["far","Raf"],"playerId":"Raf"}}
+//            HashMap<Resource, Integer> strongBox = new HashMap<>() {{
+////                put(Resource.COIN, 4);
+////                put(Resource.SHIELD, 2);
+////                put(Resource.SERVANT, 5);
+////                put(Resource.ROCK, 3);
+//            }};
+//            ArrayList<DepotState> warehouse = new ArrayList<>() {{
+////                add(new DepotState(Resource.COIN, 1, 1));
+////                add(new DepotState(Resource.SHIELD, 2, 2));
+////                add(new DepotState(Resource.SERVANT, 3, 3));
+//            }};
+//            playerID.setItem("paolo");
+//            playerStates.put(playerID.getItem(), new PlayerState());
+//
+//            thisPlayerState().ownedCards.get(0).add("DevCard1");
+//            thisPlayerState().ownedCards.get(0).add("DevCard23");
+//            thisPlayerState().ownedCards.get(1).add("DevCard4");
+//            thisPlayerState().ownedCards.get(2).add("DevCard8");
+//            thisPlayerState().ownedCards.get(2).add("DevCard26");
+//            thisPlayerState().ownedCards.get(2).add("DevCard35");
+//
+//            thisPlayerState().leaderCards.put("LeaderCard5", true);
+//            thisPlayerState().leaderCards.put("LeaderCard6", false);
+//
+//
+//            thisPlayerState().updateLeaderCardDepositState("LeaderCard5", 0,
+//                    new HashMap<>() {{
+//
+//                    }});
+//            thisPlayerState().leaderPowerStates.put("LeaderCard5", new ArrayList<>() {{
+//                add(true);
+//            }});
+//
+//
+//            thisPlayerState().warehouse = warehouse;
+//            thisPlayerState().strongBox = strongBox;
+//            thisPlayerState().faithTrackPoints = 4;
+//            thisPlayerState().victoryPoints = 15;
+//            ArrayList<ArrayList<Integer>> indexes = new ArrayList<>();
+//            for (int i = 0; i < 3; i++) {
+//                int finalI = i;
+//                indexes.add(new ArrayList<>() {{
+//                    int base = (finalI) * 16;
+//                    add(1 + base);
+//                    add(2 + base);
+//                    add(3 + base);
+//                    add(4 + base);
+//                }});
+//            }
+//
+//            PlayerState.devCardGrid = new String[3][4];
+//            for (int i = 0; i < PlayerState.devCardGrid.length; i++) {
+//                for (int j = 0; j < PlayerState.devCardGrid[0].length; j++) {
+//                    int index = indexes.get(i).get(j);
+//                    PlayerState.devCardGrid[i][j] = "DevCard" + index;
+//                }
+//            }
+//
+//
+//            int rows = 3;
+//            int cols = 4;
+//            PlayerState.devCardGrid = new String[rows][cols];
+//            for (int i = 0; i < rows; i++) {
+//                for (int j = 0; j < cols; j++) {
+//                    int level = i * 16 + 1;
+//                    PlayerState.devCardGrid[i][j] = "DevCard" + (level + j);
+//                }
+//            }
+//            HashMap<Marble, Integer> marbles = new HashMap<>() {{
+//                put(Marble.GRAY, 2);
+//                put(Marble.YELLOW, 2);
+//                put(Marble.PURPLE, 2);
+//                put(Marble.BLUE, 2);
+//                put(Marble.WHITE, 4);
+//                put(Marble.RED, 1);
+//            }};
+//            Market market = new Market(3, 4, marbles);
+//            PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
+//            HashMap<Resource, Integer> resources = new HashMap<>() {{
+//                put(Resource.ROCK, 1);
+//                put(Resource.SHIELD, 1);
+//
+//            }};
+//
+//            LeaderCardActionController controller = new LeaderCardActionController(this);
+//            Platform.runLater(() -> {
+//                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("LeaderCardAction.fxml"));
+//                loader.setController(controller);
+//                try {
+//                    Stage stage = new Stage();
+//                    stage.initModality(Modality.APPLICATION_MODAL);
+//                    Scene scene = new Scene(loader.load());
+//                    stage.setScene(scene);
+//                    stage.showAndWait();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//            PlayerState.canPerformActions = true;
+//            thisPlayerState().event.setItem(null);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -577,6 +577,7 @@ public class GUI extends UI {
         Platform.runLater(() -> {
             if (playerID.equals(this.playerID.getItem())) {
                 mainViewController.setFaithTrackPosition(position);
+                mainViewController.faithTrackController.getItem().updateFavorCards();
             }
         });
 
@@ -898,11 +899,9 @@ public class GUI extends UI {
     //TODO
     @Override
     public void updateLorenzoPosition(int position) {
-
-
         Platform.runLater(() -> {
             if (playerID.equals(this.playerID.getItem())) {
-                mainViewController.updateAll();
+                mainViewController.setLorenzoFaithTrackPosition(position);
             }
         });
     }

@@ -62,7 +62,6 @@ public class MainViewController extends Controller implements Initializable {
     @FXML
     Label victoryPointsLabel;
 
-
     @FXML
     VBox playerSlot;
 
@@ -81,10 +80,10 @@ public class MainViewController extends Controller implements Initializable {
         SelectableImage.setSelectable(root);
         MainViewController aux = this;
         Platform.runLater(() -> {
-            faithTrackController.setItem(new FaithTrackController(faithTrack, aux.gui.singlePlayer.getWaitIfLocked()));
+            faithTrackController.setItem(new FaithTrackController(gui, faithTrack, aux.gui.singlePlayer.getWaitIfLocked()));
             aux.setFaithTrackPosition(0);
         });
-        ((Label)playerSlot.getChildren().stream().filter(n ->  n instanceof Label).collect(Collectors.toList()).get(0)).setText(gui.playerID.getItem());
+        ((Label) playerSlot.getChildren().stream().filter(n -> n instanceof Label).collect(Collectors.toList()).get(0)).setText(gui.playerID.getItem());
         updateAll();
     }
 
@@ -146,6 +145,11 @@ public class MainViewController extends Controller implements Initializable {
     public void setFaithTrackPosition(int pos) {
         faithTrackController.getWaitIfLocked().setPlayerPosition(pos);
     }
+
+    public void setLorenzoFaithTrackPosition(int pos) {
+        faithTrackController.getWaitIfLocked().setLorenzoPosition(pos);
+    }
+
 
     public void updateMarket() {
         ArrayList<ArrayList<String>> marketStatus = new ArrayList<>();
@@ -334,8 +338,7 @@ public class MainViewController extends Controller implements Initializable {
 
     }
 
-    public void updateLeaderCards()
-    {
+    public void updateLeaderCards() {
 
     }
 
@@ -354,7 +357,6 @@ public class MainViewController extends Controller implements Initializable {
     }
 
 
-
     public void setTurnActive(boolean active) {
         System.out.println("turn active: " + active);
         if (active)
@@ -362,7 +364,6 @@ public class MainViewController extends Controller implements Initializable {
         else
             playerSlot.setStyle("-fx-border-color: #801b1b; -fx-background-color: rgba(165, 27, 27, 0.25)");
     }
-
 
 
     public void leaderAction(MouseEvent mouseEvent) throws IOException {

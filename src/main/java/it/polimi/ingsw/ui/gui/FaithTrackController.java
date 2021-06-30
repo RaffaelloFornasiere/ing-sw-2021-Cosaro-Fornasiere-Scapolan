@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public class FaithTrackController {
+public class FaithTrackController extends Controller {
 
     private class DoublePoint {
         public double x;
@@ -40,19 +40,16 @@ public class FaithTrackController {
     private int positionLorenzo;
 
 
-
     ArrayList<ImageView> popeFavorCards;
 
 
     ImageView cross;
     ImageView crossLorenzo;
     GridPane faithTrack;
-
     double cellSize;
 
 
     boolean singlePlayer;
-
 
 
     /**
@@ -66,8 +63,8 @@ public class FaithTrackController {
      *
      * @param faithTrack
      */
-    FaithTrackController(GridPane faithTrack, boolean singlePlayer) {
-
+    FaithTrackController(GUI gui, GridPane faithTrack, boolean singlePlayer) {
+        super(gui);
         zeroPos = new DoublePoint(0, 0);
         currentPos = new DoublePoint(0, 0);
         this.faithTrack = faithTrack;
@@ -98,7 +95,7 @@ public class FaithTrackController {
                 .collect(Collectors.toList())
                 .get(0).getFitHeight() + 5;
         cellSize = faithTrack.getWidth() / 19;
-       // System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
+        // System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
         cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
         cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
         cross.setTranslateY(zeroPos.y * 1.2);
@@ -106,7 +103,7 @@ public class FaithTrackController {
         currentPos.y = zeroPos.y * 1.2;
         setPlayerPosition(0);
 
-        if(singlePlayer) {
+        if (singlePlayer) {
             ((StackPane) faithTrack.getParent()).getChildren().add(crossLorenzo);
             crossLorenzo.setTranslateX(-zeroPos.x + zeroPos.y / 2);
             crossLorenzo.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
@@ -115,16 +112,18 @@ public class FaithTrackController {
         }
 
 
+
+
+
     }
 
 
-    public void setLorenzoPosition(int newPosition)
-    {
-        setPosition( newPosition,  crossLorenzo);
+    public void setLorenzoPosition(int newPosition) {
+        setPosition(newPosition, crossLorenzo);
     }
 
-    public void setPlayerPosition(int newPosition){
-        setPosition( newPosition,  cross);
+    public void setPlayerPosition(int newPosition) {
+        setPosition(newPosition, cross);
     }
 
     /**
@@ -211,6 +210,12 @@ public class FaithTrackController {
     }
 
 
+    public void updateFavorCards() {
+        var popeFavorCards = gui.thisPlayerState().getPopeFavorCards();
+
+    }
+
     public void setPopeFavorCards(HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+
     }
 }

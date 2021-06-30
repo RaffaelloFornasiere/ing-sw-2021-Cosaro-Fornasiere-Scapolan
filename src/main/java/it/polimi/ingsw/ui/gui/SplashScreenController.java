@@ -82,7 +82,9 @@ public class SplashScreenController extends Controller implements Initializable 
 
     public void setSinglePlayer() throws IOException {
         gui.singlePlayer.setItem(true);
-        switchToLogin();
+        Controller controller = new LoginController(gui);
+        controller.setPreviousScene(root.getScene());
+        ((Stage)root.getScene().getWindow()).setScene(MainApplication.createScene("Login.fxml", controller));
     }
 
 

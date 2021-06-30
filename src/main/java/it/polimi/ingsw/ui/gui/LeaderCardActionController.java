@@ -21,7 +21,7 @@ public class LeaderCardActionController extends Controller implements Initializa
     LeaderCardActionController(GUI gui) {
         super(gui);
         String url = new java.io.File(".").getAbsolutePath();
-        url = "file:/" + url.substring(0, url.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        url = "file:/" + url.substring(0, url.length() - 2).replace("\\", "/") + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
         leaderImages = new LinkedList<>();
         String finalUrl = url;
         gui.thisPlayerState().leaderCards.forEach((key, value) -> leaderImages.add(new Pair<>(finalUrl + key + ".png", value)));
@@ -31,7 +31,7 @@ public class LeaderCardActionController extends Controller implements Initializa
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        nextImage();
     }
 
     @FXML
@@ -59,8 +59,8 @@ public class LeaderCardActionController extends Controller implements Initializa
             nextImage();
             return;
         }
-
-        current = next.getKey().substring(next.getKey().lastIndexOf("/"+1, next.getKey().lastIndexOf(".")));
+        String url = next.getKey();
+        current = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf("."));
         isActive.setVisible(next.getValue());
         leaderImage.setImage(new Image(next.getKey()));
     }
@@ -76,7 +76,7 @@ public class LeaderCardActionController extends Controller implements Initializa
             previousImage();
             return;
         }
-        current = previous.getKey().substring(previous.getKey().lastIndexOf("/"+1, previous.getKey().lastIndexOf(".")));
+        current = previous.getKey().substring(previous.getKey().lastIndexOf("/")+1, previous.getKey().lastIndexOf("."));
         isActive.setVisible(previous.getValue());
         leaderImage.setImage(new Image(previous.getKey()));
     }
