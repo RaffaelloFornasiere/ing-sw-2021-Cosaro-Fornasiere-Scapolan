@@ -52,7 +52,18 @@ public class ClientAppGUI2 {
     }
 
     private static UI selectUI() {
-            return new GUIFar();
+//        System.out.println("Write C for CLI, G for GUI");
+//        Scanner in = new Scanner(System.in);
+//        String input = in.nextLine().toUpperCase();
+//        while (!input.startsWith("C") && !input.startsWith("G")) {
+//            System.out.println("Insert a valid input");
+//            System.out.println("Write C for CLI, G for GUI");
+//            input = in.nextLine().toUpperCase();
+//        }
+//        if (input.startsWith("C"))
+//            return new CLI();
+//        else
+        return new GUIFar();
     }
 
     public static void joinLobby(UI ui, NetworkAdapter networkAdapter) {

@@ -4,10 +4,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -32,36 +28,54 @@
                                 <Image url="@images/warehouse.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="30.0" layoutX="99.0" layoutY="49.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="99.0" layoutY="49.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <styleClass>
                         <String fx:value="Coin" />
                         <String fx:value="Resource" />
-                     </styleClass></ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="30.0" layoutX="81.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="81.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <styleClass>
                         <String fx:value="Shield" />
                         <String fx:value="Resource" />
-                     </styleClass></ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="30.0" layoutX="125.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="125.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <styleClass>
                         <String fx:value="Shield" />
                         <String fx:value="Resource" />
-                     </styleClass></ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="30.0" layoutX="57.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="57.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <styleClass>
                         <String fx:value="Rock" />
                         <String fx:value="Resource" />
-                     </styleClass></ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="30.0" layoutX="99.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="99.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <styleClass>
                         <String fx:value="Rock" />
                         <String fx:value="Resource" />
-                     </styleClass></ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="30.0" layoutX="143.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="143.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <styleClass>
                         <String fx:value="Rock" />
                         <String fx:value="Resource" />
-                     </styleClass></ImageView>
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
                     </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -193,7 +207,7 @@
                                     <children>
                                         <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
-                                                <Image url="@images/stone2.png" />
+                                                <Image url="@images/rock2.png" />
                                             </image>
                                         </ImageView>
                                         <Label id="rockCounter" alignment="CENTER" text="5" textFill="WHITE">
@@ -218,9 +232,9 @@
             <children>
                 <Group stylesheets="@stylesheets/main.css">
                     <children>
-                        <VBox alignment="CENTER" layoutX="31.03333282470703" layoutY="6.299999237060547" prefHeight="135.0" prefWidth="118.0">
+                        <VBox alignment="CENTER" layoutX="31.03333282470703" layoutY="6.299999237060547" prefHeight="135.0" prefWidth="118.0" styleClass="PlayerSlot">
                             <children>
-                                <ImageView fitHeight="88.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true" styleClass="PlayerSlot">
+                                <ImageView fitHeight="88.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@images/Players/illustrationAccueil_plan1.png" />
                                     </image>
@@ -449,45 +463,6 @@
     <top>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
             <children>
-                <MenuBar style="-fx-text-fill: white;" stylesheets="@stylesheets/main.css">
-                    <menus>
-                        <Menu mnemonicParsing="false" text="File">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="New" />
-                                <MenuItem mnemonicParsing="false" text="Open…" />
-                                <Menu mnemonicParsing="false" text="Open Recent" />
-                                <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" text="Close" />
-                                <MenuItem mnemonicParsing="false" text="Save" />
-                                <MenuItem mnemonicParsing="false" text="Save As…" />
-                                <MenuItem mnemonicParsing="false" text="Revert" />
-                                <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" text="Preferences…" />
-                                <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" text="Quit" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Edit">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Undo" />
-                                <MenuItem mnemonicParsing="false" text="Redo" />
-                                <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" text="Cut" />
-                                <MenuItem mnemonicParsing="false" text="Copy" />
-                                <MenuItem mnemonicParsing="false" text="Paste" />
-                                <MenuItem mnemonicParsing="false" text="Delete" />
-                                <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" text="Select All" />
-                                <MenuItem mnemonicParsing="false" text="Unselect All" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Help">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-                            </items>
-                        </Menu>
-                    </menus>
-                </MenuBar>
                 <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="210.0" prefWidth="1300.0">
                     <children>
                         <StackPane>

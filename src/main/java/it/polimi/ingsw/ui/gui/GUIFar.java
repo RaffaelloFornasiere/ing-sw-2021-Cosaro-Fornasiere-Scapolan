@@ -7,6 +7,7 @@ public class GUIFar extends GUI{
     public GUIFar(){
         playerID.setItem("far");
         leaderID.setItem("Raf");
+        singlePlayer.setItem(false);
     }
 
     @Override

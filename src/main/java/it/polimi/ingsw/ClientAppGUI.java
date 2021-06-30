@@ -51,17 +51,17 @@ public class ClientAppGUI {
     }
 
     private static UI selectUI() {
-        System.out.println("Write C for CLI, G for GUI");
-        Scanner in = new Scanner(System.in);
-        String input = in.nextLine().toUpperCase();
-        while (!input.startsWith("C") && !input.startsWith("G")) {
-            System.out.println("Insert a valid input");
-            System.out.println("Write C for CLI, G for GUI");
-            input = in.nextLine().toUpperCase();
-        }
-        if (input.startsWith("C"))
-            return new CLI();
-        else
+//        System.out.println("Write C for CLI, G for GUI");
+//        Scanner in = new Scanner(System.in);
+//        String input = in.nextLine().toUpperCase();
+//        while (!input.startsWith("C") && !input.startsWith("G")) {
+//            System.out.println("Insert a valid input");
+//            System.out.println("Write C for CLI, G for GUI");
+//            input = in.nextLine().toUpperCase();
+//        }
+//        if (input.startsWith("C"))
+//            return new CLI();
+//        else
             return new GUIRaf();
     }
 

@@ -1,0 +1,83 @@
+.root {
+    -fx-background-color: #393939;
+
+}
+
+.label {
+    -fx-text-fill: #2a2a2a;
+}
+
+.progress-indicator {
+    /*-fx-scale-x: 0;*/
+    -fx-progress-color: rgba(203, 141, 117, 0.66);
+}
+
+.ButtonsGroup {
+
+}
+
+.button {
+    -fx-background-radius: 20 20 20 20;
+    -fx-background-color: #84522b;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 0, 0, 0);
+}
+
+.button:hover {
+    -fx-background-color: #b8703b;
+}
+
+.button:pressed {
+    -fx-background-color: #b8703b;
+}
+
+
+.list-view {
+    -fx-background-color: #ffffff10;
+}
+
+
+.list-cell > .label {
+    -fx-text-fill: black; /* 5 */
+}
+
+.list-cell:odd {
+    -fx-background-color: #535353; /* 1 */
+}
+
+.list-cell:even {
+    -fx-background-color: #717171; /* for information */
+}
+
+
+.table-view{
+    -fx-background-color: #ffffff10;
+}
+
+.table-view .column-header-background .filler{
+    -fx-background-color: #ffffff10;
+}
+.table-view .column-header-background{
+    -fx-background-color: #ffffff10;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #212121;
+}
+
+.table-view .table-cell{
+    -fx-border-color: transparent;
+}
+.table-row-cell:hover {
+    -fx-background-color: #93f9b911;
+    -fx-text-background-color: #878787;
+}
+.table-row-cell:odd{
+    -fx-background-color: #535353; /* 1 */
+    -fx-padding: 0.0em;
+}
+.table-row-cell:even{
+    -fx-background-color: #717171; /* for information */
+    -fx-padding: 0.0em;
+}

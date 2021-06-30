@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="401.0" prefWidth="305.0" stylesheets="@stylesheets/ChoseResources.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="564.0" prefWidth="305.0" stylesheets="@stylesheets/ChoseResources.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView fx:id="resourcesOfChoiceList" layoutX="53.0" layoutY="74.0" prefHeight="200.0" prefWidth="200.0" />
-      <HBox layoutX="139.0" layoutY="347.0">
+      <ListView fx:id="resourcesOfChoiceList" layoutX="53.0" layoutY="233.0" prefHeight="200.0" prefWidth="200.0" />
+      <HBox layoutX="139.0" layoutY="509.0">
          <children>
             <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0" prefWidth="65.0" text="Cancel">
                <HBox.margin>
@@ -31,16 +31,17 @@
             </Button>
          </children>
       </HBox>
-      <Label id="addResourceOfChoiceButton" fx:id="addLabel" layoutX="225.0" layoutY="46.0" onMouseClicked="#onAddResourcesClicked" />
-      <Label fx:id="label" layoutX="53.0" layoutY="50.0" text="Select 3 resources">
+      <Label id="addResourceOfChoiceButton" fx:id="addLabel" layoutX="225.0" layoutY="205.0" onMouseClicked="#onAddResourcesClicked" />
+      <Label fx:id="title" layoutX="69.0" layoutY="14.0" text="Select 3 resources">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="warningLabelOfChoice" layoutX="53.0" layoutY="369.0" style="-fx-opacity: 0;" text="Not enough resources chosen" textFill="#880000">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <Label fx:id="warningLabelOfChoice" layoutX="53.0" layoutY="283.0" style="-fx-opacity: 0;" text="Not enough resources chosen" textFill="#880000">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
+      <Label fx:id="explanation" alignment="TOP_LEFT" layoutX="53.0" layoutY="61.0" prefHeight="131.0" prefWidth="168.0" text="You have to choose 3 resources among these:" wrapText="true" />
    </children>
 </AnchorPane>

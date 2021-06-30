@@ -23,7 +23,6 @@ public class PlayerState {
     //for buying
     private final HashMap<Resource, Integer> leaderDepots;
 
-
     // resources contained in leader depots
     private final HashMap<String, ArrayList<HashMap<Resource, Integer>>> leaderDepotsState;
 

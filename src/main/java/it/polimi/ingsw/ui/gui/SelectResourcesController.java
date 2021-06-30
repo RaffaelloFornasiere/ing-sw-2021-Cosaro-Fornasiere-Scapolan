@@ -63,7 +63,8 @@ public class SelectResourcesController extends Controller implements Initializab
         Platform.runLater(() -> {
             root.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
                 public void handle(WindowEvent we) {
-                    dataReady.setItem(false);
+                    onCancel();
+                    //dataReady.setItem(false);
                 }
             });
         });
@@ -100,6 +101,7 @@ public class SelectResourcesController extends Controller implements Initializab
 
         if (!dataReady.getWaitIfLocked())
             return null;
+
         HashMap<Resource, Integer> allResources = new HashMap<>();
         HashMap<Resource, Integer> fromWareHouse = new HashMap<>();
         HashMap<Resource, Integer> fromLeadersDepots = new HashMap<>();

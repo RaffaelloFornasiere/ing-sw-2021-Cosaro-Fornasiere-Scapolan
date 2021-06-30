@@ -23,10 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -61,17 +58,12 @@ public class MainViewController extends Controller implements Initializable {
     HBox ownedCardsSlot;
     @FXML
     Label victoryPointsLabel;
+
+
+    @FXML
+    VBox playerSlot;
+
     LockWrap<FaithTrackController> faithTrackController = new LockWrap<>(null, null);
-
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        SelectableImage.setSelectable(root);
-        Platform.runLater(() ->
-                faithTrackController.setItem(new FaithTrackController(faithTrack)));
-
-    }
 
     public MainViewController(GUI gui) {
         super(gui);
@@ -80,6 +72,25 @@ public class MainViewController extends Controller implements Initializable {
     public boolean waitForReady() {
         return faithTrackController.getWaitIfLocked() != null;
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        SelectableImage.setSelectable(root);
+        MainViewController aux = this;
+        Platform.runLater(() ->{
+                faithTrackController.setItem(new FaithTrackController(faithTrack, aux.gui.singlePlayer.getWaitIfLocked()));
+                aux.setFaithTrackPosition(0);
+        });
+
+
+        updateStrongBox();
+        updateDepots();
+        updateMarket();
+        updateOwnedCards();
+        updateVictoryPoints();
+    }
+
+
 
     public void openMarket() throws IOException {
         Stage marketStage = new Stage();
@@ -170,6 +181,7 @@ public class MainViewController extends Controller implements Initializable {
                     .get(marble.getId().charAt(1) - '0')));
         }
         marbleLeftImage.setImage(new Image(marbleLeft));
+        System.out.println("market updated");
     }
 
     public void updateOwnedCards() {
@@ -199,9 +211,11 @@ public class MainViewController extends Controller implements Initializable {
                 ownedCards.get(i).get(j).setImage(new Image(imageUrl + ownedCardIds.get(i).get(j) + ".png"));
                 ownedCards.get(i).get(j).setVisible(true);
             }
-            ownedCards.get(i).get(j - 1).getStyleClass().add("hoverBorder");
+            if(j != 0)
+                ownedCards.get(i).get(j - 1).getStyleClass().add("hoverBorder");
         }
         SelectableImage.setSelectable(ownedCardsSlot);
+        System.out.println("owned cards update");
     }
 
     public void updateDepots() {
@@ -242,22 +256,36 @@ public class MainViewController extends Controller implements Initializable {
         Gson gson = builder.create();
 
 
-        HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>();
-        gui.thisPlayerState().leaderCards.forEach((key1, value1) -> {
+        HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>(){{
+            for(var res : Resource.values())
+                put(res, new Pair<>(0,0));
+        }};
+        gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
             try {
-                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + key1 + ".json")), LeaderCard.class);
-                leaderCard.getLeaderPowers().stream().filter(card -> card instanceof DepositLeaderPower)
-                        .forEach(power -> ((DepositLeaderPower) power).getMaxResources()
-                                .forEach((key, value) -> depotsInfo.put(key, new Pair<>(depotsInfo.getOrDefault(key, new Pair<>(0, 0)).getKey() + value, 0)))
+                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
+                        .forEach(power -> {
+                                    int powerIndex = leaderCard.getLeaderPowers().indexOf(power);
+                                    ((DepositLeaderPower) power).getMaxResources()
+                                            .forEach((key, value) ->
+                                                    {
+                                                        if (cardActive
+                                                                &&
+                                                                gui.thisPlayerState().leaderPowerStates.get(card) != null
+                                                                && gui.thisPlayerState().leaderPowerStates.get(card).get(powerIndex)
+                                                        )
+                                                            depotsInfo.put(key, new Pair<>(depotsInfo.getOrDefault(key, new Pair<>(0, 0)).getKey() + value, 0));
+                                                    }
+                                            );
+
+                                }
                         );
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-
         for (var entry : gui.thisPlayerState().getLeaderDepots().entrySet()) {
             depotsInfo.put(entry.getKey(), new Pair<>(depotsInfo.get(entry.getKey()).getKey(), entry.getValue()));
-
         }
 
 
@@ -284,6 +312,7 @@ public class MainViewController extends Controller implements Initializable {
 
 
         });
+        System.out.println("depots updated");
     }
 
     public void updateStrongBox() {
@@ -294,10 +323,12 @@ public class MainViewController extends Controller implements Initializable {
                     Resource r = Resource.valueOf(l.getId().replace("Counter", "").toUpperCase());
                     l.setText(String.valueOf(gui.thisPlayerState().strongBox.getOrDefault(r, 0)));
                 });
+        System.out.println("strongbox updated");
     }
 
     public void updateVictoryPoints() {
         victoryPointsLabel.setText(String.valueOf(gui.thisPlayerState().victoryPoints));
+        System.out.println("victory points updated");
     }
 
     public void openPopeFavorCard() {
@@ -308,6 +339,16 @@ public class MainViewController extends Controller implements Initializable {
     public void exitApplication(ActionEvent event) {
         ((Stage) root.getScene().getWindow()).close();
         gui.close();
+    }
+
+
+
+    public  void setTurnActive(boolean active){
+        System.out.println("turn active: " + active);
+        if(active)
+            playerSlot.setStyle("-fx-border-color: #2a801b; -fx-background-color: rgba(131, 255, 131, 0.25)");
+        else
+            playerSlot.setStyle("-fx-border-color: #801b1b; -fx-background-color: rgba(165, 27, 27, 0.25)");
     }
 
 }

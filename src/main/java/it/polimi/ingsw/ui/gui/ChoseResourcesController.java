@@ -2,13 +2,14 @@ package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.LockWrap;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Line;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,7 +37,9 @@ public class ChoseResourcesController extends Controller implements Initializabl
     @FXML
     Label warningLabelOfChoice;
     @FXML
-    Label label;
+    Label title;
+    @FXML
+    Label explanation;
     @FXML
     Label addLabel;
 
@@ -57,12 +61,26 @@ public class ChoseResourcesController extends Controller implements Initializabl
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Platform.runLater(() -> {
+            root.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent we) {
+                    onCancel();
+                    //dataReady.setItem(false);
+                }
+            });
+        });
         done.setItem(false);
         checkResources();
         if(numberOFResources == 1)
-            label.setText("Select one resource");
+            title.setText("Select one resource");
         else
-            label.setText("Select " + String.valueOf(numberOFResources) + " resources");
+            title.setText("Select " + String.valueOf(numberOFResources) + " resources");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("You have to chose "+String.valueOf(numberOFResources)+((numberOFResources == 1)?" resource ":" resources ") +"among these:\n");
+        for(var res : allowedResourceType)
+            sb.append(res).append("\n");
+        explanation.setText(sb.toString());
     }
 
     public HashMap<Resource, Integer> getChosen() {
@@ -78,8 +96,8 @@ public class ChoseResourcesController extends Controller implements Initializabl
 
     @FXML
     public void onCancel() {
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.close();
+        Alert alert = new Alert(Alert.AlertType.ERROR, "You must select " + numberOFResources + " " + ((numberOFResources > 1) ? "resources " : "resource"), ButtonType.OK);
+        alert.showAndWait();
     }
 
     public void checkResources() {

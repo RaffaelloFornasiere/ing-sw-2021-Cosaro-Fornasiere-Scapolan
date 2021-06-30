@@ -1,6 +1,9 @@
 package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.utilities.LockWrap;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -14,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,6 +45,14 @@ public class SelectLeaderCardsController extends Controller implements Initializ
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Platform.runLater(() -> {
+            root.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent we) {
+                    onCancel();
+                    we.consume();
+                }
+            });
+        });
         done.setItem(false);
         String imageUrl = new java.io.File(".").getAbsolutePath().replace("\\", "/");
         imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
@@ -102,6 +114,5 @@ public class SelectLeaderCardsController extends Controller implements Initializ
         Alert alert = new Alert(Alert.AlertType.ERROR, "You must select " + selectable + " " + ((selectable > 1) ? "leader cards" : "leader card"), ButtonType.OK);
         alert.showAndWait();
     }
-
 
 }

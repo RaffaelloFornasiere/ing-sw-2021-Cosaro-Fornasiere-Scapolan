@@ -34,14 +34,22 @@ public class FaithTrackController {
     ArrayList<Triplet<Integer, Point, Node>> track;
     DoublePoint currentPos;
     DoublePoint zeroPos;
-
     private int position;
+
+
+
     ArrayList<ImageView> popeFavorCards;
+
 
     ImageView cross;
     GridPane faithTrack;
 
-    double cellsize;
+    double cellSize;
+
+
+    boolean singlePlayer;
+
+
 
     /**
      * constructor: retrieves the gridpane where
@@ -54,7 +62,8 @@ public class FaithTrackController {
      *
      * @param faithTrack
      */
-    FaithTrackController(GridPane faithTrack) {
+    FaithTrackController(GridPane faithTrack, boolean singlePlayer) {
+
         zeroPos = new DoublePoint(0, 0);
         currentPos = new DoublePoint(0, 0);
         this.faithTrack = faithTrack;
@@ -81,7 +90,7 @@ public class FaithTrackController {
                 .map(n -> (ImageView) n)
                 .collect(Collectors.toList())
                 .get(0).getFitHeight() + 5;
-        cellsize = faithTrack.getWidth() / 19;
+        cellSize = faithTrack.getWidth() / 19;
        // System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
         cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
         cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
@@ -120,10 +129,10 @@ public class FaithTrackController {
             int verticalMove = next.x - current.x;
             var lastTransition = path.get(path.size() - 1);
             if (lastTransition.getFromY() == lastTransition.getToY() && verticalMove == 0) {
-                lastTransition.setToX(currentPos.x + cellsize * sideMove);
+                lastTransition.setToX(currentPos.x + cellSize * sideMove);
                 lastTransition.setDuration(lastTransition.getDuration().add(Duration.millis(150)));
             } else if (lastTransition.getFromX() == lastTransition.getToX() && sideMove == 0) {
-                lastTransition.setToY(currentPos.y + cellsize * verticalMove);
+                lastTransition.setToY(currentPos.y + cellSize * verticalMove);
                 lastTransition.setDuration(lastTransition.getDuration().add(Duration.millis(150)));
             } else {
                 TranslateTransition transition = new TranslateTransition(Duration.millis(150));
@@ -131,12 +140,12 @@ public class FaithTrackController {
                 transition.setAutoReverse(false);
                 transition.setFromX(currentPos.x);
                 transition.setFromY(currentPos.y);
-                transition.setToX(currentPos.x + cellsize * sideMove);
-                transition.setToY(currentPos.y + cellsize * verticalMove);
+                transition.setToX(currentPos.x + cellSize * sideMove);
+                transition.setToY(currentPos.y + cellSize * verticalMove);
                 path.add(transition);
             }
-            currentPos.x = currentPos.x + cellsize * sideMove;
-            currentPos.y = currentPos.y + cellsize * verticalMove;
+            currentPos.x = currentPos.x + cellSize * sideMove;
+            currentPos.y = currentPos.y + cellSize * verticalMove;
 
         }
         SequentialTransition sequentialTransition = new SequentialTransition();

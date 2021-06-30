@@ -458,8 +458,62 @@ public class WarehouseController extends Controller implements Initializable {
 
     public void onNext() {
         ArrayList<DepotState> depots = new ArrayList<>();
-        ArrayList<DepositLeaderPowerStateEvent> leaderDepots = new ArrayList<>();
-        gui.addEvent(new NewResourcesOrganizationEvent(gui.askUserID(), depots, leaderDepots, discardResources));
+
+
+        HashMap<Resource, Pair<Integer, Integer>> qty = new HashMap<>();
+        var list = warehouse.getChildren().stream().filter(n -> n.getStyleClass().contains("Resource")).collect(Collectors.toList());
+        for (int i = 0; i < list.size(); i++) {
+            String url = Objects.requireNonNullElse(((ImageView) list.get(i)).getImage(),
+            new Image("file:/C:/Users/raffa/Documenti/uni/1.Politecnico/SE1/ing-sw-2021-Cosaro-Fornasiere-Scapolan/src/main/resources/it/polimi/ingsw/ui/gui/images/rock2.png")).getUrl();
+            Resource r = Resource.valueOf(url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("2.png")).toUpperCase());
+            qty.put(r, new Pair<>(qty.getOrDefault(r, new Pair<>(0, 0)).getKey(), (i == 0) ? 1 : (i <= 2) ? 2 : 3));
+        }
+        qty.forEach((key, value) -> depots.add(new DepotState(key, value.getKey(), value.getValue())));
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
+        builder.registerTypeAdapter(LeaderPower.class, new GsonInheritanceAdapter<LeaderPower>());
+        builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
+        Gson gson = builder.create();
+
+
+        HashMap<Resource, Integer> storedInLeaders = new HashMap<>() {{
+            leaderDepots.forEach(n -> put(n.getResourceType(), getOrDefault(n.getResourceType(), 0) + n.getCurrentQuantity())
+
+            );
+        }};
+
+
+        ArrayList<DepositLeaderPowerStateEvent> resLeaderDepots = new ArrayList<>();
+        gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
+            try {
+                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
+                        .forEach(power -> {
+                                    int powerIndex = leaderCard.getLeaderPowers().indexOf(power);
+                                    if (gui.thisPlayerState().leaderPowerStates.get(leaderCard.getCardID()).get(powerIndex)) {
+                                        HashMap<Resource, Integer> maxResources = ((DepositLeaderPower) power).getMaxResources();
+                                        HashMap<Resource, Integer> currentResources = new HashMap<>();
+                                        maxResources.forEach((key, value) -> {
+                                            int toStore = storedInLeaders.getOrDefault(key, 0);
+                                            if (toStore > value) {
+                                                currentResources.put(key, toStore - value);
+                                                storedInLeaders.put(key, toStore - value);
+                                            }
+                                        });
+                                        DepositLeaderPowerStateEvent deposit = new DepositLeaderPowerStateEvent(gui.playerID.getItem(), leaderCard.getCardID(),
+                                                powerIndex, currentResources);
+                                        resLeaderDepots.add(deposit);
+                                    }
+                                }
+                        );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        gui.addEvent(new NewResourcesOrganizationEvent(gui.askUserID(), depots, resLeaderDepots, discardResources));
         ((Stage) root.getScene().getWindow()).close();
     }
 
