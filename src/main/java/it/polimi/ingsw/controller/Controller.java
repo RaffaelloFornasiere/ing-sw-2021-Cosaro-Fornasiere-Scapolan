@@ -380,13 +380,15 @@ public class Controller {
                         matchState.setWaitingForSomething();
                         playerWaitingForResourceOrganization = player.getPlayerId();
                         waitingForResourceOrganizationLock.wait();
+                        System.out.println("Notified");
                         matchState.somethingArrived();
                     }catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-
+                System.out.println("Returning");
                 if (newResourcesOrganizationEvent == null) return;
+                System.out.println("Not returned");
                 HashMap<Resource, Integer> newTotalStoredResources = new HashMap<>();
                 HashMap<Resource, Integer> discardedResources = newResourcesOrganizationEvent.getDiscardedResources();
                 //validate deposit state
@@ -1005,7 +1007,9 @@ public class Controller {
                 endGame();
             else {
                 do {
+                    System.out.println("preloop: " + matchState.getCurrentPlayerIndex());
                     matchState.nextTurn();
+                    System.out.println("loop: " + matchState.getCurrentPlayerIndex());
                 } while (disconnected.get(matchState.getPlayers().get(matchState.getCurrentPlayerIndex()).getPlayerId()));
             }
         } catch (NotPresentException | IllegalOperation | LeaderCardNotActiveException notPresentException) {
@@ -1110,37 +1114,46 @@ public class Controller {
      */
     public void QuitGameEventHandler(PropertyChangeEvent evt){
         QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
+        System.out.println("Into the match handler");
 
-        if(event.getPlayerId().equals(matchState.getPlayers().get(matchState.getCurrentPlayerIndex()).getPlayerId())) {
-            synchronized (waitingForSimpleResourcesLock) {
-                simpleChosenResourcesEvent = null;
-                waitingForSimpleResourcesLock.notifyAll();
+        try {
+            Player disconnectedPlayer = matchState.getPlayerFromID(event.getPlayerId());
+
+            if (canActionBePerformed(event, disconnectedPlayer, TurnState.WAITING_FOR_SOMETHING) ||
+                    (!setuppedPlayers.contains(event.getPlayerId()) && playerWaitingForResourceOrganization!=null && playerWaitingForResourceOrganization.equals(event.getPlayerId()))) {
+                System.out.println("Before simple resource");
+                synchronized (waitingForSimpleResourcesLock) {
+                    simpleChosenResourcesEvent = null;
+                    waitingForSimpleResourcesLock.notifyAll();
+                }
+
+                System.out.println("Before resource");
+                synchronized (waitingForResourcesLock) {
+                    chosenResourcesEvent = null;
+                    waitingForResourcesLock.notifyAll();
+                }
+
+                System.out.println("Before resource organization");
+                synchronized (waitingForResourceOrganizationLock) {
+                    newResourcesOrganizationEvent = null;
+                    waitingForResourceOrganizationLock.notifyAll();
+                }
             }
 
-            synchronized (waitingForResourcesLock) {
-                chosenResourcesEvent = null;
-                waitingForResourcesLock.notifyAll();
-            }
+            System.out.println("After locks");
+            synchronized (this) {
+                disconnected.put(event.getPlayerId(), true);
+                senders.remove(event.getPlayerId());
 
-            synchronized (waitingForResourceOrganizationLock) {
-                newResourcesOrganizationEvent = null;
-                waitingForResourceOrganizationLock.notifyAll();
-            }
-        }
-
-        synchronized (this) {
-            disconnected.put(event.getPlayerId(), true);
-            senders.remove(event.getPlayerId());
-            try {
-                Player disconnectedPlayer = matchState.getPlayerFromID(event.getPlayerId());
-                if(!setuppedPlayers.contains(event.getPlayerId())){
+                if (!setuppedPlayers.contains(event.getPlayerId())) {
                     setDefaultInitialDecisions(disconnectedPlayer);
                 }
-                if(disconnectedPlayer == matchState.getPlayers().get(matchState.getCurrentPlayerIndex()))
+                if (disconnectedPlayer == matchState.getPlayers().get(matchState.getCurrentPlayerIndex()))
                     nextTurn(disconnectedPlayer);
-            } catch (NotPresentException notPresentException) {
-                notPresentException.printStackTrace();
+
             }
+        } catch (NotPresentException notPresentException) {
+            notPresentException.printStackTrace();
         }
     }
 

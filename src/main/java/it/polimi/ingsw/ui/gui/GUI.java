@@ -444,7 +444,7 @@ public class GUI extends UI {
                 }
             }
         });
-        System.out.println("wating for res");
+        System.out.println("waiting for res");
         res = controller.getSelected();
         System.out.println("Res arrived: ");
         res.forEach(System.out::print);
