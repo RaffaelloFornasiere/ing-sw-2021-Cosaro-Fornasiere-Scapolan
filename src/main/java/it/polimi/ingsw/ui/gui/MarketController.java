@@ -42,7 +42,7 @@ public class MarketController extends Controller implements Initializable {
 
 
     MarketController(GUI gui) {
-
+        super(gui);
         this.marketStatus = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath() + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         for (int i = 0; i < PlayerState.marketStatus.getKey().length; i++) {

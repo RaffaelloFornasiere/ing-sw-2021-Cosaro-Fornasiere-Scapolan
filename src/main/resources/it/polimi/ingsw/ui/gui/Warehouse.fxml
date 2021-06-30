@@ -95,7 +95,7 @@
                 </ImageView>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="leaderDepotsAnchorPane" layoutX="475.0" layoutY="152.0" prefHeight="188.0" prefWidth="185.0" AnchorPane.rightAnchor="74.66666666666663">
+        <AnchorPane fx:id="leaderDepotsAnchorPane" layoutX="541.0" layoutY="152.0" prefHeight="188.0" prefWidth="185.0" AnchorPane.rightAnchor="55.66666666666663">
             <children>
             <AnchorPane id="leaderDepotServant" layoutX="9.0" layoutY="10.0" onDragDetected="#onDragDetected" onDragDone="#onDragDone" onDragDropped="#onDragDroppedOnLeader" onDragOver="#onDragOver" prefHeight="83.0" prefWidth="83.0">
                <children>
@@ -123,7 +123,7 @@
                                 <String fx:value="hoverBorder" />
                             </styleClass>
                      <image>
-                        <Image url="@images/stone2.png" />
+                        <Image url="@images/rock2.png" />
                      </image>
                         </ImageView>
                   <Label id="rockCountLabel" layoutX="52.0" layoutY="8.0" mouseTransparent="true" prefHeight="27.0" prefWidth="16.0" text="3" textFill="WHITE">
@@ -176,7 +176,7 @@
                 <Font name="System Bold" size="32.0" />
             </font>
         </Label>
-        <Label layoutX="450.0" layoutY="61.0" text="Leaders' depots" AnchorPane.rightAnchor="48.33333333333337">
+        <Label layoutX="516.0" layoutY="61.0" text="Leaders' depots" AnchorPane.rightAnchor="29.33333333333337">
             <font>
                 <Font name="System Bold" size="32.0" />
             </font>

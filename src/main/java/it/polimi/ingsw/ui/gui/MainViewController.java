@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.ui.cli.Action;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;
 import it.polimi.ingsw.utilities.LockWrap;
@@ -51,6 +52,8 @@ public class MainViewController extends Controller implements Initializable {
     @FXML
     AnchorPane leaderDepotsSlot;
     @FXML
+    AnchorPane leaderCardsSlot;
+    @FXML
     AnchorPane strongBoxSlot;
     @FXML
     Label victoryPoints;
@@ -77,19 +80,13 @@ public class MainViewController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SelectableImage.setSelectable(root);
         MainViewController aux = this;
-        Platform.runLater(() ->{
-                faithTrackController.setItem(new FaithTrackController(faithTrack, aux.gui.singlePlayer.getWaitIfLocked()));
-                aux.setFaithTrackPosition(0);
+        Platform.runLater(() -> {
+            faithTrackController.setItem(new FaithTrackController(faithTrack, aux.gui.singlePlayer.getWaitIfLocked()));
+            aux.setFaithTrackPosition(0);
         });
-
-
-        updateStrongBox();
-        updateDepots();
-        updateMarket();
-        updateOwnedCards();
-        updateVictoryPoints();
+        ((Label)playerSlot.getChildren().stream().filter(n ->  n instanceof Label).collect(Collectors.toList()).get(0)).setText(gui.playerID.getItem());
+        updateAll();
     }
-
 
 
     public void openMarket() throws IOException {
@@ -113,7 +110,7 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openProduction() throws IOException {
-        if (!PlayerState.canPerformActions)
+        if (!PlayerState.canPerformActions || PlayerState.availableActions.contains(Action.PRODUCE))
             return;
 
         Stage productionStage = new Stage();
@@ -127,9 +124,6 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openDepots() throws IOException {
-        if (!PlayerState.canPerformActions)
-            return;
-
         Stage depotsStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Warehouse.fxml"));
         fxmlLoader.setController(new WarehouseController(gui, new HashMap<>()));
@@ -200,8 +194,9 @@ public class MainViewController extends Controller implements Initializable {
             imageView.setVisible(false);
             imageView.getStyleClass().remove("hoverBorder");
         }));
-
         SelectableImage.cleanRoot(ownedCardsSlot);
+
+
         String imageUrl = new java.io.File(".").getAbsolutePath();
         imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
         var ownedCardIds = gui.thisPlayerState().ownedCards;
@@ -211,12 +206,13 @@ public class MainViewController extends Controller implements Initializable {
                 ownedCards.get(i).get(j).setImage(new Image(imageUrl + ownedCardIds.get(i).get(j) + ".png"));
                 ownedCards.get(i).get(j).setVisible(true);
             }
-            if(j != 0)
+            if (j != 0)
                 ownedCards.get(i).get(j - 1).getStyleClass().add("hoverBorder");
         }
         SelectableImage.setSelectable(ownedCardsSlot);
         System.out.println("owned cards update");
     }
+
 
     public void updateDepots() {
 
@@ -225,8 +221,11 @@ public class MainViewController extends Controller implements Initializable {
         imagePath = "file:/" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         String finalImagePath = imagePath;
         var images = gui.thisPlayerState().warehouse.stream().flatMap(n -> new ArrayList<Image>() {{
-            for (int i = 0; i < n.getCurrentQuantity(); i++) {
-                add(new Image(finalImagePath + n.getResourceType().toString().toLowerCase() + "2.png"));
+            for (int i = 0; i < n.getMaxQuantity(); i++) {
+                if (i < n.getCurrentQuantity())
+                    add(new Image(finalImagePath + n.getResourceType().toString().toLowerCase() + "2.png"));
+                else
+                    add(null);
             }
         }}.stream()).collect(Collectors.toList());
 
@@ -256,9 +255,9 @@ public class MainViewController extends Controller implements Initializable {
         Gson gson = builder.create();
 
 
-        HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>(){{
-            for(var res : Resource.values())
-                put(res, new Pair<>(0,0));
+        HashMap<Resource, Pair<Integer, Integer>> depotsInfo = new HashMap<>() {{
+            for (var res : Resource.values())
+                put(res, new Pair<>(0, 0));
         }};
         gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
             try {
@@ -335,20 +334,47 @@ public class MainViewController extends Controller implements Initializable {
 
     }
 
+    public void updateLeaderCards()
+    {
+
+    }
+
     @FXML
     public void exitApplication(ActionEvent event) {
         ((Stage) root.getScene().getWindow()).close();
         gui.close();
     }
 
+    public void updateAll() {
+        updateStrongBox();
+        updateDepots();
+        updateMarket();
+        updateOwnedCards();
+        updateVictoryPoints();
+    }
 
 
-    public  void setTurnActive(boolean active){
+
+    public void setTurnActive(boolean active) {
         System.out.println("turn active: " + active);
-        if(active)
+        if (active)
             playerSlot.setStyle("-fx-border-color: #2a801b; -fx-background-color: rgba(131, 255, 131, 0.25)");
         else
             playerSlot.setStyle("-fx-border-color: #801b1b; -fx-background-color: rgba(165, 27, 27, 0.25)");
     }
 
+
+
+    public void leaderAction(MouseEvent mouseEvent) throws IOException {
+        if (!PlayerState.canPerformActions && PlayerState.availableActions.contains(Action.LEADER_ACTION))
+            return;
+
+        Stage depotsStage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("LeaderCardAction.fxml"));
+        fxmlLoader.setController(new LeaderCardActionController(gui));
+        Scene scene = new Scene(fxmlLoader.load());
+        depotsStage.initModality(Modality.APPLICATION_MODAL);
+        depotsStage.setScene(scene);
+        depotsStage.showAndWait();
+    }
 }

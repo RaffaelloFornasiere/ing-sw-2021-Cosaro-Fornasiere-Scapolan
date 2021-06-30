@@ -181,3 +181,19 @@ arrow-button-left {
     -fx-background-size: stretch;
 }
 
+
+#endOfTurnButton{
+    -fx-font-weight: bold;
+    -fx-text-fill: #570c0c;
+    -fx-background-color: rgba(113, 58, 58, 0.49);
+    -fx-border-width: 3;
+    -fx-border-color: #570c0c;
+}
+
+#endOfTurnButton:hover {
+    -fx-background-color: #ba8a54;
+}
+
+#endOfTurnButton:pressed {
+    -fx-background-color: #dba76d;
+}

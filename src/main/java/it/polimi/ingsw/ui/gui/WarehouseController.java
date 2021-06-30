@@ -25,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.net.URL;
@@ -459,16 +460,49 @@ public class WarehouseController extends Controller implements Initializable {
     public void onNext() {
         ArrayList<DepotState> depots = new ArrayList<>();
 
-
-        HashMap<Resource, Pair<Integer, Integer>> qty = new HashMap<>();
-        var list = warehouse.getChildren().stream().filter(n -> n.getStyleClass().contains("Resource")).collect(Collectors.toList());
-        for (int i = 0; i < list.size(); i++) {
-            String url = Objects.requireNonNullElse(((ImageView) list.get(i)).getImage(),
-            new Image("file:/C:/Users/raffa/Documenti/uni/1.Politecnico/SE1/ing-sw-2021-Cosaro-Fornasiere-Scapolan/src/main/resources/it/polimi/ingsw/ui/gui/images/rock2.png")).getUrl();
-            Resource r = Resource.valueOf(url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("2.png")).toUpperCase());
-            qty.put(r, new Pair<>(qty.getOrDefault(r, new Pair<>(0, 0)).getKey(), (i == 0) ? 1 : (i <= 2) ? 2 : 3));
+        class aux {
+            aux(){
+                this(Resource.ROCK, 0, 0);
+            }
+            aux(Resource res, int maxQ, int curQ){
+                this.res = res;
+                this.maxQ = maxQ; this.curQ = curQ;
+            }
+            Resource res;
+            int maxQ;
+            int curQ;
         }
-        qty.forEach((key, value) -> depots.add(new DepotState(key, value.getKey(), value.getValue())));
+
+        //HashMap<Resource, Pair<Integer, Integer>> qty = new HashMap<>();
+        ArrayList<aux> qty = new ArrayList<>(){{
+            add(new aux(Resource.ROCK, 1, 0));
+            add(new aux(Resource.ROCK, 2, 0));
+            add(new aux(Resource.ROCK, 3, 0));
+        }};
+        var list = warehouse.getChildren().stream().filter(n -> n.getStyleClass().contains("Resource")).collect(Collectors.toList());
+        ArrayList<ArrayList<Resource>> resources = new ArrayList<>(){{
+            add(new ArrayList<>());
+            add(new ArrayList<>());
+            add(new ArrayList<>());
+
+        }};
+        for (int i = 0; i < list.size(); i++) {
+            Resource r = null;
+            int inc;
+            if (((ImageView) list.get(i)).getImage() != null) {
+                String url = ((ImageView) list.get(i)).getImage().getUrl();
+                r = Resource.valueOf(url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("2.png")).toUpperCase());
+
+            }
+            resources.get((i == 0) ? 0 : (i <= 2) ? 1 : 2).add(r);
+        }
+
+        for(int i = 0; i < resources.size(); i++)
+        {
+            Resource r = resources.get(i).stream().filter(Objects::nonNull).findAny().orElse(Resource.ROCK);
+            depots.add(new DepotState(r, i+1, (int)resources.get(i).stream().filter(Objects::nonNull).count()));
+        }
+
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
@@ -479,36 +513,37 @@ public class WarehouseController extends Controller implements Initializable {
 
         HashMap<Resource, Integer> storedInLeaders = new HashMap<>() {{
             leaderDepots.forEach(n -> put(n.getResourceType(), getOrDefault(n.getResourceType(), 0) + n.getCurrentQuantity())
-
             );
         }};
 
 
         ArrayList<DepositLeaderPowerStateEvent> resLeaderDepots = new ArrayList<>();
         gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
-            try {
-                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
-                leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
-                        .forEach(power -> {
-                                    int powerIndex = leaderCard.getLeaderPowers().indexOf(power);
-                                    if (gui.thisPlayerState().leaderPowerStates.get(leaderCard.getCardID()).get(powerIndex)) {
-                                        HashMap<Resource, Integer> maxResources = ((DepositLeaderPower) power).getMaxResources();
-                                        HashMap<Resource, Integer> currentResources = new HashMap<>();
-                                        maxResources.forEach((key, value) -> {
-                                            int toStore = storedInLeaders.getOrDefault(key, 0);
-                                            if (toStore > value) {
-                                                currentResources.put(key, toStore - value);
-                                                storedInLeaders.put(key, toStore - value);
-                                            }
-                                        });
-                                        DepositLeaderPowerStateEvent deposit = new DepositLeaderPowerStateEvent(gui.playerID.getItem(), leaderCard.getCardID(),
-                                                powerIndex, currentResources);
-                                        resLeaderDepots.add(deposit);
+            if (cardActive) {
+                try {
+                    LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                    leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
+                            .forEach(power -> {
+                                        int powerIndex = leaderCard.getLeaderPowers().indexOf(power);
+                                        if (gui.thisPlayerState().leaderPowerStates.get(leaderCard.getCardID()).get(powerIndex)) {
+                                            HashMap<Resource, Integer> maxResources = ((DepositLeaderPower) power).getMaxResources();
+                                            HashMap<Resource, Integer> currentResources = new HashMap<>();
+                                            maxResources.forEach((key, value) -> {
+                                                int toStore = storedInLeaders.getOrDefault(key, 0);
+                                                if (toStore > value) {
+                                                    currentResources.put(key, toStore - value);
+                                                    storedInLeaders.put(key, toStore - value);
+                                                }
+                                            });
+                                            DepositLeaderPowerStateEvent deposit = new DepositLeaderPowerStateEvent(gui.playerID.getItem(), leaderCard.getCardID(),
+                                                    powerIndex, currentResources);
+                                            resLeaderDepots.add(deposit);
+                                        }
                                     }
-                                }
-                        );
-            } catch (IOException e) {
-                e.printStackTrace();
+                            );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

@@ -83,7 +83,6 @@ public class GUI extends UI {
             TimeUnit.SECONDS.sleep(1);
 
 
-//
 //            Platform.runLater(() -> {
 //                try {
 //                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Splashscreen.fxml"));
@@ -98,20 +97,20 @@ public class GUI extends UI {
 //            });
 
 
-
-
-
-
-//            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent","INSTANCE":{"lobbyLeaderID":"Raf","playerId":"Raf"}}
-//            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":[]}}
-//            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":["far"]}}
-//            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.StartMatchEvent","INSTANCE":{"playerId":"Raf"}}
-//            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.GameStartingEvent","INSTANCE":{"playerIDs":["far","Raf"],"playerId":"Raf"}}
+//
+////
+////
+////
+////            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent","INSTANCE":{"lobbyLeaderID":"Raf","playerId":"Raf"}}
+////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":[]}}
+////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.LobbyStateEvent","INSTANCE":{"leaderID":"Raf","otherPLayersID":["far"]}}
+////            {"CLASSNAME":"it.polimi.ingsw.events.ControllerEvents.StartMatchEvent","INSTANCE":{"playerId":"Raf"}}
+////            {"CLASSNAME":"it.polimi.ingsw.events.ClientEvents.GameStartingEvent","INSTANCE":{"playerIDs":["far","Raf"],"playerId":"Raf"}}
             HashMap<Resource, Integer> strongBox = new HashMap<>() {{
-                put(Resource.COIN, 4);
-                put(Resource.SHIELD, 2);
-                put(Resource.SERVANT, 5);
-                put(Resource.ROCK, 3);
+//                put(Resource.COIN, 4);
+//                put(Resource.SHIELD, 2);
+//                put(Resource.SERVANT, 5);
+//                put(Resource.ROCK, 3);
             }};
             ArrayList<DepotState> warehouse = new ArrayList<>() {{
 //                add(new DepotState(Resource.COIN, 1, 1));
@@ -132,13 +131,13 @@ public class GUI extends UI {
             thisPlayerState().leaderCards.put("LeaderCard6", false);
 
 
-
             thisPlayerState().updateLeaderCardDepositState("LeaderCard5", 0,
                     new HashMap<>() {{
 
                     }});
-            thisPlayerState().leaderPowerStates.put("LeaderCard5", new ArrayList<>(){{add(true);}});
-
+            thisPlayerState().leaderPowerStates.put("LeaderCard5", new ArrayList<>() {{
+                add(true);
+            }});
 
 
             thisPlayerState().warehouse = warehouse;
@@ -185,13 +184,15 @@ public class GUI extends UI {
             }};
             Market market = new Market(3, 4, marbles);
             PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
-            HashMap<Resource, Integer> resources = new HashMap<>(){{
-                put(Resource.SERVANT, 1);
+            HashMap<Resource, Integer> resources = new HashMap<>() {{
+                put(Resource.ROCK, 1);
+                put(Resource.SHIELD, 1);
+
             }};
 
-            WarehouseController controller = new WarehouseController(this, resources);
+            LeaderCardActionController controller = new LeaderCardActionController(this);
             Platform.runLater(() -> {
-                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("Warehouse.fxml"));
+                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("LeaderCardAction.fxml"));
                 loader.setController(controller);
                 try {
                     Stage stage = new Stage();
@@ -219,7 +220,8 @@ public class GUI extends UI {
         return PlayerState.devCardGrid.clone();
     }
 
-    public void addEvent(Event event) {
+    public synchronized void addEvent(Event event) {
+
         if (event instanceof BuyResourcesEvent) {
             PlayerState.availableActions.remove(Action.TAKE_RESOURCES_FROM_MARKET);
         } else if (event instanceof BuyDevCardsEvent) {
@@ -235,8 +237,10 @@ public class GUI extends UI {
         } else if (event instanceof EndTurnEvent) {
             PlayerState.availableActions.remove(Action.END_TURN);
         }
-        if(thisPlayerState().event.getItem() == null)
-            thisPlayerState().event.setItem(event);
+        PlayerState.canPerformActions = false;
+        PlayerState.availableActions.clear();
+        thisPlayerState().event.waitIfSet();
+        thisPlayerState().event.setItem(event);
     }
 
 
@@ -416,14 +420,13 @@ public class GUI extends UI {
         thisPlayerState().leaderCards.put("LeaderCard8", false);
 
 
-
-
         thisPlayerState().updateLeaderCardDepositState("LeaderCard5", 0,
                 new HashMap<>() {{
                     // put(Resource.ROCK, 1);
                 }});
-        thisPlayerState().leaderPowerStates.put("LeaderCard5", new ArrayList<>(){{add(true);}});
-
+        thisPlayerState().leaderPowerStates.put("LeaderCard5", new ArrayList<>() {{
+            add(true);
+        }});
 
 
         thisPlayerState().warehouse = warehouse;
@@ -470,7 +473,6 @@ public class GUI extends UI {
         }};
         Market market = new Market(3, 4, marbles);
         PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
-
 
 
         mainViewController = new MainViewController(this);
@@ -556,10 +558,7 @@ public class GUI extends UI {
                 }
             }
         });
-        //System.out.println("waiting for res");
         res = controller.getChosen();
-        //System.out.println("Res arrived: ");
-        //res.entrySet().stream().map(n -> new Pair(n.getKey(), n.getValue())).forEach(System.out::print);
         return res;
     }
 
@@ -575,9 +574,12 @@ public class GUI extends UI {
         playerState.setFaithTrackPosition(position);
         playerState.setPopeFavorCards(popeFavorCards.get(playerID));
 
-        if (playerID.equals(this.playerID.getItem())) {
-            mainViewController.setFaithTrackPosition(position);
-        }
+        Platform.runLater(() -> {
+            if (playerID.equals(this.playerID.getItem())) {
+                mainViewController.setFaithTrackPosition(position);
+            }
+        });
+
     }
 
     @Override
@@ -593,6 +595,11 @@ public class GUI extends UI {
         }
         playerState.strongBox = new HashMap<>(strongBox);
         playerState.warehouse = new ArrayList<>(warehouse);
+        Platform.runLater(() -> {
+            if (playerID.equals(this.playerID.getItem())) {
+                mainViewController.updateAll();
+            }
+        });
 
     }
 
@@ -602,16 +609,26 @@ public class GUI extends UI {
         playerState.leaderCards = new HashMap<>(leaderCards);
         for (String lcID : leaderCards.keySet())
             playerState.leaderPowerStates.putIfAbsent(lcID, new ArrayList<>());
+        Platform.runLater(() -> {
+            if (playerID.equals(this.playerID.getItem())) {
+                mainViewController.updateAll();
+            }
+        });
     }
 
     @Override
     public void updateMarket(int rows, int cols, Marble[][] marketStatus, Marble marbleLeft) {
         PlayerState.marketStatus = new Pair<>(marketStatus.clone(), marbleLeft);
+        Platform.runLater(() -> {
+            mainViewController.updateMarket();
+
+        });
     }
 
     @Override
     public void updateDevCardGrid(String[][] topDevCardIDs) {
         PlayerState.devCardGrid = topDevCardIDs.clone();
+
     }
 
     @Override
@@ -623,7 +640,7 @@ public class GUI extends UI {
         PlayerState.canPerformActions = true;
         BuyResourcesEvent e = (BuyResourcesEvent) thisPlayerState().event.getWaitIfLocked();
         thisPlayerState().event.setItem(null);
-        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+
         PlayerState.canPerformActions = false;
 
         return e;
@@ -637,7 +654,7 @@ public class GUI extends UI {
         PlayerState.canPerformActions = true;
         BuyDevCardsEvent e = (BuyDevCardsEvent) thisPlayerState().event.getWaitIfLocked();
         thisPlayerState().event.setItem(null);
-        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+
         PlayerState.canPerformActions = false;
 
         return e;
@@ -651,7 +668,7 @@ public class GUI extends UI {
         PlayerState.canPerformActions = true;
         ActivateProductionEvent e = (ActivateProductionEvent) thisPlayerState().event.getWaitIfLocked();
         thisPlayerState().event.setItem(null);
-        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+
         PlayerState.canPerformActions = false;
 
         return e;
@@ -664,17 +681,17 @@ public class GUI extends UI {
             throw new NotPresentException("No leader card can be discarded");
         PlayerState.availableActions = new ArrayList<>();
         PlayerState.availableActions.add(Action.LEADER_ACTION);
-
         PlayerState.canPerformActions = true;
+
         String leaderCardID = ((DiscardLeaderCardEvent) thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
         thisPlayerState().event.setItem(null);
-        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+
         PlayerState.canPerformActions = false;
 
         return leaderCardID;
     }
 
-    //TODO missing a way to differentiate it with discard
+
     @Override
     public String askForLeaderCardToActivate() throws NotPresentException {
         if (!thisPlayerState().leaderCards.containsValue(false))
@@ -685,7 +702,7 @@ public class GUI extends UI {
         PlayerState.canPerformActions = true;
         String leaderCardID = ((ActivateLeaderCardEvent) thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
         thisPlayerState().event.setItem(null);
-        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+
         PlayerState.canPerformActions = false;
 
         return leaderCardID;
@@ -703,7 +720,7 @@ public class GUI extends UI {
         PlayerState.canPerformActions = true;
         events.add((LeaderPowerSelectStateEvent) thisPlayerState().event.getWaitIfLocked());
         thisPlayerState().event.setItem(null);
-        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+
         PlayerState.canPerformActions = false;
         return events;
     }
@@ -738,14 +755,16 @@ public class GUI extends UI {
                 PlayerState.availableActions.add(Action.END_TURN);
             }
         }
-
+        Platform.runLater(() -> mainViewController.setTurnActive(true));
         PlayerState.canPerformActions = true;
+
+        System.out.println("locking events");
         //null is the lockingState
         events.add(thisPlayerState().event.getWaitIfLocked());
         thisPlayerState().event.setItem(null);
-        //TODO this is problematic because potentially a user could do more than one action if he's fast enough. Should be done by each controller before setting event
+
         PlayerState.canPerformActions = false;
-        Platform.runLater(() -> mainViewController.setTurnActive(true));
+
 
         return events;
     }
@@ -755,12 +774,18 @@ public class GUI extends UI {
     public void updateLeaderCardDepositState(String playerID, String leaderCardID, int leaderPowerIndex, HashMap<
             Resource, Integer> storedResources) {
         playerStates.get(playerID).updateLeaderCardDepositState(leaderCardID, leaderPowerIndex, storedResources);
+        Platform.runLater(() -> {
+            if (playerID.equals(this.playerID.getItem())) {
+                mainViewController.updateDepots();
+            }
+        });
     }
 
     @Override
     public void updateLeaderPowersSelectedState(String playerID, String
             leaderCardID, ArrayList<Boolean> powerSelectedStates) {
         playerStates.get(playerID).leaderPowerStates.put(leaderCardID, new ArrayList<>(powerSelectedStates));
+
     }
 
 
@@ -805,7 +830,7 @@ public class GUI extends UI {
         });
         PlayerState.canPerformActions = true;
         thisPlayerState().event.setItem(null);
-        NewResourcesOrganizationEvent event =  (NewResourcesOrganizationEvent) thisPlayerState().event.getWaitIfLocked();
+        NewResourcesOrganizationEvent event = (NewResourcesOrganizationEvent) thisPlayerState().event.getWaitIfLocked();
         return event;
     }
 
@@ -855,11 +880,7 @@ public class GUI extends UI {
         return controller.getChosen();
     }
 
-    //TODO
-    @Override
-    public void displayIAAction(SoloActionToken action) {
 
-    }
 
     @Override
     public void displaySinglePlayerLost() {
@@ -884,6 +905,19 @@ public class GUI extends UI {
     //TODO
     @Override
     public void updateLorenzoPosition(int position) {
+
+
+        Platform.runLater(() -> {
+            if (playerID.equals(this.playerID.getItem())) {
+                mainViewController.updateAll();
+            }
+        });
+    }
+
+
+    //TODO
+    @Override
+    public void displayIAAction(SoloActionToken action) {
 
     }
 }
