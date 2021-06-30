@@ -918,6 +918,20 @@ public class GUI extends UI {
     //TODO
     @Override
     public void displayIAAction(SoloActionToken action) {
+        FinalScreenController controller = new FinalScreenController(this, true, null);
 
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("FinalScreen.fxml"));
+            loader.setController(controller);
+            try {
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                Scene scene = new Scene(loader.load());
+                stage.setScene(scene);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

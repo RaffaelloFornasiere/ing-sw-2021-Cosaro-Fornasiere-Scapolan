@@ -36,12 +36,16 @@ public class FaithTrackController {
     DoublePoint zeroPos;
     private int position;
 
+    DoublePoint currentPosLorenzo;
+    private int positionLorenzo;
+
 
 
     ArrayList<ImageView> popeFavorCards;
 
 
     ImageView cross;
+    ImageView crossLorenzo;
     GridPane faithTrack;
 
     double cellSize;
@@ -78,11 +82,14 @@ public class FaithTrackController {
         Collections.swap(track, 17, 16);
 
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/crocePlayer.png";
-        cross = new ImageView(new Image(imageUrl));
-        //System.out.println(imageUrl);
+        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        cross = new ImageView(new Image(imageUrl + "crocePlayer.png"));
+        crossLorenzo = new ImageView(new Image(imageUrl + "croceLorenzo.png"));
         cross.setFitWidth(45);
         cross.setFitHeight(55);
+        crossLorenzo.setFitWidth(45);
+        crossLorenzo.setFitHeight(55);
+
         ((StackPane) faithTrack.getParent()).getChildren().add(cross);
         zeroPos.x = faithTrack.getWidth() / 2;
         zeroPos.y = ((Group) track.get(0).getValue(2)).getChildren().stream()
@@ -97,9 +104,28 @@ public class FaithTrackController {
         cross.setTranslateY(zeroPos.y * 1.2);
         currentPos.x = -zeroPos.x + zeroPos.y / 2;
         currentPos.y = zeroPos.y * 1.2;
-        setPosition(0);
+        setPlayerPosition(0);
+
+        if(singlePlayer) {
+            ((StackPane) faithTrack.getParent()).getChildren().add(crossLorenzo);
+            crossLorenzo.setTranslateX(-zeroPos.x + zeroPos.y / 2);
+            crossLorenzo.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
+            crossLorenzo.setTranslateY(zeroPos.y * 1.2);
+            setLorenzoPosition(0);
+        }
+
+
     }
 
+
+    public void setLorenzoPosition(int newPosition)
+    {
+        setPosition( newPosition,  crossLorenzo);
+    }
+
+    public void setPlayerPosition(int newPosition){
+        setPosition( newPosition,  cross);
+    }
 
     /**
      * update the current position of the player to his new position
@@ -108,7 +134,7 @@ public class FaithTrackController {
      *
      * @param newPosition the new position of the player
      */
-    public void setPosition(int newPosition) {
+    public void setPosition(int newPosition, ImageView cross) {
         if (newPosition == position)
             return;
 
@@ -158,16 +184,32 @@ public class FaithTrackController {
     /**
      * increments the position of one step
      */
-    public void incrementPosition() {
-        setPosition(position + 1);
+    public void incrementPlayerPosition() {
+        setPlayerPosition(position + 1);
     }
 
     /**
      * decrements the position of one step
      */
-    public void decrementPosition() {
-        setPosition(position - 1);
+    public void decrementPlayerPosition() {
+        setPlayerPosition(position - 1);
     }
+
+
+    /**
+     * increments the position of one step
+     */
+    public void incrementLorenzoPosition() {
+        setPlayerPosition(position + 1);
+    }
+
+    /**
+     * decrements the position of one step
+     */
+    public void decrementLorenzoPosition() {
+        setPlayerPosition(position - 1);
+    }
+
 
     public void setPopeFavorCards(HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
     }

@@ -136,15 +136,15 @@ public class MainViewController extends Controller implements Initializable {
 
 
     public void decrementPos() {
-        faithTrackController.getWaitIfLocked().setPosition(gui.thisPlayerState().getFaithTrackPosition() - 1);
+        faithTrackController.getWaitIfLocked().setPlayerPosition(gui.thisPlayerState().getFaithTrackPosition() - 1);
     }
 
     public void incrementPos() {
-        faithTrackController.getWaitIfLocked().setPosition(gui.thisPlayerState().getFaithTrackPosition() + 1);
+        faithTrackController.getWaitIfLocked().setPlayerPosition(gui.thisPlayerState().getFaithTrackPosition() + 1);
     }
 
     public void setFaithTrackPosition(int pos) {
-        faithTrackController.getWaitIfLocked().setPosition(pos);
+        faithTrackController.getWaitIfLocked().setPlayerPosition(pos);
     }
 
     public void updateMarket() {
