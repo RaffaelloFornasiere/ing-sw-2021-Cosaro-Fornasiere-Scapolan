@@ -63,8 +63,7 @@ public abstract class UI {
     //game related
 
 
-    public void invalidateUsername() {
-    }
+    public abstract void invalidateUsername();
 
     public abstract ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose);
 
@@ -81,18 +80,6 @@ public abstract class UI {
     public abstract void updateMarket(int rows, int cols, Marble[][] marketStatus, Marble marbleLeft);
 
     public abstract void updateDevCardGrid(String[][] topDevCardIDs);
-
-    public abstract BuyResourcesEvent askForMarketRow();
-
-    public abstract BuyDevCardsEvent askForDevCard();
-
-    public abstract ActivateProductionEvent askForProductionPowersToUse();
-
-    public abstract String askForLeaderCardToDiscard() throws NotPresentException;
-
-    public abstract String askForLeaderCardToActivate() throws NotPresentException;
-
-    public abstract ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException;
 
     public abstract ArrayList<Event> askForNextAction(String PlayerID, boolean lastRound, TurnState turnState);
 
