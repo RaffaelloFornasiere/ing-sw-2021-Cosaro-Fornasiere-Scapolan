@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.EventRegistry;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
-import it.polimi.ingsw.events.ControllerEvents.QuitGameEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.HeartbeatEvent;

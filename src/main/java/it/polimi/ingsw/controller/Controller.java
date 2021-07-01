@@ -743,7 +743,7 @@ public class Controller {
                 for (Resource r : cr.keySet()) {
                     consumedResources.put(r, cr.get(r) + consumedResources.getOrDefault(r, 0));
                 }
-                HashMap<Resource, Integer> pr = productionPower.getConsumedResources();
+                HashMap<Resource, Integer> pr = productionPower.getProducedResources();
                 for (Resource r : pr.keySet()) {
                     producedResources.put(r, pr.get(r) + producedResources.getOrDefault(r, 0));
                 }
