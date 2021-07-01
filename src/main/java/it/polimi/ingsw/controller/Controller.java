@@ -719,6 +719,7 @@ public class Controller {
             leaderCardManager.removeResourcesFromLeaderCards(player, selectedResourcesFromLeaderPower);
             for(Resource r: resourcesFromStrongBox.keySet())
                 player.getDashBoard().subResourcesToStrongBox(r, resourcesFromStrongBox.get(r));
+            devCardGrid.pop(devDeckIndexes);
             player.getDashBoard().addCard(event.getCardSlot(), devCard);
 
             int totalDevCard = 0;
