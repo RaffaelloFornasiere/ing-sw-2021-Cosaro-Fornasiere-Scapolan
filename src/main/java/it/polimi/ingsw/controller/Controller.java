@@ -34,15 +34,20 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Class responsible for handling all the events related to one game
+ *
+ * note: handler for events don't follow the same naming scheme of other methods (in particular they have the firs letter in upper case) because they have to, in order to be automatically registered for handling the right event
+ */
 @SuppressWarnings("unused")
 public class Controller {
-    MarketManager marketManager;
-    LeaderCardManager leaderCardManager;
-    FaithTrackManager faithTrackManager;
-    MatchState matchState;
-    HashMap<String, Sender> senders;
-    PropertyChangeSubject eventsRegistry;
-    HashMap<String, Boolean> disconnected;
+    private final MarketManager marketManager;
+    private final LeaderCardManager leaderCardManager;
+    private final FaithTrackManager faithTrackManager;
+    private final MatchState matchState;
+    private final HashMap<String, Sender> senders;
+    private final PropertyChangeSubject eventsRegistry;
+    private final HashMap<String, Boolean> disconnected;
     private final ArrayList<String> setuppedPlayers;
     private HashMap<String, InitialChoicesEvent> initialChoices;
 
