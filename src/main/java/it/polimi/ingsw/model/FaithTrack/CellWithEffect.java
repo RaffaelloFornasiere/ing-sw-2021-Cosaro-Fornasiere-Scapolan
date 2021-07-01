@@ -3,7 +3,12 @@ package it.polimi.ingsw.model.FaithTrack;
 import it.polimi.ingsw.controller.EffectOfCell;
 import it.polimi.ingsw.model.MatchState;
 
+import java.util.ArrayList;
+
 public abstract class CellWithEffect extends AbstractCell {
+
+
+
     protected AbstractCell cell;
     private boolean effectDone = false;
     protected EffectOfCell effect;
@@ -13,8 +18,16 @@ public abstract class CellWithEffect extends AbstractCell {
      *
      * @return effect of cell
      */
-    public EffectOfCell getEffectOfCell() {
-        return effect;
+    public ArrayList<EffectOfCell> getEffectOfCell() {
+        ArrayList<EffectOfCell> effects = new ArrayList<>();
+        effects.add(effect);
+        if (cell instanceof CellWithEffect) {
+            for (EffectOfCell effect : ((CellWithEffect) cell).getEffectOfCell()) {
+                if (!effects.contains(effect))
+                    effects.add(effect);
+            }
+        }
+        return effects;
     }
 
     /**
@@ -33,6 +46,14 @@ public abstract class CellWithEffect extends AbstractCell {
      */
     public int getVictoryPoints() {
         return cell.getVictoryPoints();
+    }
+
+    /**
+     * Getter of the inner Cell
+     * @return the cell private attribute
+     */
+    public AbstractCell getCell() {
+        return cell;
     }
 
     /**

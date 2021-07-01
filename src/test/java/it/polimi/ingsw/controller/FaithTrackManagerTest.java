@@ -63,6 +63,13 @@ public class FaithTrackManagerTest extends TestCase {
                 assertEquals(2, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().get(8).getVictoryPoints());
                 assertEquals(0, player2.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
                 assertEquals(0, player3.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
+                //increment position further 20 steps. Should go past the end of faithTrack
+                new FaithTrackManager(matchState).incrementFaithTrackPosition(player1, 20);
+                assertEquals(24, player1.getDashBoard().getFaithTrackData().getPosition());
+                assertEquals(3, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().size());
+                assertEquals(2, player1.getDashBoard().getFaithTrackData().getAcquiredPopeFavorCards().get(8).getVictoryPoints());
+                assertEquals(true, matchState.isLastRound());
+
         }
 
 

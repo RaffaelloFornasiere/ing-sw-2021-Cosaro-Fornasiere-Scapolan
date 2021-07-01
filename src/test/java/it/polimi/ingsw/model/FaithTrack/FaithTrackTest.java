@@ -26,6 +26,8 @@ public class FaithTrackTest extends TestCase {
 
     }
 
+
+
     /**
      * This method tests the correctness of initializing the singleton FaithTrack, in case a wrong parameter is given
      * ( the length of the array of points for the cells must be equal to the length of the faith track)
@@ -79,7 +81,6 @@ public class FaithTrackTest extends TestCase {
         FaithTrack.initFaithTrack(Config.getDefaultConfig().getFaithTrack());
         Assert.assertEquals(Config.getDefaultConfig().getFaithTrack(), FaithTrack.getArrayOfCells());
         FaithTrack.resetForTest();
-
 
     }
 }

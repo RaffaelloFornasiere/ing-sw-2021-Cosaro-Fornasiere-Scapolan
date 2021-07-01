@@ -230,7 +230,8 @@ public class Config {
         Gson gson = builder.create();
         ArrayList<AbstractCell> arrayOfCells;
         try {
-            String faithTrackJSON = Files.readString(Paths.get("src\\main\\resources\\default\\CompleteFaithTrack.json"));
+
+            String faithTrackJSON = Files.readString(Paths.get("src/main/resources/default/CompleteFaithTrack.json"));
             arrayOfCells = gson.fromJson(faithTrackJSON, new TypeToken<ArrayList<AbstractCell>>(){}.getType());
         } catch (Exception e) {
             System.err.println("Default faith track corrupted");
@@ -252,7 +253,7 @@ public class Config {
         Gson gson = builder.create();
         for(int i = 1; i<= config.leaderCardNumber; i++){
             try {
-                String leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\LeaderCard" + i + ".json"));
+                String leaderCardJSON = Files.readString(Paths.get("src/main/resources/LeaderCard" + i + ".json"));
                 gson.fromJson(leaderCardJSON, LeaderCard.class);
             } catch (Exception e) {
                 System.err.println("Leader cards corrupted. Checking defaults");
@@ -275,7 +276,7 @@ public class Config {
         Gson gson = builder.create();
         for(int i = 1; i<= leaderCardNumberDefault; i++){
             try {
-                String leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\LeaderCard" + i + ".json"));
+                String leaderCardJSON = Files.readString(Paths.get("src/main/resources/LeaderCard" + i + ".json"));
                 gson.fromJson(leaderCardJSON, LeaderCard.class);
             } catch (Exception e) {
                 System.err.println("Default leader cards corrupted");
@@ -294,7 +295,7 @@ public class Config {
         ArrayList<DevCard> devCards = new ArrayList<>();
         for(int i = 1; i<= config.devCardNumber; i++){
             try {
-                String DevCardJSON = Files.readString(Paths.get("src\\main\\resources\\DevCard" + i + ".json"));
+                String DevCardJSON = Files.readString(Paths.get("src/main/resources/DevCard" + i + ".json"));
                 devCards.add(gson.fromJson(DevCardJSON, DevCard.class));
             } catch (Exception e) {
                 System.err.println("Development cards corrupted. Loading defaults");
@@ -315,7 +316,7 @@ public class Config {
         ArrayList<DevCard> devCards = new ArrayList<>();
         for(int i = 1; i<= devCardNumberDefault; i++){
             try {
-                String DevCardJSON = Files.readString(Paths.get("src\\main\\resources\\default\\DevCard" + i + ".json"));
+                String DevCardJSON = Files.readString(Paths.get("src/main/resources/default/DevCard" + i + ".json"));
                 devCards.add(gson.fromJson(DevCardJSON, DevCard.class));
             } catch (Exception e) {
                 System.err.println("Default development cards corrupted");
@@ -541,7 +542,7 @@ public class Config {
         Gson gson = new GsonBuilder().registerTypeAdapter(SoloActionToken.class, new GsonInheritanceAdapter<SoloActionToken>()).setPrettyPrinting().create();
         String s = gson.toJson(config);
 
-        String path = "src\\main\\resources\\Config.json";
+        String path = "src/main/resources/Config.json";
         try {
             File file = new File(path);
             FileWriter fw = new FileWriter(file);

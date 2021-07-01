@@ -107,7 +107,13 @@ public class NetworkAdapter {
         sender = new NetworkHandlerSender(server.getOutputStream());
         receiver = new NetworkHandlerReceiver(server);
 
-        new Thread(() -> receiver.receive()).start();
+        new Thread(() -> {
+            while (!stopThread) {
+                receiver.receive();
+            }
+            System.out.println("Stopped thread");
+
+        }).start();
 
 
 
