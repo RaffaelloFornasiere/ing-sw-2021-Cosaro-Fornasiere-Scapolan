@@ -86,5 +86,6 @@ public class SinglePlayerMatchState extends MatchState {
      */
     public void incrementLorenzoPosition(int steps){
         lorenzoPosition = Math.min(lorenzoPosition+steps, FaithTrack.getArrayOfCells().size()-1);
+        notifyObservers();
     }
 }
