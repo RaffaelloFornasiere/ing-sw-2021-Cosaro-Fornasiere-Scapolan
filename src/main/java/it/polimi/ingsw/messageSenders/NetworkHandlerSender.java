@@ -1,8 +1,8 @@
-package it.polimi.ingsw.Server;
+package it.polimi.ingsw.messageSenders;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.client.Sender;
+import it.polimi.ingsw.messageSenders.Sender;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
@@ -12,14 +12,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 
-public class ClientHandlerSender implements Sender {
+public class NetworkHandlerSender implements Sender {
     PrintWriter printWriter;
 
     /**
      * Constructor for the class
      * @param outputStream the stream where to write the messages to send
      */
-    public ClientHandlerSender(OutputStream outputStream) {
+    public NetworkHandlerSender(OutputStream outputStream) {
         printWriter = new PrintWriter(outputStream);
     }
 

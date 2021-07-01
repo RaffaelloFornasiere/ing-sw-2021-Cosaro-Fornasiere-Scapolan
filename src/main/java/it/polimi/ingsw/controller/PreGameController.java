@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.client.Sender;
+import it.polimi.ingsw.events.EventRegistry;
+import it.polimi.ingsw.messageSenders.Sender;
 import it.polimi.ingsw.controller.modelChangeHandlers.*;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;

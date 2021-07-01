@@ -1,9 +1,9 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.client.LocalSender;
+import it.polimi.ingsw.messageSenders.LocalSender;
 import it.polimi.ingsw.client.NetworkAdapter;
-import it.polimi.ingsw.client.Sender;
-import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.messageSenders.Sender;
+import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.events.ClientEvents.GameStartingEvent;
 import it.polimi.ingsw.ui.UI;

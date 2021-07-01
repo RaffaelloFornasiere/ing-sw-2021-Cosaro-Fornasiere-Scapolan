@@ -2,17 +2,18 @@ package it.polimi.ingsw.client;
 
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.ClientApp;
-import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.events.ClientEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.StartMatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.HeartbeatEvent;
-import it.polimi.ingsw.model.Direction;
+import it.polimi.ingsw.messageSenders.NetworkHandlerSender;
+import it.polimi.ingsw.messageSenders.LocalSender;
+import it.polimi.ingsw.messageSenders.Sender;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
-import it.polimi.ingsw.utilities.Config;
 import it.polimi.ingsw.utilities.NetworkConfiguration;
 import org.reflections.Reflections;
 
@@ -103,7 +104,7 @@ public class NetworkAdapter {
     public boolean connectToServer(InetAddress address) throws IOException {
         server = new Socket(address, SERVER_PORT);
         server.setSoTimeout(10*1000);
-        sender = new NetworkHandlerSender(server);
+        sender = new NetworkHandlerSender(server.getOutputStream());
         receiver = new NetworkHandlerReceiver(server);
 
         new Thread(() -> {
@@ -150,30 +151,6 @@ public class NetworkAdapter {
 
     public void startMatch() {
         send(new StartMatchEvent(playerID));
-    }
-
-    public void buyResources(Direction direction, int index) {
-        BuyResourcesEvent event = new BuyResourcesEvent(playerID, direction, index);
-        send(event);
-    }
-
-    public void buyDevCards(String cardID, int cardSlot) {
-        BuyDevCardsEvent event = new BuyDevCardsEvent(playerID, cardID, cardSlot);
-        send(event);
-    }
-
-    public void activateProduction(ArrayList<String> devCards, boolean personalPower) {
-        ActivateProductionEvent event = new ActivateProductionEvent(playerID, devCards, personalPower);
-        send(event);
-    }
-
-    public void activateLeaderCard(String leaderCardID) {
-        ActivateLeaderCardEvent event = new ActivateLeaderCardEvent(playerID, leaderCardID);
-        send(event);
-    }
-
-    public void sendSelectedResources(HashMap<Resource, Integer> resources) {
-
     }
 
 

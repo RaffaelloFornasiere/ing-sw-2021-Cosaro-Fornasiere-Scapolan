@@ -5,9 +5,10 @@ import it.polimi.ingsw.events.ControllerEvents.MatchEvents.MatchEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEvent;
 import it.polimi.ingsw.events.ControllerEvents.NewPlayerEventWithNetworkData;
-import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.events.QueueStopEvent;
+import it.polimi.ingsw.messageSenders.NetworkHandlerSender;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,7 +19,7 @@ public class RequestsElaborator {
     public static final int QUEUE_SIZE = 10;
 
     private Socket socket;
-    private ClientHandlerSender clientHandlerSender;
+    private NetworkHandlerSender networkHandlerSender;
     private ClientHandlerReceiver clientHandlerReceiver;
     private BlockingQueue<Event> requestsQueue;
     private EventRegistry mainEventHandlerRegistry;
@@ -36,7 +37,7 @@ public class RequestsElaborator {
         try {
             this.socket = socket;
             this.requestsQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
-            this.clientHandlerSender = new ClientHandlerSender(socket.getOutputStream());
+            this.networkHandlerSender = new NetworkHandlerSender(socket.getOutputStream());
             this.clientHandlerReceiver = new ClientHandlerReceiver(socket.getInputStream(), requestsQueue);
             this.mainEventHandlerRegistry = mainEventHandlerRegistry;
         } catch (IOException e) {
@@ -74,7 +75,7 @@ public class RequestsElaborator {
         }
         if (socket != null) {
             if(event.getClass() == HeartbeatEvent.class) {
-                clientHandlerSender.sendObject(event);
+                networkHandlerSender.sendObject(event);
                 return;
             }
             else if (event.getClass() == NewPlayerEvent.class)
@@ -100,8 +101,8 @@ public class RequestsElaborator {
      * Getter for the object responsible of sending the events through the socket this request elaborator is associated with
      * @return The object responsible of sending the events through the socket this request elaborator is associated with
      */
-    public ClientHandlerSender getClientHandlerSender() {
-        return clientHandlerSender;
+    public NetworkHandlerSender getClientHandlerSender() {
+        return networkHandlerSender;
     }
 
     /**
@@ -133,7 +134,7 @@ public class RequestsElaborator {
      * Method responsible of closing the connection with the socket this request elaborator is associated with
      */
     public void closeConnection() {
-        clientHandlerSender.closeConnection();
+        networkHandlerSender.closeConnection();
         clientHandlerReceiver.closeConnection();
         try {
             socket.close();

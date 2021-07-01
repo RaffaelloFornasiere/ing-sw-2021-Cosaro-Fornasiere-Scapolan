@@ -3,7 +3,7 @@ package it.polimi.ingsw.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.events.ClientEvents.ServerDisconnectionEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.HeartbeatEvent;

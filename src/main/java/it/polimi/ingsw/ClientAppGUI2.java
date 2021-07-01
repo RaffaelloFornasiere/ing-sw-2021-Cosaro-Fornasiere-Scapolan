@@ -1,22 +1,18 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.client.LocalSender;
+import it.polimi.ingsw.messageSenders.LocalSender;
 import it.polimi.ingsw.client.NetworkAdapter;
-import it.polimi.ingsw.client.Sender;
-import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.messageSenders.Sender;
+import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.events.ClientEvents.GameStartingEvent;
 import it.polimi.ingsw.ui.UI;
-import it.polimi.ingsw.ui.cli.CLI;
-import it.polimi.ingsw.ui.gui.GUI;
 import it.polimi.ingsw.ui.gui.GUIFar;
-import it.polimi.ingsw.ui.gui.GUIRaf;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 /**
  * Hello world!

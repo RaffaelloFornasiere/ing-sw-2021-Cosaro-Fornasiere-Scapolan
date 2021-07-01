@@ -1,15 +1,22 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.messageSenders;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.ui.cli.Color;
 
-public class LocalSender implements Sender{
+/**
+ * Class for sending events locally
+ */
+public class LocalSender implements Sender {
 
     private final EventRegistry eventRegistry;
     private boolean closed;
 
+    /**
+     * Constructor for the class
+     * @param eventRegistry the registry for the handlers tat will be called when an event is sent
+     */
     public LocalSender(EventRegistry eventRegistry){
         this.eventRegistry = eventRegistry;
         this.closed = false;
