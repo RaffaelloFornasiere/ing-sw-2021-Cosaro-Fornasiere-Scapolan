@@ -34,6 +34,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class Controller {
     MarketManager marketManager;
     LeaderCardManager leaderCardManager;
