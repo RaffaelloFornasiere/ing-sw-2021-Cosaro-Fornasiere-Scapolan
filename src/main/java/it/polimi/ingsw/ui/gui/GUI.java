@@ -4,7 +4,6 @@ import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
@@ -34,33 +33,43 @@ public class GUI extends UI {
     protected final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
     protected final LockWrap<Integer> serverPort = new LockWrap<>(null);
     protected final LockWrap<Boolean> singlePlayer = new LockWrap<>(null);
-
-
     protected String PlayerImage;
 
-    ServerSettingsController serverSettingsController;
-    LoginController loginController;
-    SplashScreenController splashScreenController;
+
     LobbyController lobbyController;
     MainViewController mainViewController;
-
     HashMap<String, PlayerState> playerStates;
 
+
+    // primary stage, this mustn't to be deleted
+    Stage stage;
+
+
+    /**
+     * @return the reference to the player state of the user using the gui
+     */
     public PlayerState thisPlayerState() {
         return playerStates.get(playerID.getItem());
     }
 
+    /**
+     *
+     */
     public synchronized void close() {
         System.exit(0);
     }
 
-    Stage stage;
 
+    /**
+     * constructor:
+     * launches the javafx application and wait it gets ready
+     * one the application is read sets the splashscreen scene
+     */
     public GUI() {
 
-        serverSettingsController = new ServerSettingsController(this);
-        loginController = new LoginController(this);
-        splashScreenController = new SplashScreenController(this);
+//        serverSettingsController = new ServerSettingsController(this);
+//        loginController = new LoginController(this);
+//        splashScreenController = new SplashScreenController(this);
         //
 
         GUI aux = this;
@@ -212,14 +221,14 @@ public class GUI extends UI {
         }
     }
 
-    public Pair<Marble[][], Marble> getMarketStatus() {
-        return new Pair<>(PlayerState.marketStatus);
-    }
 
-    public String[][] getDevCardGridState() {
-        return PlayerState.devCardGrid.clone();
-    }
-
+    /**
+     * method used by controllers to set the next event on queue.
+     * In addition, resets the array of actions that can be performed
+     * and sets to false the variable that allows controllers to perform actions
+     *
+     * @param event event to put in queue
+     */
     public synchronized void addEvent(Event event) {
 
         if (event instanceof BuyResourcesEvent) {
@@ -243,15 +252,29 @@ public class GUI extends UI {
         thisPlayerState().event.setItem(event);
     }
 
-
+    /**
+     * @return the player image url
+     */
     public String getPlayerImage() {
         return PlayerImage;
     }
 
+    /**
+     * sets the player image url
+     *
+     * @param playerImage image url
+     */
     public void setPlayerImage(String playerImage) {
         PlayerImage = playerImage;
     }
 
+
+    /**
+     * setter. if these are wrong the user receives an error window
+     *
+     * @param playerID string that identifies the user
+     * @param leaderID string that identifies the leader
+     */
     public void setLoginData(String playerID, String leaderID) {
 
         this.playerID.setItem(playerID);
@@ -259,31 +282,23 @@ public class GUI extends UI {
         playerStates.put(this.playerID.getItem(), new PlayerState());
     }
 
-    public InetAddress getServerAddress() {
-        return serverAddress.getWaitIfLocked();
-    }
-
+    /**
+     * setter
+     *
+     * @param serverAddress the address of the server to connect
+     */
     public void setServerAddress(InetAddress serverAddress) {
         this.serverAddress.setItem(serverAddress);
     }
 
-
-    public int getServerPort() throws InterruptedException {
-        return serverPort.getWaitIfLocked();
-    }
-
+    /**
+     * setter
+     *
+     * @param serverPort the port of the server to connect
+     */
     public void setServerPort(int serverPort) {
         this.serverPort.setItem(serverPort);
     }
-
-
-//   #######  ##     ## ######## ########  ########  #### #######   ########  ######
-//  ##     ## ##     ## ##       ##     ## ##     ##  ##  ##     ## ##       ##    ##
-//  ##     ## ##     ## ##       ##     ## ##     ##  ##  ##     ## ##       ##
-//  ##     ## ##     ## ######   ########  ########   ##  ##     ## ######    ######
-//  ##     ##  ##   ##  ##       ##   ##   ##   ##    ##  ##     ## ##             ##
-//  ##     ##   ## ##   ##       ##    ##  ##    ##   ##  ##     ## ##       ##    ##
-//   #######     ###    ######## ##     ## ##     ## #### #######   ########  ######
 
 
     @Override
@@ -356,28 +371,23 @@ public class GUI extends UI {
     public void displayLobbyState(String leaderID, ArrayList<String> otherPLayersID) {
         otherPLayersID.add(leaderID);
         GUI aux = this;
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                if (lobbyController != null) {
-                    lobbyController.updatePlayerList(leaderID, otherPLayersID);
-                } else {
-                    lobbyController = new LobbyController(aux, leaderID, otherPLayersID,
-                            aux.playerID.getItem().equals(leaderID));
-                    try {
-                        Scene scene = MainApplication.createScene("Lobby.fxml", lobbyController);
-                        stage.setScene(scene);
-                        stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        Platform.runLater(() -> {
+            if (lobbyController != null) {
+                lobbyController.updatePlayerList(leaderID, otherPLayersID);
+            } else {
+                lobbyController = new LobbyController(aux, leaderID, otherPLayersID,
+                        aux.playerID.getItem().equals(leaderID));
+                try {
+                    Scene scene = MainApplication.createScene("Lobby.fxml", lobbyController);
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-
-                for (
-                        var player : otherPLayersID) {
-                    playerStates.put(player, new PlayerState());
-                }
+            }
+            for (
+                    var player : otherPLayersID) {
+                playerStates.put(player, new PlayerState());
             }
         });
 
@@ -394,103 +404,17 @@ public class GUI extends UI {
 
     @Override
     public void initializeMatchObjects() {
-//
-//        HashMap<Resource, Integer> strongBox = new HashMap<>() {{
-//            put(Resource.COIN, 4);
-//            put(Resource.SHIELD, 2);
-//            put(Resource.SERVANT, 5);
-//            put(Resource.ROCK, 3);
-//        }};
-//        ArrayList<DepotState> warehouse = new ArrayList<>() {{
-//            add(new DepotState(Resource.COIN, 1, 1));
-//            add(new DepotState(Resource.SHIELD, 2, 2));
-//            add(new DepotState(Resource.SERVANT, 3, 3));
-//        }};
-//
-//        thisPlayerState().ownedCards.get(0).add("DevCard1");
-//        thisPlayerState().ownedCards.get(0).add("DevCard23");
-//        thisPlayerState().ownedCards.get(1).add("DevCard4");
-//        thisPlayerState().ownedCards.get(2).add("DevCard8");
-//        thisPlayerState().ownedCards.get(2).add("DevCard26");
-//        thisPlayerState().ownedCards.get(2).add("DevCard35");
-//
-//        thisPlayerState().leaderCards.put("LeaderCard5", true);
-//        thisPlayerState().leaderCards.put("LeaderCard6", false);
-//        thisPlayerState().leaderCards.put("LeaderCard7", false);
-//        thisPlayerState().leaderCards.put("LeaderCard8", false);
-//
-//
-//        thisPlayerState().updateLeaderCardDepositState("LeaderCard5", 0,
-//                new HashMap<>() {{
-//                    // put(Resource.ROCK, 1);
-//                }});
-//        thisPlayerState().leaderPowerStates.put("LeaderCard5", new ArrayList<>() {{
-//            add(true);
-//        }});
-//
-//
-//        thisPlayerState().warehouse = warehouse;
-//        thisPlayerState().strongBox = strongBox;
-//        thisPlayerState().faithTrackPoints = 4;
-//        thisPlayerState().victoryPoints = 15;
-//        ArrayList<ArrayList<Integer>> indexes = new ArrayList<>();
-//        for (int i = 0; i < 3; i++) {
-//            int finalI = i;
-//            indexes.add(new ArrayList<>() {{
-//                int base = (finalI) * 16;
-//                add(1 + base);
-//                add(2 + base);
-//                add(3 + base);
-//                add(4 + base);
-//            }});
-//        }
-//
-//        PlayerState.devCardGrid = new String[3][4];
-//        for (int i = 0; i < PlayerState.devCardGrid.length; i++) {
-//            for (int j = 0; j < PlayerState.devCardGrid[0].length; j++) {
-//                int index = indexes.get(i).get(j);
-//                PlayerState.devCardGrid[i][j] = "DevCard" + index;
-//            }
-//        }
-//
-//
-//        int rows = 3;
-//        int cols = 4;
-//        PlayerState.devCardGrid = new String[rows][cols];
-//        for (int i = 0; i < rows; i++) {
-//            for (int j = 0; j < cols; j++) {
-//                int level = i * 16 + 1;
-//                PlayerState.devCardGrid[i][j] = "DevCard" + (level + j);
-//            }
-//        }
-//        HashMap<Marble, Integer> marbles = new HashMap<>() {{
-//            put(Marble.GRAY, 2);
-//            put(Marble.YELLOW, 2);
-//            put(Marble.PURPLE, 2);
-//            put(Marble.BLUE, 2);
-//            put(Marble.WHITE, 4);
-//            put(Marble.RED, 1);
-//        }};
-//        Market market = new Market(3, 4, marbles);
-//        PlayerState.marketStatus = new Pair<>(market.getMarketStatus(), market.getMarbleLeft());
-//
-
         mainViewController = new MainViewController(this);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    Scene scene = MainApplication.createScene("MainView.fxml", mainViewController);
-                    stage.setScene(scene);
-                    stage.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+        Platform.runLater(() -> {
+            try {
+                Scene scene = MainApplication.createScene("MainView.fxml", mainViewController);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
+
         System.out.println("waiting for mainViewController get ready");
         mainViewController.waitForReady();
         System.out.println("ready");
@@ -506,27 +430,20 @@ public class GUI extends UI {
 
         ArrayList<String> res;
         SelectLeaderCardsController controller = new SelectLeaderCardsController(this, leaderCardsIDs, numberOFLeaderCardsToChose);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectLeaderCards.fxml"));
-                loader.setController(controller);
-                Scene scene = null;
-                try {
-                    Stage stage = new Stage();
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    scene = new Scene(loader.load());
-                    stage.setScene(scene);
-                    stage.showAndWait();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectLeaderCards.fxml"));
+            loader.setController(controller);
+            try {
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                Scene scene = new Scene(loader.load());
+                stage.setScene(scene);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
-        //System.out.println("waiting for res");
         res = controller.getSelected();
-        //System.out.println("Res arrived: ");
-        //res.forEach(System.out::print);
         return res;
     }
 
@@ -541,21 +458,17 @@ public class GUI extends UI {
         if (numberOFResources <= 0) return res;
 
         ChoseResourcesController controller = new ChoseResourcesController(this, resourceType, numberOFResources);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ChoseResources.fxml"));
-                loader.setController(controller);
-                try {
-                    Stage stage = new Stage();
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    Scene scene = null;
-                    scene = new Scene(loader.load());
-                    stage.setScene(scene);
-                    stage.showAndWait();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ChoseResources.fxml"));
+            loader.setController(controller);
+            try {
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                Scene scene = new Scene(loader.load());
+                stage.setScene(scene);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
         res = controller.getChosen();
@@ -620,10 +533,7 @@ public class GUI extends UI {
     @Override
     public void updateMarket(int rows, int cols, Marble[][] marketStatus, Marble marbleLeft) {
         PlayerState.marketStatus = new Pair<>(marketStatus.clone(), marbleLeft);
-        Platform.runLater(() -> {
-            mainViewController.updateMarket();
-
-        });
+        Platform.runLater(() -> mainViewController.updateMarket());
     }
 
     @Override
@@ -632,92 +542,6 @@ public class GUI extends UI {
 
     }
 
-    /*public BuyResourcesEvent askForMarketRow() {
-        PlayerState.availableActions = new ArrayList<>();
-
-        PlayerState.availableActions.add(Action.TAKE_RESOURCES_FROM_MARKET);
-
-        PlayerState.canPerformActions = true;
-        BuyResourcesEvent e = (BuyResourcesEvent) thisPlayerState().event.getWaitIfLocked();
-        thisPlayerState().event.setItem(null);
-
-        PlayerState.canPerformActions = false;
-
-        return e;
-    }
-
-    public BuyDevCardsEvent askForDevCard() {
-        PlayerState.availableActions = new ArrayList<>();
-        PlayerState.availableActions.add(Action.BUY_DEVCARD);
-
-        PlayerState.canPerformActions = true;
-        BuyDevCardsEvent e = (BuyDevCardsEvent) thisPlayerState().event.getWaitIfLocked();
-        thisPlayerState().event.setItem(null);
-
-        PlayerState.canPerformActions = false;
-
-        return e;
-    }
-
-    public ActivateProductionEvent askForProductionPowersToUse() {
-        PlayerState.availableActions = new ArrayList<>();
-        PlayerState.availableActions.add(Action.PRODUCE);
-
-        PlayerState.canPerformActions = true;
-        ActivateProductionEvent e = (ActivateProductionEvent) thisPlayerState().event.getWaitIfLocked();
-        thisPlayerState().event.setItem(null);
-
-        PlayerState.canPerformActions = false;
-
-        return e;
-    }
-
-    public String askForLeaderCardToDiscard() throws NotPresentException {
-        if (!thisPlayerState().leaderCards.containsValue(false))
-            throw new NotPresentException("No leader card can be discarded");
-        PlayerState.availableActions = new ArrayList<>();
-        PlayerState.availableActions.add(Action.LEADER_ACTION);
-        PlayerState.canPerformActions = true;
-
-        String leaderCardID = ((DiscardLeaderCardEvent) thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
-        thisPlayerState().event.setItem(null);
-
-        PlayerState.canPerformActions = false;
-
-        return leaderCardID;
-    }
-
-
-    public String askForLeaderCardToActivate() throws NotPresentException {
-        if (!thisPlayerState().leaderCards.containsValue(false))
-            throw new NotPresentException("No leader card can be activated");
-        PlayerState.availableActions = new ArrayList<>();
-        PlayerState.availableActions.add(Action.LEADER_ACTION);
-
-        PlayerState.canPerformActions = true;
-        String leaderCardID = ((ActivateLeaderCardEvent) thisPlayerState().event.getWaitIfLocked()).getLeaderCardID();
-        thisPlayerState().event.setItem(null);
-
-        PlayerState.canPerformActions = false;
-
-        return leaderCardID;
-    }
-
-
-    public ArrayList<LeaderPowerSelectStateEvent> askForLeaderCardToSelectOrDeselect() throws NotPresentException {
-        ArrayList<LeaderPowerSelectStateEvent> events = new ArrayList<>();
-        if (!thisPlayerState().leaderCards.containsValue(true))
-            throw new NotPresentException("No leader card is active");
-        PlayerState.availableActions = new ArrayList<>();
-        PlayerState.availableActions.add(Action.SELECT_LEADER_CARD);
-
-        PlayerState.canPerformActions = true;
-        events.add((LeaderPowerSelectStateEvent) thisPlayerState().event.getWaitIfLocked());
-        thisPlayerState().event.setItem(null);
-
-        PlayerState.canPerformActions = false;
-        return events;
-    }*/
 
     @Override
     public ArrayList<Event> askForNextAction(String playerID, boolean lastRound, TurnState turnState) {
@@ -745,9 +569,7 @@ public class GUI extends UI {
                 PlayerState.availableActions.add(Action.LEADER_ACTION);
                 PlayerState.availableActions.add(Action.END_TURN);
             }
-            case END_OF_TURN -> {
-                PlayerState.availableActions.add(Action.END_TURN);
-            }
+            case END_OF_TURN -> PlayerState.availableActions.add(Action.END_TURN);
         }
         Platform.runLater(() -> mainViewController.setTurnActive(true));
         PlayerState.canPerformActions = true;
@@ -824,8 +646,7 @@ public class GUI extends UI {
         });
         PlayerState.canPerformActions = true;
         thisPlayerState().event.setItem(null);
-        NewResourcesOrganizationEvent event = (NewResourcesOrganizationEvent) thisPlayerState().event.getWaitIfLocked();
-        return event;
+        return (NewResourcesOrganizationEvent) thisPlayerState().event.getWaitIfLocked();
     }
 
 
@@ -895,18 +716,11 @@ public class GUI extends UI {
         PlayerState.canPerformActions = true;
     }
 
-    //TODO
     @Override
     public void updateLorenzoPosition(int position) {
-        Platform.runLater(() -> {
-            if (playerID.equals(this.playerID.getItem())) {
-                mainViewController.setLorenzoFaithTrackPosition(position);
-            }
-        });
+        Platform.runLater(() -> mainViewController.setLorenzoFaithTrackPosition(position));
     }
 
-
-    //TODO
     @Override
     public void displayIAAction(SoloActionToken action) {
         FinalScreenController controller = new FinalScreenController(this, true, null);
