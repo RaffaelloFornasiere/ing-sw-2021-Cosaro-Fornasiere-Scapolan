@@ -1,7 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateLeaderCardEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.LeaderPowerSelectStateEvent;
 import it.polimi.ingsw.utilities.Pair;
 import javafx.fxml.FXML;
@@ -16,8 +15,32 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 
+
+/**
+ * ui window controller to allow user to activate/select/deselect leader powers/cards
+ */
 public class LeaderCardActionController extends Controller implements Initializable {
 
+
+    @FXML
+    ImageView leaderImage;
+    @FXML
+    AnchorPane root;
+    @FXML
+    Label isActive;
+
+
+
+    LinkedList<Pair<String, Boolean>> leaderImages;
+    ListIterator<Pair<String, Boolean>> currentImage;
+    String current;
+
+
+    /**
+     * constructor: initialize images and a the list of leaders that the user will scroll with arrows
+     * to activate their leader powers
+     * @param gui gui object reference
+     */
     LeaderCardActionController(GUI gui) {
         super(gui);
         String url = new java.io.File(".").getAbsolutePath();
@@ -34,20 +57,10 @@ public class LeaderCardActionController extends Controller implements Initializa
         nextImage();
     }
 
+    /**
+     * shows the next image in the list
+     */
     @FXML
-    ImageView leaderImage;
-    @FXML
-    AnchorPane root;
-    @FXML
-    Label isActive;
-
-
-
-    LinkedList<Pair<String, Boolean>> leaderImages;
-    ListIterator<Pair<String, Boolean>> currentImage;
-    String current;
-
-
     public void nextImage() {
         Pair<String, Boolean> next;
         if (currentImage.hasNext())
@@ -65,6 +78,10 @@ public class LeaderCardActionController extends Controller implements Initializa
         leaderImage.setImage(new Image(next.getKey()));
     }
 
+    /**
+     * shows the previous image in the list
+     */
+    @FXML
     public void previousImage() {
         Pair<String, Boolean> previous;
         if (currentImage.hasPrevious())
@@ -81,12 +98,13 @@ public class LeaderCardActionController extends Controller implements Initializa
         leaderImage.setImage(new Image(previous.getKey()));
     }
 
-
+    /**
+     * method invoked when the user press the button to activate a leader card
+     */
+    @FXML
     public void activateLeaderCard() {
         if(gui.thisPlayerState().leaderCards.get(current))
             gui.addEvent(new ActivateLeaderCardEvent(gui.askLeaderID(), current));
         gui.addEvent(new LeaderPowerSelectStateEvent(gui.askUserID(), current, 0, true));
     }
-
-
 }
