@@ -87,12 +87,12 @@ public class ProductionController extends Controller implements Initializable {
             for (var deck : gui.thisPlayerState().ownedCards) {
                 if (deck.isEmpty())
                     continue;
-                var devCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + deck.get(deck.size() - 1) + ".json")), DevCard.class);
+                var devCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/" + deck.get(deck.size() - 1) + ".json")), DevCard.class);
                 devCards.add(devCard);
             }
             if (PlayerState.availableActions.contains(Action.LEADER_ACTION))
                 for (var card : gui.thisPlayerState().leaderCards.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toList())) {
-                    var leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                    var leaderCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/" + card + ".json")), LeaderCard.class);
                     leaderCards.add(leaderCard);
                 }
 

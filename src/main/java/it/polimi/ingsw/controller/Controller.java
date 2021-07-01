@@ -166,9 +166,9 @@ public class Controller {
         for (String leaderCardID : leaderCardIDs) {
             String leaderCardJSON;
             if (Config.getInstance().isLeaderCardDefault())
-                leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\default\\" + leaderCardID + ".json"));
+                leaderCardJSON = Files.readString(Paths.get("src/main/resources/default/" + leaderCardID + ".json"));
             else
-                leaderCardJSON = Files.readString(Paths.get("src\\main\\resources\\" + leaderCardID + ".json"));
+                leaderCardJSON = Files.readString(Paths.get("src/main/resources/" + leaderCardID + ".json"));
             LeaderCard lc = gson.fromJson(leaderCardJSON, LeaderCard.class);
             lc.addObserver(leaderCardHandler);
             for (LeaderPower lp : lc.getLeaderPowers()) {

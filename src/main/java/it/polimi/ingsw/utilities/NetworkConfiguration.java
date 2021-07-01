@@ -28,7 +28,7 @@ public class NetworkConfiguration {
     private static NetworkConfiguration loadFromJSON() {
         Gson gson = new Gson();
         try {
-            String JSON = Files.readString(Paths.get("src\\main\\resources\\NetworkConfiguration.json"));
+            String JSON = Files.readString(Paths.get("src/main/resources/NetworkConfiguration.json"));
             return  gson.fromJson(JSON, NetworkConfiguration.class);
         } catch (Exception e) {
             System.err.println("Unable to load network configuration from file. Loading default configuration");

@@ -350,9 +350,9 @@ public class PreGameController {
         Gson gson = builder.create();
         ArrayList<CellWithEffect> cellsWithEffectArray = new ArrayList<>();
         try {
-            String cellsEffectJSON = Files.readString(Paths.get("src\\main\\resources\\CellsWithEffectArray.json"));
+            String cellsEffectJSON = Files.readString(Paths.get("src/main/resources/CellsWithEffectArray.json"));
             cellsEffectJSON = cellsEffectJSON.substring(1,cellsEffectJSON.length()-1);
-            String[] cells = cellsEffectJSON.split("(,)(?=\\{)");
+            String[] cells = cellsEffectJSON.split("(,)(?=/{)");
 
             for (String s : cells) {
                 CellWithEffect cell = (CellWithEffect)gson.fromJson(s, AbstractCell.class);
@@ -364,7 +364,7 @@ public class PreGameController {
 
         ArrayList<Integer> victoryPoints = new ArrayList<>();
         try {
-            String victoryPointsJSON = Files.readString(Paths.get("src\\main\\resources\\VictoryPoints.json"));
+            String victoryPointsJSON = Files.readString(Paths.get("src/main/resources/VictoryPoints.json"));
             Type integerList = new TypeToken<ArrayList<Integer>>(){}.getType();
             victoryPoints= gson.fromJson(victoryPointsJSON, integerList);
         } catch (IOException e) {
@@ -379,7 +379,7 @@ public class PreGameController {
         }
         s.append("]");
         System.out.println(s.toString());
-        String path = "src\\main\\resources\\CompleteFaithTrack.json";
+        String path = "src/main/resources/CompleteFaithTrack.json";
         try {
             File file = new File(path);
             FileWriter fw = new FileWriter(file);
@@ -400,7 +400,7 @@ public class PreGameController {
 
         ArrayList<AbstractCell> arrayOfCells = new ArrayList<>();
         try {
-            String faithTrackJSON = Files.readString(Paths.get("src\\main\\resources\\CompleteFaithTrack.json"));
+            String faithTrackJSON = Files.readString(Paths.get("src/main/resources/CompleteFaithTrack.json"));
             arrayOfCells = gson.fromJson(faithTrackJSON, new TypeToken<ArrayList<AbstractCell>>(){}.getType());
         } catch (IOException e) {
             e.printStackTrace(); //use default configuration

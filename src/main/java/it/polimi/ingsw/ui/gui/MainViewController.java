@@ -84,7 +84,7 @@ public class MainViewController extends Controller implements Initializable {
             aux.setFaithTrackPosition(0);
         });
         ((Label) playerSlot.getChildren().stream().filter(n -> n instanceof Label).collect(Collectors.toList()).get(0)).setText(gui.playerID.getItem());
-        updateAll();
+        //updateAll();
     }
 
 
@@ -265,7 +265,7 @@ public class MainViewController extends Controller implements Initializable {
         }};
         gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
             try {
-                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/" + card + ".json")), LeaderCard.class);
                 leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
                         .forEach(power -> {
                                     int powerIndex = leaderCard.getLeaderPowers().indexOf(power);

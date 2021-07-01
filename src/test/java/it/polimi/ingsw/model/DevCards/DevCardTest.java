@@ -90,8 +90,8 @@ public class DevCardTest {
         DevCard devCard2 = null;
 
         try {
-            devCard1 = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard3.json")), DevCard.class);
-            devCard2 = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard3.json")), DevCard.class);
+            devCard1 = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard3.json")), DevCard.class);
+            devCard2 = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard3.json")), DevCard.class);
 
         } catch (IOException e) {
             e.printStackTrace();

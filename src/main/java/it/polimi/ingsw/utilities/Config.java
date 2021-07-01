@@ -129,7 +129,7 @@ public class Config {
         gsonBuilder.registerTypeAdapter(SoloActionToken.class, new GsonInheritanceAdapter<SoloActionToken>());
         Gson gson = gsonBuilder.create();
         try {
-            String configJSON = Files.readString(Paths.get("src\\main\\resources\\Config.json"));
+            String configJSON = Files.readString(Paths.get("src/main/resources/Config.json"));
             Config config = gson.fromJson(configJSON, Config.class);
 
             if(config.soloActionTokens.stream().filter(x -> x.getClass() == SoloActionTokenMove.class).map(x -> (SoloActionTokenMove) x).noneMatch(SoloActionTokenMove::reshuffle)){
@@ -209,7 +209,7 @@ public class Config {
         Gson gson = builder.create();
         ArrayList<AbstractCell> arrayOfCells;
         try {
-            String faithTrackJSON = Files.readString(Paths.get("src\\main\\resources\\CompleteFaithTrack.json"));
+            String faithTrackJSON = Files.readString(Paths.get("src/main/resources/CompleteFaithTrack.json"));
             arrayOfCells = gson.fromJson(faithTrackJSON, new TypeToken<ArrayList<AbstractCell>>(){}.getType());
         } catch (IOException e) {
             System.err.println("Faith track corrupted. Loading default");
