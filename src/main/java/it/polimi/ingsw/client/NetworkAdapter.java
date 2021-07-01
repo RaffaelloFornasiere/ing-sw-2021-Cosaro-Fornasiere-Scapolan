@@ -373,7 +373,6 @@ public class NetworkAdapter {
      */
     public synchronized void LorenzoPositionEventHandler(PropertyChangeEvent evt) {
         LorenzoPositionEvent event = (LorenzoPositionEvent) evt.getNewValue();
-        System.out.println("LorenzoPositionEventHandler");
         view.updateLorenzoPosition(event.getPosition());
     }
 
