@@ -407,9 +407,16 @@ public class Controller {
                     }
                 }
 
+                ArrayList<Resource> types = new ArrayList<>();
                 for (DepotState depotState : eventDepotStates) {
                     Resource type = depotState.getResourceType();
-                    newTotalStoredResources.put(type, newTotalStoredResources.getOrDefault(type, 0) + depotState.getCurrentQuantity());
+                    int quantity = depotState.getCurrentQuantity();
+                    if(quantity>0){
+                        newTotalStoredResources.put(type, newTotalStoredResources.getOrDefault(type, 0) + quantity);
+                        if(types.contains(type))
+                            throw new HandlerCheckException(new PlayerActionError(player.getPlayerId(), "Multiple depots contain the same resource", newResourcesOrganizationEvent));
+                        types.add(type);
+                    }
                 }
 
                 //validate leader power state
@@ -656,7 +663,7 @@ public class Controller {
                     selectedResourcesFromWarehouse = chosenResourcesEvent.getSelectedResourcesFromWarehouse();
 
                     for (Resource r : cardCost.keySet()) {
-                        int resourceQuantity = cardCost.get(r) - selectedResourcesFromLeaderPower.get(r) - selectedResourcesFromWarehouse.get(r);
+                        int resourceQuantity = cardCost.get(r) - selectedResourcesFromLeaderPower.getOrDefault(r, 0) - selectedResourcesFromWarehouse.getOrDefault(r, 0);
                         if (resourceQuantity < 0) {
                             throw new HandlerCheckException(new PlayerActionError(event.getPlayerId(), "Too many resources selected from leader powers or warehouse", event));
                         }
