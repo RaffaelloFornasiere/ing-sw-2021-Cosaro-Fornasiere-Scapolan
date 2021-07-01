@@ -27,6 +27,10 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+
+/**
+ * ui window controller to ask user to chose some resources
+ */
 public class ChoseResourcesController extends Controller implements Initializable {
 
 
@@ -51,7 +55,7 @@ public class ChoseResourcesController extends Controller implements Initializabl
      * Constructor
      * initializes local variables
      *
-     * @param gui
+     * @param gui reference to gui object
      */
     ChoseResourcesController(GUI gui, ArrayList<Resource> resourceType, int numberOFResources) {
         super(gui);
@@ -59,30 +63,32 @@ public class ChoseResourcesController extends Controller implements Initializabl
         this.allowedResourceType = resourceType;
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Platform.runLater(() -> {
-            root.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
-                public void handle(WindowEvent we) {
-                    onCancel();
-                    //dataReady.setItem(false);
-                }
-            });
-        });
+        Platform.runLater(() -> root.getScene().getWindow().setOnCloseRequest(we -> {
+            done.setItem(false);
+            onCancel();
+        }));
         done.setItem(false);
         checkResources();
         if(numberOFResources == 1)
             title.setText("Select one resource");
         else
-            title.setText("Select " + String.valueOf(numberOFResources) + " resources");
+            title.setText("Select " + numberOFResources + " resources");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("You have to chose "+String.valueOf(numberOFResources)+((numberOFResources == 1)?" resource ":" resources ") +"among these:\n");
+        sb.append("You have to chose ").append(numberOFResources).append((numberOFResources == 1) ? " resource " : " resources ").append("among these:\n");
         for(var res : allowedResourceType)
             sb.append(res).append("\n");
         explanation.setText(sb.toString());
     }
 
+
+    /**
+     * function to retrieve the chosen resources once the user confirmed the action
+     * @return the resources chosen by the user
+     */
     public HashMap<Resource, Integer> getChosen() {
         done.getWaitIfLocked();
         HashMap<Resource, Integer> res = new HashMap<>();
@@ -94,12 +100,21 @@ public class ChoseResourcesController extends Controller implements Initializabl
         return res;
     }
 
+    /**
+     * javafx function called when cancel button is pressed:
+     * opens a dialog that warns the user that is forbidden to close that window
+     * without inserting the resources
+     */
     @FXML
     public void onCancel() {
         Alert alert = new Alert(Alert.AlertType.ERROR, "You must select " + numberOFResources + " " + ((numberOFResources > 1) ? "resources " : "resource"), ButtonType.OK);
         alert.showAndWait();
     }
 
+    /**
+     * function called ad every insertion of the user. if the user reaches the
+     * required qty of resources, the insert button disappears
+     */
     public void checkResources() {
         if (resourcesOfChoiceList.getItems().size() < numberOFResources)
             warningLabelOfChoice.setOpacity(1);
@@ -107,7 +122,9 @@ public class ChoseResourcesController extends Controller implements Initializabl
             addLabel.setVisible(false);
     }
 
-
+    /**
+     * javafx function called when the users confirms the insertion
+     */
     @FXML
     public void onNext() {
         if (resourcesOfChoiceList.getItems().size() != numberOFResources)
@@ -117,6 +134,11 @@ public class ChoseResourcesController extends Controller implements Initializabl
         stage.close();
     }
 
+
+    /**
+     * function called when user clicks on "add" button: opensa
+     * a dialog that ask he resource type
+     */
     @FXML
     public void onAddResourcesClicked() {
         Stage dialog = new Stage();
@@ -133,9 +155,7 @@ public class ChoseResourcesController extends Controller implements Initializabl
 
         list.getItems().addAll(allowedResourceType.stream().map(n -> new Label(n.name())).collect(Collectors.toList()));
         Button confirm = new Button("Add");
-        confirm.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            dialog.close();
-        });
+        confirm.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
         root.getChildren().addAll(list, confirm);
         AnchorPane.setTopAnchor(list, 0.0);
         AnchorPane.setLeftAnchor(list, 0.0);
