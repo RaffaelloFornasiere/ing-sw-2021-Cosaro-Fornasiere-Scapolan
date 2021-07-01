@@ -67,8 +67,6 @@ public abstract class UI {
 
     public abstract ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose);
 
-    public abstract HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources);
-
     public abstract void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower);
 
     public abstract void updateFaithTrack(String playerID, int position, HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards);

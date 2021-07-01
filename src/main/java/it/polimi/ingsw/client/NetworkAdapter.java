@@ -328,7 +328,7 @@ public class NetworkAdapter {
         ArrayList<String> chosenLeaderCards = view.choseInitialLeaderCards(event.getLeaderCards(), event.getNumberOFLeaderCardsToChose());
 
         ArrayList<Resource> allResources = Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new));
-        HashMap<Resource, Integer> chosenResources = view.choseResources(allResources, event.getNumberResourcesOfChoice());
+        HashMap<Resource, Integer> chosenResources = view.chooseResources(event.getNumberResourcesOfChoice(), allResources);
 
         send(new InitialDecisionsEvent(event.getPlayerId(), chosenLeaderCards, chosenResources));
     }

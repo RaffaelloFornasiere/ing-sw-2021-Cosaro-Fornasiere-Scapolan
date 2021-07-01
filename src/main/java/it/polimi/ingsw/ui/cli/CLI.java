@@ -52,34 +52,6 @@ public class CLI extends UI {
     }
 
     /**
-     * Method used to visualized a BadRequestEvent.
-     *
-     * @param playerID    The player the Bad Request was sent to.
-     * @param description The description of what was the problem
-     * @param cause       The event which generated the BadRequestEvent
-     */
-    public void displayBadRequest(String playerID, String description, Event cause) {
-        out.println(" Player" + playerID + ", your request, caused by event:" + cause.getEventName() + " cannot be satisfied:"
-                + description);
-    }
-
-    /**
-     * Method used to visualize the Error caused by the attempt to buy a card, without satisfying the requirements.
-     *
-     * @param id the Id of the card to buy.
-     */
-    public void displayCantAffordError(String id) {
-        out.println(thisPlayer + ", IT SEEMS YOU DON'T HAVE THE REQUIRED RESOURCES TO BUY " + id.toUpperCase() + ", TRY AGAIN");
-        DrawableObject obj = new DrawableObject(new DevCardView(id).toString(), 50, 0);
-        DrawableObject resources = new DrawableObject(playerStates.get(thisPlayer).dashBoard.resourceNumberToString(), 0, obj.getHeight() + 3);
-        Panel panel = new Panel(250, obj.getHeight() + resources.getHeight() + 4, out);
-        panel.addItem(obj);
-        panel.addItem(resources);
-        panel.show();
-
-    }
-
-    /**
      * Method to display a form to ask the user to make some selection among different choices of any kind.
      *
      * @param option_itsColor        The array of pairs of title of the option(String)- color the option in displayed with(String).
@@ -89,6 +61,7 @@ public class CLI extends UI {
      * @return The array of indexes referring to the selected items in the array of options.
      */
     public static ArrayList<Integer> displaySelectionForm(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
+        if(numberOfOptionsToChose<=0) return new ArrayList<>();
         String resetColor = Color.WHITE.getAnsiCode();
         StringBuilder builder = new StringBuilder();
         builder.append(message);
@@ -222,6 +195,7 @@ public class CLI extends UI {
      * @return The array of indexes referring to the selected items in the array of options.
      */
     public static ArrayList<Integer> displaySelectionFormVariableChoices(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int maxNumberOfOptionsToChose, String message) {
+        if(maxNumberOfOptionsToChose<=0) return new ArrayList<>();
         String resetColor = Color.reset();
         StringBuilder builder = new StringBuilder();
         builder.append(message);
@@ -291,6 +265,7 @@ public class CLI extends UI {
      * @return The array of indexes referring to the selected items in the array of options.
      */
     public static ArrayList<Integer> displaySelectionFormMultipleChoices(ArrayList<Pair<String, String>> option_itsColor, Panel displayPanel, int numberOfOptionsToChose, String message) {
+        if(numberOfOptionsToChose<=0) return new ArrayList<>();
         String resetColor = Color.WHITE.getAnsiCode();
         StringBuilder builder = new StringBuilder();
         builder.append(message);
@@ -343,93 +318,6 @@ public class CLI extends UI {
             return displaySelectionForm(option_itsColor, displayPanel, numberOfOptionsToChose, message);
         }
 
-    }
-
-    /**
-     * Method which asks the user to choose a given number of Resources ( which might be of different types)
-     *
-     * @param resourceTypes     The types of resources allowed.
-     * @param numberOfResources The number of resources to choose.
-     */
-    public void displayChooseMultipleExtraResourcePowerForm(ArrayList<Resource> resourceTypes, int numberOfResources) {
-        out.println("SOME ACTIVE EXTRA RESOURCE POWER ALLOWS YOU \n " +
-                "TO ADD " + numberOfResources + " RESOURCES TO YOUR STORE! \n ");
-        choseResources(resourceTypes, numberOfResources);
-    }
-
-    /**
-     * Method which displays the state of a given dashboard.
-     *
-     * @param playerId The Id of the player the dashboard belongs to.
-     */
-    public void displayDashBoardState(String playerId) {
-        out.println("One dashboard has been updated!");
-        DashBoardView dashBoardView = playerStates.get(playerId).dashBoard;
-        if (dashBoardView != null) {
-            dashBoardView.displayAll(playerId.toUpperCase());
-        }
-
-    }
-
-    /**
-     * Method to display the state of the devCardGrid.
-     */
-    public void displayDevCardGridState() {
-        out.println("The market has been updated!");
-        if (market != null) {
-            DrawableObject obj = new DrawableObject(market.toString(), 10, 2);
-            Panel panel = new Panel(100, obj.getHeight() + 10, System.out);
-            panel.addItem(obj);
-            panel.show();
-        }
-    }
-
-    /**
-     * Method to display the state of Faith Track
-     *
-     * @param causeMessage optional message to print
-     * @param causePlayer  The player who asked to display the FaithTrack
-     */
-    public void displayFaithTrack(String causeMessage, String causePlayer) {
-        out.println("The faithTrack has been updated!");
-        faithTrack.display(causeMessage, causePlayer);
-    }
-
-    /**
-     * method which display an error caused by the attempt to put a card into a slot which doesn't agree with the card level.
-     *
-     * @param devCardID The Id of the card.
-     * @param cardSlot  The index of the slot.
-     */
-    public void displayDevCardSlotError(String devCardID, int cardSlot) {
-        out.println("SORRY, " + devCardID + " CANNOT BE ADDED TO THE SELECTED SLOT, SINCE IT \n  DOES NOT FULFILL THE SPECIFIED LEVEL REQUIREMENTS");
-        DevCardView card = new DevCardView(devCardID);
-        out.println(card);
-        playerStates.get(thisPlayer).dashBoard.displayDevCardSlots();
-    }
-
-    /**
-     * Method to display an error related to the attempt to join two incompatible leaderPowers.
-     *
-     * @param leaderCardID     The Id of the card
-     * @param leaderPowerIndex The index of the leaderPower
-     */
-    public void displayIncompatiblePowersError(String leaderCardID, int leaderPowerIndex) {
-        LeaderCardView card = playerStates.get(thisPlayer).leaderCards.get(leaderCardID);
-        System.out.println(card.getLeaderPowerName(leaderPowerIndex) + "IN" + leaderCardID.toUpperCase() + " IS NOT COMPATIBLE WITH OTHER SELECTED POWERS");
-        System.out.println(card);
-
-    }
-
-    /**
-     * Method to display an error related to the attempt to use a leader card which is not active.
-     *
-     * @param leaderCardID The id of the card.
-     */
-    public void displayLeaderCardNotActiveError(String leaderCardID) {
-        LeaderCardView card = playerStates.get(thisPlayer).leaderCards.get(leaderCardID);
-        System.out.println("SORRY, " + leaderCardID.toUpperCase() + " IS NOT ACTIVE, YOU CAN'T USE IT");
-        System.out.println(card.toString());
     }
 
 
@@ -1032,79 +920,6 @@ public class CLI extends UI {
             playerStates.get(thisPlayer).leaderCards.putAll(leaderCardsChosen);
             return new ArrayList<>(leaderCardsChosen.keySet());
         } else return choseInitialLeaderCards(leaderCardsIDs, numberOFLeaderCardsToChose);
-    }
-
-    /**
-     * Method which asks the user to choose among a set of given types of Resources in the set up fase.
-     *
-     * @param resourceType      The options
-     * @param numberOFResources The number of resources to choose.
-     * @return The hashmap containing : type of resource- quantity of resources for that type.
-     */
-    @Override
-    public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
-        HashMap<Resource, Integer> initialResources = new HashMap<>();
-        for (Resource res : resourceType) {
-            initialResources.put(res, 0);
-        }
-        if (numberOFResources <= 0) return initialResources;
-
-        int numberOFResourcesLeft = numberOFResources;
-
-        out.println(thisPlayer.toUpperCase() + ", YOU HAVE TO CHOOSE " + numberOFResourcesLeft + " RESOURCES AMONG:");
-        resourceType.forEach(el -> out.println(colorResource(el) + el.toString().toUpperCase() + "\n" + Color.reset()));
-
-        for (Resource res : resourceType) {
-            if (res != resourceType.get(resourceType.size() - 1) && numberOFResourcesLeft > 0) {
-                out.println("HOW MANY " + colorResource(res) + res.toString() + Color.reset() + " WOULD YOU LIKE? INSERT A NUMBER (" + numberOFResourcesLeft + " LEFT)");
-                String input = in.nextLine();
-                boolean validInput = false;
-                int chosenNumber = 0;
-                while (!validInput) {
-                    if (!input.matches("-?\\d+")) {
-                        out.println("YOU HAVE TO INSERT NUMBERS");
-                        input = in.nextLine();
-                        continue;
-                    }
-                    chosenNumber = Integer.parseInt(input);
-
-                    if (numberOFResourcesLeft - chosenNumber < 0) {
-                        out.println("RETRY, HOW MANY " + colorResource(res) + res + Color.reset() + "S WOULD YOU LIKE? INSERT A NUMBER");
-                        input = in.nextLine();
-                        continue;
-                    }
-
-                    validInput = true;
-                }
-
-                initialResources.put(res, chosenNumber);
-                numberOFResourcesLeft = numberOFResourcesLeft - chosenNumber;
-            }
-        }
-        if (numberOFResourcesLeft >= 0) {
-            if (numberOFResourcesLeft == 0) out.println("YOU HAVE " + numberOFResourcesLeft + " RESOURCES LEFT");
-            else {
-                out.println("YOU HAVE " + numberOFResourcesLeft + " RESOURCES LEFT: THESE WILL BE " + colorResource(resourceType.get(resourceType.size() - 1)) + resourceType.get(resourceType.size() - 1).toString() + Color.reset());
-                initialResources.put(resourceType.get(resourceType.size() - 1), numberOFResourcesLeft);
-            }
-        }
-        out.println("YOU HAVE CHOSEN THESE RESOURCES:");
-        StringBuilder builder = new StringBuilder();
-
-        initialResources.keySet().forEach(resource -> {
-            String color = colorResource(resource);
-            String shape = shapeResource(resource);
-            builder.append(color).append(resource.toString()).append(": ");
-            IntStream.range(0, initialResources.get(resource)).forEach(n -> builder.append(color).append(shape).append(" "));
-            builder.append(Color.reset()).append("\n");
-        });
-        out.println(builder);
-        out.println("DO YOU AGREE? yes/no");
-        String response = in.next().toUpperCase();
-        if (isAffirmative(response)) {
-            out.println("resources chosen successfully");
-            return initialResources;
-        } else return choseResources(resourceType, numberOFResources);
     }
 
     /**
@@ -1879,7 +1694,7 @@ public class CLI extends UI {
             boolean validResourcesChosen = false;
             while (!validResourcesChosen) {
                 HashMap<Resource, Integer> temp = new HashMap<>(required);
-                choseResources(Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new)), freeChoicesResources).forEach((key, value) -> {
+                chooseResources(freeChoicesResources, Arrays.stream(Resource.values()).collect(Collectors.toCollection(ArrayList::new))).forEach((key, value) -> {
                     if (value != 0) {
                         if (temp.containsKey(key)) temp.put(key, temp.get(key) + value);
                         else temp.put(key, value);
