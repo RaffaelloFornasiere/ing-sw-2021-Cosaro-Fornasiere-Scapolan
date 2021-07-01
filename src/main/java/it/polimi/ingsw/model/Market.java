@@ -18,11 +18,10 @@ public class Market extends Observable {
     private int cols;
 
     /**
-     * Constructor
-     *
-     * @param rows    number of rows in market's grid
-     * @param columns  number of columns in market's grid
-     * @param marbles hashmap with the available marbles
+     * Constructor for the class
+     * @param rows number of rows in market's grid
+     * @param columns number of columns in market's grid
+     * @param marbles hashmap with the marbles that will be in the market
      */
     public Market(int rows, int columns, HashMap<Marble, Integer> marbles) {
         this(rows, columns, new ArrayList<Marble>() {{
@@ -33,6 +32,12 @@ public class Market extends Observable {
         }});
     }
 
+    /**
+     * Constructor for the class
+     * @param rows number of rows in market's grid
+     * @param columns number of columns in market's grid
+     * @param marbles ArrayList with the marbles that will be in the market
+     */
     public Market(int rows, int columns, ArrayList<Marble> marbles) {
         if (marbles.size() != rows * columns + 1)  throw new IllegalArgumentException("number of marbles is not compatible with grid size");
         this.rows = rows;
@@ -47,6 +52,9 @@ public class Market extends Observable {
         marbleLeft = marbles.get(marbles.size() - 1);
     }
 
+    /**
+     * Randomly puts the marbles in the market
+     */
     public void shuffleMarket() {
         ArrayList<Marble> marbleArrayList = new ArrayList<>();
         for (Marble[] x : grid) marbleArrayList.addAll(Arrays.asList(x));
@@ -66,7 +74,7 @@ public class Market extends Observable {
 
     /**
      * @param direction selects row or column
-     * @param index     selects a specific row or column
+     * @param index selects a specific row or column
      * @return the set of marbles obtained with the selected row or column
      */
     public HashMap<Marble, Integer> getMarbles(Direction direction, int index) {
@@ -88,9 +96,8 @@ public class Market extends Observable {
     /**
      * Updates the market adding the left marble on the row or column specified
      * and take apart the first marble that becomes the new left marble
-     *
      * @param direction direction (row or column) to update
-     * @param index     specifies the row/column to update
+     * @param index specifies the row/column to update
      */
     public void update(Direction direction, int index) {
         Marble aux;
@@ -111,18 +118,34 @@ public class Market extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Getter for the market grid
+     * @return The market grid
+     */
     public Marble[][] getMarketStatus() {
         return grid.clone();
     }
 
+    /**
+     * Getter for the marble outside the market
+     * @return The marble outside the market
+     */
     public Marble getMarbleLeft() {
         return marbleLeft;
     }
 
+    /**
+     * Getter for the numbers of rows
+     * @return The numbers of rows
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * Getter for the numbers of columns
+     * @return The numbers of columns
+     */
     public int getCols() {
         return cols;
     }
