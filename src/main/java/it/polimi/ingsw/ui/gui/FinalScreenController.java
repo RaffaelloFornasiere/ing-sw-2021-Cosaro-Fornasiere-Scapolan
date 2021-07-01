@@ -13,6 +13,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * ui window controller to show the result of the match
+ */
 
 public class FinalScreenController extends Controller implements Initializable {
 
@@ -27,6 +30,12 @@ public class FinalScreenController extends Controller implements Initializable {
     ArrayList<FinalPlayerState> finalPlayerStates;
 
 
+    /**
+     * Constructor, takes the classification list and if the match was single player or multiplayer
+     * @param gui object reference to gui
+     * @param singlePlayer true if the match was single-player
+     * @param finalPlayerStates classification list
+     */
     public FinalScreenController(GUI gui, boolean singlePlayer, ArrayList<FinalPlayerState> finalPlayerStates) {
         super(gui);
         this.finalPlayerStates = finalPlayerStates;
