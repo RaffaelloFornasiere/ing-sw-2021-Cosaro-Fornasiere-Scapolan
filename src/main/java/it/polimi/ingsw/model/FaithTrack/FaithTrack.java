@@ -29,7 +29,6 @@ public class FaithTrack {
                 throw new IllegalArgumentException("cell index is out of array length");
             arrayOfCells.set(e.getIndex(), e);
         });
-        arrayOfCells.set(arrayOfCells.size() - 1, new LastCell(arrayOfCells.get(arrayOfCells.size() - 1)));
     }
 
     /**

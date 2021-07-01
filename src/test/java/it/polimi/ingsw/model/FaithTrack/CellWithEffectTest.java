@@ -1,13 +1,14 @@
 package it.polimi.ingsw.model.FaithTrack;
 
-import it.polimi.ingsw.controller.EffectOfPopeCell;
 import junit.framework.TestCase;
 
 public class CellWithEffectTest extends TestCase {
 
     public void testGetEffectOfCell() {
         CellWithEffect cell = new PopeCell(3, 2, new PopeFavorCard(2),3);
-        assertEquals(EffectOfPopeCell.class,cell.getEffectOfCell().getClass());
+        assertEquals(1,cell.getEffectOfCell().size());
+        cell.getEffectOfCell().stream().forEach(effect-> assertEquals("it.polimi.ingsw.controller.EffectOfPopeCell",effect.getClass().getName()));
+
     }
 
     public void testGetIndex() {

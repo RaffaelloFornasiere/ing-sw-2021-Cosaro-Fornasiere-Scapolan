@@ -58,10 +58,8 @@ public class FaithTrackView {
             int n = 0;
             for (String s : cells) {
                 AbstractCell cell = gson.fromJson(s, AbstractCell.class);
-
-
                 CellView cellView = new CellView(cell.getIndex(), cell.getVictoryPoints());
-
+                AbstractCell finalCell = cell;
                 array.add(cellView);
                 if (cell instanceof PopeCell) {
                     cellView.setPopeCell();
@@ -69,16 +67,17 @@ public class FaithTrackView {
                         array.get(i).setVaticanSection();
                     }
                     cellView.setShowFavorPopeCard();
-                    if (popeFavorCards.keySet().stream().map(entry->popeFavorCards.get(entry).containsKey(cell.getIndex())).reduce(false, (subtotal, element) -> subtotal||element)) {
-                        String popeFavorCardPlaceholder = popeFavorCards.keySet().stream().filter(f -> popeFavorCards.get(f).containsKey(cell.getIndex())).map(name->name.substring(0,1)).collect(Collectors.joining());
+
+                    if (popeFavorCards.keySet().stream().map(entry->popeFavorCards.get(entry).containsKey(finalCell.getIndex())).reduce(false, (subtotal, element) -> subtotal||element)) {
+                        String popeFavorCardPlaceholder = popeFavorCards.keySet().stream().filter(f -> popeFavorCards.get(f).containsKey(finalCell.getIndex())).map(name->name.substring(0,1)).collect(Collectors.joining());
                         cellView.setPopeFavorCardPlaceHolder(popeFavorCardPlaceholder);
-                        int points= popeFavorCards.get(popeFavorCards.keySet().stream().filter(f -> popeFavorCards.get(f).containsKey(cell.getIndex())).collect(Collectors.toCollection(ArrayList::new)).get(0)).get(cell.getIndex()).getVictoryPoints();
+                        int points= popeFavorCards.get(popeFavorCards.keySet().stream().filter(f -> popeFavorCards.get(f).containsKey(finalCell.getIndex())).collect(Collectors.toCollection(ArrayList::new)).get(0)).get(cell.getIndex()).getVictoryPoints();
                     cellView.setFavorPopeCardPoint(points);
                     }
                 }
 
                 if (playersPositions.containsValue(cell.getIndex())) {
-                    String placeholder = playersPositions.keySet().stream().filter(f -> playersPositions.get(f) == cell.getIndex()).map(name->name.substring(0,1)).collect(Collectors.joining());
+                    String placeholder = playersPositions.keySet().stream().filter(f -> playersPositions.get(f) == finalCell.getIndex()).map(name->name.substring(0,1)).collect(Collectors.joining());
                     cellView.setPlaceHolder(placeholder);
                 }
             }
