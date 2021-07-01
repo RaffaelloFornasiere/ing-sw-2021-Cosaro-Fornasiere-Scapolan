@@ -2,9 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.model.leaderCards.DepositLeaderPower;
+import it.polimi.ingsw.model.leaderCards.LeaderCard;
+import it.polimi.ingsw.model.leaderCards.LeaderPower;
 import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;

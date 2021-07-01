@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
+
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateLeaderCardEvent;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.LeaderPowerSelectStateEvent;
 import it.polimi.ingsw.utilities.Pair;

@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.DevCards.DevCardGrid;
+import it.polimi.ingsw.model.devCards.DevCard;
+import it.polimi.ingsw.model.devCards.DevCardGrid;
 import it.polimi.ingsw.utilities.Observable;
 
 import java.util.ArrayList;

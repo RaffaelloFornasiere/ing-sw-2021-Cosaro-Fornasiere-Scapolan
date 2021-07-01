@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
 import it.polimi.ingsw.messageSenders.Sender;
-import it.polimi.ingsw.events.ClientEvents.MarketStateEvent;
+import it.polimi.ingsw.events.clientEvents.MarketStateEvent;
 import it.polimi.ingsw.model.Market;
 
 import java.util.HashMap;

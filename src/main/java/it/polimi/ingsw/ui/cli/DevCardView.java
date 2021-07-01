@@ -2,7 +2,7 @@ package it.polimi.ingsw.ui.cli;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.devCards.DevCard;
 import it.polimi.ingsw.model.Resource;
 
 import java.io.IOException;

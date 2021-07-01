@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import it.polimi.ingsw.events.EventRegistry;
-import it.polimi.ingsw.events.ClientEvents.ServerDisconnectionEvent;
+import it.polimi.ingsw.events.clientEvents.ServerDisconnectionEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
@@ -16,10 +16,14 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class NetworkHandlerReceiver{
-    EventRegistry eventRegistry = new EventRegistry();
-    Scanner scanner;
+    private final EventRegistry eventRegistry;
+    private Scanner scanner;
     private String userID;
 
+    /**
+     * Constructor for the class
+     * @param server the socket from which the messages will be received
+     */
     public NetworkHandlerReceiver(Socket server) {
         if (server == null)
             throw new NullPointerException();
@@ -29,9 +33,13 @@ public class NetworkHandlerReceiver{
             e.printStackTrace();
         }
         userID = "";
+        eventRegistry = new EventRegistry();
     }
 
 
+    /**
+     * Continuously reads the socket and if an event gets sent trough it, it decodes it and notifies it to an EventRegistry
+     */
     public void receive() {
         GsonBuilder jsonBuilder = new GsonBuilder();
         jsonBuilder.registerTypeAdapter(Event.class, new GsonInheritanceAdapter<Event>());
@@ -57,10 +65,17 @@ public class NetworkHandlerReceiver{
         }
     }
 
+    /**
+     * Getter for the event registry that should handle all the received events
+     * @return The event registry that should handle all the received events
+     */
     public EventRegistry getEventRegistry() {
         return eventRegistry;
     }
 
+    /**
+     * Closes the scanner reading the socket
+     */
     public void closeConnection() {
         scanner.close();
     }

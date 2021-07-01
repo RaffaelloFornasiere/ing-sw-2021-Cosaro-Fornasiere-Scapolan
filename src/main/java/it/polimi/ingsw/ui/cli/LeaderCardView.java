@@ -6,7 +6,7 @@ import it.polimi.ingsw.exceptions.IllegalOperation;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
 import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.model.LeaderCards.*;
+import it.polimi.ingsw.model.leaderCards.*;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;

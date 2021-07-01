@@ -1,6 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenResourcesEvent;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.ChosenResourcesEvent;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Platform;

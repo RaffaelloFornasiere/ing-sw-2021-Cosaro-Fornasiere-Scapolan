@@ -11,7 +11,7 @@ import java.util.HashMap;
  *
  */
 public class MarketManager {
-    Market market;
+    private final Market market;
 
     /**
      * Constructor

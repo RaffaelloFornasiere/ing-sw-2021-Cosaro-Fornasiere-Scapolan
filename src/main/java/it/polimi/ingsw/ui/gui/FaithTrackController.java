@@ -1,6 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Group;

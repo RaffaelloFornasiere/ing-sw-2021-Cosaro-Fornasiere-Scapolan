@@ -2,8 +2,8 @@ package it.polimi.ingsw.controller;
 
 
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
+import it.polimi.ingsw.model.devCards.DevCard;
+import it.polimi.ingsw.model.faithTrack.FaithTrack;
 import it.polimi.ingsw.utilities.Config;
 import junit.framework.TestCase;
 

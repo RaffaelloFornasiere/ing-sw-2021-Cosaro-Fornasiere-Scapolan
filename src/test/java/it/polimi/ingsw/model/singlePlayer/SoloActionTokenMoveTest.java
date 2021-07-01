@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.singlePlayer;
 
 import it.polimi.ingsw.model.DashBoard;
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
+import it.polimi.ingsw.model.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.utilities.Config;
 import org.junit.Test;

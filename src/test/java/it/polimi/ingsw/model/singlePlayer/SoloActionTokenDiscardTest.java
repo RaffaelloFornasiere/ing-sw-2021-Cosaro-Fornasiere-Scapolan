@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.singlePlayer;
 
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.devCards.DevCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.utilities.Config;
 import org.junit.Test;

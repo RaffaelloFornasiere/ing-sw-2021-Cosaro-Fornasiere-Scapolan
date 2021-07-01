@@ -4,8 +4,8 @@ import it.polimi.ingsw.events.ClientEvents.DepotState;
 import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.ui.cli.Action;
@@ -479,6 +479,7 @@ public class GUI extends UI {
     public void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower) {
         playerStates.get(playerId).personalProductionPower = personalProductionPower;
     }
+
 
     @Override
     public void updateFaithTrack(String playerID, int position, HashMap<
