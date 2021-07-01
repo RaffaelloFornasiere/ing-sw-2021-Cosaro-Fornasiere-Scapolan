@@ -43,8 +43,8 @@ public class GsonInheritanceAdapterTest {
         Gson gson = builder.create();
         String JSONLeaderCard = gson.toJson(lc);
         String expected = "{\"cardID\":\"Test\",\"victoryPoints\":3,\"activationRequirements\":[{\"CLASSNAME\":" +
-                "\"it.polimi.ingsw.model.LeaderCards.ResourcesRequirement\",\"INSTANCE\":{\"resources\":{\"SHIELD\":5}}}]," +
-                "\"powers\":[{\"KEY_CLASSNAME\":\"it.polimi.ingsw.model.LeaderCards.DepositLeaderPower\"," +
+                "\"it.polimi.ingsw.model.leaderCards.ResourcesRequirement\",\"INSTANCE\":{\"resources\":{\"SHIELD\":5}}}]," +
+                "\"powers\":[{\"KEY_CLASSNAME\":\"it.polimi.ingsw.model.leaderCards.DepositLeaderPower\"," +
                 "\"KEY_INSTANCE\":{\"maxResources\":{\"COIN\":2},\"currentResources\":{\"COIN\":0},\"observers\":[]}," +
                 "\"VALUE_CLASSNAME\":\"java.lang.Boolean\",\"VALUE_INSTANCE\":false}],\"observers\":[]}";
 
