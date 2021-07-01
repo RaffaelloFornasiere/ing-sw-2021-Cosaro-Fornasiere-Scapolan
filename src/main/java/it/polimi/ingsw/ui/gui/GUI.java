@@ -495,10 +495,10 @@ public class GUI extends UI {
         mainViewController.waitForReady();
         System.out.println("ready");
 
-
-        for (String playerID : lobbyController.getPlayers()) {
-            playerStates.put(playerID, new PlayerState());
-        }
+        if (!singlePlayer.getItem())
+            for (String playerID : lobbyController.getPlayers()) {
+                playerStates.put(playerID, new PlayerState());
+            }
     }
 
     @Override
@@ -873,7 +873,6 @@ public class GUI extends UI {
         PlayerState.canPerformActions = true;
         return controller.getChosen();
     }
-
 
 
     @Override
