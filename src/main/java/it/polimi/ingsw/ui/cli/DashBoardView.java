@@ -1,6 +1,6 @@
 package it.polimi.ingsw.ui.cli;
 
-import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.clientEvents.DepotState;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;
 

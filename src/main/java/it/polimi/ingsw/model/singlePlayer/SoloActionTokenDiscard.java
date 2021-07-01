@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.singlePlayer;
 
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.model.DevCards.DevCardGrid;
-import it.polimi.ingsw.model.DevCards.DevDeck;
+import it.polimi.ingsw.model.devCards.DevCardGrid;
+import it.polimi.ingsw.model.devCards.DevDeck;
 
 import java.util.Arrays;
 import java.util.Comparator;

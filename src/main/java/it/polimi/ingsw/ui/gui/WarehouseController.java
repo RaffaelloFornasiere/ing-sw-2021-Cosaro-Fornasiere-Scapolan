@@ -3,13 +3,13 @@ package it.polimi.ingsw.ui.gui;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
-import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.NewResourcesOrganizationEvent;
-import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderPower;
-import it.polimi.ingsw.model.LeaderCards.Requirement;
+import it.polimi.ingsw.events.clientEvents.DepositLeaderPowerStateEvent;
+import it.polimi.ingsw.events.clientEvents.DepotState;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.NewResourcesOrganizationEvent;
+import it.polimi.ingsw.model.leaderCards.DepositLeaderPower;
+import it.polimi.ingsw.model.leaderCards.LeaderCard;
+import it.polimi.ingsw.model.leaderCards.LeaderPower;
+import it.polimi.ingsw.model.leaderCards.Requirement;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;
@@ -25,7 +25,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.net.URL;

@@ -1,12 +1,11 @@
 package it.polimi.ingsw.ui;
 
 import it.polimi.ingsw.client.NetworkAdapter;
-import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
+import it.polimi.ingsw.events.clientEvents.DepotState;
+import it.polimi.ingsw.events.clientEvents.FinalPlayerState;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.*;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;

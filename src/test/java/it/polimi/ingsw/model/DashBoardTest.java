@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.clientEvents.DepotState;
 import it.polimi.ingsw.exceptions.EmptyStrongboxException;
 import it.polimi.ingsw.exceptions.IndexSlotException;
 import it.polimi.ingsw.exceptions.LevelCardException;
 import it.polimi.ingsw.exceptions.ResourcesLimitsException;
-import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
+import it.polimi.ingsw.model.devCards.DevCard;
+import it.polimi.ingsw.model.faithTrack.FaithTrack;
 import it.polimi.ingsw.utilities.Config;
 import junit.framework.TestCase;
 

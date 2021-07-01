@@ -1,10 +1,10 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
 import it.polimi.ingsw.messageSenders.Sender;
-import it.polimi.ingsw.events.ClientEvents.DepositLeaderPowerStateEvent;
-import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
-import it.polimi.ingsw.model.LeaderCards.LeaderPower;
+import it.polimi.ingsw.events.clientEvents.DepositLeaderPowerStateEvent;
+import it.polimi.ingsw.model.leaderCards.DepositLeaderPower;
+import it.polimi.ingsw.model.leaderCards.LeaderCard;
+import it.polimi.ingsw.model.leaderCards.LeaderPower;
 import it.polimi.ingsw.model.Player;
 
 import java.util.ArrayList;

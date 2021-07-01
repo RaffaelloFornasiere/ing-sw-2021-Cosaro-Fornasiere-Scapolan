@@ -1,9 +1,9 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
 import it.polimi.ingsw.messageSenders.Sender;
-import it.polimi.ingsw.events.ClientEvents.DevCardGridStateEvent;
+import it.polimi.ingsw.events.clientEvents.DevCardGridStateEvent;
 import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.DevCards.DevCardGrid;
+import it.polimi.ingsw.model.devCards.DevCardGrid;
 
 import java.util.HashMap;
 

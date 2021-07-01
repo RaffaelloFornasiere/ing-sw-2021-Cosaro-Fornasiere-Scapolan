@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.singlePlayer;
 
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
+import it.polimi.ingsw.model.faithTrack.FaithTrack;
 
 import java.util.stream.IntStream;
 

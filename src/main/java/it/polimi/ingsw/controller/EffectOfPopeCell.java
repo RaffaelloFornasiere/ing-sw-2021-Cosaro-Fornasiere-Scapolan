@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.FaithTrack.CellWithEffect;
-import it.polimi.ingsw.model.FaithTrack.PopeCell;
+import it.polimi.ingsw.model.faithTrack.CellWithEffect;
+import it.polimi.ingsw.model.faithTrack.PopeCell;
 import it.polimi.ingsw.model.MatchState;
 import it.polimi.ingsw.model.Player;
 

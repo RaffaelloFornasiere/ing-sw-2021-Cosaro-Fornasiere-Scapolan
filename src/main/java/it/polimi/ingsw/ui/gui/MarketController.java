@@ -1,6 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.model.Direction;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

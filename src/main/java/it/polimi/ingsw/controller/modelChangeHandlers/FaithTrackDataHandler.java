@@ -1,9 +1,9 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
 import it.polimi.ingsw.messageSenders.Sender;
-import it.polimi.ingsw.events.ClientEvents.FaithTrackEvent;
-import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.events.clientEvents.FaithTrackEvent;
+import it.polimi.ingsw.model.faithTrack.FaithTrackData;
+import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.MatchState;
 import it.polimi.ingsw.model.Player;
 

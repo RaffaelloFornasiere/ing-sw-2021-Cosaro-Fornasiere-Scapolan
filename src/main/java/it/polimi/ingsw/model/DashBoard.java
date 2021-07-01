@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.clientEvents.DepotState;
 import it.polimi.ingsw.exceptions.*;
-import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
+import it.polimi.ingsw.model.devCards.DevCard;
+import it.polimi.ingsw.model.faithTrack.FaithTrackData;
 import it.polimi.ingsw.utilities.Observable;
 
 import java.util.*;

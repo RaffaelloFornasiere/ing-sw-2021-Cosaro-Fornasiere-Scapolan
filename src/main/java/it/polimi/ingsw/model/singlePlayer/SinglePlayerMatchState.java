@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.singlePlayer;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
-import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
+import it.polimi.ingsw.model.devCards.DevCard;
+import it.polimi.ingsw.model.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.MatchState;
 import it.polimi.ingsw.model.Player;

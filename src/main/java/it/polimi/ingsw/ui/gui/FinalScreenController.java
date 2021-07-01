@@ -1,6 +1,6 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
+import it.polimi.ingsw.events.clientEvents.FinalPlayerState;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;

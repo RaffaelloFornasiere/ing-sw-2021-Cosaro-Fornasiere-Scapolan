@@ -3,9 +3,9 @@ package it.polimi.ingsw.ui.cli;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.EffectOfCell;
-import it.polimi.ingsw.model.FaithTrack.AbstractCell;
-import it.polimi.ingsw.model.FaithTrack.PopeCell;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.faithTrack.AbstractCell;
+import it.polimi.ingsw.model.faithTrack.PopeCell;
+import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
 import java.io.IOException;

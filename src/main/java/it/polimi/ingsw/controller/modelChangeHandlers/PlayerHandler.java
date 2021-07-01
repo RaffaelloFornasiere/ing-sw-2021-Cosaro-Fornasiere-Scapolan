@@ -1,8 +1,8 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
 import it.polimi.ingsw.messageSenders.Sender;
-import it.polimi.ingsw.events.ClientEvents.PlayerStateEvent;
-import it.polimi.ingsw.model.LeaderCards.LeaderCard;
+import it.polimi.ingsw.events.clientEvents.PlayerStateEvent;
+import it.polimi.ingsw.model.leaderCards.LeaderCard;
 import it.polimi.ingsw.model.Player;
 
 import java.util.ArrayList;

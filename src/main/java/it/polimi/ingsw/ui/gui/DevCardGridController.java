@@ -1,9 +1,9 @@
 package it.polimi.ingsw.ui.gui;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyDevCardsEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenResourcesEvent;
-import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.BuyDevCardsEvent;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.ChosenResourcesEvent;
+import it.polimi.ingsw.model.devCards.DevCard;
 import it.polimi.ingsw.model.Resource;
 import javafx.event.Event;
 import javafx.fxml.FXML;

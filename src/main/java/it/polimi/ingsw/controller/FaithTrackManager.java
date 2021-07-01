@@ -3,8 +3,8 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.exceptions.OutOfBoundException;
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
-import it.polimi.ingsw.model.FaithTrack.FaithTrackData;
+import it.polimi.ingsw.model.faithTrack.FaithTrack;
+import it.polimi.ingsw.model.faithTrack.FaithTrackData;
 import it.polimi.ingsw.model.MatchState;
 import it.polimi.ingsw.model.Player;
 

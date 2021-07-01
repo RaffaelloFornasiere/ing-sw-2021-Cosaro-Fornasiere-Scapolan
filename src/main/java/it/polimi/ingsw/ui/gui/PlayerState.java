@@ -1,9 +1,9 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ChosenResourcesEvent;
+import it.polimi.ingsw.events.clientEvents.DepotState;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.ChosenResourcesEvent;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.model.Resource;

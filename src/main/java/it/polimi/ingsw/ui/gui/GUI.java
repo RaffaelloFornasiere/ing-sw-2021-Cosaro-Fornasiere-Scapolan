@@ -1,11 +1,10 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
+import it.polimi.ingsw.events.clientEvents.DepotState;
+import it.polimi.ingsw.events.clientEvents.FinalPlayerState;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.*;
 import it.polimi.ingsw.events.Event;
-import it.polimi.ingsw.exceptions.NotPresentException;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;

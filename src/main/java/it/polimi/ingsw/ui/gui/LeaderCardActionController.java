@@ -1,8 +1,7 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.ActivateLeaderCardEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.LeaderPowerSelectStateEvent;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.ActivateLeaderCardEvent;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.LeaderPowerSelectStateEvent;
 import it.polimi.ingsw.utilities.Pair;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

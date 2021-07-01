@@ -1,11 +1,11 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
 import it.polimi.ingsw.messageSenders.Sender;
-import it.polimi.ingsw.events.ClientEvents.DashBoardStateEvent;
-import it.polimi.ingsw.events.ClientEvents.DepotState;
+import it.polimi.ingsw.events.clientEvents.DashBoardStateEvent;
+import it.polimi.ingsw.events.clientEvents.DepotState;
 import it.polimi.ingsw.model.DashBoard;
 import it.polimi.ingsw.model.Depot;
-import it.polimi.ingsw.model.DevCards.DevCard;
+import it.polimi.ingsw.model.devCards.DevCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 
