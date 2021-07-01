@@ -1,11 +1,12 @@
 package it.polimi.ingsw.ui.gui;
 
-import it.polimi.ingsw.events.ClientEvents.DepotState;
-import it.polimi.ingsw.events.ClientEvents.FinalPlayerState;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.*;
 import it.polimi.ingsw.events.Event;
+import it.polimi.ingsw.events.clientEvents.DepotState;
+import it.polimi.ingsw.events.clientEvents.FinalPlayerState;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.*;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.FaithTrack.PopeFavorCard;
+
+import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.model.singlePlayer.SoloActionToken;
 import it.polimi.ingsw.ui.UI;
 import it.polimi.ingsw.ui.cli.Action;
@@ -231,7 +232,7 @@ public class GUI extends UI {
      */
     public synchronized void addEvent(Event event) {
 
-        if (event instanceof BuyResourcesEvent) {
+        if (event instanceof it.polimi.ingsw.events.controllerEvents.matchEvents.BuyResourcesEvent) {
             PlayerState.availableActions.remove(Action.TAKE_RESOURCES_FROM_MARKET);
         } else if (event instanceof BuyDevCardsEvent) {
             PlayerState.availableActions.remove(Action.BUY_DEVCARD);
@@ -448,32 +449,32 @@ public class GUI extends UI {
     }
 
 
-    @Override
-    public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
-
-        HashMap<Resource, Integer> res = new HashMap<>();
-        for (Resource r : resourceType) {
-            res.put(r, 0);
-        }
-        if (numberOFResources <= 0) return res;
-
-        ChoseResourcesController controller = new ChoseResourcesController(this, resourceType, numberOFResources);
-        Platform.runLater(() -> {
-            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ChoseResources.fxml"));
-            loader.setController(controller);
-            try {
-                Stage stage = new Stage();
-                stage.initModality(Modality.APPLICATION_MODAL);
-                Scene scene = new Scene(loader.load());
-                stage.setScene(scene);
-                stage.showAndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        res = controller.getChosen();
-        return res;
-    }
+//    @Override
+//    public HashMap<Resource, Integer> choseResources(ArrayList<Resource> resourceType, int numberOFResources) {
+//
+//        HashMap<Resource, Integer> res = new HashMap<>();
+//        for (Resource r : resourceType) {
+//            res.put(r, 0);
+//        }
+//        if (numberOFResources <= 0) return res;
+//
+//        ChoseResourcesController controller = new ChoseResourcesController(this, resourceType, numberOFResources);
+//        Platform.runLater(() -> {
+//            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("ChoseResources.fxml"));
+//            loader.setController(controller);
+//            try {
+//                Stage stage = new Stage();
+//                stage.initModality(Modality.APPLICATION_MODAL);
+//                Scene scene = new Scene(loader.load());
+//                stage.setScene(scene);
+//                stage.showAndWait();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        res = controller.getChosen();
+//        return res;
+//    }
 
     @Override
     public void setPersonalProductionPower(String playerId, ProductionPower personalProductionPower) {
