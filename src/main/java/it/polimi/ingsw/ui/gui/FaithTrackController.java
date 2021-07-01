@@ -42,6 +42,10 @@ public class FaithTrackController extends Controller {
      * auxiliary class to wrap data to manage user's and lorenzo's cross on faith track
      */
     private static class PlayerMetaData {
+        PlayerMetaData(){
+            currentPos = new DoublePoint(0,0);
+            cross = new ImageView();
+        }
         int positionIndex;
         DoublePoint currentPos;
         ImageView cross;
@@ -119,6 +123,8 @@ public class FaithTrackController extends Controller {
             lorenzo.cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
             lorenzo.cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
             lorenzo.cross.setTranslateY(zeroPos.y * 1.2);
+            lorenzo.currentPos.x = -zeroPos.x + zeroPos.y / 2;
+            lorenzo.currentPos.y = zeroPos.y * 1.2;
             setLorenzoPosition(0);
         }
     }

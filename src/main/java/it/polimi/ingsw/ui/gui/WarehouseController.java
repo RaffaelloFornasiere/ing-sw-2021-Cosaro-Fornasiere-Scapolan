@@ -69,13 +69,23 @@ public class WarehouseController extends Controller implements Initializable {
         String imagePath = new java.io.File(".").getAbsolutePath();
         imagePath = "file:/" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         String finalImagePath = imagePath;
+
+
+
+
+
+
         var images = gui.thisPlayerState().warehouse.stream().flatMap(n -> new ArrayList<Image>() {{
             for (int i = 0; i < n.getCurrentQuantity(); i++) {
                 add(new Image(finalImagePath + n.getResourceType().toString().toLowerCase() + "2.png"));
             }
+            for (int i = n.getCurrentQuantity(); i < n.getMaxQuantity(); i++)
+                add(null);
         }}.stream()).collect(Collectors.toList());
 
-        var resources = warehouse.getChildren().stream().filter(n -> n.getStyleClass().contains("Resource")).map(n -> (ImageView) n).collect(Collectors.toList());
+        var resources = warehouse.getChildren().stream()
+                .filter(n -> n.getStyleClass().contains("Resource"))
+                .map(n -> (ImageView) n).collect(Collectors.toList());
 
         for (int i = 0; i < resources.size(); i++) {
             if (i < images.size())
@@ -472,7 +482,7 @@ public class WarehouseController extends Controller implements Initializable {
             int curQ;
         }
 
-        //HashMap<Resource, Pair<Integer, Integer>> qty = new HashMap<>();
+
         ArrayList<aux> qty = new ArrayList<>(){{
             add(new aux(Resource.ROCK, 1, 0));
             add(new aux(Resource.ROCK, 2, 0));

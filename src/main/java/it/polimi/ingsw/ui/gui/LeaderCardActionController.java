@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.LinkedList;
@@ -104,8 +105,9 @@ public class LeaderCardActionController extends Controller implements Initializa
      */
     @FXML
     public void activateLeaderCard() {
-        if(gui.thisPlayerState().leaderCards.get(current))
-            gui.addEvent(new ActivateLeaderCardEvent(gui.askLeaderID(), current));
+        if(!gui.thisPlayerState().leaderCards.get(current))
+            gui.addEvent(new ActivateLeaderCardEvent(gui.askUserID(), current));
         gui.addEvent(new LeaderPowerSelectStateEvent(gui.askUserID(), current, 0, true));
+        ((Stage)root.getScene().getWindow()).close();
     }
 }

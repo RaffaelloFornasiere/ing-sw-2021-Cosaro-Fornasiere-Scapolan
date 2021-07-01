@@ -1,13 +1,9 @@
 package it.polimi.ingsw.ui.gui;
 
-import com.google.gson.Gson;
 import it.polimi.ingsw.events.controllerEvents.matchEvents.BuyDevCardsEvent;
-import it.polimi.ingsw.events.controllerEvents.matchEvents.ChosenResourcesEvent;
 import it.polimi.ingsw.model.devCards.DevCard;
-import it.polimi.ingsw.model.Resource;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,14 +14,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -46,6 +38,7 @@ public class DevCardGridController extends Controller implements Initializable {
 
     /**
      * constructor
+     *
      * @param gui reference object to gui
      */
     DevCardGridController(GUI gui) {
@@ -58,6 +51,7 @@ public class DevCardGridController extends Controller implements Initializable {
 
         var images = grid.getChildren().stream().filter(n -> n instanceof Group)
                 .map(n -> (ImageView) ((Group) n).getChildren().stream().findFirst().orElse(null)).collect(Collectors.toList());
+
         String imageUrl = new java.io.File(".").getAbsolutePath();
         imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
         for (int i = 0; i < images.size(); i++) {
@@ -74,6 +68,7 @@ public class DevCardGridController extends Controller implements Initializable {
      * when a card is clicked this method is invoked and the card is saved on local variable.
      * if another card where selected a mouse event is triggered to remove the selection border
      * on the previous one. the selection border is managed by the SelectableImage class
+     *
      * @param mouseEvent event fired
      */
     @FXML
@@ -127,31 +122,16 @@ public class DevCardGridController extends Controller implements Initializable {
         DevCard devCard;
         System.out.println(selected);
         try {
-            devCard = (new Gson()).fromJson(Files.readString(Paths.get("src/main/resources/" + selected + ".json")), DevCard.class);
-            HashMap<Resource, Integer> requiredResources = devCard.getCost();
-            requiredResources.forEach((key, value) -> System.out.println(key + "--" + value));
             Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            SelectResourcesController selectResourcesController = new SelectResourcesController(gui, requiredResources, 0);
-
-            FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectResourcesToUse.fxml"));
-            loader.setController(selectResourcesController);
-            try {
-                stage.setScene(new Scene(loader.load()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            SelectDevCardSlotController controller = new SelectDevCardSlotController(gui);
+            Scene scene = MainApplication.createScene("SelectCardSlot.fxml", controller);
+            stage.setScene(scene);
             stage.showAndWait();
-            ChosenResourcesEvent res = selectResourcesController.getResult();
-            if (res != null) {
-                gui.addEvent(new BuyDevCardsEvent(gui.askUserID(), selected, devCardSlot));
-                gui.addEvent(res);
-            }
+            gui.addEvent(new BuyDevCardsEvent(gui.askUserID(), selected, controller.getRes()));
             ((Stage) root.getScene().getWindow()).close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 

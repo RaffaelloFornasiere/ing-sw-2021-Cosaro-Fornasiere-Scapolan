@@ -3,11 +3,12 @@ package it.polimi.ingsw.ui.gui;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.events.clientEvents.DepotState;
+import it.polimi.ingsw.events.controllerEvents.matchEvents.EndTurnEvent;
+import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.leaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.leaderCards.LeaderCard;
 import it.polimi.ingsw.model.leaderCards.LeaderPower;
 import it.polimi.ingsw.model.leaderCards.Requirement;
-import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.cli.Action;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 import it.polimi.ingsw.utilities.GsonPairAdapter;
@@ -15,6 +16,7 @@ import it.polimi.ingsw.utilities.LockWrap;
 import it.polimi.ingsw.utilities.Pair;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -65,6 +67,9 @@ public class MainViewController extends Controller implements Initializable {
     @FXML
     VBox playerSlot;
 
+
+    boolean turnActive = false;
+
     LockWrap<FaithTrackController> faithTrackController = new LockWrap<>(null, null);
 
     public MainViewController(GUI gui) {
@@ -109,7 +114,7 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openProduction() throws IOException {
-        if (!PlayerState.canPerformActions || PlayerState.availableActions.contains(Action.PRODUCE))
+        if (!PlayerState.canPerformActions || !PlayerState.availableActions.contains(Action.PRODUCE))
             return;
 
         Stage productionStage = new Stage();
@@ -130,8 +135,8 @@ public class MainViewController extends Controller implements Initializable {
         depotsStage.initModality(Modality.APPLICATION_MODAL);
         depotsStage.setScene(scene);
         depotsStage.showAndWait();
-
     }
+
 
 
     public void decrementPos() {
@@ -210,8 +215,17 @@ public class MainViewController extends Controller implements Initializable {
                 ownedCards.get(i).get(j).setImage(new Image(imageUrl + ownedCardIds.get(i).get(j) + ".png"));
                 ownedCards.get(i).get(j).setVisible(true);
             }
-            if (j != 0)
+            if (j != 0 && ownedCards.get(i).get(j).isVisible()) {
                 ownedCards.get(i).get(j - 1).getStyleClass().add("hoverBorder");
+                ownedCards.get(i).get(j - 1).addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                    try {
+                        openProduction();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //mouseEvent.consume();
+                });
+            }
         }
         SelectableImage.setSelectable(ownedCardsSlot);
         System.out.println("owned cards update");
@@ -312,8 +326,6 @@ public class MainViewController extends Controller implements Initializable {
             if (depot.getCurrentQuantity() == 0) {
                 image.setOpacity(0);
             }
-
-
         });
         System.out.println("depots updated");
     }
@@ -333,6 +345,7 @@ public class MainViewController extends Controller implements Initializable {
         victoryPointsLabel.setText(String.valueOf(gui.thisPlayerState().victoryPoints));
         System.out.println("victory points updated");
     }
+
 
     public void openPopeFavorCard() {
 
@@ -358,6 +371,7 @@ public class MainViewController extends Controller implements Initializable {
 
 
     public void setTurnActive(boolean active) {
+        turnActive = active;
         System.out.println("turn active: " + active);
         if (active)
             playerSlot.setStyle("-fx-border-color: #2a801b; -fx-background-color: rgba(131, 255, 131, 0.25)");
@@ -378,4 +392,13 @@ public class MainViewController extends Controller implements Initializable {
         depotsStage.setScene(scene);
         depotsStage.showAndWait();
     }
+
+
+    public void endOfTurn() {
+        if (PlayerState.availableActions.contains(Action.END_TURN)) {
+            turnActive = false;
+            gui.addEvent(new EndTurnEvent(gui.playerID.getItem()));
+        }
+    }
+
 }

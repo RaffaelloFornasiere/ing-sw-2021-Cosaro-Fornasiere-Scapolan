@@ -2,6 +2,7 @@ package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.controllerEvents.matchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.model.Direction;
+import it.polimi.ingsw.ui.cli.Action;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -60,7 +61,7 @@ public class MarketController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (!PlayerState.canPerformActions) {
+        if (!PlayerState.canPerformActions || !PlayerState.availableActions.contains(Action.TAKE_RESOURCES_FROM_MARKET)) {
             SelectableImage.getChildrenOf(root).stream().filter(n -> n.getStyleClass().contains("arrow-button"))
                     .forEach(n -> n.setDisable(true));
             nextButton.setDisable(true);
@@ -80,6 +81,7 @@ public class MarketController extends Controller implements Initializable {
 
     }
 
+    @FXML
     public void onButtonPressed(ActionEvent event) {
         String id = ((Button) event.getSource()).getId();
         int index = Integer.parseInt(String.valueOf(id.charAt(1))) - 1;
@@ -104,7 +106,7 @@ public class MarketController extends Controller implements Initializable {
     public void onNext() {
 
         gui.addEvent(new BuyResourcesEvent(gui.askUserID(), dir, index));
-
+        ((Stage) gridPane.getScene().getWindow()).close();
     }
 
 

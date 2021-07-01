@@ -214,87 +214,9 @@ public class ProductionController extends Controller implements Initializable {
             ((Stage) root.getScene().getWindow()).close();
             return;
         }
-
-
         gui.addEvent(new ActivateProductionEvent(gui.askUserID(), selectedDevCards, personalPower));
 
-        HashMap<Resource, Integer> requiredResources = new HashMap<>() {{
-            getResourcesRequired().forEach(n -> put(n, getOrDefault(n, 0) + 1));
-        }};
 
-        Stage stage = new Stage();
-
-        stage.initModality(Modality.APPLICATION_MODAL);
-        SelectResourcesController selectResourcesController = new SelectResourcesController(gui, requiredResources, personalPower ? 2 : 0);
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("SelectResourcesToUse.fxml"));
-        loader.setController(selectResourcesController);
-        try {
-            stage.setScene(new Scene(loader.load()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        stage.showAndWait();
-        var res = selectResourcesController.getResult();
-        if (res != null)
-            gui.addEvent(res);
         ((Stage) root.getScene().getWindow()).close();
-
-
     }
-/*
-    @FXML
-    public void onAddResourcesClicked() {
-        Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initStyle(StageStyle.UTILITY);
-
-        AnchorPane root = new AnchorPane();
-        dialog.setTitle("Select Resources");
-        Scene scene = new Scene(root);
-
-        ListView<Label> list = new ListView<>();
-        list.setMaxHeight(100);
-        list.setMaxWidth(200);
-
-        list.getItems().addAll(Arrays.stream(Resource.values()).map(n -> new Label(n.name())).collect(Collectors.toList()));
-        Button confirm = new Button("Add");
-        confirm.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            dialog.close();
-        });
-        root.getChildren().addAll(list, confirm);
-        AnchorPane.setTopAnchor(list, 0.0);
-        AnchorPane.setLeftAnchor(list, 0.0);
-        AnchorPane.setRightAnchor(list, 0.0);
-        AnchorPane.setBottomAnchor(list, 70.0);
-        AnchorPane.setRightAnchor(confirm, 20.0);
-        AnchorPane.setBottomAnchor(confirm, 10.0);
-        String path = new java.io.File(".").getAbsolutePath().replace("\\", "/");
-        path = "file:/" + path.substring(0, path.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/stylesheets/selectresourcedialog.css";
-        root.getStylesheets().add(path);
-        dialog.setScene(scene);
-        dialog.showAndWait();
-        if (list.getSelectionModel().getSelectedItem() != null) {
-            HBox hBox = new HBox();
-            hBox.setAlignment(Pos.CENTER);
-            Label label = new Label(list.getSelectionModel().getSelectedItem().getText());
-            label.setMaxHeight(10);
-            Line buttonLine = new Line();
-            buttonLine.setStrokeWidth(4);
-            buttonLine.setEndX(hBox.getWidth() - 5);
-            buttonLine.setStartX(hBox.getWidth() - 20);
-            buttonLine.setStroke(Paint.valueOf("red"));
-            buttonLine.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-
-                resourcesOfChoiceList.getItems().remove(hBox);
-            });
-
-            label.setMaxWidth(Double.MAX_VALUE);
-            HBox.setHgrow(label, Priority.ALWAYS);
-            hBox.getChildren().addAll(label, buttonLine);
-            resourcesOfChoiceList.getItems().add(hBox);
-            System.out.println(list.getSelectionModel().getSelectedItem().getText());
-        }
-    }
-*/
-
 }

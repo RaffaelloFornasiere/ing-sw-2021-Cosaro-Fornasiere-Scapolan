@@ -4,17 +4,15 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="550.0" prefWidth="515.0" stylesheets="@stylesheets/production.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="427.0" prefWidth="380.0" stylesheets="@stylesheets/production.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <HBox layoutX="331.0" layoutY="484.0">
+        <HBox layoutX="214.0" layoutY="372.0">
             <children>
                 <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancel" prefHeight="30.0" prefWidth="65.0" text="Cancel">
                     <HBox.margin>
@@ -52,7 +50,7 @@
                 <String fx:value="selectable" />
             </styleClass>
         </ImageView>
-        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="28.0" layoutY="363.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="142.0" fitWidth="163.0" layoutX="257.0" layoutY="50.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true">
             <styleClass>
                 <String fx:value="selectable" />
                 <String fx:value="devCard" />
@@ -79,25 +77,12 @@
                 <Image url="@images/leaders/LeaderCard8.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="95.0" fitWidth="99.0" layoutX="140.0" layoutY="385.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
+        <ImageView fitHeight="95.0" fitWidth="99.0" layoutX="264.0" layoutY="229.0" onMouseClicked="#onProductionClicked" pickOnBounds="true" preserveRatio="true" styleClass="selectable">
             <image>
                 <Image url="@images/BasicProduction.png" />
             </image>
         </ImageView>
-        <Line endX="-36.6666259765625" endY="281.33331298828125" layoutX="300.0" layoutY="246.0" startX="-36.6666259765625" startY="-226.00001525878906" />
         <Label layoutX="28.0" layoutY="15.0" text="Select Productions" textFill="#393939">
-            <font>
-                <Font name="System Bold" size="13.0" />
-            </font>
-        </Label>
-        <ListView fx:id="resourcesOfChoiceList" layoutX="286.0" layoutY="50.0" prefHeight="112.0" prefWidth="200.0" />
-        <Label layoutX="286.0" layoutY="24.0" text="Resources of choice" textFill="#393939">
-            <font>
-                <Font name="System Bold" size="13.0" />
-            </font>
-        </Label>
-        <Label id="addResourceOfChoiceButton" layoutX="484.0" layoutY="25.0" onMouseClicked="#onAddResourcesClicked" prefHeight="17.0" prefWidth="1.0" />
-        <Label fx:id="warningLabelOfChoice" layoutX="286.0" layoutY="172.0" style="-fx-opacity: 0;" text="not enough resources of choice" textFill="#8b1010">
             <font>
                 <Font name="System Bold" size="13.0" />
             </font>

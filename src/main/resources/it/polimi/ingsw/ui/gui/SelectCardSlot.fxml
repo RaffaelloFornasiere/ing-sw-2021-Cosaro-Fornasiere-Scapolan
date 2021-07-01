@@ -11,7 +11,7 @@
    <children>
       <HBox layoutX="41.0" layoutY="120.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="1">
+            <Button mnemonicParsing="false" onMouseClicked="#setRes" prefHeight="50.0" prefWidth="50.0" text="1">
                <HBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
@@ -19,7 +19,7 @@
                   <Font name="System Bold" size="23.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="2">
+            <Button mnemonicParsing="false" onMouseClicked="#setRes" prefHeight="50.0" prefWidth="50.0" text="2">
                <HBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
@@ -27,7 +27,7 @@
                   <Font name="System Bold" size="23.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="3">
+            <Button mnemonicParsing="false" onMouseClicked="#setRes" prefHeight="50.0" prefWidth="50.0" text="3">
                <HBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
@@ -42,6 +42,6 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Button id="nextButton" layoutX="176.0" layoutY="250.0" mnemonicParsing="false" text="Next" />
+      <Button id="nextButton" layoutX="176.0" layoutY="250.0" mnemonicParsing="false" onAction="#onNext" text="Next" />
    </children>
 </AnchorPane>
