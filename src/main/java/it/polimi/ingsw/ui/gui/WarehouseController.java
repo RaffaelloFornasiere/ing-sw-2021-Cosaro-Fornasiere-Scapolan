@@ -112,7 +112,7 @@ public class WarehouseController extends Controller implements Initializable {
         }};
         gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
             try {
-                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/" + card + ".json")), LeaderCard.class);
                 leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
                         .forEach(power -> {
                                     int powerIndex = leaderCard.getLeaderPowers().indexOf(power);
@@ -521,7 +521,7 @@ public class WarehouseController extends Controller implements Initializable {
         gui.thisPlayerState().leaderCards.forEach((card, cardActive) -> {
             if (cardActive) {
                 try {
-                    LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\" + card + ".json")), LeaderCard.class);
+                    LeaderCard leaderCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/" + card + ".json")), LeaderCard.class);
                     leaderCard.getLeaderPowers().stream().filter(power -> power instanceof DepositLeaderPower)
                             .forEach(power -> {
                                         int powerIndex = leaderCard.getLeaderPowers().indexOf(power);

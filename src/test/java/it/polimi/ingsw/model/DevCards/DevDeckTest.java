@@ -23,7 +23,7 @@ public class DevDeckTest {
         cards = new ArrayList<>();
         try {
             for (int i = 1; i < 49; i++) {
-                String cardJSON = Files.readString(Paths.get("src\\main\\resources\\DevCard" + i + ".json"));
+                String cardJSON = Files.readString(Paths.get("src/main/resources/DevCard" + i + ".json"));
                 if (cardJSON.contains("\"level\":2") && cardJSON.contains("\"color\":\"VIOLET\""))
                     cards.add(gson.fromJson(cardJSON, DevCard.class));
             }
@@ -37,7 +37,7 @@ public class DevDeckTest {
         new DevDeck(cards);
         DevCard newCard = null;
         try {
-            newCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard21.json")), DevCard.class);
+            newCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard21.json")), DevCard.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class DevDeckTest {
         }
         cards.remove(newCard);
         try {
-            newCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard2.json")), DevCard.class);
+            newCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard2.json")), DevCard.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,7 +72,7 @@ public class DevDeckTest {
         DevDeck devDeck = new DevDeck(cards);
         DevCard newCard;
         try {
-            newCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard2.json")), DevCard.class);
+            newCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard2.json")), DevCard.class);
             try {
                 devDeck.push(newCard);
                 Assert.fail();
@@ -83,7 +83,7 @@ public class DevDeckTest {
 
         }
         try {
-            newCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard21.json")), DevCard.class);
+            newCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard21.json")), DevCard.class);
             try {
                 devDeck.push(newCard);
                 Assert.fail();
@@ -94,7 +94,7 @@ public class DevDeckTest {
         }
 
         try {
-            newCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard26.json")), DevCard.class);
+            newCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard26.json")), DevCard.class);
             try {
                 devDeck.push(newCard);
                 Assert.assertEquals(devDeck.pop(), newCard);

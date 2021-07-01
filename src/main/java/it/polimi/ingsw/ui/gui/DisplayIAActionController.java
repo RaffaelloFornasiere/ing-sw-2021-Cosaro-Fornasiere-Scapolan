@@ -12,17 +12,26 @@ import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
+/**
+ * ui window controller to show the user what solo action token have been selected
+ */
 public class DisplayIAActionController extends Controller implements Initializable {
 
 
-
-
+    /**
+     * Constructor
+     * @param gui gui object reference
+     * @param token the selected token
+    */
+    //TODO it doesn't work properly
     DisplayIAActionController(GUI gui, SoloActionToken token)
     {
         super(gui);
         String imagePath = new java.io.File(".").getAbsolutePath() + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         if(token instanceof SoloActionTokenDiscard) {
             SoloActionTokenDiscard tok = (SoloActionTokenDiscard) token;
+            @SuppressWarnings("OptionalGetWithoutIsPresent")
             CardColor color = tok.getCardsDiscarded().keySet().stream().findFirst().get();
             int n = 0;
             switch (color){
@@ -38,6 +47,7 @@ public class DisplayIAActionController extends Controller implements Initializab
             imageUrl = "file:/" + imagePath + "token" + (tok.reshuffle()?7:6)  + ".png";
         }
 
+        description = token.description();
     }
 
     String description;

@@ -24,7 +24,7 @@ public class DevCardGridTest {
         cards = new ArrayList<>();
         try {
             for (int i = 1; i < 49; i++) {
-                String cardJSON = Files.readString(Paths.get("src\\main\\resources\\DevCard" + i + ".json"));
+                String cardJSON = Files.readString(Paths.get("src/main/resources/DevCard" + i + ".json"));
                 cards.add(gson.fromJson(cardJSON, DevCard.class));
             }
         } catch (IOException e) {
@@ -79,7 +79,7 @@ public class DevCardGridTest {
 
         DevCard newCard = null;
         try {
-             newCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard3.json")), DevCard.class);
+             newCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard3.json")), DevCard.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,7 +139,7 @@ public class DevCardGridTest {
         try {
             DevCard newCard = null;
             try {
-                newCard = gson.fromJson(Files.readString(Paths.get("src\\main\\resources\\DevCard3.json")), DevCard.class);
+                newCard = gson.fromJson(Files.readString(Paths.get("src/main/resources/DevCard3.json")), DevCard.class);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -156,7 +156,7 @@ public class DevCardGridTest {
         String cardJSON = null;
         Gson gson = new Gson();
         try {
-            cardJSON = Files.readString(Paths.get("src\\main\\resources\\DevCard3.json"));
+            cardJSON = Files.readString(Paths.get("src/main/resources/DevCard3.json"));
         } catch (IOException e) {
             e.printStackTrace();
         }

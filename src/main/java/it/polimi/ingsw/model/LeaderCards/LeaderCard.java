@@ -140,7 +140,7 @@ public class LeaderCard extends Observable {
         try {
             for (int i = 5; i <= 16; i++) {
                 String name = "LeaderCard" + i;
-                File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\" + name + ".json");
+                File file = new File("C:/Users/Leo/IdeaProjects/ing-sw-2021-Cosaro-Fornasiere-Scapolan/src/main/resources/" + name + ".json");
                 FileReader r = new FileReader(file);
                 Scanner scanner = new Scanner(r);
                 StringBuilder s = new StringBuilder();
@@ -169,7 +169,7 @@ public class LeaderCard extends Observable {
         Gson gson = builder.create();
         for(int i=1; i<=16; i++){
             String name = "LeaderCard" + i;
-            File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\" + name + ".json");
+            File file = new File("C:/Users/Leo/IdeaProjects/ing-sw-2021-Cosaro-Fornasiere-Scapolan/src/main/resources/" + name + ".json");
             try {
                 FileReader r = new FileReader(file);
                 Scanner scanner = new Scanner(r);
@@ -238,7 +238,7 @@ public class LeaderCard extends Observable {
 
         System.out.println(JSONLeaderCard);
 
-        File file = new File("C:\\Users\\Leo\\IdeaProjects\\ing-sw-2021-Cosaro-Fornasiere-Scapolan\\src\\main\\resources\\LeaderCard" + lcIndex + ".json");
+        File file = new File("C:/Users/Leo/IdeaProjects/ing-sw-2021-Cosaro-Fornasiere-Scapolan/src/main/resources/LeaderCard" + lcIndex + ".json");
         try {
             FileWriter w = new FileWriter(file);
             w.write(JSONLeaderCard);

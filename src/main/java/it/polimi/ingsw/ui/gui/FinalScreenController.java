@@ -28,6 +28,7 @@ public class FinalScreenController extends Controller implements Initializable {
 
 
     public FinalScreenController(GUI gui, boolean singlePlayer, ArrayList<FinalPlayerState> finalPlayerStates) {
+        super(gui);
         this.finalPlayerStates = finalPlayerStates;
         this.singlePlayer = singlePlayer;
 
