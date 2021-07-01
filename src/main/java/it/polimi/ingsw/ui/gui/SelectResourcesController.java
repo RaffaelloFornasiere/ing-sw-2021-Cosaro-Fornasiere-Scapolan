@@ -7,25 +7,18 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.checkerframework.checker.units.qual.A;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SelectResourcesController extends Controller implements Initializable {
@@ -45,13 +38,16 @@ public class SelectResourcesController extends Controller implements Initializab
     @FXML
     AnchorPane root;
 
+    @FXML
+    Button nextButton;
+
 
     ArrayList<Resource> resourcesRequired;
     int resourcesOfChoice;
 
     SelectResourcesController(GUI gui, HashMap<Resource, Integer> required, int resourcesOfChoice) {
         super(gui);
-        resourcesRequired = new ArrayList<>(){{
+        resourcesRequired = new ArrayList<>() {{
             required.forEach((key, value) -> {
                 for (int i = 0; i < value; i++)
                     add(key);
@@ -67,7 +63,8 @@ public class SelectResourcesController extends Controller implements Initializab
         Platform.runLater(() -> {
             root.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
                 public void handle(WindowEvent we) {
-                    dataReady.setItem(false);
+                    onCancel();
+                    //dataReady.setItem(false);
                 }
             });
         });
@@ -94,12 +91,17 @@ public class SelectResourcesController extends Controller implements Initializab
         leaderDeportsResourcesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         resourcesToUse.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         checkResources();
+
+
+        if (!PlayerState.canPerformActions)
+            nextButton.setDisable(true);
     }
 
     public ChosenResourcesEvent getResult() {
 
-        if(!dataReady.getWaitIfLocked())
+        if (!dataReady.getWaitIfLocked())
             return null;
+
         HashMap<Resource, Integer> allResources = new HashMap<>();
         HashMap<Resource, Integer> fromWareHouse = new HashMap<>();
         HashMap<Resource, Integer> fromLeadersDepots = new HashMap<>();
@@ -125,7 +127,6 @@ public class SelectResourcesController extends Controller implements Initializab
             return;
         }
         dataReady.setItem(true);
-
         ((Stage) root.getScene().getWindow()).close();
     }
 

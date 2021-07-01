@@ -1,25 +1,14 @@
 package it.polimi.ingsw.model.singlePlayer;
 
-import com.google.gson.Gson;
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_GREENPeer;
-import it.polimi.ingsw.events.ControllerEvents.MatchEvents.DiscardLeaderCardEvent;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.CardColor;
-import it.polimi.ingsw.model.DashBoard;
 import it.polimi.ingsw.model.DevCards.DevCard;
-import it.polimi.ingsw.model.DevCards.DevDeck;
-import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.ProductionPower;
 import it.polimi.ingsw.utilities.Config;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 

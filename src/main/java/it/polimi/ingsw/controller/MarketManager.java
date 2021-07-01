@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.model.Marble;
 import it.polimi.ingsw.model.Market;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

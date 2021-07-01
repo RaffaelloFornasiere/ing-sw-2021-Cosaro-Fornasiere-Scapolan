@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.singlePlayer;
 
 import it.polimi.ingsw.exceptions.IllegalOperation;
-import it.polimi.ingsw.exceptions.OutOfBoundException;
 import it.polimi.ingsw.model.DevCards.DevCard;
 import it.polimi.ingsw.model.FaithTrack.FaithTrack;
 import it.polimi.ingsw.model.Marble;

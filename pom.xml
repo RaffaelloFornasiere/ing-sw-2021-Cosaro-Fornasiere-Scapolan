@@ -112,7 +112,7 @@
                 <version>3.2.4</version>
                 <executions>
                     <execution>
-                        <id>server-jar</id>
+                        <id>client-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
@@ -129,7 +129,7 @@
                     </execution>
 
                     <execution>
-                        <id>client-jar</id>
+                        <id>server-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>

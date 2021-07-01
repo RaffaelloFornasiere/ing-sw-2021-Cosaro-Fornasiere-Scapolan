@@ -1,11 +1,17 @@
 package it.polimi.ingsw.ui.gui;
 
+import it.polimi.ingsw.utilities.LockWrap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.A;
 
+import javax.naming.spi.StateFactory;
 import java.io.IOException;
 import java.util.Stack;
 
@@ -13,10 +19,11 @@ import java.util.Stack;
 public class MainApplication extends Application {
 
     public static void setGui(GUI gui) {
-        if (MainApplication.gui == null)
-            MainApplication.gui = gui;
+//        if (MainApplication.gui == null)
+//            MainApplication.gui = gui;
     }
 
+    static Stage stage;
 
     static private GUI gui;
 
@@ -24,21 +31,19 @@ public class MainApplication extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-//        if (scenes == null || controllers == null)
-//            throw new Exception("Main App not initialized");
     }
 
     static void setFirstScene(String fxml) {
-        setFirstScene(fxml, null);
+//        setFirstScene(fxml, null);
     }
 
     static void setFirstScene(String fxml, Controller controller) {
-        if (scenes == null) {
-            scenes = new Stack<>();
-            controllers = new Stack<>();
-            scenes.add(fxml);
-            controllers.add(controller);
-        }
+//        if (scenes == null) {
+//            scenes = new Stack<>();
+//            controllers = new Stack<>();
+//            scenes.add(fxml);
+//            controllers.add(controller);
+//        }
     }
 
 
@@ -46,59 +51,63 @@ public class MainApplication extends Application {
     static Stack<String> scenes;
     static Stack<Controller> controllers;
 
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(scenes.peek() + ".fxml"));
-        loader.setController(controllers.peek());
-        Parent parent = loader.load();
-        scene = new Scene(parent);
-        stage.setScene(scene);
-        stage.show();
+    public static Stage getStage()
+    {
+        return stage;
     }
 
-    static void setScene(String fxml) throws IOException {
-        setScene(fxml, null);
+
+    private static final LockWrap<Boolean> isReady = new LockWrap<>(false, false);
+    public static boolean isReady()
+    {
+        return isReady.getWaitIfLocked();
+    }
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        MainApplication.stage = stage;
+        isReady.setItem(true);
+    }
+
+    static void setScene(Scene scene) throws IOException {
+        MainApplication.scene = scene;
+        stage.setScene(scene);
     }
 
     static void setScene(String fxml, Controller controller) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
-
-        if (controller != null)
-            fxmlLoader.setController(controller);
-        Parent parent = fxmlLoader.load();
-        if (controller == null) {
-            controller = fxmlLoader.getController();
-            controller.setGUI(gui);
-        }
-
-        scenes.add(fxml);
-        controllers.add(controller);
-        scene.setRoot(parent);
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml ));
+        fxmlLoader.setController(controller);
+        controller.setPreviousScene(scene);
+        scene = new Scene((fxmlLoader.load()));
+        stage.setScene(scene);
+        stage.sizeToScene();
     }
 
-    static void setPreviousScene() throws IOException {
-        scenes.pop();
-        controllers.pop();
-        scene.setRoot(loadFXML(scenes.peek(), controllers.peek()));
+    static Scene createScene(String fxml, Controller controller) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml));
+        fxmlLoader.setController(controller);
+        return new Scene((fxmlLoader.load()));
     }
+
 
     private static Parent loadFXML(String fxml, Controller controller) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
-        fxmlLoader.setController(controller);
-        return fxmlLoader.load();
+//        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
+//        fxmlLoader.setController(controller);
+//        return fxmlLoader.load();
+        return null;
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
-        Parent parent = fxmlLoader.load();
-        return parent;
+//        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
+//        return fxmlLoader.load();
+        return null;
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
         System.out.println("stop");
+        gui.close();
     }
-
 
 }

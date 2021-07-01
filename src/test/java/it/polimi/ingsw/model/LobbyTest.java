@@ -19,6 +19,14 @@ public class LobbyTest {
     }
 
     @Test
+    public void testGetSetCanAcceptPlayers() {
+        Lobby lobby = new Lobby(4);
+        assertTrue(lobby.canAcceptPlayers());
+        lobby.setCanAcceptPlayers(false);
+        assertFalse(lobby.canAcceptPlayers());
+    }
+
+    @Test
     public void testSetLeaderID() {
         Lobby lobby = new Lobby(4);
         lobby.setLeaderID("test");
@@ -77,7 +85,7 @@ public class LobbyTest {
     }
 
     @Test
-    public void testAddPlayerIDException() {
+    public void testAddPlayerIDExceptionFull() {
         Lobby lobby = new Lobby(4);
         lobby.setLeaderID("1");
         try {
@@ -89,6 +97,22 @@ public class LobbyTest {
         }
         try {
             lobby.addPlayerID("5");
+            fail();
+        } catch (IllegalOperation ignored) { }
+    }
+
+    @Test
+    public void testAddPlayerIDExceptionCantAcceptPlayers() {
+        Lobby lobby = new Lobby(4);
+        lobby.setLeaderID("1");
+        try {
+            lobby.addPlayerID("2");
+        } catch (IllegalOperation illegalOperation) {
+            fail();
+        }
+        lobby.setCanAcceptPlayers(false);
+        try {
+            lobby.addPlayerID("3");
             fail();
         } catch (IllegalOperation ignored) { }
     }

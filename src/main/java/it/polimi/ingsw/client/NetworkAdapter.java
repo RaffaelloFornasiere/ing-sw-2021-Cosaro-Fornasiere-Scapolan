@@ -12,6 +12,8 @@ import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.model.Direction;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.ui.UI;
+import it.polimi.ingsw.utilities.Config;
+import it.polimi.ingsw.utilities.NetworkConfiguration;
 import org.reflections.Reflections;
 
 import java.beans.PropertyChangeEvent;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class NetworkAdapter {
 
-    public static final int SERVER_PORT = 50885;
+    public static final int SERVER_PORT = NetworkConfiguration.getInstance().getPORT();
     NetworkHandlerReceiver receiver;
     Sender sender;
     Socket server;
@@ -46,12 +48,14 @@ public class NetworkAdapter {
 
         for (var event : events) {
             try {
+
                 Method method = this.getClass().getMethod(event.getSimpleName() + "Handler",
                         PropertyChangeEvent.class);
                 receiver.getEventRegistry().addPropertyChangeListener(event.getSimpleName(), x -> {
                     try {
                         method.invoke(this, x);
                     } catch (IllegalAccessException | InvocationTargetException e) {
+                        System.out.println(event.getSimpleName());
                         e.printStackTrace();
                     }
                 });
@@ -278,7 +282,6 @@ public class NetworkAdapter {
 
     public synchronized void LobbyErrorHandler(PropertyChangeEvent evt) {
         LobbyError event = (LobbyError) evt.getNewValue();
-
 
         view.printError(event.getErrorMsg());
         ClientApp.joinLobby(view, this);

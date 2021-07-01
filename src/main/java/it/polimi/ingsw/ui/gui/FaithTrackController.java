@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public class FaithTrackController {
+public class FaithTrackController extends Controller {
 
     private class DoublePoint {
         public double x;
@@ -34,14 +34,23 @@ public class FaithTrackController {
     ArrayList<Triplet<Integer, Point, Node>> track;
     DoublePoint currentPos;
     DoublePoint zeroPos;
-
     private int position;
+
+    DoublePoint currentPosLorenzo;
+    private int positionLorenzo;
+
+
     ArrayList<ImageView> popeFavorCards;
 
-    ImageView cross;
-    GridPane faithTrack;
 
-    double cellsize;
+    ImageView cross;
+    ImageView crossLorenzo;
+    GridPane faithTrack;
+    double cellSize;
+
+
+    boolean singlePlayer;
+
 
     /**
      * constructor: retrieves the gridpane where
@@ -51,9 +60,11 @@ public class FaithTrackController {
      * and the node of the cell.
      * Then it calculates the zero position of the
      * player's cross and place it there.
+     *
      * @param faithTrack
      */
-    FaithTrackController(GridPane faithTrack) {
+    FaithTrackController(GUI gui, GridPane faithTrack, boolean singlePlayer) {
+        super(gui);
         zeroPos = new DoublePoint(0, 0);
         currentPos = new DoublePoint(0, 0);
         this.faithTrack = faithTrack;
@@ -68,11 +79,14 @@ public class FaithTrackController {
         Collections.swap(track, 17, 16);
 
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/crocePlayer.png";
-        cross = new ImageView(new Image(imageUrl));
-        System.out.println(imageUrl);
+        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        cross = new ImageView(new Image(imageUrl + "crocePlayer.png"));
+        crossLorenzo = new ImageView(new Image(imageUrl + "croceLorenzo.png"));
         cross.setFitWidth(45);
         cross.setFitHeight(55);
+        crossLorenzo.setFitWidth(45);
+        crossLorenzo.setFitHeight(55);
+
         ((StackPane) faithTrack.getParent()).getChildren().add(cross);
         zeroPos.x = faithTrack.getWidth() / 2;
         zeroPos.y = ((Group) track.get(0).getValue(2)).getChildren().stream()
@@ -80,25 +94,47 @@ public class FaithTrackController {
                 .map(n -> (ImageView) n)
                 .collect(Collectors.toList())
                 .get(0).getFitHeight() + 5;
-        cellsize = faithTrack.getWidth() / 19;
-        System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
+        cellSize = faithTrack.getWidth() / 19;
+        // System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
         cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
         cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
         cross.setTranslateY(zeroPos.y * 1.2);
         currentPos.x = -zeroPos.x + zeroPos.y / 2;
         currentPos.y = zeroPos.y * 1.2;
-        setPosition(0);
+        setPlayerPosition(0);
+
+        if (singlePlayer) {
+            ((StackPane) faithTrack.getParent()).getChildren().add(crossLorenzo);
+            crossLorenzo.setTranslateX(-zeroPos.x + zeroPos.y / 2);
+            crossLorenzo.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
+            crossLorenzo.setTranslateY(zeroPos.y * 1.2);
+            setLorenzoPosition(0);
+        }
+
+
+
+
+
     }
 
+
+    public void setLorenzoPosition(int newPosition) {
+        setPosition(newPosition, crossLorenzo);
+    }
+
+    public void setPlayerPosition(int newPosition) {
+        setPosition(newPosition, cross);
+    }
 
     /**
      * update the current position of the player to his new position
      * and executes the animation to move the player's cross in
      * the new player's position on the faith track
+     *
      * @param newPosition the new position of the player
      */
-    public void setPosition(int newPosition) {
-        if(newPosition == position)
+    public void setPosition(int newPosition, ImageView cross) {
+        if (newPosition == position)
             return;
 
         ArrayList<TranslateTransition> path = new ArrayList<>();
@@ -118,10 +154,10 @@ public class FaithTrackController {
             int verticalMove = next.x - current.x;
             var lastTransition = path.get(path.size() - 1);
             if (lastTransition.getFromY() == lastTransition.getToY() && verticalMove == 0) {
-                lastTransition.setToX(currentPos.x + cellsize * sideMove);
+                lastTransition.setToX(currentPos.x + cellSize * sideMove);
                 lastTransition.setDuration(lastTransition.getDuration().add(Duration.millis(150)));
             } else if (lastTransition.getFromX() == lastTransition.getToX() && sideMove == 0) {
-                lastTransition.setToY(currentPos.y + cellsize * verticalMove);
+                lastTransition.setToY(currentPos.y + cellSize * verticalMove);
                 lastTransition.setDuration(lastTransition.getDuration().add(Duration.millis(150)));
             } else {
                 TranslateTransition transition = new TranslateTransition(Duration.millis(150));
@@ -129,12 +165,12 @@ public class FaithTrackController {
                 transition.setAutoReverse(false);
                 transition.setFromX(currentPos.x);
                 transition.setFromY(currentPos.y);
-                transition.setToX(currentPos.x + cellsize * sideMove);
-                transition.setToY(currentPos.y + cellsize * verticalMove);
+                transition.setToX(currentPos.x + cellSize * sideMove);
+                transition.setToY(currentPos.y + cellSize * verticalMove);
                 path.add(transition);
             }
-            currentPos.x = currentPos.x + cellsize * sideMove;
-            currentPos.y = currentPos.y + cellsize * verticalMove;
+            currentPos.x = currentPos.x + cellSize * sideMove;
+            currentPos.y = currentPos.y + cellSize * verticalMove;
 
         }
         SequentialTransition sequentialTransition = new SequentialTransition();
@@ -147,17 +183,39 @@ public class FaithTrackController {
     /**
      * increments the position of one step
      */
-    public void incrementPosition() {
-        setPosition(position + 1);
+    public void incrementPlayerPosition() {
+        setPlayerPosition(position + 1);
     }
 
     /**
      * decrements the position of one step
      */
-    public void decrementPosition() {
-        setPosition(position - 1);
+    public void decrementPlayerPosition() {
+        setPlayerPosition(position - 1);
+    }
+
+
+    /**
+     * increments the position of one step
+     */
+    public void incrementLorenzoPosition() {
+        setPlayerPosition(position + 1);
+    }
+
+    /**
+     * decrements the position of one step
+     */
+    public void decrementLorenzoPosition() {
+        setPlayerPosition(position - 1);
+    }
+
+
+    public void updateFavorCards() {
+        var popeFavorCards = gui.thisPlayerState().getPopeFavorCards();
+
     }
 
     public void setPopeFavorCards(HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+
     }
 }

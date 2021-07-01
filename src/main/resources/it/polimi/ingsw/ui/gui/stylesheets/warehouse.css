@@ -68,24 +68,37 @@ arrow-button-left {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
 }
 
-
-.Coin {
-    -fx-image: url(../images/coin.png);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
-
+.bin {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.7), 5, 0, 0, 0);
 }
 
-.Servant {
-    -fx-image: url(../images/servant.png);
 
+
+
+
+#leaderDepotCoin{
+    -fx-background-image: url(../images/LeaderDepotCoin.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 }
 
-.Rock {
-    -fx-image: url(../images/stone.png);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
-
+#leaderDepotRock{
+    -fx-background-image: url(../images/LeaderDepotRock.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 }
 
-.Shield {
-    -fx-image: url(../images/shield.png);
+#leaderDepotShield{
+    -fx-background-image: url(../images/LeaderDepotShield.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+#leaderDepotServant{
+    -fx-background-image: url(../images/LeaderDepotServant.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
 }

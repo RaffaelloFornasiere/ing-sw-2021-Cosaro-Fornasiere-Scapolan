@@ -1,21 +1,13 @@
 package it.polimi.ingsw.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;
 import it.polimi.ingsw.exceptions.*;
-import it.polimi.ingsw.model.FaithTrack.AbstractCell;
 import it.polimi.ingsw.model.LeaderCards.DepositLeaderPower;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;
 import it.polimi.ingsw.model.LeaderCards.Requirement;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 

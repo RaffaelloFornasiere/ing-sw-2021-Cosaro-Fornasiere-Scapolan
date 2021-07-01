@@ -6,29 +6,23 @@
 
 }
 
-.Resource{
+.Resource {
 
 }
 
 .Coin {
-    -fx-image: url(../images/coin.png);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
 
 }
 
 .Servant {
-    -fx-image: url(../images/servant.png);
 
 }
 
 .Rock {
-    -fx-image: url(../images/stone.png);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 1, 1, 1, 1);
 
 }
 
 .Shield {
-    -fx-image: url(../images/shield.png);
 }
 
 
@@ -53,28 +47,18 @@
 }
 
 .PlayerSlot {
-    -fx-border-color: #cd853f;
-    -fx-border-width: 2;
-    -fx-border-radius: 60 60 60 60;
-    /*-fx-background-color: linear-gradient(from 0px 0px to 0px 11px, #78786C, #C0C0B1),*/
-    /*linear-gradient(from 0px 70px to 0px 90px, #C0C0B100, #78786C);*/
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 20, 0, 0, 0);
     -fx-scale-x: 0.9;
     -fx-scale-y: 0.9;
-    /*linear-gradient(from 10px 0px to 13px 0px, #78786C, #C0C0B100);*/
-    /*linear-gradient(from 0px 70px to 0px 71px, #C0C0B100, #78786C);*/
-
-
-    -fx-background-radius: 22 22 22 22;
+    -fx-border-color: #801b1b;
+    -fx-border-width: 3px;
+    -fx-border-radius: 20px;
+    -fx-background-color: rgba(165, 27, 27, 0.25);
+    -fx-background-radius: 20px;
 }
 
-@font-face {
-    font-family: Elliot;
-    src: url(../fonts/Elliot.otf);
-}
 
 .PlayerLabel {
-    -fx-font-family: Elliot;
     -fx-text-fill: black;
     -fx-font-weight: bold;
 
@@ -105,7 +89,7 @@
 }
 
 .VaticanReportSection {
-    -fx-effect: dropshadow(three-pass-box, rgb(18, 158, 31), 4, 1, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgb(255, 119, 0), 4, 1, 0, 0);
 }
 
 .VictoryPoint {
@@ -113,11 +97,6 @@
     -fx-background-size: stretch;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
 
-}
-
-.DevCardCounter {
-    -fx-background-image: url(../images/back.png);
-    -fx-background-size: stretch;
 }
 
 
@@ -174,4 +153,47 @@ arrow-button-left {
     -fx-border-color: #dba76d;
 }
 
+#leaderDepotCoin{
+    -fx-background-image: url(../images/LeaderDepotCoin.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
 
+#leaderDepotRock{
+    -fx-background-image: url(../images/LeaderDepotRock.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+#leaderDepotShield{
+    -fx-background-image: url(../images/LeaderDepotShield.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+#leaderDepotServant{
+    -fx-background-image: url(../images/LeaderDepotServant.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+
+#endOfTurnButton{
+    -fx-font-weight: bold;
+    -fx-text-fill: #570c0c;
+    -fx-background-color: rgba(113, 58, 58, 0.49);
+    -fx-border-width: 3;
+    -fx-border-color: #570c0c;
+}
+
+#endOfTurnButton:hover {
+    -fx-background-color: #ba8a54;
+}
+
+#endOfTurnButton:pressed {
+    -fx-background-color: #dba76d;
+}

@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.Sender;
 import it.polimi.ingsw.events.ClientEvents.DevCardGridStateEvent;
 import it.polimi.ingsw.exceptions.NotPresentException;
 import it.polimi.ingsw.model.DevCards.DevCardGrid;
-import it.polimi.ingsw.Server.ClientHandlerSender;
 
 import java.util.HashMap;
 

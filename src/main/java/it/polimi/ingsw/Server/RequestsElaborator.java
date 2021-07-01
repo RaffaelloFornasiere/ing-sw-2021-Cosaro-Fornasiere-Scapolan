@@ -53,8 +53,8 @@ public class RequestsElaborator {
         while(socket!=null) {
             try {
                 event = requestsQueue.take();
-                new Thread(this::elaborateEvent).start();
                 synchronized (eventLock){
+                    new Thread(this::elaborateEvent).start();
                     eventLock.wait();
                 }
             } catch (InterruptedException e) {
@@ -73,8 +73,10 @@ public class RequestsElaborator {
             eventLock.notifyAll();
         }
         if (socket != null) {
-            if(event.getClass() == HeartbeatEvent.class)
+            if(event.getClass() == HeartbeatEvent.class) {
                 clientHandlerSender.sendObject(event);
+                return;
+            }
             else if (event.getClass() == NewPlayerEvent.class)
                 event = new NewPlayerEventWithNetworkData((NewPlayerEvent) event, this);
             else if (!ownerUserID.equals(event.getPlayerId()))
@@ -88,6 +90,7 @@ public class RequestsElaborator {
                 else
                     matchEventHandlerRegistry.sendEvent(event);
             } else {
+                System.out.println("Elaborating " + event.getEventName());
                 mainEventHandlerRegistry.sendEvent(event);
             }
         }

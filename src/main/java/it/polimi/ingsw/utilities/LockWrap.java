@@ -40,4 +40,18 @@ public class LockWrap<T> {
             notifyAll();
         }
     }
+
+
+    public void waitIfSet()
+    {
+        synchronized (this) {
+            while (item != lockingState) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

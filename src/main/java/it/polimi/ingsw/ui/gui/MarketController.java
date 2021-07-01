@@ -2,7 +2,6 @@ package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.events.ControllerEvents.MatchEvents.BuyResourcesEvent;
 import it.polimi.ingsw.model.Direction;
-import it.polimi.ingsw.model.Marble;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,7 +42,7 @@ public class MarketController extends Controller implements Initializable {
 
 
     MarketController(GUI gui) {
-
+        super(gui);
         this.marketStatus = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath() + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         for (int i = 0; i < PlayerState.marketStatus.getKey().length; i++) {
@@ -103,9 +102,9 @@ public class MarketController extends Controller implements Initializable {
     }
 
     public void onNext() {
-        if (gui != null) {
-            gui.addEvent(new BuyResourcesEvent(gui.askUserID(), dir, index));
-        }
+
+        gui.addEvent(new BuyResourcesEvent(gui.askUserID(), dir, index));
+
     }
 
 
