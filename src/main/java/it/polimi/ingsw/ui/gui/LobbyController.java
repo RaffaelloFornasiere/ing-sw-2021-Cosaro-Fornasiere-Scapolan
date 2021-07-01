@@ -14,10 +14,15 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+
+/**
+ * ui window controller to show the lobby and the users logging in the match
+ * the match leader can start the game
+ */
 public class LobbyController extends Controller implements Initializable {
     private ArrayList<String> players;
     private String leader;
-    private boolean isLeader;
+    private final boolean isLeader;
 
     @FXML
     ListView<Label> playersList;
@@ -28,12 +33,18 @@ public class LobbyController extends Controller implements Initializable {
     @FXML
     AnchorPane root;
 
+    /**
+     * controller
+     * @param gui object reference to gui
+     * @param leader leader id of the
+     * @param players players already in the lobby
+     * @param isLeader if this player is the leader
+     */
     public LobbyController(GUI gui, String leader, ArrayList<String> players, boolean isLeader) {
         super(gui);
         updateData(leader, players);
         this.isLeader = isLeader;
     }
-
 
 
     @Override
@@ -48,6 +59,11 @@ public class LobbyController extends Controller implements Initializable {
     }
 
 
+    /**
+     * update the data and the ui
+     * @param leader string identifier of the leader
+     * @param players all players in lobby
+     */
     public void updatePlayerList(String leader, ArrayList<String> players) {
         updateData(leader, players);
         playersList.getItems().clear();
@@ -69,6 +85,12 @@ public class LobbyController extends Controller implements Initializable {
         }
     }
 
+
+    /**
+     * update the lobby players
+     * @param leader leader identifier
+     * @param players players in the lobby
+     */
     private void updateData(String leader, ArrayList<String> players) {
         this.leader = leader;
         this.players = players;
@@ -77,10 +99,14 @@ public class LobbyController extends Controller implements Initializable {
             throw new IllegalArgumentException("no leader present");
     }
 
+    /**
+     * @return the players waiting inside the lobby
+     */
     public ArrayList<String> getPlayers() {
         return new ArrayList<>(players);
     }
 
+    @FXML
     public void onStartGame() {
         gui.startGame();
     }
