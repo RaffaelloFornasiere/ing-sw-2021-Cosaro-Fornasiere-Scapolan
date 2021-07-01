@@ -154,6 +154,13 @@ public class Controller {
         }
     }
 
+    /**
+     * Loads leader cards from JSON files and assignees to them the necessary observers
+     * @param leaderCardIDs The IDs of the leader cards to load
+     * @param player The player that will be the owner of these leader cards
+     * @return The loaded leader cards
+     * @throws IOException If the leader cards cannot be loaded
+     */
     private synchronized ArrayList<LeaderCard> loadLeaderCards(ArrayList<String> leaderCardIDs, Player player) throws IOException {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
@@ -180,6 +187,10 @@ public class Controller {
         return leaderCards;
     }
 
+    /**
+     * Stores he information that a player is done with their initial decision, and notifies the clients of it
+     * @param playerID The ID of the player that finished with their decisions
+     */
     private synchronized void notifyPlayerDoneWithInitialDecisions(String playerID){
         setuppedPlayers.add(playerID);
         for (Sender sender : senders.values())
@@ -193,6 +204,11 @@ public class Controller {
             matchState.beginMatch();
     }
 
+    /**
+     * Sets a default set of initial decision for a player
+     * In particular it chooses to keep the first leader cards assigned and to discard the resources
+     * @param player The player for which to take the default decision
+     */
     private synchronized void setDefaultInitialDecisions(Player player) {
         InitialChoicesEvent initialChoicesEvent = initialChoices.get(player.getPlayerId());
         if(initialChoicesEvent == null) return;
@@ -206,6 +222,12 @@ public class Controller {
         } catch (IOException e) {
             //impossible
             e.printStackTrace();
+        }
+
+        int numDiscardedResources = initialChoicesEvent.getNumberResourcesOfChoice();
+        for (Player p : matchState.getPlayers()) {
+            if (p != player)
+                faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources);
         }
 
         notifyPlayerDoneWithInitialDecisions(player.getPlayerId());
