@@ -39,11 +39,11 @@
                         <Font name="System Bold" size="13.0" />
                     </font>
                 </Button>
-            <Button fx:id="button21" layoutX="5.0" layoutY="88.0" mnemonicParsing="false" onAction="#switchToServerSettings" prefHeight="30.0" prefWidth="180.0" styleClass="Button" stylesheets="@stylesheets/splashScreen.css" text="Single Player">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Button>
+                <Button fx:id="button21" layoutX="5.0" layoutY="88.0" mnemonicParsing="false" onAction="#setSinglePlayer" prefHeight="30.0" prefWidth="180.0" styleClass="Button" stylesheets="@stylesheets/splashScreen.css" text="Single Player">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Button>
             </children>
         </Group>
     </children>

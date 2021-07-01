@@ -68,6 +68,7 @@ public class SplashScreenController extends Controller implements Initializable 
 
     public void switchToLogin() throws IOException {
         gui.setServerAddress(InetAddress.getByName("127.0.0.1"));
+        gui.singlePlayer.setItem(false);
         defaultAddress = true;
         Controller controller = new LoginController(gui);
         controller.setPreviousScene(root.getScene());
@@ -75,6 +76,7 @@ public class SplashScreenController extends Controller implements Initializable 
     }
 
     public void switchToServerSettings() throws IOException {
+        gui.singlePlayer.setItem(false);
         Controller controller = new ServerSettingsController(gui);
         controller.setPreviousScene(root.getScene());
         ((Stage)root.getScene().getWindow()).setScene(MainApplication.createScene("ServerSettings.fxml", controller));
