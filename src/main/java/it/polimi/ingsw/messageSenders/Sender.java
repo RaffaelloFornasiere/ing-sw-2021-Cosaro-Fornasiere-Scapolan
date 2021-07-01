@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.messageSenders;
 
 import it.polimi.ingsw.events.Event;
 

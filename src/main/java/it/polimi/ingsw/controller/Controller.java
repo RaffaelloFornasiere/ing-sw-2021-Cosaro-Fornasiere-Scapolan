@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.client.Sender;
+import it.polimi.ingsw.messageSenders.Sender;
 import it.polimi.ingsw.controller.modelChangeHandlers.DashBoardHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.DepositLeaderPowerHandler;
 import it.polimi.ingsw.controller.modelChangeHandlers.LeaderCardHandler;

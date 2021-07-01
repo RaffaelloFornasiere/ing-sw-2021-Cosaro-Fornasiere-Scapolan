@@ -1,7 +1,7 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.messageSenders;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.controller.EventRegistry;
+import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.ui.cli.Color;
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.modelChangeHandlers;
 
-import it.polimi.ingsw.client.Sender;
+import it.polimi.ingsw.messageSenders.Sender;
 import it.polimi.ingsw.events.ClientEvents.LeaderCardStateEvent;
 import it.polimi.ingsw.model.LeaderCards.LeaderCard;
 import it.polimi.ingsw.model.LeaderCards.LeaderPower;

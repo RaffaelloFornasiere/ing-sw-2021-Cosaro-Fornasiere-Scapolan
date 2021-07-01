@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.events;
 
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.utilities.PropertyChangeSubject;
