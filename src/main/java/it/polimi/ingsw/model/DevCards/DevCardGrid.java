@@ -174,8 +174,10 @@ public class DevCardGrid extends Observable {
     public Pair<Integer, Integer> getRowColOfCardFromID(String devCardID) throws NotPresentException {
         for (int i = 0; i < getRowsNumber(); i++) {
             for (int j = 0; j < getColumnsNumber(); j++) {
-                if (decks[i][j].topCard().getCardID().equals(devCardID))
-                    return new Pair<>(i, j);
+                try {
+                    if (decks[i][j].topCard().getCardID().equals(devCardID))
+                        return new Pair<>(i, j);
+                } catch (NotPresentException ignored) {}
             }
         }
         throw new NotPresentException("There's no card at the top of any deck with the given ID");
