@@ -1,6 +1,7 @@
 package it.polimi.ingsw.ui.gui;
 
 import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
+import it.polimi.ingsw.utilities.Pair;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import org.javatuples.Triplet;
 
+import javax.sound.midi.Soundbank;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,7 +95,7 @@ public class FaithTrackController extends Controller {
         Collections.swap(track, 17, 16);
 
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         user.cross = new ImageView(new Image(imageUrl + "crocePlayer.png"));
 
         user.cross.setFitWidth(45);
@@ -107,7 +109,7 @@ public class FaithTrackController extends Controller {
                 .collect(Collectors.toList())
                 .get(0).getFitHeight() + 5;
         cellSize = faithTrack.getWidth() / 19;
-        // System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
+        // //System.out.printlnln("zx: " + zeroPos.x + " zy: " + zeroPos.y);
         user.cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
         user.cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
         user.cross.setTranslateY(zeroPos.y * 1.2);
@@ -234,22 +236,32 @@ public class FaithTrackController extends Controller {
 
     /**
      * upates the state of pope favor cards
+     *
      * @param discard if the card must be discarded
      */
     public void updateFavorCards(boolean discard) {
-        System.out.println("updateFavorCards");
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         String finalImageUrl = imageUrl;
-        System.out.println("popefavorcards number: "  + gui.thisPlayerState().getPopeFavorCards().size());
-        gui.thisPlayerState().getPopeFavorCards().forEach((key, value) -> {
-            int i = (key==8)?1:(key ==16)?2:3;
-            System.out.println("updating images " + " int " + i);
-            Image im = discard?null:new Image(finalImageUrl + "pope_favor"+i+"_front.png");
-            System.out.println(im);
-            popeFavorCards.get(i-1).setImage(im);
-            System.out.println("updating images ");
-        });
+        for (Pair<String, HashMap<Integer, PopeFavorCard>> favorCards :
+                gui.playerStates.entrySet().stream().map(e -> new Pair<>(e.getKey(), e.getValue().getPopeFavorCards())).collect(Collectors.toList())) {
+
+            if (favorCards.getValue().size() > 0) {
+                //System.out.printlnln("Player: " + gui.playerID.getItem());
+                //System.out.println("\t");
+                //System.out.printlnln(discard ? "Discard" : "Open");
+            }
+            favorCards.getValue().forEach((key, value) -> {
+                int i = (key == 8) ? 1 : (key == 16) ? 2 : 3;
+                if ((popeFavorCards.get(i - 1).getImage() != null && popeFavorCards.get(i - 1).getImage().getUrl().contains("back")
+                        || (popeFavorCards.get(i - 1).getImage() == null && !discard && favorCards.getKey().equals(gui.playerID.getItem())))) {
+                    //System.out.println("\tchanging state into: ");
+                    Image im = discard ? null : new Image(finalImageUrl + "pope_favor" + i + "_front.png");
+                    //System.out.printlnln(im == null ? "null" : im.getUrl());
+                    popeFavorCards.get(i - 1).setImage(im);
+                }
+            });
+        }
     }
 
 

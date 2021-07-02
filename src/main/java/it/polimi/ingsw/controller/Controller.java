@@ -242,7 +242,7 @@ public class Controller {
         int numDiscardedResources = initialChoicesEvent.getNumberResourcesOfChoice();
         for (Player p : matchState.getPlayers()) {
             if (p != player)
-                faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources);
+                faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources*Config.getInstance().getFaithPointPerDiscardedResource());
         }
 
         notifyPlayerDoneWithInitialDecisions(player.getPlayerId());
@@ -518,7 +518,7 @@ public class Controller {
                 }
                 for (Player p : matchState.getPlayers()) {
                     if (p != player)
-                        faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources);
+                        faithTrackManager.incrementFaithTrackPosition(p, 25 + numDiscardedResources * Config.getInstance().getFaithPointPerDiscardedResource());
                 }
             } catch (NotPresentException notPresentException) {
                 goodChoice = false;
@@ -628,7 +628,6 @@ public class Controller {
                 new MatchStateHandler(senders).update(matchState);
             } catch (NotPresentException notPresentException) {
                 senders.get(event.getPlayerId()).sendObject(new BadRequestEvent(event.getPlayerId(), "Leader card not owned by this player", event));
-                System.out.println(notPresentException.getMessage());
             }
         } catch (NotPresentException e) {
             //Impossible

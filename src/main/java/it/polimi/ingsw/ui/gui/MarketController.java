@@ -50,12 +50,12 @@ public class MarketController extends Controller implements Initializable {
         for (int i = 0; i < PlayerState.marketStatus.getKey().length; i++) {
             this.marketStatus.add(new ArrayList<String>());
             for (int j = 0; j < PlayerState.marketStatus.getKey()[0].length; j++) {
-                String url = "file:/" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
-                System.out.println(url);
+                String url = "file:" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
+                ////System.out.printlnln(url);
                 this.marketStatus.get(i).add(url);
             }
         }
-        this.marbleLeft = "file:/" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
+        this.marbleLeft = "file:" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
 
 
     }
@@ -88,7 +88,7 @@ public class MarketController extends Controller implements Initializable {
         int index = Integer.parseInt(String.valueOf(id.charAt(1))) - 1;
         String regex = "c"
                 + (id.contains("c") ? Integer.toString(index) + "\\d" : "\\d" + Integer.toString(index));
-        //System.out.println(regex);
+        ////System.out.printlnln(regex);
         gridPane.getChildren().stream()
                 .filter(n -> n instanceof Circle)
                 .forEach(c -> c.setOpacity(0));

@@ -13,7 +13,7 @@ public class GUIFar extends GUI{
     @Override
     public InetAddress askIP() {
         try {
-            return InetAddress.getByName("192.168.0.233");
+            return InetAddress.getByName("127.0.0.1");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

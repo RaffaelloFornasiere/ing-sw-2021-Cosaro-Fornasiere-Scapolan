@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client;
 
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.ClientApp;
 import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.events.clientEvents.*;
 import it.polimi.ingsw.events.controllerEvents.matchEvents.*;
@@ -154,9 +153,11 @@ public class NetworkAdapter {
     /**
      * Methods that stops the thread that continuously reads from the socket
      */
-    public void stopThread(){
-        if(receiver!=null)
+    public void stopRead(){
+        if(receiver!=null) {
+            stopThread = true;
             receiver.closeConnection();
+        }
     }
 
     /**
@@ -167,6 +168,22 @@ public class NetworkAdapter {
         sender.sendObject(e);
     }
 
+    /**
+     * Makes a player join or create a lobby
+     */
+    public void joinLobby() {
+        String playerID;
+        String leaderID;
+        if (view.askIfNewLobby()) {
+            playerID = view.askUserID();
+            createMatch(playerID);
+        } else {
+            playerID = view.askUserID();
+            leaderID = view.askLeaderID();
+            System.out.println(leaderID + " " + playerID);
+            enterMatch(playerID, leaderID);
+        }
+    }
 
     /**
      * Enters a lobby
@@ -300,8 +317,9 @@ public class NetworkAdapter {
      */
     public synchronized void GameEndedEventHandler(PropertyChangeEvent evt) {
         GameEndedEvent event = (GameEndedEvent) evt.getNewValue();
+        System.out.println("game ended received");
         view.displayEndOfGame(event.getFinalPlayerStates());
-        stopThread();
+        stopRead();
     }
 
     /**
@@ -356,7 +374,7 @@ public class NetworkAdapter {
         LobbyError event = (LobbyError) evt.getNewValue();
 
         view.printError(event.getErrorMsg());
-        ClientApp.joinLobby(view, this);
+        joinLobby();
     }
 
     /**
@@ -447,7 +465,7 @@ public class NetworkAdapter {
         view.printError("The connection with the server was closed. Shutting down the application");
         heartbeatTimer.cancel();
         sender.closeConnection();
-        receiver.closeConnection();
+        stopRead();
         try {
             server.close();
         } catch (IOException e) {
@@ -490,6 +508,6 @@ public class NetworkAdapter {
 
         view.invalidateUsername();
         view.printError(event.getErrorMsg());
-        ClientApp.joinLobby(view, this);
+        joinLobby();
     }
 }

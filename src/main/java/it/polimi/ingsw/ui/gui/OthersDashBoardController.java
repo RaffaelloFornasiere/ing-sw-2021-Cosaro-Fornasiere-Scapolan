@@ -18,6 +18,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class OthersDashBoardController extends MainViewController{
+public class OthersDashBoardController extends  Controller implements Initializable {
     public OthersDashBoardController(GUI gui, PlayerState thisPlayerState, String playerID) {
 
         super(gui);
@@ -88,8 +89,9 @@ public class OthersDashBoardController extends MainViewController{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         SelectableImage.setSelectable(root);
-        MainViewController aux = this;
+
         Platform.runLater(() -> {
             ArrayList<ImageView> arr = new ArrayList<>() {{
                 add(popeFavorCard1);
@@ -101,6 +103,7 @@ public class OthersDashBoardController extends MainViewController{
         });
         ((Label) playerSlot.getChildren().stream().filter(n -> n instanceof Label).collect(Collectors.toList()).get(0)).setText(playerID);
         playerImage = null;
+        ////System.out.printlnln("update all");
         updateAll();
     }
 
@@ -130,12 +133,12 @@ public class OthersDashBoardController extends MainViewController{
         for (int i = 0; i < PlayerState.marketStatus.getKey().length; i++) {
             marketStatus.add(new ArrayList<>());
             for (int j = 0; j < PlayerState.marketStatus.getKey()[0].length; j++) {
-                String url = "file:/" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
+                String url = "file:" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
                 marketStatus.get(i).add(url);
             }
         }
-        String marbleLeft = "file:/" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
-        System.out.println(marbleLeft);
+        String marbleLeft = "file:" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
+        ////System.out.printlnln(marbleLeft);
         GridPane gridPane = (GridPane) marketSlot.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().orElse(null);
         var marbles = gridPane.getChildren()
                 .stream().filter(n -> n instanceof ImageView)
@@ -152,7 +155,7 @@ public class OthersDashBoardController extends MainViewController{
                     .get(marble.getId().charAt(1) - '0')));
         }
         marbleLeftImage.setImage(new Image(marbleLeft));
-        System.out.println("market updated");
+        ////System.out.printlnln("market updated");
     }
 
     public void updateOwnedCards() {
@@ -175,7 +178,7 @@ public class OthersDashBoardController extends MainViewController{
 
 
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
         var ownedCardIds = thisPlayerState.ownedCards;
         for (int i = 0; i < ownedCardIds.size(); i++) {
             int j = 0;
@@ -183,20 +186,9 @@ public class OthersDashBoardController extends MainViewController{
                 ownedCards.get(i).get(j).setImage(new Image(imageUrl + ownedCardIds.get(i).get(j) + ".png"));
                 ownedCards.get(i).get(j).setVisible(true);
             }
-            if (j != 0 && ownedCards.get(i).get(j).isVisible()) {
-                ownedCards.get(i).get(j - 1).getStyleClass().add("hoverBorder");
-                ownedCards.get(i).get(j - 1).addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                    try {
-                        openProduction();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //mouseEvent.consume();
-                });
-            }
         }
         SelectableImage.setSelectable(ownedCardsSlot);
-        System.out.println("owned cards update");
+        ////System.out.printlnln("owned cards update");
     }
 
 
@@ -204,7 +196,7 @@ public class OthersDashBoardController extends MainViewController{
 
         ArrayList<ArrayList<ImageView>> depots = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath();
-        imagePath = "file:/" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imagePath = "file:" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         String finalImagePath = imagePath;
         var images = thisPlayerState.warehouse.stream().flatMap(n -> new ArrayList<Image>() {{
             for (int i = 0; i < n.getMaxQuantity(); i++) {
@@ -295,7 +287,7 @@ public class OthersDashBoardController extends MainViewController{
                 image.setOpacity(0);
             }
         });
-        System.out.println("depots updated");
+        ////System.out.printlnln("depots updated");
     }
 
     public void updateStrongBox() {
@@ -306,7 +298,7 @@ public class OthersDashBoardController extends MainViewController{
                     Resource r = Resource.valueOf(l.getId().replace("Counter", "").toUpperCase());
                     l.setText(String.valueOf(thisPlayerState.strongBox.getOrDefault(r, 0)));
                 });
-        System.out.println("strongbox updated");
+        ////System.out.printlnln("strongbox updated");
     }
 
 
@@ -314,7 +306,7 @@ public class OthersDashBoardController extends MainViewController{
     public void updateLeaderCards() {
         assert leaderCardsSlot.getChildren().size() != thisPlayerState.leaderCards.size();
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         for (int i = 0; i < thisPlayerState.leaderCards.size(); i++) {
             String leaderId = (String) thisPlayerState.leaderCards.keySet().toArray()[i];
             ((ImageView) leaderCardsSlot.getChildren().get(i)).setImage(new Image(imageUrl + leaderId + ".png"));

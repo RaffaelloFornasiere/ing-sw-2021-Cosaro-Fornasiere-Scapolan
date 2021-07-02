@@ -89,7 +89,7 @@ public class MainApplication extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        System.out.println("stop");
+        //System.out.printlnln("stop");
         gui.close();
     }
 

@@ -303,9 +303,9 @@ public class GUI extends UI {
             }
         });
 
-        System.out.println("waiting for mainViewController get ready");
+        ////System.out.printlnln("waiting for mainViewController get ready");
         mainViewController.waitForReady();
-        System.out.println("ready");
+        //System.out.printlnln("ready");
 
         if (!singlePlayer.getItem())
             for (String playerID : lobbyController.getPlayers()) {
@@ -345,19 +345,15 @@ public class GUI extends UI {
     @Override
     public void updateFaithTrack(String playerID, int position,
                                  HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
-        System.out.println("updateFaithTrack");
         PlayerState playerState = playerStates.get(playerID);
         playerState.setFaithTrackPosition(position);
         playerState.setPopeFavorCards(popeFavorCards.get(playerID));
 
         Platform.runLater(() -> {
-            System.out.println("runlater favor cards update");
             if (playerID.equals(this.playerID.getItem())) {
                 mainViewController.setFaithTrackPosition(position);
-                System.out.println("turn");
                 mainViewController.faithTrackController.getItem().updateFavorCards(false);
             } else {
-                System.out.println("discard");
                 mainViewController.faithTrackController.getItem().updateFavorCards(true);
             }
         });
@@ -437,11 +433,14 @@ public class GUI extends UI {
                 PlayerState.availableActions.add(Action.END_TURN);
             }
             case END_OF_TURN -> PlayerState.availableActions.add(Action.END_TURN);
+            case MATCH_ENDED -> {
+                return new ArrayList<>();
+            }
         }
         Platform.runLater(() -> mainViewController.setTurnActive(true));
         PlayerState.canPerformActions = true;
 
-        System.out.println("locking events");
+        //System.out.printlnln("locking events");
         //null is the lockingState
         thisPlayerState().event.setItem(null);
         events.add(thisPlayerState().event.getWaitIfLocked());
@@ -473,8 +472,9 @@ public class GUI extends UI {
 
     @Override
     public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
-
-        FinalScreenController controller = new FinalScreenController(this, false, singlePlayer.getItem() ? finalPlayerStates : null);
+        //System.out.printlnln("gui game end");
+        //System.out.printlnln(finalPlayerStates);
+        FinalScreenController controller = new FinalScreenController(this, singlePlayer.getItem(), !singlePlayer.getItem() ? finalPlayerStates : null);
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("FinalScreen.fxml"));
             loader.setController(controller);
@@ -488,13 +488,13 @@ public class GUI extends UI {
                 e.printStackTrace();
             }
         });
-        PlayerState.canPerformActions = true;
+        this.close();
     }
 
 
     @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources) {
-        //System.out.println(resources);
+        ////System.out.printlnln(resources);
         //resources.entrySet().stream().map(n -> new Pair(n.getKey(), n.getValue())).forEach(System.out::print);
         WarehouseController controller = new WarehouseController(this, resources);
         Platform.runLater(() -> {
@@ -589,7 +589,7 @@ public class GUI extends UI {
 
     @Override
     public void updateLorenzoPosition(int position) {
-        System.out.println(position);
+        ////System.out.printlnln(position);
         Platform.runLater(() -> mainViewController.setLorenzoFaithTrackPosition(position));
     }
 

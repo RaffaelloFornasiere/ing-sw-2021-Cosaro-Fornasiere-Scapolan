@@ -114,12 +114,12 @@ public class ProductionController extends Controller implements Initializable {
                 continue;
             }
             devCardsImages.get(i).setOpacity(1);
-            devCardsImages.get(i).setImage(new Image("file:/" + imagePath + "front/" +
+            devCardsImages.get(i).setImage(new Image("file:" + imagePath + "front/" +
                     devCards.get(i).getCardID() + ".png"));
         }
-        System.out.println(devCardsImages.size());
+        ////System.out.printlnln(devCardsImages.size());
         var leaderCardImages = selectableImages.stream().filter(n -> n.getStyleClass().contains("leaderCard")).collect(Collectors.toList());
-        System.out.println(leaderCardImages.size());
+        ////System.out.printlnln(leaderCardImages.size());
 
 
         for (int i = 0; i < leaderCardImages.size(); i++) {
@@ -136,7 +136,7 @@ public class ProductionController extends Controller implements Initializable {
             if (leaderCard.getLeaderPowers().stream().noneMatch(n -> n instanceof ProductionLeaderPower)) {
                 selectableImages.remove(leaderCardImages.get(i));
             }
-            leaderCardImages.get(i).setImage(new Image("file:/" + imagePath + "leaders/" + leaderCards.get(i).getCardID() + ".png"));
+            leaderCardImages.get(i).setImage(new Image("file:" + imagePath + "leaders/" + leaderCards.get(i).getCardID() + ".png"));
 
         }
 
@@ -148,7 +148,7 @@ public class ProductionController extends Controller implements Initializable {
         String name = image.getImage().getUrl();
 
         name = name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
-        System.out.println(name);
+        ////System.out.printlnln(name);
         ArrayList<String> aux = null;
         if (name.contains("DevCard"))
             aux = selectedDevCards;
