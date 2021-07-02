@@ -17,11 +17,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0" prefWidth="1418.0" stylesheets="@stylesheets/main.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0"
+            prefWidth="1418.0" stylesheets="@stylesheets/main.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <left>
         <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="178.0" stylesheets="@stylesheets/main.css" BorderPane.alignment="CENTER">
             <children>
-                <AnchorPane fx:id="warehouseSlot" onMouseClicked="#openDepots">
+                <AnchorPane fx:id="warehouseSlot" >
                     <children>
                         <ImageView fitHeight="206.0" fitWidth="202.0" layoutX="9.0" pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
                             <image>
@@ -29,123 +30,123 @@
                             </image>
                         </ImageView>
                         <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="99.0" layoutY="49.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                     <styleClass>
-                        <String fx:value="Coin" />
-                        <String fx:value="Resource" />
-                     </styleClass>
-                     <image>
-                        <Image url="@images/coin2.png" />
-                     </image></ImageView>
+                            <styleClass>
+                                <String fx:value="Coin" />
+                                <String fx:value="Resource" />
+                            </styleClass>
+                            <image>
+                                <Image url="@images/coin2.png" />
+                            </image></ImageView>
                         <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="81.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                     <styleClass>
-                        <String fx:value="Shield" />
-                        <String fx:value="Resource" />
-                     </styleClass>
-                     <image>
-                        <Image url="@images/coin2.png" />
-                     </image></ImageView>
+                            <styleClass>
+                                <String fx:value="Shield" />
+                                <String fx:value="Resource" />
+                            </styleClass>
+                            <image>
+                                <Image url="@images/coin2.png" />
+                            </image></ImageView>
                         <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="125.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                     <styleClass>
-                        <String fx:value="Shield" />
-                        <String fx:value="Resource" />
-                     </styleClass>
-                     <image>
-                        <Image url="@images/coin2.png" />
-                     </image></ImageView>
+                            <styleClass>
+                                <String fx:value="Shield" />
+                                <String fx:value="Resource" />
+                            </styleClass>
+                            <image>
+                                <Image url="@images/coin2.png" />
+                            </image></ImageView>
                         <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="57.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                     <styleClass>
-                        <String fx:value="Rock" />
-                        <String fx:value="Resource" />
-                     </styleClass>
-                     <image>
-                        <Image url="@images/coin2.png" />
-                     </image></ImageView>
+                            <styleClass>
+                                <String fx:value="Rock" />
+                                <String fx:value="Resource" />
+                            </styleClass>
+                            <image>
+                                <Image url="@images/coin2.png" />
+                            </image></ImageView>
                         <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="99.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                     <styleClass>
-                        <String fx:value="Rock" />
-                        <String fx:value="Resource" />
-                     </styleClass>
-                     <image>
-                        <Image url="@images/coin2.png" />
-                     </image></ImageView>
+                            <styleClass>
+                                <String fx:value="Rock" />
+                                <String fx:value="Resource" />
+                            </styleClass>
+                            <image>
+                                <Image url="@images/coin2.png" />
+                            </image></ImageView>
                         <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="143.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                     <styleClass>
-                        <String fx:value="Rock" />
-                        <String fx:value="Resource" />
-                     </styleClass>
-                     <image>
-                        <Image url="@images/coin2.png" />
-                     </image></ImageView>
+                            <styleClass>
+                                <String fx:value="Rock" />
+                                <String fx:value="Resource" />
+                            </styleClass>
+                            <image>
+                                <Image url="@images/coin2.png" />
+                            </image></ImageView>
                     </children>
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
                 </AnchorPane>
-            <AnchorPane fx:id="leaderDepotsSlot" prefHeight="122.0" prefWidth="141.0">
-               <children>
-                  <AnchorPane id="leaderDepotServant" layoutX="36.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
-                           <image>
-                              <Image url="@images/servant2.png" />
-                           </image>
-                        </ImageView>
-                        <Label id="servantCountLabel" layoutX="37.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane id="leaderDepotRock" layoutX="95.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
-                           <image>
-                              <Image url="@images/rock2.png" />
-                           </image>
-                        </ImageView>
-                        <Label id="rockCountLabel" layoutX="38.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane id="leaderDepotShield" layoutX="95.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
-                           <image>
-                              <Image url="@images/shield2.png" />
-                           </image>
-                        </ImageView>
-                        <Label id="shieldCountLabel" layoutX="38.0" layoutY="2.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane id="leaderDepotCoin" layoutX="36.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
-                           <image>
-                              <Image url="@images/coin2.png" />
-                           </image>
-                        </ImageView>
-                        <Label id="coinCountLabel" layoutX="38.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="strongBoxSlot" layoutX="25.0">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
-               <children>
+                <AnchorPane fx:id="leaderDepotsSlot" prefHeight="122.0" prefWidth="141.0">
+                    <children>
+                        <AnchorPane id="leaderDepotServant" layoutX="36.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                            <children>
+                                <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                                    <image>
+                                        <Image url="@images/servant2.png" />
+                                    </image>
+                                </ImageView>
+                                <Label id="servantCountLabel" layoutX="37.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="18.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane id="leaderDepotRock" layoutX="95.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                            <children>
+                                <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                                    <image>
+                                        <Image url="@images/rock2.png" />
+                                    </image>
+                                </ImageView>
+                                <Label id="rockCountLabel" layoutX="38.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="18.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane id="leaderDepotShield" layoutX="95.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                            <children>
+                                <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                                    <image>
+                                        <Image url="@images/shield2.png" />
+                                    </image>
+                                </ImageView>
+                                <Label id="shieldCountLabel" layoutX="38.0" layoutY="2.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="18.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane id="leaderDepotCoin" layoutX="36.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                            <children>
+                                <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                                    <image>
+                                        <Image url="@images/coin2.png" />
+                                    </image>
+                                </ImageView>
+                                <Label id="coinCountLabel" layoutX="38.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="18.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="strongBoxSlot" layoutX="25.0">
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </VBox.margin>
+                    <children>
                         <ImageView fitHeight="154.0" fitWidth="160.0" layoutX="4.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" styleClass="StrongBox" />
                         <HBox layoutY="35.0" prefHeight="54.0" prefWidth="151.0">
                             <children>
@@ -219,8 +220,8 @@
                                 </VBox>
                             </children>
                         </HBox>
-               </children>
-            </AnchorPane>
+                    </children>
+                </AnchorPane>
             </children>
             <BorderPane.margin>
                 <Insets left="15.0" />
@@ -230,8 +231,8 @@
     <right>
         <VBox alignment="TOP_CENTER" prefHeight="851.0" prefWidth="198.0" stylesheets="@stylesheets/main.css" BorderPane.alignment="CENTER">
             <children>
-            <AnchorPane>
-               <children>
+                <AnchorPane>
+                    <children>
                         <VBox fx:id="playerSlot" alignment="CENTER" layoutX="40.0" layoutY="3.0" prefHeight="135.0" prefWidth="118.0" styleClass="PlayerSlot">
                             <children>
                                 <ImageView fx:id="playerImage" fitHeight="88.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
@@ -239,155 +240,155 @@
                                         <Image url="@images/Players/illustrationAccueil_plan1.png" />
                                     </image>
                                 </ImageView>
-                              <Label alignment="CENTER" prefHeight="24.0" prefWidth="80.0" styleClass="PlayerLabel" text="Player 1" textFill="WHITE">
-                                  <font>
-                                      <Font name="Microsoft JhengHei" size="17.0" />
-                                  </font>
-                              </Label>
+                                <Label alignment="CENTER" prefHeight="24.0" prefWidth="80.0" styleClass="PlayerLabel" text="Player 1" textFill="WHITE">
+                                    <font>
+                                        <Font name="Microsoft JhengHei" size="17.0" />
+                                    </font>
+                                </Label>
                             </children>
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
                         </VBox>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="marketSlot">
-               <children>
-                        <ImageView fitHeight="121.0" fitWidth="141.0" layoutX="30.0" onMouseClicked="#openMarket" pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="marketSlot">
+                    <children>
+                        <ImageView fitHeight="121.0" fitWidth="141.0" layoutX="30.0" pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
                             <image>
                                 <Image url="@images/market.png" />
                             </image>
                         </ImageView>
-                  <GridPane fx:id="gridPane" layoutX="51.0" layoutY="20.0" mouseTransparent="true" prefHeight="84.0" prefWidth="100.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="60.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="60.0" />
-                        <ColumnConstraints halignment="CENTER" minWidth="0.0" prefWidth="60.0" />
-                        <ColumnConstraints halignment="CENTER" minWidth="0.0" prefWidth="60.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <ImageView id="i00" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble">
-                           <image>
-                              <Image url="@images/purple-marble.png" />
-                           </image>
+                        <GridPane fx:id="gridPane" layoutX="51.0" layoutY="20.0" mouseTransparent="true" prefHeight="84.0" prefWidth="100.0">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="60.0" />
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="60.0" />
+                                <ColumnConstraints halignment="CENTER" minWidth="0.0" prefWidth="60.0" />
+                                <ColumnConstraints halignment="CENTER" minWidth="0.0" prefWidth="60.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <ImageView id="i00" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble">
+                                    <image>
+                                        <Image url="@images/purple-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i01" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="1">
+                                    <image>
+                                        <Image url="@images/white-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i02" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="2">
+                                    <image>
+                                        <Image url="@images/white-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i10" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1">
+                                    <image>
+                                        <Image url="@images/blue-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i11" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <image>
+                                        <Image url="@images/red-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i12" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <image>
+                                        <Image url="@images/gray-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i20" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2">
+                                    <image>
+                                        <Image url="@images/purple-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i21" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                    <image>
+                                        <Image url="@images/white-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i22" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                    <image>
+                                        <Image url="@images/yellow-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i30" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3">
+                                    <image>
+                                        <Image url="@images/gray-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i31" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                    <image>
+                                        <Image url="@images/white-marble.png" />
+                                    </image>
+                                </ImageView>
+                                <ImageView id="i32" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                    <image>
+                                        <Image url="@images/yellow-marble.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </GridPane>
+                        <ImageView id="marbleLeft" fitHeight="20.0" fitWidth="20.0" layoutX="143.0" layoutY="10.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble">
+                            <image>
+                                <Image url="@images/blue-marble.png" />
+                            </image>
                         </ImageView>
-                        <ImageView id="i01" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="1">
-                           <image>
-                              <Image url="@images/white-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i02" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="2">
-                           <image>
-                              <Image url="@images/white-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i10" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1">
-                           <image>
-                              <Image url="@images/blue-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i11" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <image>
-                              <Image url="@images/red-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i12" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <image>
-                              <Image url="@images/gray-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i20" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2">
-                           <image>
-                              <Image url="@images/purple-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i21" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                           <image>
-                              <Image url="@images/white-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i22" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                           <image>
-                              <Image url="@images/yellow-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i30" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3">
-                           <image>
-                              <Image url="@images/gray-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i31" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                           <image>
-                              <Image url="@images/white-marble.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView id="i32" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                           <image>
-                              <Image url="@images/yellow-marble.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </GridPane>
-                  <ImageView id="marbleLeft" fitHeight="20.0" fitWidth="20.0" layoutX="143.0" layoutY="10.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble">
-                     <image>
-                        <Image url="@images/blue-marble.png" />
-                     </image>
-                  </ImageView>
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </AnchorPane>
+                    </children>
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </AnchorPane>
                 <Group VBox.vgrow="ALWAYS">
                     <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </VBox.margin>
                     <children>
-                        <ImageView fitHeight="173.0" fitWidth="115.0" layoutX="9.000000953674316" layoutY="9.0" onMouseClicked="#openCardGrid" pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
+                        <ImageView fitHeight="173.0" fitWidth="115.0" layoutX="9.000000953674316" layoutY="9.0"  pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
                             <image>
                                 <Image url="@images/DecksGrid.png" />
                             </image>
                         </ImageView>
                     </children>
                 </Group>
-            <AnchorPane fx:id="leaderCardsSlot" onMouseClicked="#leaderAction" prefHeight="153.0" prefWidth="198.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="35.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
-                     <image>
-                        <Image url="@images/leaders/LeaderCard8.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="70.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
-                     <image>
-                        <Image url="@images/leaders/LeaderCard8.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="0.0" prefWidth="198.0">
-               <children>
-                  <Button id="watchOthersButton" layoutX="38.0" mnemonicParsing="false" onAction="#watchOthers" text="Watch others " />
-               </children>
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
-            </AnchorPane>
-            <AnchorPane>
-               <children>
-                  <Button id="endOfTurnButton" layoutX="46.0" mnemonicParsing="false" onAction="#endOfTurn" text="End of turn" />
-               </children>
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" />
-               </VBox.margin>
-            </AnchorPane>
+                <AnchorPane fx:id="leaderCardsSlot"  prefHeight="153.0" prefWidth="198.0">
+                    <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="35.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/leaders/LeaderCard8.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="70.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/leaders/LeaderCard8.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="0.0" prefWidth="198.0">
+                    <children>
+                        <Button id="watchOthersButton" layoutX="38.0" mnemonicParsing="false"  text="Watch others " />
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </VBox.margin>
+                </AnchorPane>
+                <AnchorPane>
+                    <children>
+                        <Button id="endOfTurnButton" layoutX="46.0" mnemonicParsing="false"  text="End of turn" />
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                    </VBox.margin>
+                </AnchorPane>
             </children>
             <opaqueInsets>
                 <Insets />
@@ -399,17 +400,17 @@
             <children>
                 <Group stylesheets="@stylesheets/main.css" HBox.hgrow="NEVER">
                     <children>
-                        <ImageView fx:id="s1card1" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="50.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                        <ImageView fx:id="s1card1" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="50.0"  pickOnBounds="true" preserveRatio="true" styleClass="Card">
                             <image>
                                 <Image url="@images/Front/DevCard4.png" />
                             </image>
                         </ImageView>
-                        <ImageView fx:id="s1card2" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="-25.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                        <ImageView fx:id="s1card2" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="-25.0"  pickOnBounds="true" preserveRatio="true" styleClass="Card">
                             <image>
                                 <Image url="@images/Front/DevCard18.png" />
                             </image>
                         </ImageView>
-                        <ImageView fx:id="s1card3" fitHeight="350.0" fitWidth="244.0" layoutX="28.0" layoutY="-100.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="s1card3" fitHeight="350.0" fitWidth="244.0" layoutX="28.0" layoutY="-100.0"  pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@images/Front/DevCard41.png" />
                             </image>
@@ -425,17 +426,17 @@
                 </Group>
                 <Group>
                     <children>
-                        <ImageView fx:id="s2card1" fitHeight="350.0" fitWidth="300.0" layoutY="50.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                        <ImageView fx:id="s2card1" fitHeight="350.0" fitWidth="300.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
                             <image>
                                 <Image url="@images/Front/DevCard5.png" />
                             </image>
                         </ImageView>
-                        <ImageView fx:id="s2card2" fitHeight="350.0" fitWidth="300.0" layoutY="-25.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                        <ImageView fx:id="s2card2" fitHeight="350.0" fitWidth="300.0" layoutY="-25.0"  pickOnBounds="true" preserveRatio="true" styleClass="Card">
                             <image>
                                 <Image url="@images/Front/DevCard23.png" />
                             </image>
                         </ImageView>
-                        <ImageView fx:id="s2card3" fitHeight="350.0" fitWidth="300.0" layoutY="-100.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="s2card3" fitHeight="350.0" fitWidth="300.0" layoutY="-100.0"  pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@images/Front/DevCard48.png" />
                             </image>
@@ -451,17 +452,17 @@
                 </Group>
                 <Group stylesheets="@stylesheets/main.css">
                     <children>
-                        <ImageView fx:id="s3card1" fitHeight="350.0" fitWidth="300.0" layoutY="50.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                        <ImageView fx:id="s3card1" fitHeight="350.0" fitWidth="300.0" layoutY="50.0"  pickOnBounds="true" preserveRatio="true" styleClass="Card">
                             <image>
                                 <Image url="@images/Front/DevCard7.png" />
                             </image>
                         </ImageView>
-                        <ImageView fx:id="s3card2" fitHeight="350.0" fitWidth="300.0" layoutY="-25.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                        <ImageView fx:id="s3card2" fitHeight="350.0" fitWidth="300.0" layoutY="-25.0"  pickOnBounds="true" preserveRatio="true" styleClass="Card">
                             <image>
                                 <Image url="@images/Front/DevCard21.png" />
                             </image>
                         </ImageView>
-                        <ImageView fitHeight="350.0" fitWidth="244.0" layoutY="-100.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 25px;" styleClass="hoverBorder">
+                        <ImageView fitHeight="350.0" fitWidth="244.0" layoutY="-100.0"  pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 25px;" styleClass="hoverBorder">
                             <image>
                                 <Image url="@images/Front/DevCard46.png" />
                             </image>

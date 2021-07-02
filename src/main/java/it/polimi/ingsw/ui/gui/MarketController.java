@@ -38,6 +38,7 @@ public class MarketController extends Controller implements Initializable {
     private BuyResourcesEvent data;
 
 
+
     ArrayList<ArrayList<String>> marketStatus;
     String marbleLeft;
 
