@@ -145,7 +145,7 @@ public class CLI extends UI {
             String[] rows = option.getKey().split("\n");
             int maxLength = Arrays.stream(rows).map(String::length).max(Integer::compare).orElse(0);
 
-            builderTop.append("╔═").append(resetColor);
+            builderTop.append(resetColor).append("╔═").append(resetColor);
             IntStream.range(0, maxLength).forEach(letter -> builderTop.append("═"));
             builderTop.append(resetColor).append("═╗  ");
 
