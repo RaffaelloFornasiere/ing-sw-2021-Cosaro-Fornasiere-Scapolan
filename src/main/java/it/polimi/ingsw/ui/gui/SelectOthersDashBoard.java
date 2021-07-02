@@ -46,7 +46,9 @@ public class SelectOthersDashBoard extends Controller implements Initializable {
         for (int i = 0; i < gui.playerStates.size(); i++) {
             list.get(i).setText(new ArrayList<>(gui.playerStates.keySet()).get(i));
         }
-
+        for (int i = gui.playerStates.size(); i < 4; i++) {
+            list.get(i).setVisible(false);
+        }
     }
 
 
