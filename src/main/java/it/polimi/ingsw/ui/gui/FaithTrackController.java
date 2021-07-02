@@ -109,7 +109,7 @@ public class FaithTrackController extends Controller {
                 .collect(Collectors.toList())
                 .get(0).getFitHeight() + 5;
         cellSize = faithTrack.getWidth() / 19;
-        // System.out.println("zx: " + zeroPos.x + " zy: " + zeroPos.y);
+        // //System.out.printlnln("zx: " + zeroPos.x + " zy: " + zeroPos.y);
         user.cross.setTranslateX(-zeroPos.x + zeroPos.y / 2);
         user.cross.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);");
         user.cross.setTranslateY(zeroPos.y * 1.2);
@@ -247,17 +247,17 @@ public class FaithTrackController extends Controller {
                 gui.playerStates.entrySet().stream().map(e -> new Pair<>(e.getKey(), e.getValue().getPopeFavorCards())).collect(Collectors.toList())) {
 
             if (favorCards.getValue().size() > 0) {
-                System.out.println("Player: " + gui.playerID.getItem());
-                System.out.print("\t");
-                System.out.println(discard ? "Discard" : "Open");
+                //System.out.printlnln("Player: " + gui.playerID.getItem());
+                //System.out.println("\t");
+                //System.out.printlnln(discard ? "Discard" : "Open");
             }
             favorCards.getValue().forEach((key, value) -> {
                 int i = (key == 8) ? 1 : (key == 16) ? 2 : 3;
                 if ((popeFavorCards.get(i - 1).getImage() != null && popeFavorCards.get(i - 1).getImage().getUrl().contains("back")
                         || (popeFavorCards.get(i - 1).getImage() == null && !discard && favorCards.getKey().equals(gui.playerID.getItem())))) {
-                    System.out.print("\tchanging state into: ");
+                    //System.out.println("\tchanging state into: ");
                     Image im = discard ? null : new Image(finalImageUrl + "pope_favor" + i + "_front.png");
-                    System.out.println(im == null ? "null" : im.getUrl());
+                    //System.out.printlnln(im == null ? "null" : im.getUrl());
                     popeFavorCards.get(i - 1).setImage(im);
                 }
             });

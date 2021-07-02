@@ -59,10 +59,9 @@ public class NetworkHandlerReceiver{
                 }
             } catch (JsonSyntaxException ignore) {
             } catch (NoSuchElementException | IllegalStateException e){
-                LockWrap<Boolean> a = new LockWrap<>(null, null);
 
                 System.out.println("catch");
-                a.getWaitIfLocked();
+
                 eventRegistry.sendEvent(new ServerDisconnectionEvent(userID));
                 done = true;
             }

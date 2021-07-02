@@ -93,7 +93,7 @@ public class DevCardGridController extends Controller implements Initializable {
             selected = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
 
         }
-        //System.out.println(selected);
+        ////System.out.printlnln(selected);
         //
 
     }
@@ -121,7 +121,7 @@ public class DevCardGridController extends Controller implements Initializable {
             return;
 
         DevCard devCard;
-        //System.out.println(selected);
+        ////System.out.printlnln(selected);
         //
         try {
             Stage stage = new Stage();

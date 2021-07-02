@@ -90,7 +90,7 @@ public class SelectableImage {
 
 
             //controls the border
-            // System.out.println(image.getImage().getUrl());
+            // //System.out.printlnln(image.getImage().getUrl());
             if (image.getStyleClass().contains("selectable")) {
                 image.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
                     if (!border.getId().contains("selected")) {

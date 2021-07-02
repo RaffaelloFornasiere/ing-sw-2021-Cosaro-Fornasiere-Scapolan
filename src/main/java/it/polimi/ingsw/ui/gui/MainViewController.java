@@ -180,7 +180,7 @@ public class MainViewController extends Controller implements Initializable {
             }
         }
         String marbleLeft = "file:" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
-        //System.out.println(marbleLeft);
+        ////System.out.printlnln(marbleLeft);
         GridPane gridPane = (GridPane) marketSlot.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().orElse(null);
         var marbles = gridPane.getChildren()
                 .stream().filter(n -> n instanceof ImageView)
@@ -197,7 +197,7 @@ public class MainViewController extends Controller implements Initializable {
                     .get(marble.getId().charAt(1) - '0')));
         }
         marbleLeftImage.setImage(new Image(marbleLeft));
-        //System.out.println("market updated");
+        ////System.out.printlnln("market updated");
     }
 
     public void updateOwnedCards() {
@@ -241,7 +241,7 @@ public class MainViewController extends Controller implements Initializable {
             }
         }
         SelectableImage.setSelectable(ownedCardsSlot);
-        //System.out.println("owned cards update");
+        ////System.out.printlnln("owned cards update");
     }
 
 
@@ -340,7 +340,7 @@ public class MainViewController extends Controller implements Initializable {
                 image.setOpacity(0);
             }
         });
-        //System.out.println("depots updated");
+        ////System.out.printlnln("depots updated");
     }
 
     public void updateStrongBox() {
@@ -351,7 +351,7 @@ public class MainViewController extends Controller implements Initializable {
                     Resource r = Resource.valueOf(l.getId().replace("Counter", "").toUpperCase());
                     l.setText(String.valueOf(gui.thisPlayerState().strongBox.getOrDefault(r, 0)));
                 });
-        //System.out.println("strongbox updated");
+        ////System.out.printlnln("strongbox updated");
     }
 
 
@@ -384,7 +384,7 @@ public class MainViewController extends Controller implements Initializable {
 
     public void setTurnActive(boolean active) {
         turnActive = active;
-        //System.out.println("turn active: " + active);
+        ////System.out.printlnln("turn active: " + active);
         if (active)
             playerSlot.setStyle("-fx-border-color: #2a801b; -fx-background-color: rgba(131, 255, 131, 0.25)");
         else

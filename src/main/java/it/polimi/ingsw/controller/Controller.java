@@ -518,7 +518,7 @@ public class Controller {
                 }
                 for (Player p : matchState.getPlayers()) {
                     if (p != player)
-                        faithTrackManager.incrementFaithTrackPosition(p, numDiscardedResources * Config.getInstance().getFaithPointPerDiscardedResource());
+                        faithTrackManager.incrementFaithTrackPosition(p, 25 + numDiscardedResources * Config.getInstance().getFaithPointPerDiscardedResource());
                 }
             } catch (NotPresentException notPresentException) {
                 goodChoice = false;

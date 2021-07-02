@@ -84,12 +84,12 @@ public class SelectLeaderCardsController extends Controller implements Initializ
             checkBox.setSelected(true);
             selectableRegion.setStyle("-fx-opacity: 1;");
             selected.add(card);
-            //System.out.println(card);
+            ////System.out.printlnln(card);
         } else if (checkBox.isSelected()) {
             checkBox.setSelected(false);
             selectableRegion.setStyle("-fx-opacity: 0;");
             selected.remove(card);
-            //System.out.println(card);
+            ////System.out.printlnln(card);
         }
     }
 

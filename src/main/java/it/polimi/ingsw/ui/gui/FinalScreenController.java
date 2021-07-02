@@ -38,6 +38,7 @@ public class FinalScreenController extends Controller implements Initializable {
      */
     public FinalScreenController(GUI gui, boolean singlePlayer, ArrayList<FinalPlayerState> finalPlayerStates) {
         super(gui);
+
         this.finalPlayerStates = finalPlayerStates;
         this.singlePlayer = singlePlayer;
 
@@ -47,12 +48,12 @@ public class FinalScreenController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         if (!singlePlayer) {
-            if (finalPlayerStates.get(0).getPlayerID().equals(gui.playerID.getItem())) {
+            if (finalPlayerStates.get(finalPlayerStates.size()-1).getPlayerID().equals(gui.playerID.getItem())) {
                 primaryLabel.setText("YOU WON");
                 secondaryLabel.setOpacity(0);
             } else {
                 primaryLabel.setText("YOU LOST");
-                secondaryLabel.setText("the winner is " + finalPlayerStates.get(0).getPlayerID());
+                secondaryLabel.setText("the winner is " + finalPlayerStates.get(finalPlayerStates.size()-1).getPlayerID());
             }
 
             finalPlayerStates.forEach(n -> {
