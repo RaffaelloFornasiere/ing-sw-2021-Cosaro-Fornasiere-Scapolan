@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+
+/**
+ * copy of the model to be used in the view
+ */
 public class PlayerState {
 
     ArrayList<DepotState> warehouse;
@@ -78,26 +82,52 @@ public class PlayerState {
     }
 
 
+    /**
+     *
+     * @return the current faith track position
+     */
     public int getFaithTrackPosition() {
         return faithTrackPosition;
     }
 
+    /**
+     * sets the new faith track position
+     * @param position
+     */
     public void setFaithTrackPosition(int position) {
         this.faithTrackPosition = position;
     }
 
+    /**
+     * getter
+     * @return the opened pope favor cards
+     */
     public HashMap<Integer, PopeFavorCard> getPopeFavorCards() {
         return new HashMap<>(popeFavorCards);
     }
 
+    /**
+     * opens a pope favor card
+     * @param popeFavorCards
+     */
     public void setPopeFavorCards(HashMap<Integer, PopeFavorCard> popeFavorCards) {
         this.popeFavorCards = new HashMap<>(popeFavorCards);
     }
 
+    /**
+     *
+     * @return the status of the leader depots all together
+     */
     public HashMap<Resource, Integer> getLeaderDepots() {
         return leaderDepots;
     }
 
+    /**
+     * update a single deposit of a specific card
+     * @param leaderCardID
+     * @param leaderPowerIndex
+     * @param storedResources
+     */
     public void updateLeaderCardDepositState(String leaderCardID, int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
         leaderDepotsState.putIfAbsent(leaderCardID, new ArrayList<>());
         ArrayList<HashMap<Resource, Integer>> leaderPowersDeposit = leaderDepotsState.get(leaderCardID);

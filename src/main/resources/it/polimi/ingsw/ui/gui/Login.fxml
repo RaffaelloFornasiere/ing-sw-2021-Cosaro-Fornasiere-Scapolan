@@ -20,7 +20,7 @@
                 <Font name="System Bold" size="12.0" />
             </font>
         </Label>
-        <TextField fx:id="playerIdTextField" layoutX="109.0" layoutY="163.0" onInputMethodTextChanged="#onTextChanged" promptText="PlayerID">
+        <TextField fx:id="playerIdTextField" layoutX="109.0" layoutY="163.0" promptText="PlayerID">
             <font>
                 <Font name="System Bold" size="12.0" />
             </font>

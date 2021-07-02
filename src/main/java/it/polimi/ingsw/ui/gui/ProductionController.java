@@ -143,6 +143,10 @@ public class ProductionController extends Controller implements Initializable {
         SelectableImage.setSelectable(root);
     }
 
+    /**
+     *
+     * @param mouseEvent
+     */
     public void onProductionClicked(MouseEvent mouseEvent) {
         ImageView image = (ImageView) mouseEvent.getSource();
         String name = image.getImage().getUrl();
@@ -164,11 +168,10 @@ public class ProductionController extends Controller implements Initializable {
             personalPower = true;
     }
 
-
-    public void leaderClick(MouseEvent event) {
-
-    }
-
+    /**
+     *
+     * @return
+     */
     public ArrayList<Resource> getResourcesRequired() {
         ArrayList<Resource> resourcesRequired = new ArrayList<>();
         for (var card : selectedDevCards) {
@@ -195,19 +198,19 @@ public class ProductionController extends Controller implements Initializable {
         return resourcesRequired;
     }
 
-
+    /**
+     *
+     */
     @FXML
     public void onCancel() {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
     }
 
-//    public void checkResources() {
-//        int opacity = (((personalPower ? 1 : 0) + selectedLeaderCards.size()) == resourcesOfChoiceList.getItems().size()) ? 0 : 1;
-//        warningLabelOfChoice.setOpacity(opacity);
-//    }
 
-
+    /**
+     *
+     */
     @FXML
     public void onNext() {
         if (getResourcesRequired().size() == 0) {

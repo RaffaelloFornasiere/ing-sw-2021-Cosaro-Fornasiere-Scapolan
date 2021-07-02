@@ -82,11 +82,6 @@ public class OthersDashBoardController extends  Controller implements Initializa
 
     LockWrap<FaithTrackController> faithTrackController = new LockWrap<>(null, null);
 
-
-    public boolean waitForReady() {
-        return faithTrackController.getWaitIfLocked() != null;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -107,26 +102,9 @@ public class OthersDashBoardController extends  Controller implements Initializa
         updateAll();
     }
 
-
-
-
-    public void decrementPos() {
-        faithTrackController.getWaitIfLocked().setPlayerPosition(thisPlayerState.getFaithTrackPosition() - 1);
-    }
-
-    public void incrementPos() {
-        faithTrackController.getWaitIfLocked().setPlayerPosition(thisPlayerState.getFaithTrackPosition() + 1);
-    }
-
-    public void setFaithTrackPosition(int pos) {
-        faithTrackController.getWaitIfLocked().setPlayerPosition(pos);
-    }
-
-    public void setLorenzoFaithTrackPosition(int pos) {
-        faithTrackController.getWaitIfLocked().setLorenzoPosition(pos);
-    }
-
-
+    /**
+     * updates the market status shown in the dashboard
+     */
     public void updateMarket() {
         ArrayList<ArrayList<String>> marketStatus = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath() + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
@@ -157,7 +135,9 @@ public class OthersDashBoardController extends  Controller implements Initializa
         marbleLeftImage.setImage(new Image(marbleLeft));
         ////System.out.printlnln("market updated");
     }
-
+    /**
+     * updates the owned cards in the dashboard
+     */
     public void updateOwnedCards() {
         ArrayList<ArrayList<ImageView>> ownedCards = new ArrayList<>();
         ownedCards.add(new ArrayList<>(((Group) ownedCardsSlot.getChildren().get(0)).getChildren().stream().filter(i -> i instanceof ImageView)
@@ -192,6 +172,9 @@ public class OthersDashBoardController extends  Controller implements Initializa
     }
 
 
+    /**
+     * updates the warehouse and the leader depots shown in the dashboard
+     */
     public void updateDepots() {
 
         ArrayList<ArrayList<ImageView>> depots = new ArrayList<>();
@@ -289,7 +272,9 @@ public class OthersDashBoardController extends  Controller implements Initializa
         });
         ////System.out.printlnln("depots updated");
     }
-
+    /**
+     * updates the strongbox shown in the dashboard
+     */
     public void updateStrongBox() {
         SelectableImage.getChildrenOf(strongBoxSlot).stream().filter(n -> n.getId() != null &&
                 n.getId().contains("Counter")).map(l -> (javafx.scene.control.Label) l)
@@ -302,7 +287,9 @@ public class OthersDashBoardController extends  Controller implements Initializa
     }
 
 
-
+    /**
+     * updates the leaders shown in the dashboard
+     */
     public void updateLeaderCards() {
         assert leaderCardsSlot.getChildren().size() != thisPlayerState.leaderCards.size();
         String imageUrl = new java.io.File(".").getAbsolutePath();
@@ -313,6 +300,10 @@ public class OthersDashBoardController extends  Controller implements Initializa
         }
     }
 
+
+    /**
+     * update all the view with new data
+     */
     public void updateAll() {
         updateStrongBox();
         updateDepots();

@@ -19,12 +19,33 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+
+/**
+ * ui window controller to show the login view
+ */
 public class LoginController extends Controller implements Initializable {
 
     LinkedList<String> playerImages;
     ListIterator<String> currentImage;
+    @FXML
+    ImageView playerImage;
+    @FXML
+    CheckBox createMatchCheckBox;
+    @FXML
+    Group joinMatchGroup;
+    @FXML
+    TextField playerIdTextField;
+    @FXML
+    Label noPlayerIDLabel;
+    @FXML
+    TextField leaderIdTextField;
+    @FXML
+    AnchorPane root;
 
-
+    /**
+     * constructor
+     * @param gui
+     */
     public LoginController(GUI gui) {
         super(gui);
         playerImages = new LinkedList<String>();
@@ -42,21 +63,11 @@ public class LoginController extends Controller implements Initializable {
 
     }
 
-    @FXML
-    ImageView playerImage;
-    @FXML
-    CheckBox createMatchCheckBox;
-    @FXML
-    Group joinMatchGroup;
-    @FXML
-    TextField playerIdTextField;
-    @FXML
-    Label noPlayerIDLabel;
-    @FXML
-    TextField leaderIdTextField;
-    @FXML
-    AnchorPane root;
 
+    /**
+     * method invoked when the user wants to join a match
+     */
+    @FXML
     public void onCheckBoxStatusChanged() {
         if (createMatchCheckBox.isSelected())
             joinMatchGroup.setOpacity(1);
@@ -72,6 +83,10 @@ public class LoginController extends Controller implements Initializable {
             playerImage.setImage(new Image(gui.getPlayerImage()));
     }
 
+    /**
+     * shows the next player image
+     */
+    @FXML
     public void nextImage() {
         String newImage;
         if (currentImage.hasNext())
@@ -86,6 +101,10 @@ public class LoginController extends Controller implements Initializable {
         playerImage.setImage(new Image(newImage));
     }
 
+    /**
+     * shows the previous player image
+     */
+    @FXML
     public void previousImage() {
         String newImage;
         if (currentImage.hasPrevious())
@@ -100,11 +119,20 @@ public class LoginController extends Controller implements Initializable {
         playerImage.setImage(new Image(newImage));
     }
 
-
+    /**
+     * sets the previous scene
+     * @throws IOException
+     */
+    @FXML
     public void onCancel() throws IOException {
         MainApplication.setScene(previousScene);
     }
 
+    /**
+     * sends login data to gui
+     * @throws IOException
+     */
+    @FXML
     public void onNext() throws IOException {
         if (playerIdTextField.getText().equals(""))
             noPlayerIDLabel.setOpacity(1);
@@ -115,15 +143,5 @@ public class LoginController extends Controller implements Initializable {
         }
 
     }
-
-    public void onTextChanged()
-    {
-        //System.out.printlnln();
-    }
-
-    public void UsernameAlreadyTaken() {
-
-    }
-
 
 }

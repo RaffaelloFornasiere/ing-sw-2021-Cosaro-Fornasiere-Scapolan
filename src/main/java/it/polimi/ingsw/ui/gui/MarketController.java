@@ -43,6 +43,10 @@ public class MarketController extends Controller implements Initializable {
     String marbleLeft;
 
 
+    /**
+     * constructor
+     * @param gui gui object reference
+     */
     MarketController(GUI gui) {
         super(gui);
         this.marketStatus = new ArrayList<>();
@@ -56,7 +60,7 @@ public class MarketController extends Controller implements Initializable {
             }
         }
         this.marbleLeft = "file:" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
-
+        dir = null;
 
     }
 
@@ -82,6 +86,11 @@ public class MarketController extends Controller implements Initializable {
 
     }
 
+
+    /**
+     * event triggered when the user selected a row or column
+     * @param event event passed from fxml
+     */
     @FXML
     public void onButtonPressed(ActionEvent event) {
         String id = ((Button) event.getSource()).getId();
@@ -100,12 +109,19 @@ public class MarketController extends Controller implements Initializable {
         this.index = index;
     }
 
+    /**
+     * method invoked then users closes window
+     * @throws IOException
+     */
     public void onCancel() throws IOException {
         ((Stage) gridPane.getScene().getWindow()).close();
     }
 
+    /**
+     * method invoked when user confirms his selection
+     */
     public void onNext() {
-
+        if(dir != null)
         gui.addEvent(new BuyResourcesEvent(gui.askUserID(), dir, index));
         ((Stage) gridPane.getScene().getWindow()).close();
     }

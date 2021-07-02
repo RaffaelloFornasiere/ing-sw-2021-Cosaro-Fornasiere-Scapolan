@@ -92,6 +92,9 @@ public class LobbyController extends Controller implements Initializable {
         return new ArrayList<>(players);
     }
 
+    /**
+     * calls a function that will trig an event to start the game
+     */
     @FXML
     public void onStartGame() {
         gui.startGame();

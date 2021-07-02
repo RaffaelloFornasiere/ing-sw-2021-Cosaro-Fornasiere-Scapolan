@@ -210,17 +210,38 @@ public class GUI extends UI {
 
     @Override
     public void printError(String error) {
+        GUI aux = this;
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR, error, ButtonType.OK);
             alert.showAndWait();
+            if (error.contains("IP")) {
+                aux.serverAddress.setItem(null);
+                Controller controller = new ServerSettingsController(aux);
+                try {
+                    stage.setScene(MainApplication.createScene("ServerSettings.fxml", controller));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         });
     }
 
     @Override
     public void printWarning(String warning) {
+        GUI aux = this;
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.WARNING, warning, ButtonType.OK);
             alert.showAndWait();
+            if (warning.contains("IP")) {
+                aux.serverAddress.setItem(null);
+                Controller controller = new ServerSettingsController(aux);
+                try {
+                    stage.setScene(MainApplication.createScene("ServerSettings.fxml", controller));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 
@@ -315,7 +336,6 @@ public class GUI extends UI {
 
     @Override
     public ArrayList<String> choseInitialLeaderCards(ArrayList<String> leaderCardsIDs, int numberOFLeaderCardsToChose) {
-
         ArrayList<String> res;
         SelectLeaderCardsController controller = new SelectLeaderCardsController(this, leaderCardsIDs, numberOFLeaderCardsToChose);
         Platform.runLater(() -> {
@@ -402,7 +422,6 @@ public class GUI extends UI {
     @Override
     public void updateDevCardGrid(String[][] topDevCardIDs) {
         PlayerState.devCardGrid = topDevCardIDs.clone();
-
     }
 
 
@@ -440,7 +459,7 @@ public class GUI extends UI {
         Platform.runLater(() -> mainViewController.setTurnActive(true));
         PlayerState.canPerformActions = true;
 
-        //System.out.printlnln("locking events");
+        System.out.println("locking events");
         //null is the lockingState
         thisPlayerState().event.setItem(null);
         events.add(thisPlayerState().event.getWaitIfLocked());
@@ -472,8 +491,6 @@ public class GUI extends UI {
 
     @Override
     public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
-        //System.out.printlnln("gui game end");
-        //System.out.printlnln(finalPlayerStates);
         FinalScreenController controller = new FinalScreenController(this, singlePlayer.getItem(), !singlePlayer.getItem() ? finalPlayerStates : null);
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("FinalScreen.fxml"));
@@ -494,8 +511,6 @@ public class GUI extends UI {
 
     @Override
     public NewResourcesOrganizationEvent getWarehouseDisplacement(HashMap<Resource, Integer> resources) {
-        ////System.out.printlnln(resources);
-        //resources.entrySet().stream().map(n -> new Pair(n.getKey(), n.getValue())).forEach(System.out::print);
         WarehouseController controller = new WarehouseController(this, resources);
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("Warehouse.fxml"));

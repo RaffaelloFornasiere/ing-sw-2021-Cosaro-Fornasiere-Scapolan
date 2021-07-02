@@ -79,10 +79,18 @@ public class MainViewController extends Controller implements Initializable {
 
     LockWrap<FaithTrackController> faithTrackController = new LockWrap<>(null, null);
 
+    /**
+     * constructor
+     * @param gui gui object reference
+     */
     public MainViewController(GUI gui) {
         super(gui);
     }
 
+    /**
+     * tells when the window is ready
+     * @return always true
+     */
     public boolean waitForReady() {
         return faithTrackController.getWaitIfLocked() != null;
     }
@@ -104,7 +112,10 @@ public class MainViewController extends Controller implements Initializable {
         //playerImage = new ImageView(new Image(gui.playerImage));
     }
 
-
+    /**
+     * opens the window buy marbles
+     * @throws IOException if there is no fxml file
+     */
     @FXML
     public void openMarket() throws IOException {
         Stage marketStage = new Stage();
@@ -116,6 +127,10 @@ public class MainViewController extends Controller implements Initializable {
         marketStage.showAndWait();
     }
 
+    /**
+     * opens the window to buy dev cards
+     * @throws IOException if there is no fxml file
+     */
     @FXML
     public void openCardGrid(MouseEvent event) throws IOException {
         Stage gridStage = new Stage();
@@ -127,6 +142,11 @@ public class MainViewController extends Controller implements Initializable {
         gridStage.showAndWait();
     }
 
+    /**
+     * opens the window to produce resources
+     * @throws IOException if there is no fxml file
+     */
+    @FXML
     public void openProduction() throws IOException {
         if (!PlayerState.canPerformActions || !PlayerState.availableActions.contains(Action.PRODUCE))
             return;
@@ -141,6 +161,10 @@ public class MainViewController extends Controller implements Initializable {
 
     }
 
+    /**
+     * opens the window to reorganize warehouse
+     * @throws IOException if there is no fxml file
+     */
     public void openDepots() throws IOException {
         Stage depotsStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Warehouse.fxml"));
@@ -160,15 +184,25 @@ public class MainViewController extends Controller implements Initializable {
         faithTrackController.getWaitIfLocked().setPlayerPosition(gui.thisPlayerState().getFaithTrackPosition() + 1);
     }
 
+    /**
+     * sets the user position in the faith track
+     * @param pos new pos
+     */
     public void setFaithTrackPosition(int pos) {
         faithTrackController.getWaitIfLocked().setPlayerPosition(pos);
     }
 
+    /**
+     * sets the lorenzo posiion on faith track
+     * @param pos new position
+     */
     public void setLorenzoFaithTrackPosition(int pos) {
         faithTrackController.getWaitIfLocked().setLorenzoPosition(pos);
     }
 
-
+    /**
+     * updates the market status shown in the dashboard
+     */
     public void updateMarket() {
         ArrayList<ArrayList<String>> marketStatus = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath() + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
@@ -200,6 +234,10 @@ public class MainViewController extends Controller implements Initializable {
         ////System.out.printlnln("market updated");
     }
 
+
+    /**
+     * updates the owned cards in the dashboard
+     */
     public void updateOwnedCards() {
         ArrayList<ArrayList<ImageView>> ownedCards = new ArrayList<>();
         ownedCards.add(new ArrayList<>(((Group) ownedCardsSlot.getChildren().get(0)).getChildren().stream().filter(i -> i instanceof ImageView)
@@ -244,7 +282,9 @@ public class MainViewController extends Controller implements Initializable {
         ////System.out.printlnln("owned cards update");
     }
 
-
+    /**
+     * updates the warehouse and the leader depots shown in the dashboard
+     */
     public void updateDepots() {
 
         ArrayList<ArrayList<ImageView>> depots = new ArrayList<>();
@@ -342,7 +382,9 @@ public class MainViewController extends Controller implements Initializable {
         });
         ////System.out.printlnln("depots updated");
     }
-
+    /**
+     * updates the strongbox shown in the dashboard
+     */
     public void updateStrongBox() {
         SelectableImage.getChildrenOf(strongBoxSlot).stream().filter(n -> n.getId() != null &&
                 n.getId().contains("Counter")).map(l -> (javafx.scene.control.Label) l)
@@ -355,7 +397,9 @@ public class MainViewController extends Controller implements Initializable {
     }
 
 
-
+    /**
+     * updates the leaders shown in the dashboard
+     */
     public void updateLeaderCards() {
         assert leaderCardsSlot.getChildren().size() != gui.thisPlayerState().leaderCards.size();
         String imageUrl = new java.io.File(".").getAbsolutePath();
@@ -367,12 +411,20 @@ public class MainViewController extends Controller implements Initializable {
         }
     }
 
+    /**
+     * method invoked when users closes window.
+     * It also calls the gui method to disconnect and stop process
+     * @param event
+     */
     @FXML
     public void exitApplication(ActionEvent event) {
         ((Stage) root.getScene().getWindow()).close();
         gui.close();
     }
 
+    /**
+     * update all the view with new data
+     */
     public void updateAll() {
         updateStrongBox();
         updateDepots();
@@ -381,7 +433,10 @@ public class MainViewController extends Controller implements Initializable {
         updateLeaderCards();
     }
 
-
+    /**
+     * changes the player rectangle color to notify the user it is his turn or not
+     * @param active
+     */
     public void setTurnActive(boolean active) {
         turnActive = active;
         ////System.out.printlnln("turn active: " + active);
@@ -391,6 +446,11 @@ public class MainViewController extends Controller implements Initializable {
             playerSlot.setStyle("-fx-border-color: #801b1b; -fx-background-color: rgba(165, 27, 27, 0.25)");
     }
 
+    /**
+     * method invoked when user wants to select or active a leader card
+     * @param mouseEvent event from gui
+     * @throws IOException is there is no fxml
+     */
     @FXML
     public void leaderAction(MouseEvent mouseEvent) throws IOException {
         if (!PlayerState.canPerformActions && PlayerState.availableActions.contains(Action.LEADER_ACTION))
@@ -405,6 +465,9 @@ public class MainViewController extends Controller implements Initializable {
         leaderAction.showAndWait();
     }
 
+    /**
+     * sends the event to terminate turn
+     */
     @FXML
     public void endOfTurn() {
         if (PlayerState.availableActions.contains(Action.END_TURN)) {
@@ -413,6 +476,11 @@ public class MainViewController extends Controller implements Initializable {
         }
     }
 
+
+    /**
+     * opens the the ui to ask which dashboard to show
+     * @throws IOException
+     */
     @FXML
     public void watchOthers() throws IOException {
         Stage selectDashboardStage = new Stage();
