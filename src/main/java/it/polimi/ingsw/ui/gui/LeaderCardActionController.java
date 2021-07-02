@@ -46,7 +46,7 @@ public class LeaderCardActionController extends Controller implements Initializa
     LeaderCardActionController(GUI gui) {
         super(gui);
         String url = new java.io.File(".").getAbsolutePath();
-        url = "file:/" + url.substring(0, url.length() - 2).replace("\\", "/") + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
+        url = "file:" + url.substring(0, url.length() - 2).replace("\\", "/") + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
         leaderImages = new LinkedList<>();
         String finalUrl = url;
         gui.thisPlayerState().leaderCards.forEach((key, value) -> leaderImages.add(new Pair<>(finalUrl + key + ".png", value)));

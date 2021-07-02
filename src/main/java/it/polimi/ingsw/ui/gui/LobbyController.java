@@ -27,8 +27,6 @@ public class LobbyController extends Controller implements Initializable {
     @FXML
     ListView<Label> playersList;
     @FXML
-    GridPane playersGrid;
-    @FXML
     Button startGameButton;
     @FXML
     AnchorPane root;
@@ -54,7 +52,6 @@ public class LobbyController extends Controller implements Initializable {
         if (isLeader) {
             startGameButton.setDisable(false);
             startGameButton.setVisible(true);
-
         }
     }
 
@@ -72,17 +69,6 @@ public class LobbyController extends Controller implements Initializable {
                 .filter(l -> l.getText().equals(leader))
                 .collect(Collectors.toList())
                 .get(0).setStyle("    -fx-text-fill: #6a0a0a;");
-
-        var children = playersGrid.getChildren();
-        for (int i = 0; i < playersList.getItems().size(); i++) {
-            Label playerName =
-                    ((Label) ((AnchorPane) children.get(i)).getChildren()
-                            .stream().filter(n -> n instanceof Label)
-                            .collect(Collectors.toList()).get(0));
-            playerName.setText(players.get(i));
-            if (players.get(i).equals(leader))
-                playerName.setStyle("    -fx-text-fill: #6a0a0a;");
-        }
     }
 
 

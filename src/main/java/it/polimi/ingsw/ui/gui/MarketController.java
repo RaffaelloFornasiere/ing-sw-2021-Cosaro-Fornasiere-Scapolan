@@ -50,12 +50,12 @@ public class MarketController extends Controller implements Initializable {
         for (int i = 0; i < PlayerState.marketStatus.getKey().length; i++) {
             this.marketStatus.add(new ArrayList<String>());
             for (int j = 0; j < PlayerState.marketStatus.getKey()[0].length; j++) {
-                String url = "file:/" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
-                System.out.println(url);
+                String url = "file:" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
+                //System.out.println(url);
                 this.marketStatus.get(i).add(url);
             }
         }
-        this.marbleLeft = "file:/" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
+        this.marbleLeft = "file:" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
 
 
     }

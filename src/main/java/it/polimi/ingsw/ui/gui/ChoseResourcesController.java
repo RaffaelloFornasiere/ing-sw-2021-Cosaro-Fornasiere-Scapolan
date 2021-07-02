@@ -164,7 +164,7 @@ public class ChoseResourcesController extends Controller implements Initializabl
         AnchorPane.setRightAnchor(confirm, 20.0);
         AnchorPane.setBottomAnchor(confirm, 10.0);
         String path = new java.io.File(".").getAbsolutePath().replace("\\", "/");
-        path = "file:/" + path.substring(0, path.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/stylesheets/selectresourcedialog.css";
+        path = "file:" + path.substring(0, path.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/stylesheets/selectresourcedialog.css";
         root.getStylesheets().add(path);
         dialog.setScene(scene);
         dialog.showAndWait();
@@ -188,7 +188,7 @@ public class ChoseResourcesController extends Controller implements Initializabl
             HBox.setHgrow(label, Priority.ALWAYS);
             hBox.getChildren().addAll(label, buttonLine);
             resourcesOfChoiceList.getItems().add(hBox);
-            System.out.println(list.getSelectionModel().getSelectedItem().getText());
+            //System.out.println(list.getSelectionModel().getSelectedItem().getText());
         }
     }
 

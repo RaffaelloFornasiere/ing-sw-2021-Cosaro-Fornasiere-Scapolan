@@ -46,10 +46,10 @@ public class DisplayIAActionController extends Controller implements Initializab
                 case VIOLET -> n = 3;
                 case YELLOW -> n = 4;
             }
-            imageUrl = "file:/" + imagePath + "token" + n + ".png";
+            imageUrl = "file:" + imagePath + "token" + n + ".png";
         } else {
             SoloActionTokenMove tok = (SoloActionTokenMove) token;
-            imageUrl = "file:/" + imagePath + "token" + (tok.reshuffle() ? 7 : 6) + ".png";
+            imageUrl = "file:" + imagePath + "token" + (tok.reshuffle() ? 7 : 6) + ".png";
         }
 
         description = token.description();

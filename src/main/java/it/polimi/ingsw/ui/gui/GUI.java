@@ -303,7 +303,7 @@ public class GUI extends UI {
             }
         });
 
-        System.out.println("waiting for mainViewController get ready");
+        //System.out.println("waiting for mainViewController get ready");
         mainViewController.waitForReady();
         System.out.println("ready");
 
@@ -345,19 +345,15 @@ public class GUI extends UI {
     @Override
     public void updateFaithTrack(String playerID, int position,
                                  HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
-        System.out.println("updateFaithTrack");
         PlayerState playerState = playerStates.get(playerID);
         playerState.setFaithTrackPosition(position);
         playerState.setPopeFavorCards(popeFavorCards.get(playerID));
 
         Platform.runLater(() -> {
-            System.out.println("runlater favor cards update");
             if (playerID.equals(this.playerID.getItem())) {
                 mainViewController.setFaithTrackPosition(position);
-                System.out.println("turn");
                 mainViewController.faithTrackController.getItem().updateFavorCards(false);
             } else {
-                System.out.println("discard");
                 mainViewController.faithTrackController.getItem().updateFavorCards(true);
             }
         });
@@ -589,7 +585,7 @@ public class GUI extends UI {
 
     @Override
     public void updateLorenzoPosition(int position) {
-        System.out.println(position);
+        //System.out.println(position);
         Platform.runLater(() -> mainViewController.setLorenzoFaithTrackPosition(position));
     }
 
