@@ -2,120 +2,180 @@ title Masters of Renaissance (buy a resource)
 
 actor User
 participant View
-participantgroup #lightgreen 
-participant Network Handler
+activate View
+participantgroup #lightgreen
+participant "Client" as Network Handler
 end
 participantgroup #lightblue
-participant Virtual View
+participant "Server" as Virtual View
 end
 participantgroup #pink
 participant Controller
-end 
+participant MarketManager
+participant LeaderCardManager
+participant FaithTrackManager
+participant ModelChanngeHandlers
+end
 
 participantgroup #lightgray
 participant Model
 end
 
+participant "Other Clients" as OtherVirtualViews
+
 User ->> View: selects the Market
-activate View
 View <-View: access local data and\nupdate view
 User <--View: view updated
-deactivate View
 
 
 
 // ***************Buy Action **************************************
 User ->>View: Selects row or column
-View -> Network Handler: update(MarketBuyEvent)
-Network Handler -#ff00ff>Virtual View: send(MarketBuyEvent)
-Virtual View ->Controller: update(MarketBuyEvent)
+View --> Network Handler: MarketBuyEvent
+deactivate View
+Network Handler -#ff00ff>Virtual View: MarketBuyEvent
+Virtual View ->Controller: MarketBuyEventHandler(MarketBuyEvent)
 activate Controller
-Controller -> Model: buyMarbels(dir, index)
+Controller->MarketManager: buy(dir, index)
+activate MarketManager
+MarketManager -> Model: getMarbles(dir, index)
 activate Model
-Controller <--Model: reosurces
+Model -> ModelChanngeHandlers : update(market)
+activate ModelChanngeHandlers
+ModelChanngeHandlers -> OtherVirtualViews : sendObject(MarketStateEvent)
+ModelChanngeHandlers -> Virtual View : sendObject(MarketStateEvent)
+deactivate ModelChanngeHandlers
+Network Handler <#ff00ff-Virtual View: MarketStateEvent
+Network Handler->View: updateMarket(rows, clumns, grid, marbleLeft)
+MarketManager <--Model: marbles
 deactivate Model
+Controller <--MarketManager: marbles
+deactivate MarketManager
+
 
 alt if there are red marbles
-loop for all red marbles
-Controller -> Controller: increase player position
-Controller ->Model : cell.activateEffect()
-end 
-Controller->Model: setPosition(newPosition)
+Controller->FaithTrackManager: incrementFaithTrackPosition(steps)
+FaithTrackManager->Model: incrementPosition(steps)
+Model -> ModelChanngeHandlers : update(faithTrackData
+activate ModelChanngeHandlers
+ModelChanngeHandlers -> OtherVirtualViews : sendObject(FaithTrackEvent)
+ModelChanngeHandlers -> Virtual View : sendObject(FaithTrackEvent)
+Network Handler <#ff00ff-Virtual View: FaithTrackEvent
+deactivate ModelChanngeHandlers
+Network Handler->View: updateFaithTrack(playerID, position, popeFavorCards)
+note over Controller, Model: we ignore the effect of the cell passed and if the end of the faith track is reached, since it's outside the scope of this diagram
 end
-Controller ->Model: getLeaderCards()
-Controller <--Model: leaderCards
+alt there are white marbles
+Controller->LeaderCardManager: getSelectedPowers(EnxtraResourceLeaderPower.class)
+activate LeaderCardManager
+LeaderCardManager->Model: getSelectedLeaderPowers()
+LeaderCardManager <--Model: leaderPowers
+Controller <--LeaderCardManager: leaderPowers
+deactivate LeaderCardManager
 // ****************************************************************
 
 
 
 // *********Leader cards with ExtraResourceLeaderPower*************
-alt Leader cards with ExtraResourceLeaderPower
-Virtual View <- Controller: requestLeaderCardActivation(cardIndex)
-Network Handler <#ff00ff-Virtual View: send(LeaderCardActivationEvent(cardIndex, bool))
+alt multple selected ExtraResourceLeaderPower
+Virtual View <- Controller:sendObject(choseMultipleExtraResourcesEvent)
+Network Handler <#ff00ff-Virtual View: choseMultipleExtraResourcesEvent
 
-View <- Network Handler: requestLeaderCardActivation(cardIndex)
-User <- View: view updated
-User ->> View:  yes/no
-View ->Network Handler: update(LeaderCardActivationEvent(cardIndex, bool))
-Network Handler -#ff00ff> Virtual View : send(LeaderCardActivationEvent(cardIndex, bool))
-Virtual View ->Controller:update(LeaderCardActivationEvent(cardIndex, bool))
-  alt if LeaderCardActivationEvent.bool == true
-  Controller -> Controller: change white marble into resource
-  end 
-end
-// ****************************************************************
+View <- Network Handler:choseResources(num, allowedTypes)
+activate View
+User <- View: Shows to the player a way to select\nwhat resource to associate to every\nwhite marble
+User --> View: resources chosen
+View -->Network Handler: chosenResources
+deactivate View
+Network Handler -#ff00ff> Virtual View : SimpleChosenResourcesEvent
+Virtual View ->Controller: SimpleChosenResourcesEventHandler(SimpleChosenResourcesEventHandler)
+loop while the choiches made by the user are wrong
+Controller->Virtual View: sendObject(playerActionError)
+Virtual View -#ff00ff> Network Handler : playerActionError
+Network Handler->View: printWarning(errorMsg)
+View->User: display the warning message\nto inform the player on what\nthey did wrong
+Virtual View <- Controller: sendObject(choseMultipleExtraResourcesEvent)
+Network Handler <#ff00ff-Virtual View: choseMultipleExtraResourcesEvent
 
-Controller -> Other VirtualViews : UpdateView(new market state)
-
-
-// ****************** resource discard ****************************
-Controller ->Controller: Check if all resources can be placed
-loop  not all resources can be placed
-Virtual View <- Controller: requestResourceDiscard(vector<Resource>)
-Network Handler <#ff00ff-Virtual View: send(requestResourceDiscard(vector<Resource>))
-View <-Network Handler: requestResourceDiscard(vector<Resource>)
-User <- View :view updated 
-User -> View: resources selected
-View ->Network Handler: ResourceDiscardEvent(vector<Resource>)
-Network Handler -#ff00ff> Virtual View: send(ResourceDiscardEvent(vector<Resource>))
-Virtual View ->Controller: ResourceDiscardEvent(vector<Resource>)
-loop for all players
-Controller -> Controller: increase player position
-Controller ->Model : cell.activateEffect()
+View <- Network Handler:choseResources(num, allowedTypes)
+activate View
+User <- View: Shows to the player a way to select\nwhat resource to associate to every\nwhite marble
+User --> View: resources chosen
+View -->Network Handler: chosenResources
+deactivate View
+Network Handler -#ff00ff> Virtual View : SimpleChosenResourcesEvent
+Virtual View ->Controller: SimpleChosenResourcesEventHandler(SimpleChosenResourcesEventHandler)
 end
 end
-// ****************************************************************
-
-
-Virtual View <-Controller: UpdateView(new market state) \n and ask for resource placement
-deactivate Controller
-Network Handler <#ff00ff-Virtual View: UpdateView()
-View <-Network Handler: UpdateView(new market state) \n and ask for resource placement
-User <-View: view updated
-
-
-// ****************** resource replacement ************************
-loop new warehouse state is not valid
-User -> View: Selects how to put new resources
-View ->Virtual View: update(WarehouseStateChanged)
-Virtual View ->Controller: update(WarehouseStateChanged)
-
-Controller ->Controller: cheks state validity
-  alt warehouse state is valid 
-  Virtual View <-Controller: ErrorEvent: warehouse state not valid
-  Network Handler <#ff00ff-Virtual View: send(Error)
-  View <-Network Handler: ErrorEvent: warehouse state not valid
-  User <- View: Error
-  end
+alt if at least one LeaderPower is selected
+Controller -> Controller: change white marble into resource
+end
 end
 // ****************************************************************
 
 
+Controller->Virtual View: sendObject(OrganizeResourcesEvent)
+Controller -> Controller: wait()
+Network Handler <#ff00ff-Virtual View: OrganizeResourcesEvent
+Network Handler->View: getWarehouseDisplacement(resourcesToOrganize)
+activate View
+View->User: make the user organize the resources\nbetween the warehouse and the\nDepositLeaderPowers
+User-->View: Resource organization
+View-->Network Handler: NewResourcesOrganizationEvent
+deactivate View
+Network Handler -#ff00ff> Virtual View : NewResourcesOrganizationEvent
+Virtual View ->Controller: NewResourcesOrganizationEventHandler(NewResourcesOrganizationEvent)
+Controller -> Controller: notifyAll()
+loop while the new resource organization is invalid (es. multiple depots have the same resource type)
+Controller->Virtual View: sendObject(playerActionError)
+Virtual View -#ff00ff> Network Handler : playerActionError
+Network Handler->View: printWarning(errorMsg)
+View->User: display the warning message\nto inform the player on what\nthey did wrong
+Controller->Virtual View: sendObject(OrganizeResourcesEvent)
+Controller -> Controller: wait()
+Network Handler <#ff00ff-Virtual View: OrganizeResourcesEvent
+Network Handler->View: getWarehouseDisplacement(resourcesToOrganize)
+activate View
+View->User: make the user organize the resources\nbetween the warehouse and the\nDepositLeaderPowers
+User-->View: Resource organization
+View-->Network Handler: NewResourcesOrganizationEvent
+deactivate View
+Network Handler -#ff00ff> Virtual View : NewResourcesOrganizationEvent
+Virtual View ->Controller: NewResourcesOrganizationEventHandler(NewResourcesOrganizationEvent)
+Controller -> Controller: notifyAll()
+end
 
+Controller->Model: setWarehouseResources(newDepotStates)
+Model -> ModelChanngeHandlers : update(dashboard)
+activate ModelChanngeHandlers
+ModelChanngeHandlers -> OtherVirtualViews : sendObject(DashBoardStateEvent)
+ModelChanngeHandlers -> Virtual View : sendObject(DashBoardStateEvent)
+Network Handler <#ff00ff-Virtual View: DashBoardStateEvent
+deactivate ModelChanngeHandlers
+Network Handler->View: updateDashboard(playerID, devCardSlots, strongBox, warehouse)
 
-Controller ->Model: Update Warehouse state
-Controller <- Model: Update(newWarehouseState)
-Virtual View <-Controller: UpdateView()
-Network Handler <#ff00ff-Virtual View: send(UpdateView)
-View <-Network Handler: UpdateView()
-User <-View: view updated
+Controller->LeaderCardManager: removeResourcesFromLeaderCards(resources)
+loop for every leader card that contains some of the resources to remove
+LeaderCardManager->Model: removeResourcesFromLeaderCard(resources)
+Model -> ModelChanngeHandlers : update(depositLeaderPower)
+activate ModelChanngeHandlers
+ModelChanngeHandlers -> OtherVirtualViews : sendObject(DepositLeaderPowerStateEvent)
+ModelChanngeHandlers -> Virtual View : sendObject(DepositLeaderPowerStateEvent)
+Network Handler <#ff00ff-Virtual View: DepositLeaderPowerStateEvent
+deactivate ModelChanngeHandlers
+Network Handler->View: updateLeaderCardDepositState(playerID, leaderCardID, leaderPowerIndex, storedResources)
+end
+
+alt if there are discarded resources
+Controller->Controller: count discarded resources
+Controller->FaithTrackManager: incrementFaithTrackPosition(numDiscardedResources)
+FaithTrackManager->Model: incrementPosition(steps)
+Model -> ModelChanngeHandlers : update(faithTrackData
+activate ModelChanngeHandlers
+ModelChanngeHandlers -> OtherVirtualViews : sendObject(FaithTrackEvent)
+ModelChanngeHandlers -> Virtual View : sendObject(FaithTrackEvent)
+Network Handler <#ff00ff-Virtual View: FaithTrackEvent
+deactivate ModelChanngeHandlers
+Network Handler->View: updateFaithTrack(playerID, position, popeFavorCards)
+note over Controller, Model: we ignore the effect of the cell passed and if the end of the faith track is reached, since it's outside the scope of this diagram
+end
