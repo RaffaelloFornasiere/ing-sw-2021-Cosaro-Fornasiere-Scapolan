@@ -54,7 +54,7 @@ public class SelectLeaderCardsController extends Controller implements Initializ
         });
         done.setItem(false);
         String imageUrl = new java.io.File(".").getAbsolutePath().replace("\\", "/");
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
         var images = gridPane.getChildren().stream()
                 .map(n -> (ImageView) ((Group) n).getChildren().stream().filter(i -> i instanceof ImageView).findFirst().orElse(null))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -84,12 +84,12 @@ public class SelectLeaderCardsController extends Controller implements Initializ
             checkBox.setSelected(true);
             selectableRegion.setStyle("-fx-opacity: 1;");
             selected.add(card);
-            System.out.println(card);
+            //System.out.println(card);
         } else if (checkBox.isSelected()) {
             checkBox.setSelected(false);
             selectableRegion.setStyle("-fx-opacity: 0;");
             selected.remove(card);
-            System.out.println(card);
+            //System.out.println(card);
         }
     }
 

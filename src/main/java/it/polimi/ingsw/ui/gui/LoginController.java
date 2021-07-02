@@ -33,7 +33,7 @@ public class LoginController extends Controller implements Initializable {
             throw new NullPointerException("aaa");
         for (File file : dir.listFiles()) {
             if (!file.isDirectory()) {
-                String url = "file:/" + file.getAbsolutePath().replace("\\", "/");
+                String url = "file:" + file.getAbsolutePath().replace("\\", "/");
                 playerImages.add(url);
             }
         }
@@ -70,24 +70,6 @@ public class LoginController extends Controller implements Initializable {
             playerImage.setImage(new Image(currentImage.next()));
         else
             playerImage.setImage(new Image(gui.getPlayerImage()));
-
-
-        playerIdTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(!newValue) {
-                    System.out.println("Focusing out from player");
-                }
-            }
-        });
-        leaderIdTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(!newValue) {
-                    System.out.println("Focusing out from leader");
-                }
-            }
-        });
     }
 
     public void nextImage() {

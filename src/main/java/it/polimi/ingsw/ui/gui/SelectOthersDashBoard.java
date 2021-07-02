@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -16,7 +17,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class SelectOthersDashBoard extends Controller implements Initializable {
-
 
 
     SelectOthersDashBoard(GUI gui) {
@@ -31,35 +31,37 @@ public class SelectOthersDashBoard extends Controller implements Initializable {
     Button player3;
     @FXML
     Button player4;
-
+    @FXML
+    AnchorPane root;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ArrayList<Button> list = new ArrayList<>(){{
+        ArrayList<Button> list = new ArrayList<>() {{
             add(player1);
             add(player2);
             add(player3);
             add(player4);
         }};
-        for(int i = 0;i < gui.playerStates.size(); i++)
-        {
+        for (int i = 0; i < gui.playerStates.size(); i++) {
             list.get(i).setText(new ArrayList<>(gui.playerStates.keySet()).get(i));
         }
 
     }
 
+
+
+    @FXML
     public void onClicked(MouseEvent event) throws IOException {
-        Button source = (Button)event.getSource();
+        Button source = (Button) event.getSource();
         String playerId = source.getText();
-
-
         Stage watchOthersStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("OthersDashBoard.fxml"));
-        OthersDashBoardController controller = new OthersDashBoardController(gui, gui.playerStates.get(playerId), playerId);
+        fxmlLoader.setController(new OthersDashBoardController(gui, gui.playerStates.get(playerId), playerId));
         Scene scene = new Scene(fxmlLoader.load());
         watchOthersStage.initModality(Modality.APPLICATION_MODAL);
         watchOthersStage.setScene(scene);
         watchOthersStage.showAndWait();
+        ((Stage) root.getScene().getWindow()).close();
     }
 }

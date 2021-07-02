@@ -46,7 +46,7 @@ public class ServerSettingsController extends Controller implements Initializabl
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("init");
+        //System.out.println("init");
         portText.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -79,10 +79,10 @@ public class ServerSettingsController extends Controller implements Initializabl
 
     public void onPortChanged() {
         int port = Integer.parseInt(portText.getText());
-        System.out.println("port typed: " + Integer.toString(port));
+        //System.out.println("port typed: " + Integer.toString(port));
         if (port < 1024) {
             portErrorLabel.setOpacity(1);
-            System.out.println("error");
+            //System.out.println("error");
             return;
         } else
             portErrorLabel.setOpacity(0);
@@ -94,8 +94,12 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onNext() throws IOException {
-        if (hostnameTextField.getText() != "")
+        if (hostnameTextField.getText() != "") {
             onServerChanged(hostnameTextField.getText());
+            Controller controller = new LoginController(gui);
+            controller.setPreviousScene(root.getScene());
+            ((Stage) root.getScene().getWindow()).setScene(MainApplication.createScene("Login.fxml", controller));
+        }
         if (serverAddress == null) {
             invalidAddress.setOpacity(1);
             return;
@@ -108,7 +112,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onServerChanged(String ip) {
-        System.out.println(ip);
+        //System.out.println(ip);
         try {
             serverAddress = InetAddress.getByName(ip);
             gui.setServerAddress(serverAddress);

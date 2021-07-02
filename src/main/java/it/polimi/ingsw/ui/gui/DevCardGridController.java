@@ -53,7 +53,7 @@ public class DevCardGridController extends Controller implements Initializable {
                 .map(n -> (ImageView) ((Group) n).getChildren().stream().findFirst().orElse(null)).collect(Collectors.toList());
 
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
         for (int i = 0; i < images.size(); i++) {
             images.get(i).setImage(new Image(imageUrl +
                     PlayerState.devCardGrid[2 - i % 3][i / 3] + ".png"));
@@ -93,7 +93,8 @@ public class DevCardGridController extends Controller implements Initializable {
             selected = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
 
         }
-        System.out.println(selected);
+        //System.out.println(selected);
+        //
 
     }
 
@@ -120,7 +121,8 @@ public class DevCardGridController extends Controller implements Initializable {
             return;
 
         DevCard devCard;
-        System.out.println(selected);
+        //System.out.println(selected);
+        //
         try {
             Stage stage = new Stage();
             SelectDevCardSlotController controller = new SelectDevCardSlotController(gui);

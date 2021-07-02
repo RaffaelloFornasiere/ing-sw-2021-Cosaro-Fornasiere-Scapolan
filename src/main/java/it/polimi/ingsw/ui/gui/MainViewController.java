@@ -175,12 +175,12 @@ public class MainViewController extends Controller implements Initializable {
         for (int i = 0; i < PlayerState.marketStatus.getKey().length; i++) {
             marketStatus.add(new ArrayList<>());
             for (int j = 0; j < PlayerState.marketStatus.getKey()[0].length; j++) {
-                String url = "file:/" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
+                String url = "file:" + imagePath + PlayerState.marketStatus.getKey()[i][j].toString().toLowerCase() + "-marble.png";
                 marketStatus.get(i).add(url);
             }
         }
-        String marbleLeft = "file:/" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
-        System.out.println(marbleLeft);
+        String marbleLeft = "file:" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
+        //System.out.println(marbleLeft);
         GridPane gridPane = (GridPane) marketSlot.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().orElse(null);
         var marbles = gridPane.getChildren()
                 .stream().filter(n -> n instanceof ImageView)
@@ -197,7 +197,7 @@ public class MainViewController extends Controller implements Initializable {
                     .get(marble.getId().charAt(1) - '0')));
         }
         marbleLeftImage.setImage(new Image(marbleLeft));
-        System.out.println("market updated");
+        //System.out.println("market updated");
     }
 
     public void updateOwnedCards() {
@@ -220,7 +220,7 @@ public class MainViewController extends Controller implements Initializable {
 
 
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/front/";
         var ownedCardIds = gui.thisPlayerState().ownedCards;
         for (int i = 0; i < ownedCardIds.size(); i++) {
             int j = 0;
@@ -241,7 +241,7 @@ public class MainViewController extends Controller implements Initializable {
             }
         }
         SelectableImage.setSelectable(ownedCardsSlot);
-        System.out.println("owned cards update");
+        //System.out.println("owned cards update");
     }
 
 
@@ -249,7 +249,7 @@ public class MainViewController extends Controller implements Initializable {
 
         ArrayList<ArrayList<ImageView>> depots = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath();
-        imagePath = "file:/" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imagePath = "file:" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         String finalImagePath = imagePath;
         var images = gui.thisPlayerState().warehouse.stream().flatMap(n -> new ArrayList<Image>() {{
             for (int i = 0; i < n.getMaxQuantity(); i++) {
@@ -340,7 +340,7 @@ public class MainViewController extends Controller implements Initializable {
                 image.setOpacity(0);
             }
         });
-        System.out.println("depots updated");
+        //System.out.println("depots updated");
     }
 
     public void updateStrongBox() {
@@ -351,7 +351,7 @@ public class MainViewController extends Controller implements Initializable {
                     Resource r = Resource.valueOf(l.getId().replace("Counter", "").toUpperCase());
                     l.setText(String.valueOf(gui.thisPlayerState().strongBox.getOrDefault(r, 0)));
                 });
-        System.out.println("strongbox updated");
+        //System.out.println("strongbox updated");
     }
 
 
@@ -359,10 +359,11 @@ public class MainViewController extends Controller implements Initializable {
     public void updateLeaderCards() {
         assert leaderCardsSlot.getChildren().size() != gui.thisPlayerState().leaderCards.size();
         String imageUrl = new java.io.File(".").getAbsolutePath();
-        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imageUrl = "file:" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/leaders/";
         for (int i = 0; i < gui.thisPlayerState().leaderCards.size(); i++) {
             String leaderId = (String) gui.thisPlayerState().leaderCards.keySet().toArray()[i];
             ((ImageView) leaderCardsSlot.getChildren().get(i)).setImage(new Image(imageUrl + leaderId + ".png"));
+            leaderCardsSlot.getChildren().get(i).setVisible(true);
         }
     }
 
@@ -383,7 +384,7 @@ public class MainViewController extends Controller implements Initializable {
 
     public void setTurnActive(boolean active) {
         turnActive = active;
-        System.out.println("turn active: " + active);
+        //System.out.println("turn active: " + active);
         if (active)
             playerSlot.setStyle("-fx-border-color: #2a801b; -fx-background-color: rgba(131, 255, 131, 0.25)");
         else

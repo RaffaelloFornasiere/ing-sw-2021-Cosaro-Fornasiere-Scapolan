@@ -67,7 +67,7 @@ public class WarehouseController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         depots = new ArrayList<>();
         String imagePath = new java.io.File(".").getAbsolutePath();
-        imagePath = "file:/" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        imagePath = "file:" + imagePath.substring(0, imagePath.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
         String finalImagePath = imagePath;
 
 
