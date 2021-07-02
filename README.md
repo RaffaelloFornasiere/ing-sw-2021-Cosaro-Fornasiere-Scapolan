@@ -1,17 +1,17 @@
 # Prova finale di ingegneria del software - a.a. 2020-2021
 The aim of the project is to develop a software version of the game "Master of Renaissance".
 
-###Developers
+### Developers
 This particular version was developed by Lisa Cosaro, Raffaello Fornasiere and Leonardo Scapolan.
 
-###Implemented functionalities
+### Implemented functionalities
 - Complete rule set
 - CLI
 - GUI
 - Socket
 - Two advanced functionalities: "Partite multiple" and "Partita locale"
 
-###Documentation
+### Documentation
 The project is accompanied by several UML diagrams:
 
 - A [simplified UML diagram](https://github.com/RaffaelloFornasiere/ing-sw-2021-Cosaro-Fornasiere-Scapolan/blob/main/deliverables/UMLdiagram/SimplifiedUML.png) detailing the main classes of the application and their iteration
@@ -33,7 +33,7 @@ java -jar client.jar
 ```
 After this you'll be asked to select CLI or GUI mode
 
-####Multiplayer
+#### Multiplayer
 If you want to play multiplayer game you must run the server before through the following command
 ```bash
 java -jar server.jar
