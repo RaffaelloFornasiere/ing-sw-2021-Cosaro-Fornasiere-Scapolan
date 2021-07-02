@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client;
 
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.ClientApp;
 import it.polimi.ingsw.events.EventRegistry;
 import it.polimi.ingsw.events.clientEvents.*;
 import it.polimi.ingsw.events.controllerEvents.matchEvents.*;
@@ -154,9 +153,11 @@ public class NetworkAdapter {
     /**
      * Methods that stops the thread that continuously reads from the socket
      */
-    public void stopThread(){
-        if(receiver!=null)
+    public void stopRead(){
+        if(receiver!=null) {
+            stopThread = true;
             receiver.closeConnection();
+        }
     }
 
     /**
@@ -317,7 +318,7 @@ public class NetworkAdapter {
     public synchronized void GameEndedEventHandler(PropertyChangeEvent evt) {
         GameEndedEvent event = (GameEndedEvent) evt.getNewValue();
         view.displayEndOfGame(event.getFinalPlayerStates());
-        stopThread();
+        stopRead();
     }
 
     /**
@@ -463,7 +464,7 @@ public class NetworkAdapter {
         view.printError("The connection with the server was closed. Shutting down the application");
         heartbeatTimer.cancel();
         sender.closeConnection();
-        receiver.closeConnection();
+        stopRead();
         try {
             server.close();
         } catch (IOException e) {
