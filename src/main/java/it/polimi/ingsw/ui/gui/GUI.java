@@ -36,7 +36,7 @@ public class GUI extends UI {
     protected final LockWrap<InetAddress> serverAddress = new LockWrap<>(null);
     protected final LockWrap<Integer> serverPort = new LockWrap<>(null);
     protected final LockWrap<Boolean> singlePlayer = new LockWrap<>(null);
-    protected String PlayerImage;
+    protected String playerImage;
 
 
     LobbyController lobbyController;
@@ -144,7 +144,7 @@ public class GUI extends UI {
      * @return the player image url
      */
     public String getPlayerImage() {
-        return PlayerImage;
+        return playerImage;
     }
 
     /**
@@ -153,7 +153,7 @@ public class GUI extends UI {
      * @param playerImage image url
      */
     public void setPlayerImage(String playerImage) {
-        PlayerImage = playerImage;
+        this.playerImage = playerImage;
     }
 
 
@@ -343,19 +343,24 @@ public class GUI extends UI {
 
 
     @Override
-    public void updateFaithTrack(String playerID, int position, HashMap<
-            String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+    public void updateFaithTrack(String playerID, int position,
+                                 HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards) {
+        System.out.println("updateFaithTrack");
         PlayerState playerState = playerStates.get(playerID);
         playerState.setFaithTrackPosition(position);
         playerState.setPopeFavorCards(popeFavorCards.get(playerID));
 
         Platform.runLater(() -> {
+            System.out.println("runlater favor cards update");
             if (playerID.equals(this.playerID.getItem())) {
                 mainViewController.setFaithTrackPosition(position);
-                mainViewController.faithTrackController.getItem().updateFavorCards();
+                System.out.println("turn");
+                mainViewController.faithTrackController.getItem().updateFavorCards(false);
+            } else {
+                System.out.println("discard");
+                mainViewController.faithTrackController.getItem().updateFavorCards(true);
             }
         });
-
     }
 
     @Override
