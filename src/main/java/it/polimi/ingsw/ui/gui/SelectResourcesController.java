@@ -114,11 +114,15 @@ public class SelectResourcesController extends Controller implements Initializab
                 .forEach(r -> fromLeadersDepots.put(Resource.valueOf(r.getText()), fromLeadersDepots.getOrDefault(Resource.valueOf(r.getText()), 0) + 1));
         return new ChosenResourcesEvent(gui.askUserID(), allResources, fromWareHouse, fromLeadersDepots);
     }
-
+    /**
+     * method invoked when user clicks on cancel
+     */
     public void onCancel() {
         ((Stage) root.getScene().getWindow()).close();
     }
-
+    /**
+     * method invoked when user confirms action
+     */
     public void onNext() {
         if (warningLabel.getOpacity() > 0) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "you don't have enough resources to perform action", ButtonType.OK);
@@ -130,6 +134,9 @@ public class SelectResourcesController extends Controller implements Initializab
         ((Stage) root.getScene().getWindow()).close();
     }
 
+    /**
+     * method invoked when user select some resources and moves then in the ones to use
+     */
     @FXML
     public void moveIntoToUse() {
         ObservableList<Label> resourcesToMove = warehouseList.getSelectionModel().getSelectedItems();
@@ -159,6 +166,9 @@ public class SelectResourcesController extends Controller implements Initializab
         checkResources();
     }
 
+    /**
+     * does the opposit of moveIntoToUse
+     */
     @FXML
     public void removeFromToUse() {
         var resourcesToRemove = resourcesToUse.getSelectionModel().getSelectedItems();
@@ -176,6 +186,10 @@ public class SelectResourcesController extends Controller implements Initializab
         checkResources();
     }
 
+    /**
+     * deselect all lists in the view
+     */
+
     public void deselectLists() {
         warehouseList.getSelectionModel().clearSelection();
         strongboxList.getSelectionModel().clearSelection();
@@ -183,7 +197,9 @@ public class SelectResourcesController extends Controller implements Initializab
         leaderDeportsResourcesList.getSelectionModel().clearSelection();
     }
 
-
+    /**
+     * check if the resources required match the ones the user selected
+     */
     public void checkResources() {
         ArrayList<Resource> resourcesProvided = resourcesToUse.getItems().stream().map(n -> Resource.valueOf(n.getText())).collect(Collectors.toCollection(ArrayList::new));
 

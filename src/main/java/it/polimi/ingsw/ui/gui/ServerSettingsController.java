@@ -51,7 +51,9 @@ public class ServerSettingsController extends Controller implements Initializabl
 
 
     }
-
+    /**
+     * method invoked when user changes hostname
+     */
     public void onServerHostnameChanged() {
         String hostName = hostnameTextField.getText();
         try {
@@ -63,11 +65,15 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
 
-
+    /**
+     * method invoked when user clicks on cancel button
+     */
     public void onCancel() throws IOException {
         MainApplication.setScene(previousScene);
     }
-
+    /**
+     * method invoked when user confirms action
+     */
     public void onNext() throws IOException {
         if (hostnameTextField.getText() != "") {
             onServerChanged(hostnameTextField.getText());
@@ -81,10 +87,18 @@ public class ServerSettingsController extends Controller implements Initializabl
         }
     }
 
+    /**
+     * method invoked when user changes hostname
+     * @param event event triggered form fxml
+     */
     public void onServerChanged(ActionEvent event) {
         onServerChanged(((TextField) event.getSource()).getText());
     }
 
+    /**
+     * method invoked when user changes hostname
+     * @param ip new ip address
+     */
     public void onServerChanged(String ip) {
         //System.out.println(ip);
         try {

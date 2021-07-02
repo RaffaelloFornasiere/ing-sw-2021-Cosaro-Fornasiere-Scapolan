@@ -199,7 +199,7 @@ public class ProductionController extends Controller implements Initializable {
     }
 
     /**
-     *
+     * method invoked when cancel is clicked
      */
     @FXML
     public void onCancel() {
@@ -209,7 +209,7 @@ public class ProductionController extends Controller implements Initializable {
 
 
     /**
-     *
+     * method invoked when user confirms action
      */
     @FXML
     public void onNext() {

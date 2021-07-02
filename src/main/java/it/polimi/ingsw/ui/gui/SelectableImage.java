@@ -118,6 +118,10 @@ public class SelectableImage {
         }
     }
 
+    /**
+     * resets all borders
+     * @param root
+     */
     public static void cleanRoot(Parent root)
     {
         getChildrenOf(root).stream().filter(n -> n.getStyleClass().contains("border")).collect(Collectors.toList()).clear();

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+
 public class SelectOthersDashBoard extends Controller implements Initializable {
 
 
@@ -52,7 +53,11 @@ public class SelectOthersDashBoard extends Controller implements Initializable {
     }
 
 
-
+    /**
+     * method invoked when user clicks on the name of another user
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void onClicked(MouseEvent event) throws IOException {
         Button source = (Button) event.getSource();

@@ -188,6 +188,11 @@ public class WarehouseController extends Controller implements Initializable {
 
     }
 
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void onDragDetected(MouseEvent event) {
 
         if (event.getSource() instanceof ImageView) {
@@ -220,7 +225,11 @@ public class WarehouseController extends Controller implements Initializable {
         }
     }
 
-
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void onDragDroppedOnLeader(DragEvent event) {
         Dragboard db = event.getDragboard();
         boolean success = false;
@@ -243,7 +252,11 @@ public class WarehouseController extends Controller implements Initializable {
         event.setDropCompleted(success);
         event.consume();
     }
-
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void onDragDropped(DragEvent event) {
         Dragboard db = event.getDragboard();
         boolean success = false;
@@ -254,7 +267,11 @@ public class WarehouseController extends Controller implements Initializable {
         event.setDropCompleted(success);
         event.consume();
     }
-
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void onDragDroppedOnToDiscard(DragEvent event) {
         Dragboard db = event.getDragboard();
         boolean success = false;
@@ -276,7 +293,11 @@ public class WarehouseController extends Controller implements Initializable {
         event.setDropCompleted(success);
         event.consume();
     }
-
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void onDragDone(DragEvent event) {
         if (event.getSource() instanceof ImageView) {
             if (event.getTransferMode() == TransferMode.MOVE) {
@@ -309,7 +330,11 @@ public class WarehouseController extends Controller implements Initializable {
         event.consume();
 
     }
-
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void onDragOver(DragEvent event) {
         Node target = (Node) event.getTarget();
         if (event.getGestureSource() != target) {
@@ -417,7 +442,11 @@ public class WarehouseController extends Controller implements Initializable {
         event.consume();
     }
 
-
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void openBin(DragEvent event) {
         AnchorPane target = (AnchorPane) event.getTarget();
         if (event.getGestureSource() != target) {
@@ -440,7 +469,11 @@ public class WarehouseController extends Controller implements Initializable {
 
     }
 
-
+    /**
+     * drag and drop management
+     * @param event event sent from ui
+     */
+    @FXML
     public void closeBin(DragEvent event) {
         AnchorPane target = (AnchorPane) event.getTarget();
         ImageView image = (ImageView) target.getChildren().stream().filter(n -> {
@@ -461,11 +494,17 @@ public class WarehouseController extends Controller implements Initializable {
         event.consume();
     }
 
-
+    /**
+     * method invoked when user clicks on cancel
+     */
     public void onCancel() {
         ((Stage) root.getScene().getWindow()).close();
     }
 
+    /**
+     * method invoked when user wants to confirm action
+     * builds the events with the data provided by the user
+     */
     public void onNext() {
         ArrayList<DepotState> depots = new ArrayList<>();
 

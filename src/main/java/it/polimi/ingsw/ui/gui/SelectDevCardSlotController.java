@@ -39,11 +39,18 @@ public class SelectDevCardSlotController extends Controller implements Initializ
         }));
     }
 
-
+    /**
+     * returns the selected slot
+     * @return
+     */
     public int getRes() {
         return finalRes.getWaitIfLocked();
     }
 
+    /**
+     * method invoked then user clicks on a slot button
+     * @param event
+     */
     public void setRes(MouseEvent event) {
         Button button = (Button) event.getSource();
         //////System.out.printlnln(button.getText());
@@ -61,6 +68,11 @@ public class SelectDevCardSlotController extends Controller implements Initializ
         res = Integer.parseInt(button.getText());
     }
 
+    /**
+     * method to change css of button
+     * @param button
+     * @param select
+     */
     public void select(Button button, boolean select)
     {
         if (select)
@@ -69,6 +81,9 @@ public class SelectDevCardSlotController extends Controller implements Initializ
             button.setStyle("-fx-background-color: transparent;");
     }
 
+    /**
+     * method invoked when user confirms action
+     */
     public void onNext() {
         finalRes.setItem(res-1);
         ((Stage) root.getScene().getWindow()).close();

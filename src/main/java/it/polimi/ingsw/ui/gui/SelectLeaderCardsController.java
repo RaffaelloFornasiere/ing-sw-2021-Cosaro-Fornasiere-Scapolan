@@ -64,6 +64,10 @@ public class SelectLeaderCardsController extends Controller implements Initializ
             images.get(i).setImage(new Image(imageUrl + cards.get(i) + ".png"));
     }
 
+    /**
+     * method invoked when
+     * @param mouseEvent
+     */
     @FXML
     public void onMouseClicked(MouseEvent mouseEvent) {
         Region selectableRegion = (Region) mouseEvent.getSource();
@@ -93,6 +97,9 @@ public class SelectLeaderCardsController extends Controller implements Initializ
         }
     }
 
+    /**
+     * method invoked when user confirms action
+     */
     @FXML
     public void onNext() {
         if (selected.size() != selectable) {
@@ -104,11 +111,18 @@ public class SelectLeaderCardsController extends Controller implements Initializ
         ((Stage) root.getScene().getWindow()).close();
     }
 
+    /**
+     * returns selected leader cards
+     * @return
+     */
     public ArrayList<String> getSelected() {
         done.getWaitIfLocked();
         return new ArrayList<>(selected);
     }
 
+    /**
+     * method invoked when user clicks on cancel
+     */
     public void onCancel() {
         Alert alert = new Alert(Alert.AlertType.ERROR, "You must select " + selectable + " " + ((selectable > 1) ? "leader cards" : "leader card"), ButtonType.OK);
         alert.showAndWait();
