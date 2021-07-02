@@ -3,6 +3,7 @@ package it.polimi.ingsw.ui.gui;
 import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -42,10 +43,11 @@ public class FaithTrackController extends Controller {
      * auxiliary class to wrap data to manage user's and lorenzo's cross on faith track
      */
     private static class PlayerMetaData {
-        PlayerMetaData(){
-            currentPos = new DoublePoint(0,0);
+        PlayerMetaData() {
+            currentPos = new DoublePoint(0, 0);
             cross = new ImageView();
         }
+
         int positionIndex;
         DoublePoint currentPos;
         ImageView cross;
@@ -73,11 +75,10 @@ public class FaithTrackController extends Controller {
      * @param faithTrack   reference to javafx object
      * @param singlePlayer tells if the game is in singlePlayerMode
      */
-    //TODO verify working
-    FaithTrackController(GUI gui, GridPane faithTrack, boolean singlePlayer) {
+    FaithTrackController(GUI gui, GridPane faithTrack, boolean singlePlayer, ArrayList<ImageView> popeFavorCards) {
         super(gui);
         user = new PlayerMetaData();
-
+        this.popeFavorCards = popeFavorCards;
         zeroPos = new DoublePoint(0, 0);
         user.currentPos = new DoublePoint(0, 0);
         this.faithTrack = faithTrack;
@@ -127,6 +128,10 @@ public class FaithTrackController extends Controller {
             lorenzo.currentPos.y = zeroPos.y * 1.2;
             setLorenzoPosition(0);
         }
+
+
+        String finalImageUrl = imageUrl;
+
     }
 
 
@@ -229,13 +234,24 @@ public class FaithTrackController extends Controller {
 
     /**
      * upates the state of pope favor cards
+     * @param discard if the card must be discarded
      */
-    //TODO
-    public void updateFavorCards() {
-        var popeFavorCards = gui.thisPlayerState().getPopeFavorCards();
-        this.popeFavorCards = new ArrayList<>();
-
+    public void updateFavorCards(boolean discard) {
+        System.out.println("updateFavorCards");
+        String imageUrl = new java.io.File(".").getAbsolutePath();
+        imageUrl = "file:/" + imageUrl.substring(0, imageUrl.length() - 2) + "/src/main/resources/it/polimi/ingsw/ui/gui/images/";
+        String finalImageUrl = imageUrl;
+        System.out.println("popefavorcards number: "  + gui.thisPlayerState().getPopeFavorCards().size());
+        gui.thisPlayerState().getPopeFavorCards().forEach((key, value) -> {
+            int i = (key==8)?1:(key ==16)?2:3;
+            System.out.println("updating images " + " int " + i);
+            Image im = discard?null:new Image(finalImageUrl + "pope_favor"+i+"_front.png");
+            System.out.println(im);
+            popeFavorCards.get(i-1).setImage(im);
+            System.out.println("updating images ");
+        });
     }
+
 
     /**
      * opens the pope favor cards passed by argument

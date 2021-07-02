@@ -203,7 +203,16 @@ public class Controller {
             sender.sendObject(new SetupDoneEvent(playerID));
 
         //CHEATS
+        try {
+            matchState.getPlayerFromID(playerID).getDashBoard().addResourcesToStrongBox(Resource.COIN, 100);
+            matchState.getPlayerFromID(playerID).getDashBoard().addResourcesToStrongBox(Resource.ROCK, 100);
+            matchState.getPlayerFromID(playerID).getDashBoard().addResourcesToStrongBox(Resource.SERVANT, 100);
+            matchState.getPlayerFromID(playerID).getDashBoard().addResourcesToStrongBox(Resource.SHIELD, 100);
 
+            //matchState.getPlayerFromID(playerID).get
+        } catch (NotPresentException e) {
+            e.printStackTrace();
+        }
         //END_CHEATS
 
         if (setuppedPlayers.size() == matchState.getPlayers().size())

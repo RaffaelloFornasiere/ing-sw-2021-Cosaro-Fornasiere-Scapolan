@@ -191,9 +191,25 @@ arrow-button-left {
 }
 
 #endOfTurnButton:hover {
-    -fx-background-color: #ba8a54;
+    -fx-background-color: rgba(194, 109, 109, 0.49);
 }
 
 #endOfTurnButton:pressed {
-    -fx-background-color: #dba76d;
+    -fx-background-color: rgba(173, 118, 118, 0.49);
+}
+
+#watchOthersButton{
+    -fx-font-weight: bold;
+    -fx-text-fill: #0c0d57;
+    -fx-background-color: rgba(58, 70, 113, 0.49);
+    -fx-border-width: 3;
+    -fx-border-color: #0c2557;
+}
+
+#watchOthersButton:hover {
+    -fx-background-color: #576ba0;
+}
+
+#watchOthersButton:pressed {
+    -fx-background-color: #6b7699;
 }

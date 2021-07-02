@@ -7,6 +7,7 @@ public class GUIRaf extends GUI {
     public GUIRaf(){
         playerID.setItem("Raf");
         leaderID.setItem("Raf");
+        singlePlayer.setItem(false);
     }
 
     @Override
