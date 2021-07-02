@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="346.0" prefWidth="216.0" stylesheets="@stylesheets/DisplayIAAction.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="tokenImage" fitHeight="150.0" fitWidth="163.0" layoutX="37.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/token1.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="descriptionLabel" alignment="TOP_LEFT" layoutX="26.0" layoutY="200.0" prefHeight="84.0" prefWidth="163.0" text="Prova" wrapText="true">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></Label>
+      <Label layoutX="19.0" layoutY="14.0" text="Lorenzo il magnifico token">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="166.0" layoutY="304.0" mnemonicParsing="false" onAction="#onOK" text="OK" />
+   </children>
+</AnchorPane>

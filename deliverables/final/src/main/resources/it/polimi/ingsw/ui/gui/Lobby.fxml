@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@stylesheets/lobby.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label layoutX="114.0" layoutY="14.0" text="Masters of Renaissance Lobby">
+            <font>
+                <Font name="System Bold" size="30.0" />
+            </font>
+        </Label>
+        <HBox alignment="CENTER" layoutX="56.0" layoutY="72.0">
+            <children>
+                <Line endX="26.333343505859375" startX="-203.00001525878906" stroke="#848484">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin>
+                </Line>
+                <Circle fill="#1f93ff00" radius="5.0" stroke="#848484" strokeType="INSIDE">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin>
+                </Circle>
+                <Line endX="26.333343505859375" startX="-203.00001525878906" stroke="#848484">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin>
+                </Line>
+            </children>
+        </HBox>
+        <ListView fx:id="playersList" fixedCellSize="25.0" layoutX="233.0" layoutY="167.0" prefHeight="120.0" prefWidth="150.0" />
+        <Line endX="48.53334045410156" layoutX="332.0" layoutY="150.0" startX="-101.33332824707031" stroke="#848484" />
+        <Button fx:id="startGameButton" disable="true" layoutX="495.0" layoutY="344.0" mnemonicParsing="false" onAction="#onStartGame" text="Start Game" visible="false" />
+      <Label layoutX="230.0" layoutY="125.0" text="Players">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

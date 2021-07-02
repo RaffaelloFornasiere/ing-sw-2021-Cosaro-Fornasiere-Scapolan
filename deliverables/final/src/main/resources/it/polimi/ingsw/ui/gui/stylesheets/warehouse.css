@@ -1,0 +1,104 @@
+.root {
+    -fx-background-image: url(../images/MarketBackground.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+
+.button {
+    -fx-background-radius: 20 20 20 20;
+    -fx-border-radius: 20 20 20 20;
+    -fx-border-width: 1.5;
+    -fx-background-color: transparent;
+    -fx-border-color: #393939;
+    -fx-text-fill: #393939;
+    -fx-text-alignment: center;
+}
+
+.button:hover {
+    -fx-background-color: #ba8a54;
+}
+
+.button:pressed {
+    -fx-background-color: #dba76d;
+}
+
+
+.arrow-button {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+
+}
+
+arrow-button-left {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+}
+
+.arrow-button-right {
+    -fx-border-color: #ba8a54;
+    -fx-background-color: transparent;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+    -fx-shape: "M0 300L350 0L350 150L700 150V450L350 450V600L0 300Z";
+    -fx-rotate: 180;
+}
+
+.arrow-button:hover {
+    -fx-background-color: #ba8a54;
+}
+
+.arrow-button:pressed {
+    -fx-background-color: #dba76d;
+    -fx-border-color: #dba76d;
+}
+
+.selectable {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+}
+
+.hoverBorder {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+}
+
+.bin {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.7), 5, 0, 0, 0);
+}
+
+
+
+
+
+#leaderDepotCoin{
+    -fx-background-image: url(../images/LeaderDepotCoin.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+#leaderDepotRock{
+    -fx-background-image: url(../images/LeaderDepotRock.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+
+#leaderDepotShield{
+    -fx-background-image: url(../images/LeaderDepotShield.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
+#leaderDepotServant{
+    -fx-background-image: url(../images/LeaderDepotServant.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+}
