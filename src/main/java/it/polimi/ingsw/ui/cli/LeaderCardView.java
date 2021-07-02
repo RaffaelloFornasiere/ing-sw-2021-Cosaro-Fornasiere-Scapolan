@@ -313,23 +313,6 @@ public class LeaderCardView {
         return build.toString();
     }
 
-//    public static void main(String[] args) {
-//
-//        Panel panel = new Panel(10000, 15, System.out);
-//        IntStream.range(1, 17).forEach(n -> {
-//            LeaderCardView card = new LeaderCardView("LeaderCard" + n);
-//            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n - 1), 0);
-//            panel.addItem(obj1);
-//
-//        });
-//
-//        panel.show();
-//        IntStream.range(1, 17).forEach(n -> {
-//            LeaderCardView card = new LeaderCardView("LeaderCard" + n);
-//            //card.setSelected(true);
-//            System.out.println(card.depositPowersToString());
-//        });
-//    }
 
     /**
      * method which changes the state of one leader power if the input is true

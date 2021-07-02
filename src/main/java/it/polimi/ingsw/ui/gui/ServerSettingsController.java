@@ -23,12 +23,8 @@ public class ServerSettingsController extends Controller implements Initializabl
 
 
     private InetAddress serverAddress;
-    private Integer port = 50885;
 
-    @FXML
-    TextField portText;
-    @FXML
-    Label portErrorLabel;
+
     @FXML
     Label invalidAddress;
 
@@ -46,21 +42,11 @@ public class ServerSettingsController extends Controller implements Initializabl
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ////System.out.printlnln("init");
-        portText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    portText.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
-        portText.setText("50885");
+
         if (serverAddress != null) {
             hostnameTextField.setText(serverAddress.getHostAddress());
         } else {
-            hostnameTextField.setPromptText("www.mastersofrenaissance.ns0.it");
+            hostnameTextField.setPromptText("127.0.0.1");
         }
 
 
@@ -77,17 +63,6 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
 
-    public void onPortChanged() {
-        int port = Integer.parseInt(portText.getText());
-        ////System.out.printlnln("port typed: " + Integer.toString(port));
-        if (port < 1024) {
-            portErrorLabel.setOpacity(1);
-            ////System.out.printlnln("error");
-            return;
-        } else
-            portErrorLabel.setOpacity(0);
-        gui.setServerPort(port);
-    }
 
     public void onCancel() throws IOException {
         MainApplication.setScene(previousScene);
@@ -111,7 +86,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onServerChanged(String ip) {
-        ////System.out.printlnln(ip);
+        //System.out.println(ip);
         try {
             serverAddress = InetAddress.getByName(ip);
             gui.setServerAddress(serverAddress);

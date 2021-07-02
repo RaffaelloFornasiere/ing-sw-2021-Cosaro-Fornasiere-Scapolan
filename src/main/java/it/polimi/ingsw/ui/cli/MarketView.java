@@ -86,18 +86,4 @@ public class MarketView {
         return builder.toString();
     }
 
-//    public static void main(String[] args) {
-//        Marble[][] grid= {
-//                {Marble.BLUE,Marble.GRAY, Marble.YELLOW,Marble.GRAY},
-//                {Marble.RED,Marble.WHITE, Marble.PURPLE, Marble.YELLOW},
-//                {Marble.BLUE, Marble.PURPLE, Marble.WHITE, Marble.RED}
-//        };
-//        Marble left= Marble.BLUE;
-//        MarketView view= new MarketView(left, grid, grid.length, grid[0].length);
-//        DrawableObject obj= new DrawableObject(view.toString(), 10, 2);
-//        Panel panel= new Panel(1000, obj.getHeight() +10, System.out );
-//        panel.addItem(obj);
-//        panel.show();
-//
-//    }
 }
