@@ -459,7 +459,7 @@ public class GUI extends UI {
         Platform.runLater(() -> mainViewController.setTurnActive(true));
         PlayerState.canPerformActions = true;
 
-        System.out.println("locking events");
+        //System.out.println("locking events");
         //null is the lockingState
         thisPlayerState().event.setItem(null);
         events.add(thisPlayerState().event.getWaitIfLocked());
