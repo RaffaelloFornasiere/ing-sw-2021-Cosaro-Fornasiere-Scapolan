@@ -1746,33 +1746,34 @@ public class CLI extends UI {
         //until there will be resources to take, the user will be asked to chose where to take from
         while (!isEmptyHashMap(required)) {
             //ASK WHICH RESOURCE
-            out.println("CHOOSE ONE TYPE OF RESOURCE AT A TIME:\n");
             ArrayList<Resource> justResources = new ArrayList<>(required.keySet());
             ArrayList<Pair<String, String>> finalResourcesOptions = justResources.stream().map(res -> new Pair<>(res.toString() + " " + shapeResource(res), colorResource(res))).collect(Collectors.toCollection(ArrayList::new));
-            ArrayList<Integer> inputs2 = displaySelectionForm(finalResourcesOptions, null, 1, " ");
-            //ask where to take resources from
-            ArrayList<Pair<String, String>> depositCategory = new ArrayList<>();
-            depositCategory.add(new Pair<>("WAREHOUSE", Color.WHITE.getAnsiCode()));
-            if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(inputs2.get(0))))
-                depositCategory.add(new Pair<>("EXTRA DEPOSITS", Color.WHITE.getAnsiCode()));
-            if (!isEmptyHashMap(strongBoxHashMap) && strongBoxHashMap.containsKey(justResources.get(inputs2.get(0))) && strongBoxHashMap.get(justResources.get(inputs2.get(0))) != 0)
-                depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
-            ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, depositCategory.size(), "WHERE WOULD YOU LIKE TO TAKE THE RESOURCES FROM?\n ");
-            inputs.forEach(input -> {
-                if (required.containsKey(justResources.get(inputs2.get(0)))) {
-                    out.print("HAVE A LOOK AT THE CURRENT TOTAL QUANTITY OF RESOURCES IN THE " + depositCategory.get(input).getKey() + "\n");
+            ArrayList<Integer> inputs2 = displaySelectionFormVariableChoices(finalResourcesOptions, null, finalResourcesOptions.size(), "CHOOSE WHICH RESOURCES TO TAKE \n ");
 
-                    switch (input) {
-                        case 0 -> out.println(displayResourcesInHashMap(warehouseHashMap));
-                        case 1 -> {
-                            if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(inputs2.get(0))))
-                                out.println(displayResourcesInHashMap(leaderDepositsHashMap));
-                            else out.println(displayResourcesInHashMap(strongBoxHashMap));
+            inputs2.forEach(index -> {
+                //ask where to take resources from
+                ArrayList<Pair<String, String>> depositCategory = new ArrayList<>();
+                depositCategory.add(new Pair<>("WAREHOUSE", Color.WHITE.getAnsiCode()));
+                if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(index)))
+                    depositCategory.add(new Pair<>("EXTRA DEPOSITS", Color.WHITE.getAnsiCode()));
+                if (!isEmptyHashMap(strongBoxHashMap) && strongBoxHashMap.containsKey(justResources.get(index)) && strongBoxHashMap.get(justResources.get(index)) != 0)
+                    depositCategory.add(new Pair<>("STRONGBOX", Color.WHITE.getAnsiCode()));
+                ArrayList<Integer> inputs = displaySelectionFormVariableChoices(depositCategory, null, depositCategory.size(), "WHERE WOULD YOU LIKE TO TAKE THE "+ colorResource(justResources.get(index)) + justResources.get(index).toString() + " " + shapeResource(justResources.get(index)) + Color.reset() +" FROM?\n ");
+
+                inputs.forEach(input -> {
+                    if (required.containsKey(justResources.get(index))) {
+                        out.print("HAVE A LOOK AT THE CURRENT TOTAL QUANTITY OF RESOURCES IN THE " + Color.RED.getAnsiCode() + depositCategory.get(input).getKey() + Color.reset() + "\n");
+
+                        switch (input) {
+                            case 0 -> out.println(displayResourcesInHashMap(warehouseHashMap));
+                            case 1 -> {
+                                if (thisDepositLeaderPowers.size() > 0 && leaderDepositContainsResourceType(thisDepositLeaderPowers, justResources.get(index)))
+                                    out.println(displayResourcesInHashMap(leaderDepositsHashMap));
+                                else out.println(displayResourcesInHashMap(strongBoxHashMap));
+                            }
+                            case 2 -> out.println(displayResourcesInHashMap(strongBoxHashMap));
                         }
-                        case 2 -> out.println(displayResourcesInHashMap(strongBoxHashMap));
-                    }
-                    inputs2.forEach(index -> {
-                        out.println("HOW MANY " + justResources.get(index).toString() + " WOULD YOU LIKE TO REMOVE FROM THE " + depositCategory.get(input).getKey() + "?  INSERT A NUMBER\n");
+                        out.println("HOW MANY " + colorResource(justResources.get(index)) + justResources.get(index).toString() + " " + shapeResource(justResources.get(index)) + Color.reset() + " WOULD YOU LIKE TO REMOVE FROM THE " + Color.RED.getAnsiCode() + depositCategory.get(input).getKey() + Color.reset() + "?  INSERT A NUMBER\n");
                         int quantityToTake = required.get(justResources.get(index));
                         boolean successful;
                         boolean validInput = false;
@@ -1845,8 +1846,9 @@ public class CLI extends UI {
                             required.put(justResources.get(index), required.get(justResources.get(index)) - chosenNumber);
                         if (required.get(justResources.get(index)) == 0) required.remove(justResources.get(index));
 
-                    });
-                }
+                    }
+
+                });
             });
 
             if (required.keySet().stream().map(resource -> required.get(resource) == 0).reduce(true, (prev, foll) -> prev && foll))
