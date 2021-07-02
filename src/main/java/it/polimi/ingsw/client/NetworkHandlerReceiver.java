@@ -8,7 +8,6 @@ import it.polimi.ingsw.events.clientEvents.ServerDisconnectionEvent;
 import it.polimi.ingsw.events.Event;
 import it.polimi.ingsw.events.HeartbeatEvent;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
-import it.polimi.ingsw.utilities.LockWrap;
 import it.polimi.ingsw.utilities.MessageWrapper;
 
 import java.io.IOException;
@@ -50,8 +49,6 @@ public class NetworkHandlerReceiver{
             String json;
             try {
                 json = MessageWrapper.unwrap(scanner.nextLine());
-                if(!json.contains("\"CLASSNAME\":\"it.polimi.ingsw.events.HeartbeatEvent\""))
-                    System.out.println(json);
                 Event event = gson.fromJson(json, Event.class);
                 if (event.getClass() != HeartbeatEvent.class) {
                     userID = event.getPlayerId();
@@ -59,9 +56,6 @@ public class NetworkHandlerReceiver{
                 }
             } catch (JsonSyntaxException ignore) {
             } catch (NoSuchElementException | IllegalStateException e){
-
-                System.out.println("catch");
-
                 eventRegistry.sendEvent(new ServerDisconnectionEvent(userID));
                 done = true;
             }

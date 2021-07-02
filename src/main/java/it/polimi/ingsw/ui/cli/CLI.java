@@ -145,7 +145,7 @@ public class CLI extends UI {
             String[] rows = option.getKey().split("\n");
             int maxLength = Arrays.stream(rows).map(String::length).max(Integer::compare).orElse(0);
 
-            builderTop.append("╔═").append(resetColor);
+            builderTop.append(resetColor).append("╔═").append(resetColor);
             IntStream.range(0, maxLength).forEach(letter -> builderTop.append("═"));
             builderTop.append(resetColor).append("═╗  ");
 
@@ -432,7 +432,7 @@ public class CLI extends UI {
             builder0.append(" YOU  CAN NOW STORE THE FOLLOWING RESOURCES \n\n");
             builder0.append(displayResourcesInHashMap(resourcesToOrganize));
             out.println(builder0);
-            System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE D FOR 'DONE' OTHERWISE TYPE C FOR 'CONTINUE'");
+            out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE D FOR 'DONE' OTHERWISE TYPE C FOR 'CONTINUE'");
         }
         if (totalNumberOfResourcesToOrganize == 0 || in.next().equalsIgnoreCase("D")) {
             //GENERATE NEW NewResourcesOrganizationEvent
@@ -510,10 +510,10 @@ public class CLI extends UI {
                 if (resInHashMap.containsKey(res)) resInHashMap.put(res, resInHashMap.get(res) + 1);
                 else resInHashMap.put(res, 1);
             });
-            //System.out.println("YOU HAVE TO STORE THESE RESOURCES:  ( " + builder.toString() + Color.reset() + " )?");
+            //out.println("YOU HAVE TO STORE THESE RESOURCES:  ( " + builder.toString() + Color.reset() + " )?");
             resInHashMap.forEach((res, integer) -> {
                 String s = colorResource(res) + integer + " " + res.toString() + " " + shapeResource(res) + Color.reset();
-                System.out.println("WHERE TO PUT THESE:  ( " + s + " )?");
+                out.println("WHERE TO PUT THESE:  ( " + s + " )?");
                 // prepare the selection form for deposits.
                 ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
                 IntStream.range(0, currentDepotStates.size()).forEach(n -> {
@@ -748,7 +748,7 @@ public class CLI extends UI {
         players.add(leaderID);
         players.addAll(otherPlayersID);
 
-        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
+        out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
         StringBuilder builder = new StringBuilder();
         builder.append(Color.RED.getAnsiCode()).append("╔═");
         IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
@@ -1520,7 +1520,6 @@ public class CLI extends UI {
         while (!answer.equalsIgnoreCase("QUIT")) {
             answer = in.nextLine();
         }
-        System.out.println("Game Ended");
 
     }
 

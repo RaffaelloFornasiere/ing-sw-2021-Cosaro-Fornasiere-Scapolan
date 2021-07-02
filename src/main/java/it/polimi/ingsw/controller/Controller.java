@@ -290,7 +290,6 @@ public class Controller {
      * Handler for BuyResourcesEvent
      */
     public synchronized void BuyResourcesEventHandler(PropertyChangeEvent evt){
-        System.out.println("Entered into the handler of BuyResourcesEvent");
         BuyResourcesEvent event = (BuyResourcesEvent) evt.getNewValue();
         try {
             Player player = matchState.getPlayerFromID(event.getPlayerId());
@@ -321,16 +320,13 @@ public class Controller {
                 return;
             }
 
-            System.out.println("Marbles converted");
-
-            var powers = leaderCardManager.getSelectedPowers(player, ExtraResourceLeaderPower.class)
+            List<ExtraResourceLeaderPower> powers = leaderCardManager.getSelectedPowers(player, ExtraResourceLeaderPower.class)
                     .stream()
                     .map(x -> (ExtraResourceLeaderPower)x)
                     .collect(Collectors.toList());
 
             if(powers.size() > 1 && whiteMarbles>0)
             {
-                System.out.println("multiple leader powers");
                 ArrayList<Resource> resourceTypes= new ArrayList<>();
                 for(ExtraResourceLeaderPower lp: powers){
                     Resource r = lp.getResourceType();
@@ -343,14 +339,12 @@ public class Controller {
                         try {
                             matchState.setWaitingForSomething();
                             waitingForSimpleResourcesLock.wait();
-                            System.out.println("simpleChosenResourcesEvent passed to buyResources event");
                             matchState.somethingArrived();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                     if(simpleChosenResourcesEvent == null){
-                        System.err.println("The event is null");
                         return;
                     }
 
@@ -378,11 +372,9 @@ public class Controller {
             }
             else if (powers.size() == 1 && whiteMarbles>0)
             {
-                System.out.println("single leader power");
                 Resource type = powers.get(0).getResourceType();
                 resources.put(type, resources.getOrDefault(type, 0) + whiteMarbles);
             }
-            System.out.println("ending");
             faithTrackManager.incrementFaithTrackPosition(player, faithPoints);
             organizeResources(resources, player);
             matchState.setTurnState(TurnState.AFTER_MAIN_ACTION);
@@ -417,15 +409,12 @@ public class Controller {
                         matchState.setWaitingForSomething();
                         playerWaitingForResourceOrganization = player.getPlayerId();
                         waitingForResourceOrganizationLock.wait();
-                        System.out.println("Notified");
                         matchState.somethingArrived();
                     }catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                System.out.println("Returning");
                 if (newResourcesOrganizationEvent == null) return;
-                System.out.println("Not returned");
                 HashMap<Resource, Integer> newTotalStoredResources = new HashMap<>();
                 HashMap<Resource, Integer> discardedResources = newResourcesOrganizationEvent.getDiscardedResources();
                 //validate deposit state
@@ -483,12 +472,6 @@ public class Controller {
                 for(Resource r: oldWarehouseStoredResources.keySet()){
                     oldTotalStoredResources.put(r, oldTotalStoredResources.getOrDefault(r, 0) + oldWarehouseStoredResources.get(r));
                 }
-
-                System.out.println("RESOURCE BALANCE");
-                System.out.println(resources);
-                System.out.println(newTotalStoredResources);
-                System.out.println(discardedResources);
-                System.out.println(oldTotalStoredResources);
 
                 for (Resource r : resources.keySet()) {
                     if (resources.get(r) != newTotalStoredResources.getOrDefault(r, 0) + discardedResources.getOrDefault(r, 0) - oldTotalStoredResources.getOrDefault(r, 0))
@@ -1051,9 +1034,7 @@ public class Controller {
                 endGame();
             else {
                 do {
-                    System.out.println("preloop: " + matchState.getCurrentPlayerIndex());
                     matchState.nextTurn();
-                    System.out.println("loop: " + matchState.getCurrentPlayerIndex());
                 } while (disconnected.get(matchState.getPlayers().get(matchState.getCurrentPlayerIndex()).getPlayerId()));
             }
         } catch (NotPresentException | IllegalOperation | LeaderCardNotActiveException notPresentException) {
@@ -1158,33 +1139,28 @@ public class Controller {
      */
     public void QuitGameEventHandler(PropertyChangeEvent evt){
         QuitGameEvent event = (QuitGameEvent) evt.getNewValue();
-        System.out.println("Into the match handler");
 
         try {
             Player disconnectedPlayer = matchState.getPlayerFromID(event.getPlayerId());
 
             if (canActionBePerformed(event, disconnectedPlayer, TurnState.WAITING_FOR_SOMETHING) ||
                     (!setuppedPlayers.contains(event.getPlayerId()) && playerWaitingForResourceOrganization!=null && playerWaitingForResourceOrganization.equals(event.getPlayerId()))) {
-                System.out.println("Before simple resource");
                 synchronized (waitingForSimpleResourcesLock) {
                     simpleChosenResourcesEvent = null;
                     waitingForSimpleResourcesLock.notifyAll();
                 }
 
-                System.out.println("Before resource");
                 synchronized (waitingForResourcesLock) {
                     chosenResourcesEvent = null;
                     waitingForResourcesLock.notifyAll();
                 }
 
-                System.out.println("Before resource organization");
                 synchronized (waitingForResourceOrganizationLock) {
                     newResourcesOrganizationEvent = null;
                     waitingForResourceOrganizationLock.notifyAll();
                 }
             }
 
-            System.out.println("After locks");
             synchronized (this) {
                 disconnected.put(event.getPlayerId(), true);
                 senders.remove(event.getPlayerId());

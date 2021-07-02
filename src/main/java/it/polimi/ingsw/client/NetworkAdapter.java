@@ -132,7 +132,6 @@ public class NetworkAdapter {
             while (!stopThread) {
                 receiver.receive();
             }
-            System.out.println("Stopped thread");
 
         }).start();
 
@@ -180,7 +179,6 @@ public class NetworkAdapter {
         } else {
             playerID = view.askUserID();
             leaderID = view.askLeaderID();
-            System.out.println(leaderID + " " + playerID);
             enterMatch(playerID, leaderID);
         }
     }
@@ -235,8 +233,7 @@ public class NetworkAdapter {
     public synchronized void BadRequestEventHandler(PropertyChangeEvent evt) {
         BadRequestEvent event = (BadRequestEvent) evt.getNewValue();
         view.printError("Bad request");
-        view.printError(event.getDescription());
-        System.err.println("Cause: " + new GsonBuilder().setPrettyPrinting().create().toJson(event.getCause()));
+        view.printError(event.getDescription() + "\nCause: " + new GsonBuilder().setPrettyPrinting().create().toJson(event.getCause()));
     }
 
     /**
@@ -408,11 +405,7 @@ public class NetworkAdapter {
     public synchronized void MatchStateEventHandler(PropertyChangeEvent evt) {
         MatchStateEvent event = (MatchStateEvent) evt.getNewValue();
         ArrayList<Event> evs = view.askForNextAction(event.getPlayerId(), event.isLastRound(), event.getTurnState());
-        evs.forEach(ev -> {
-                    send(ev);
-                    System.out.println("event sent");
-                }
-        );
+        evs.forEach(this::send);
     }
 
     /**
