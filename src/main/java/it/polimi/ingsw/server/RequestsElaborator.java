@@ -91,7 +91,6 @@ public class RequestsElaborator {
                 else
                     matchEventHandlerRegistry.sendEvent(event);
             } else {
-                System.out.println("Elaborating " + event.getEventName());
                 mainEventHandlerRegistry.sendEvent(event);
             }
         }
