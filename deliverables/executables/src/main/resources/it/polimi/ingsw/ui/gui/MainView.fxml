@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0" prefWidth="1418.0" stylesheets="@stylesheets/main.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <left>
+        <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="178.0" stylesheets="@stylesheets/main.css" BorderPane.alignment="CENTER">
+            <children>
+                <AnchorPane fx:id="warehouseSlot" onMouseClicked="#openDepots">
+                    <children>
+                        <ImageView fitHeight="206.0" fitWidth="202.0" layoutX="9.0" pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
+                            <image>
+                                <Image url="@images/warehouse.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="99.0" layoutY="49.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <styleClass>
+                        <String fx:value="Coin" />
+                        <String fx:value="Resource" />
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="81.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <styleClass>
+                        <String fx:value="Shield" />
+                        <String fx:value="Resource" />
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="125.0" layoutY="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <styleClass>
+                        <String fx:value="Shield" />
+                        <String fx:value="Resource" />
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="57.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <styleClass>
+                        <String fx:value="Rock" />
+                        <String fx:value="Resource" />
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="99.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <styleClass>
+                        <String fx:value="Rock" />
+                        <String fx:value="Resource" />
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="143.0" layoutY="159.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <styleClass>
+                        <String fx:value="Rock" />
+                        <String fx:value="Resource" />
+                     </styleClass>
+                     <image>
+                        <Image url="@images/coin2.png" />
+                     </image></ImageView>
+                    </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+                </AnchorPane>
+            <AnchorPane fx:id="leaderDepotsSlot" prefHeight="122.0" prefWidth="141.0">
+               <children>
+                  <AnchorPane id="leaderDepotServant" layoutX="36.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                           <image>
+                              <Image url="@images/servant2.png" />
+                           </image>
+                        </ImageView>
+                        <Label id="servantCountLabel" layoutX="37.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane id="leaderDepotRock" layoutX="95.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                           <image>
+                              <Image url="@images/rock2.png" />
+                           </image>
+                        </ImageView>
+                        <Label id="rockCountLabel" layoutX="38.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane id="leaderDepotShield" layoutX="95.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                           <image>
+                              <Image url="@images/shield2.png" />
+                           </image>
+                        </ImageView>
+                        <Label id="shieldCountLabel" layoutX="38.0" layoutY="2.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane id="leaderDepotCoin" layoutX="36.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="41.0" fitWidth="30.0" layoutX="15.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" styleClass="Resource">
+                           <image>
+                              <Image url="@images/coin2.png" />
+                           </image>
+                        </ImageView>
+                        <Label id="coinCountLabel" layoutX="38.0" layoutY="3.0" prefHeight="27.0" prefWidth="16.0" text="4" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="strongBoxSlot" layoutX="25.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <children>
+                        <ImageView fitHeight="154.0" fitWidth="160.0" layoutX="4.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" styleClass="StrongBox" />
+                        <HBox layoutY="35.0" prefHeight="54.0" prefWidth="151.0">
+                            <children>
+                                <VBox alignment="CENTER">
+                                    <HBox.margin>
+                                        <Insets bottom="3.0" left="4.0" right="4.0" top="3.0" />
+                                    </HBox.margin>
+                                    <children>
+                                        <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@images/coin.png" />
+                                            </image>
+                                        </ImageView>
+                                        <Label id="coinCounter" alignment="CENTER" prefWidth="55.0" text="4" textFill="WHITE">
+                                            <font>
+                                                <Font name="System Bold" size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER">
+                                    <HBox.margin>
+                                        <Insets bottom="3.0" left="4.0" right="4.0" top="3.0" />
+                                    </HBox.margin>
+                                    <children>
+                                        <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@images/shield.png" />
+                                            </image>
+                                        </ImageView>
+                                        <Label id="shieldCounter" alignment="CENTER" prefHeight="21.0" prefWidth="55.0" text="7" textFill="WHITE">
+                                            <font>
+                                                <Font name="System Bold" size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER">
+                                    <HBox.margin>
+                                        <Insets bottom="3.0" left="4.0" right="4.0" top="3.0" />
+                                    </HBox.margin>
+                                    <children>
+                                        <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@images/servant2.png" />
+                                            </image>
+                                        </ImageView>
+                                        <Label id="servantCounter" alignment="CENTER" prefWidth="55.0" text="12" textFill="WHITE">
+                                            <font>
+                                                <Font name="System Bold" size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER">
+                                    <HBox.margin>
+                                        <Insets bottom="3.0" left="4.0" right="4.0" top="3.0" />
+                                    </HBox.margin>
+                                    <children>
+                                        <ImageView fitHeight="26.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@images/rock2.png" />
+                                            </image>
+                                        </ImageView>
+                                        <Label id="rockCounter" alignment="CENTER" prefWidth="55.0" text="5" textFill="WHITE">
+                                            <font>
+                                                <Font name="System Bold" size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+               </children>
+            </AnchorPane>
+            </children>
+            <BorderPane.margin>
+                <Insets left="15.0" />
+            </BorderPane.margin>
+        </VBox>
+    </left>
+    <right>
+        <VBox alignment="TOP_CENTER" prefHeight="851.0" prefWidth="198.0" stylesheets="@stylesheets/main.css" BorderPane.alignment="CENTER">
+            <children>
+            <AnchorPane>
+               <children>
+                        <VBox fx:id="playerSlot" alignment="CENTER" layoutX="40.0" layoutY="3.0" prefHeight="135.0" prefWidth="118.0" styleClass="PlayerSlot">
+                            <children>
+                                <ImageView fx:id="playerImage" fitHeight="88.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@images/Players/illustrationAccueil_plan1.png" />
+                                    </image>
+                                </ImageView>
+                              <Label alignment="CENTER" prefHeight="24.0" prefWidth="80.0" styleClass="PlayerLabel" text="Player 1" textFill="WHITE">
+                                  <font>
+                                      <Font name="Microsoft JhengHei" size="17.0" />
+                                  </font>
+                              </Label>
+                            </children>
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                        </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="marketSlot">
+               <children>
+                        <ImageView fitHeight="121.0" fitWidth="141.0" layoutX="30.0" onMouseClicked="#openMarket" pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
+                            <image>
+                                <Image url="@images/market.png" />
+                            </image>
+                        </ImageView>
+                  <GridPane fx:id="gridPane" layoutX="51.0" layoutY="20.0" mouseTransparent="true" prefHeight="84.0" prefWidth="100.0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="60.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="60.0" />
+                        <ColumnConstraints halignment="CENTER" minWidth="0.0" prefWidth="60.0" />
+                        <ColumnConstraints halignment="CENTER" minWidth="0.0" prefWidth="60.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <ImageView id="i00" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble">
+                           <image>
+                              <Image url="@images/purple-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i01" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="1">
+                           <image>
+                              <Image url="@images/white-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i02" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.rowIndex="2">
+                           <image>
+                              <Image url="@images/white-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i10" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1">
+                           <image>
+                              <Image url="@images/blue-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i11" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <image>
+                              <Image url="@images/red-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i12" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <image>
+                              <Image url="@images/gray-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i20" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2">
+                           <image>
+                              <Image url="@images/purple-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i21" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <image>
+                              <Image url="@images/white-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i22" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <image>
+                              <Image url="@images/yellow-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i30" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3">
+                           <image>
+                              <Image url="@images/gray-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i31" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <image>
+                              <Image url="@images/white-marble.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView id="i32" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                           <image>
+                              <Image url="@images/yellow-marble.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </GridPane>
+                  <ImageView id="marbleLeft" fitHeight="20.0" fitWidth="20.0" layoutX="143.0" layoutY="10.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="marble">
+                     <image>
+                        <Image url="@images/blue-marble.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+                <Group VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </VBox.margin>
+                    <children>
+                        <ImageView fitHeight="173.0" fitWidth="115.0" layoutX="9.000000953674316" layoutY="9.0" onMouseClicked="#openCardGrid" pickOnBounds="true" preserveRatio="true" styleClass="hoverBorder">
+                            <image>
+                                <Image url="@images/DecksGrid.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </Group>
+            <AnchorPane fx:id="leaderCardsSlot" onMouseClicked="#leaderAction" prefHeight="153.0" prefWidth="198.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="35.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                     <image>
+                        <Image url="@images/leaders/LeaderCard8.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="70.0" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                     <image>
+                        <Image url="@images/leaders/LeaderCard8.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="0.0" prefWidth="198.0">
+               <children>
+                  <Button id="watchOthersButton" layoutX="38.0" mnemonicParsing="false" onAction="#watchOthers" text="Watch others " />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <Button id="endOfTurnButton" layoutX="46.0" mnemonicParsing="false" onAction="#endOfTurn" text="End of turn" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+        </VBox>
+    </right>
+    <center>
+        <HBox fx:id="ownedCardsSlot" alignment="CENTER" prefHeight="721.0" prefWidth="991.0" stylesheets="@stylesheets/main.css">
+            <children>
+                <Group stylesheets="@stylesheets/main.css" HBox.hgrow="NEVER">
+                    <children>
+                        <ImageView fx:id="s1card1" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="50.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/Front/DevCard4.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="s1card2" fitHeight="350.0" fitWidth="300.0" layoutX="28.0" layoutY="-25.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/Front/DevCard18.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="s1card3" fitHeight="350.0" fitWidth="244.0" layoutX="28.0" layoutY="-100.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/Front/DevCard41.png" />
+                            </image>
+                            <styleClass>
+                                <String fx:value="hoverBorder" />
+                                <String fx:value="Card" />
+                            </styleClass>
+                        </ImageView>
+                    </children>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </HBox.margin>
+                </Group>
+                <Group>
+                    <children>
+                        <ImageView fx:id="s2card1" fitHeight="350.0" fitWidth="300.0" layoutY="50.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/Front/DevCard5.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="s2card2" fitHeight="350.0" fitWidth="300.0" layoutY="-25.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/Front/DevCard23.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="s2card3" fitHeight="350.0" fitWidth="300.0" layoutY="-100.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/Front/DevCard48.png" />
+                            </image>
+                            <styleClass>
+                                <String fx:value="hoverBorder" />
+                                <String fx:value="Card" />
+                            </styleClass>
+                        </ImageView>
+                    </children>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </HBox.margin>
+                </Group>
+                <Group stylesheets="@stylesheets/main.css">
+                    <children>
+                        <ImageView fx:id="s3card1" fitHeight="350.0" fitWidth="300.0" layoutY="50.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/Front/DevCard7.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="s3card2" fitHeight="350.0" fitWidth="300.0" layoutY="-25.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" styleClass="Card">
+                            <image>
+                                <Image url="@images/Front/DevCard21.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="350.0" fitWidth="244.0" layoutY="-100.0" onMouseClicked="#openProduction" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 25px;" styleClass="hoverBorder">
+                            <image>
+                                <Image url="@images/Front/DevCard46.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </HBox.margin>
+                </Group>
+            </children>
+        </HBox>
+    </center>
+    <top>
+        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="210.0" prefWidth="1300.0">
+                    <children>
+                        <StackPane>
+                            <HBox.margin>
+                                <Insets left="50.0" right="50.0" />
+                            </HBox.margin>
+                            <children>
+                                <GridPane fx:id="faithTrack" alignment="CENTER" stylesheets="@stylesheets/main.css">
+                                    <columnConstraints>
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
+                                                <Label layoutX="25.0" layoutY="20.0" text="0" />
+                                                <ImageView fitHeight="150.0" fitWidth="40.0" layoutX="8.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/CrocePrimaCella.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
+                                                <Label layoutX="25.0" layoutY="20.0" text="1" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
+                                                <Label layoutX="25.0" layoutY="20.0" text="2" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateX="-10.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="58.0" fitWidth="77.0" layoutX="-13.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true" translateX="-26.0" x="10.0">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="CellVP" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="-4.0" layoutY="14.0" style="-fx-opacity: 0;" text="3" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="-51.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="-37.0" layoutY="7.0" text="1">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
+                                                <Label layoutX="25.0" layoutY="20.0" text="4" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="25.0" layoutY="20.0" text="5" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="CellVP" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="25.0" layoutY="20.0" style="-fx-opacity: 0;" text="6" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="10.0" layoutY="-22.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="25.0" layoutY="-11.0" text="2">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="25.0" layoutY="20.0" text="7" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="PopeCell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="25.0" layoutY="20.0" text="8" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="CellVP" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="25.0" layoutY="20.0" style="-fx-opacity: 0;" text="9" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="8.0" layoutY="-24.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="-14.0" text="4">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
+                                                <Label layoutX="22.0" layoutY="20.0" text="10" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
+                                                <Label layoutX="22.0" layoutY="20.0" text="11" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="12.0" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="CellVP" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="20.0" style="-fx-opacity: 0;" text="12" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="8.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="23.0" layoutY="45.0" text="6">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="20.0" text="13" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="20.0" text="14" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="12.0" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="CellVP" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="20.0" style="-fx-opacity: 0;" text="15" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="8.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="43.0" text="9">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" styleClass="Cell" />
+                                                <Label layoutX="22.0" layoutY="19.0" text="17" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <Label layoutX="22.0" layoutY="20.0" text="16" />
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="PopeCell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="12" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="58.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="CellVP" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="19.0" style="-fx-opacity: 0;" text="18" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="9.0" layoutY="-25.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="18.0" layoutY="-13.0" text="12">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="13" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="19.0" text="19" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="14" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="19.0" text="20" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="15" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="58.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="CellVP" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="19.0" style="-fx-opacity: 0;" text="21" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="8.0" layoutY="-25.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="18.0" layoutY="-16.0" text="16">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="16" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="19.0" text="22" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" GridPane.columnIndex="17" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="20.0" text="23" />
+                                            </children>
+                                        </Group>
+
+                                        <Group styleClass="Cell" stylesheets="@stylesheets/main.css" translateY="-11.0" GridPane.columnIndex="18" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                                            <children>
+                                                <ImageView fitHeight="56.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                                    <styleClass>
+                                                        <String fx:value="Cell" />
+                                                        <String fx:value="PopeCell" />
+                                                        <String fx:value="VaticanReportSection" />
+                                                    </styleClass>
+                                                </ImageView>
+                                                <Label layoutX="22.0" layoutY="19.0" style="-fx-opacity: 0;" text="24" />
+                                                <ImageView fitHeight="50.0" fitWidth="90.0" layoutX="8.0" layoutY="-25.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/VictoryPoint.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label layoutX="17.0" layoutY="-13.0" text="20">
+                                                    <font>
+                                                        <Font name="System Bold" size="19.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </Group>
+                                        <Group translateY="-12.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                            <children>
+                                                <ImageView id="PopeFavor1" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.7;">
+                                                    <image>
+                                                        <Image url="@images/quadrato_giallo_faded.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fx:id="popeFavorCard1" fitHeight="90.0" fitWidth="90.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/pope_favor1_back.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </children>
+                                        </Group>
+                                        <Group translateY="12.0" GridPane.columnIndex="9" GridPane.columnSpan="2" GridPane.rowSpan="2">
+                                            <children>
+                                                <ImageView id="PopeFavor2" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.7;">
+                                                    <image>
+                                                        <Image url="@images/quadrato_arancione_faded.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fx:id="popeFavorCard2" fitHeight="90.0" fitWidth="90.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/pope_favor2_back.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </children>
+                                        </Group>
+                                        <Group translateY="-12.0" GridPane.columnIndex="15" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                            <children>
+                                                <ImageView id="PopeFavor3" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.7;">
+                                                    <image>
+                                                        <Image url="@images/quadrato_rosso_faded.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fx:id="popeFavorCard3" fitHeight="90.0" fitWidth="90.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@images/pope_favor3_back.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </children>
+                                        </Group>
+
+                                    </children>
+                                    <padding>
+                                        <Insets top="20.0" />
+                                    </padding>
+                                </GridPane>
+                            </children>
+                        </StackPane>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+</BorderPane>

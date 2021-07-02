@@ -1,0 +1,98 @@
+.root {
+    -fx-background-color: #393939;
+
+}
+
+.label {
+    -fx-text-fill: #848484;
+}
+
+
+.text-field {
+    -fx-background-color: #393939;
+    -fx-border-color: #848484;
+    -fx-border-width: 1;
+    -fx-border-radius: 20 20 20 20;
+    -fx-text-fill: #848484;
+    -fx-prompt-text-fill: #848484;
+}
+
+
+.PanePlayer {
+    -fx-background-color: #80808054;
+    -fx-background-radius: 30px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1), 10, 0, 0, 0);
+}
+
+#Owner {
+    -fx-border-radius: 30px;
+}
+
+.PlayerLabel {
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+}
+
+.list-view {
+    -fx-background-color: #ffffff10;
+}
+
+/*
+1. Odd rows with white background color;
+2. ListView: when mouse over an item, highlight with a blue shade;
+3. ListView: when an item is selected, paint it with a gradient;
+4. ListView: when focus is lost from ListView, selected item should be painted with gradient;
+5. ListView: all items will start with text-fill black. But on mouse over and/or selected it will change to white.
+*/
+
+.list-cell > .label {
+    -fx-text-fill: black; /* 5 */
+}
+
+.list-cell:odd {
+    -fx-background-color: #535353; /* 1 */
+}
+
+.list-cell:even {
+    -fx-background-color: #717171; /* for information */
+}
+
+.list-cell > #leader {
+    -fx-text-fill: red;
+    -fx-background-color: #9e4444;
+}
+
+.button {
+    -fx-background-radius: 20 20 20 20;
+    -fx-border-radius: 20 20 20 20;
+    -fx-border-width: 1.5;
+    -fx-background-color: #393939;
+    -fx-border-color: #848484;
+    -fx-text-fill: #848484;
+    -fx-text-alignment: center;
+}
+
+
+.button:hover {
+    -fx-background-color: #848484;
+    -fx-text-fill: #393939;
+}
+
+
+.arrow-button {
+    -fx-background-color: transparent;
+    /*-fx-border-width: 1.5px;*/
+    -fx-padding: 0.25em;
+    -fx-shape: "M 0 -3.5 v 7 l 4 -3.5 z";
+}
+
+.previousButton {
+    -fx-rotate: 180;
+}
+
+
+.nextButton {
+
+}
+
+
