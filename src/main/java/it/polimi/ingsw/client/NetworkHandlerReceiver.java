@@ -49,8 +49,6 @@ public class NetworkHandlerReceiver{
             String json;
             try {
                 json = MessageWrapper.unwrap(scanner.nextLine());
-                if(!json.contains("\"CLASSNAME\":\"it.polimi.ingsw.events.HeartbeatEvent\""))
-                    System.out.println(json);
                 Event event = gson.fromJson(json, Event.class);
                 if (event.getClass() != HeartbeatEvent.class) {
                     userID = event.getPlayerId();
@@ -58,7 +56,6 @@ public class NetworkHandlerReceiver{
                 }
             } catch (JsonSyntaxException ignore) {
             } catch (NoSuchElementException | IllegalStateException e){
-                System.out.println("catch");
                 eventRegistry.sendEvent(new ServerDisconnectionEvent(userID));
                 done = true;
             }

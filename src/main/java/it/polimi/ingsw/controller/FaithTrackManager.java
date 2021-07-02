@@ -30,7 +30,6 @@ public class FaithTrackManager {
         try {
             ft.incrementPosition(n);
         } catch (OutOfBoundException e) {
-           System.out.println(p+" reached the end of faithTrack");
             try {
                 ft.setPosition(FaithTrack.size()-1);
                 IntStream.range(beforePosition, FaithTrack.size()).forEach(i -> FaithTrack.getArrayOfCells().get(i).activateEffect(this.matchState));
