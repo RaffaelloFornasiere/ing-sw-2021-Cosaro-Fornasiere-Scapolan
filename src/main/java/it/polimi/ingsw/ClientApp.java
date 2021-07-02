@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-/**
- * Hello world!
- */
 public class ClientApp {
     public static void main(String[] args) {
         //UI ui = new GUI();
@@ -29,7 +26,7 @@ public class ClientApp {
             NetworkAdapter networkAdapter = connectToServer(ui);
             ui.setClient(networkAdapter);
 
-            joinLobby(ui, networkAdapter);
+            networkAdapter.joinLobby();
         }
     }
 
@@ -62,20 +59,6 @@ public class ClientApp {
             return new CLI();
         else
             return new GUI();
-    }
-
-    public static void joinLobby(UI ui, NetworkAdapter networkAdapter) {
-        String playerID;
-        String leaderID;
-        if (ui.askIfNewLobby()) {
-            playerID = ui.askUserID();
-            networkAdapter.createMatch(playerID);
-        } else {
-            playerID = ui.askUserID();
-            leaderID = ui.askLeaderID();
-            System.out.println(leaderID + " " + playerID);
-            networkAdapter.enterMatch(playerID, leaderID);
-        }
     }
 
     private static NetworkAdapter connectToServer(UI ui) {

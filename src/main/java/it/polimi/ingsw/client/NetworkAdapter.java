@@ -167,6 +167,22 @@ public class NetworkAdapter {
         sender.sendObject(e);
     }
 
+    /**
+     * Makes a player join or create a lobby
+     */
+    public void joinLobby() {
+        String playerID;
+        String leaderID;
+        if (view.askIfNewLobby()) {
+            playerID = view.askUserID();
+            createMatch(playerID);
+        } else {
+            playerID = view.askUserID();
+            leaderID = view.askLeaderID();
+            System.out.println(leaderID + " " + playerID);
+            enterMatch(playerID, leaderID);
+        }
+    }
 
     /**
      * Enters a lobby
@@ -356,7 +372,7 @@ public class NetworkAdapter {
         LobbyError event = (LobbyError) evt.getNewValue();
 
         view.printError(event.getErrorMsg());
-        ClientApp.joinLobby(view, this);
+        joinLobby();
     }
 
     /**
@@ -490,6 +506,6 @@ public class NetworkAdapter {
 
         view.invalidateUsername();
         view.printError(event.getErrorMsg());
-        ClientApp.joinLobby(view, this);
+        joinLobby();
     }
 }
