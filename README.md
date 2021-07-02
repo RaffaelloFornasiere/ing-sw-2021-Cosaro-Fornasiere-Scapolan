@@ -23,6 +23,29 @@ The project is accompanied by several UML diagrams:
 
 ###Requirements
 The application supports only UNIX based operating systems (like Linux or MACOS) due to the use of special characters to color the text in the CLI.
-It requires Java RE 14.
+It requires Java SE 14.
 
 ###Instruction for testing
+####Single player
+The application in single player can be run by executing the following command:
+```bash
+java -jar client.jar
+```
+After this you'll be asked to select CLI or GUI mode
+
+####Multiplayer
+If you want to play multiplayer game you must run the server before through the following command
+```bash
+java -jar server.jar
+```
+and then 
+```bash
+java -jar client.jar
+```
+to run the client. Again you'll be asked to select CLI or GUI.
+
+If you're going to use the CLI it's recommended to execute this command before executing the jar
+```bash
+tput rmam
+```
+this ensures a proper visualization of the CLI.
