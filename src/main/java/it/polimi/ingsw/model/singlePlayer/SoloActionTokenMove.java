@@ -62,7 +62,7 @@ public class SoloActionTokenMove extends SoloActionToken{
             }
         }
         if(reshuffle){
-            if(!builder.isEmpty()) builder.append(". ");
+            if(builder.length() != 0) builder.append(". ");
             builder.append("The token pile will be reshuffled");
         }
         return builder.toString();

@@ -1032,10 +1032,8 @@ public class CLI extends UI {
     public BuyResourcesEvent askForMarketRow() {
         Direction dir = null;
         int index = 0;
-        String output = """
-                YOU HAVE TO CHOOSE THE RESOURCES FROM ONE ROW OR ONE COLUMN OF THE MARKET
-                WOULD YOU LIKE A ROW OR A COLUMN?
-                """;
+        String output = "YOU HAVE TO CHOOSE THE RESOURCES FROM ONE ROW OR ONE COLUMN OF THE MARKET\n" +
+                "WOULD YOU LIKE A ROW OR A COLUMN? ";
         ArrayList<Pair<String, String>> direction = new ArrayList<>();
         direction.add(new Pair<>(Direction.ROW.toString(), Color.WHITE.getAnsiCode()));
         direction.add(new Pair<>(Direction.COLUMN.toString(), Color.WHITE.getAnsiCode()));
