@@ -118,7 +118,7 @@ public class LoginController extends Controller implements Initializable {
 
     public void onTextChanged()
     {
-        System.out.println();
+        //System.out.printlnln();
     }
 
     public void UsernameAlreadyTaken() {

@@ -46,7 +46,7 @@ public class SelectDevCardSlotController extends Controller implements Initializ
 
     public void setRes(MouseEvent event) {
         Button button = (Button) event.getSource();
-        ////System.out.println(button.getText());
+        //////System.out.printlnln(button.getText());
         if(res == Integer.parseInt(button.getText())) {
             return;
         } else if(res == 0) {

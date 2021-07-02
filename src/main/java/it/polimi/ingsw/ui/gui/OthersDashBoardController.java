@@ -103,7 +103,7 @@ public class OthersDashBoardController extends  Controller implements Initializa
         });
         ((Label) playerSlot.getChildren().stream().filter(n -> n instanceof Label).collect(Collectors.toList()).get(0)).setText(playerID);
         playerImage = null;
-        //System.out.println("update all");
+        ////System.out.printlnln("update all");
         updateAll();
     }
 
@@ -138,7 +138,7 @@ public class OthersDashBoardController extends  Controller implements Initializa
             }
         }
         String marbleLeft = "file:" + imagePath + PlayerState.marketStatus.getValue().toString().toLowerCase() + "-marble.png";
-        //System.out.println(marbleLeft);
+        ////System.out.printlnln(marbleLeft);
         GridPane gridPane = (GridPane) marketSlot.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().orElse(null);
         var marbles = gridPane.getChildren()
                 .stream().filter(n -> n instanceof ImageView)
@@ -155,7 +155,7 @@ public class OthersDashBoardController extends  Controller implements Initializa
                     .get(marble.getId().charAt(1) - '0')));
         }
         marbleLeftImage.setImage(new Image(marbleLeft));
-        //System.out.println("market updated");
+        ////System.out.printlnln("market updated");
     }
 
     public void updateOwnedCards() {
@@ -188,7 +188,7 @@ public class OthersDashBoardController extends  Controller implements Initializa
             }
         }
         SelectableImage.setSelectable(ownedCardsSlot);
-        //System.out.println("owned cards update");
+        ////System.out.printlnln("owned cards update");
     }
 
 
@@ -287,7 +287,7 @@ public class OthersDashBoardController extends  Controller implements Initializa
                 image.setOpacity(0);
             }
         });
-        //System.out.println("depots updated");
+        ////System.out.printlnln("depots updated");
     }
 
     public void updateStrongBox() {
@@ -298,7 +298,7 @@ public class OthersDashBoardController extends  Controller implements Initializa
                     Resource r = Resource.valueOf(l.getId().replace("Counter", "").toUpperCase());
                     l.setText(String.valueOf(thisPlayerState.strongBox.getOrDefault(r, 0)));
                 });
-        //System.out.println("strongbox updated");
+        ////System.out.printlnln("strongbox updated");
     }
 
 

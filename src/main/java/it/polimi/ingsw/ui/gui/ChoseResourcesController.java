@@ -188,7 +188,7 @@ public class ChoseResourcesController extends Controller implements Initializabl
             HBox.setHgrow(label, Priority.ALWAYS);
             hBox.getChildren().addAll(label, buttonLine);
             resourcesOfChoiceList.getItems().add(hBox);
-            //System.out.println(list.getSelectionModel().getSelectedItem().getText());
+            ////System.out.printlnln(list.getSelectionModel().getSelectedItem().getText());
         }
     }
 

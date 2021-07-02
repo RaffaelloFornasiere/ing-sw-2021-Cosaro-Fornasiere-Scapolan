@@ -176,7 +176,7 @@ public class WarehouseController extends Controller implements Initializable {
             label.setText(String.valueOf(discardResources.getOrDefault(r, 0)));
             ImageView image = (ImageView) n.getChildren().stream().filter(l -> l instanceof ImageView).findFirst().orElse(null);
             image.setImage(new Image(finalImagePath + r.toString().toLowerCase() + "2.png"));
-            //System.out.println("Res: " + r);
+            ////System.out.printlnln("Res: " + r);
             if (discardResources.getOrDefault(r, 0) == 0) {
                 image.setOpacity(0.5);
             }
@@ -352,13 +352,13 @@ public class WarehouseController extends Controller implements Initializable {
                     AnchorPane parent2 = ((AnchorPane) source.getParent());
                     int i = parent2.getChildren().indexOf(source);
                     String type = event.getDragboard().getString();
-//                    System.out.println("sourceres: " + type);
+//                    //System.out.printlnln("sourceres: " + type);
                     switch (i) {
                         case 1 -> event.acceptTransferModes(TransferMode.MOVE);
                         case 2 -> {
                             ImageView sibling = (ImageView) parent2.getChildren().get(i + 1);
 //                            if (sibling.getImage() != null)
-//                                System.out.println("siblings1: " + sibling.getImage().getUrl());
+//                                //System.out.printlnln("siblings1: " + sibling.getImage().getUrl());
                             if (sibling.getImage() == null ||
                                     sibling.getImage().getUrl().contains(type))
                                 event.acceptTransferModes(TransferMode.MOVE);
@@ -366,7 +366,7 @@ public class WarehouseController extends Controller implements Initializable {
                         case 3 -> {
                             ImageView sibling = (ImageView) parent2.getChildren().get(i - 1);
 //                            if (sibling.getImage() != null)
-//                                System.out.println("siblings1: " + sibling.getImage().getUrl());
+//                                //System.out.printlnln("siblings1: " + sibling.getImage().getUrl());
                             if (sibling.getImage() == null ||
                                     sibling.getImage().getUrl().contains(type))
                                 event.acceptTransferModes(TransferMode.MOVE);
@@ -375,9 +375,9 @@ public class WarehouseController extends Controller implements Initializable {
                             ImageView sibling = (ImageView) parent2.getChildren().get(i + 1);
                             ImageView sibling2 = (ImageView) parent2.getChildren().get(i + 2);
 //                            if (sibling.getImage() != null)
-//                                System.out.println("siblings1: " + sibling.getImage().getUrl());
+//                                //System.out.printlnln("siblings1: " + sibling.getImage().getUrl());
 //                            if (sibling2.getImage() != null)
-//                                System.out.println("siblings2: " + sibling2.getImage().getUrl());
+//                                //System.out.printlnln("siblings2: " + sibling2.getImage().getUrl());
                             if ((sibling.getImage() == null && sibling2.getImage() == null) ||
                                     Objects.requireNonNullElse(sibling.getImage(), sibling2.getImage()).getUrl().contains(type))
                                 event.acceptTransferModes(TransferMode.MOVE);
@@ -387,7 +387,7 @@ public class WarehouseController extends Controller implements Initializable {
                             ImageView sibling2 = (ImageView) parent2.getChildren().get(i - 1);
 
 //                            if (sibling.getImage() != null)
-//                                System.out.println("siblings1: " + sibling.getImage().getUrl());
+//                                //System.out.printlnln("siblings1: " + sibling.getImage().getUrl());
 //                            if (sibling2.getImage() != null)
 //                                System.out.println("siblings2: " + sibling2.getImage().getUrl());
 

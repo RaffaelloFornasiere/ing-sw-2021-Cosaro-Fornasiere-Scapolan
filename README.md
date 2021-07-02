@@ -1,17 +1,17 @@
 # Prova finale di ingegneria del software - a.a. 2020-2021
 The aim of the project is to develop a software version of the game "Master of Renaissance".
 
-###Developers
+### Developers
 This particular version was developed by Lisa Cosaro, Raffaello Fornasiere and Leonardo Scapolan.
 
-###Implemented functionalities
+### Implemented functionalities
 - Complete rule set
 - CLI
 - GUI
 - Socket
 - Two advanced functionalities: "Partite multiple" and "Partita locale"
 
-###Documentation
+### Documentation
 The project is accompanied by several UML diagrams:
 
 - A [simplified UML diagram](https://github.com/RaffaelloFornasiere/ing-sw-2021-Cosaro-Fornasiere-Scapolan/blob/main/deliverables/UMLdiagram/SimplifiedUML.png) detailing the main classes of the application and their iteration
@@ -21,8 +21,31 @@ The project is accompanied by several UML diagrams:
 - A [sequence diagram](https://github.com/RaffaelloFornasiere/ing-sw-2021-Cosaro-Fornasiere-Scapolan/tree/main/deliverables/UMLdiagram/Sequence%20Diagrams/PlayLeaderCard) showing the action of activating a leader card, together with an explanatory text
 - A series of [complete UML diagrams](https://github.com/RaffaelloFornasiere/ing-sw-2021-Cosaro-Fornasiere-Scapolan/tree/main/deliverables/UMLdiagram/CompleteUML) for the whole application
 
-###Requirements
-The application supports only UNIX based operating systems (like Linux or MACOS) due to the use of special characters to color the text in the CLI.
-It requires Java RE 14.
+### Requirements
+The application supports only UNIX based operating systems (like Linux or macOS) due to the use of special characters to color the text in the CLI.
+It requires Java SE 14.
 
-###Instruction for testing
+### Instruction for testing
+#### Single player
+The application in single player can be run by executing the following command:
+```bash
+java -jar client.jar
+```
+After this you'll be asked to select CLI or GUI mode
+
+#### Multiplayer
+If you want to play multiplayer game you must run the server before through the following command
+```bash
+java -jar server.jar
+```
+and then 
+```bash
+java -jar client.jar
+```
+to run the client. Again you'll be asked to select CLI or GUI.
+
+If you're going to use the CLI it's recommended to execute this command before executing the jar
+```bash
+tput rmam
+```
+this ensures a proper visualization of the CLI.

@@ -21,7 +21,7 @@ public class FaithTrackView {
     private final HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
 
     /**
-     * constructor, put all initial position to 0
+     * constructor, puts all initial positions to 0
      *
      * @param playersNames the players' ids
      */
@@ -153,6 +153,7 @@ public class FaithTrackView {
      */
     //TODO put lorenzo position into visualization
     public void updateLorenzoPosition(int position) {
+        playersPositions.put("Lorenzo", position);
     }
 //
 //    public static void main(String[] args) {

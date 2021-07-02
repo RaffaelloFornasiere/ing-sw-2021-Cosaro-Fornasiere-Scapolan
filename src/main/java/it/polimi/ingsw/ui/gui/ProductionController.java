@@ -117,9 +117,9 @@ public class ProductionController extends Controller implements Initializable {
             devCardsImages.get(i).setImage(new Image("file:" + imagePath + "front/" +
                     devCards.get(i).getCardID() + ".png"));
         }
-        //System.out.println(devCardsImages.size());
+        ////System.out.printlnln(devCardsImages.size());
         var leaderCardImages = selectableImages.stream().filter(n -> n.getStyleClass().contains("leaderCard")).collect(Collectors.toList());
-        //System.out.println(leaderCardImages.size());
+        ////System.out.printlnln(leaderCardImages.size());
 
 
         for (int i = 0; i < leaderCardImages.size(); i++) {
@@ -148,7 +148,7 @@ public class ProductionController extends Controller implements Initializable {
         String name = image.getImage().getUrl();
 
         name = name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
-        //System.out.println(name);
+        ////System.out.printlnln(name);
         ArrayList<String> aux = null;
         if (name.contains("DevCard"))
             aux = selectedDevCards;

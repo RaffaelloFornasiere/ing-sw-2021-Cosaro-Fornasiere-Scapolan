@@ -314,6 +314,7 @@ public class NetworkAdapter {
      */
     public synchronized void GameEndedEventHandler(PropertyChangeEvent evt) {
         GameEndedEvent event = (GameEndedEvent) evt.getNewValue();
+        System.out.println("game ended received");
         view.displayEndOfGame(event.getFinalPlayerStates());
         stopRead();
     }

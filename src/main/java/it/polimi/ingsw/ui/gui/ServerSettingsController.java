@@ -46,7 +46,7 @@ public class ServerSettingsController extends Controller implements Initializabl
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //System.out.println("init");
+        ////System.out.printlnln("init");
         portText.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -79,10 +79,10 @@ public class ServerSettingsController extends Controller implements Initializabl
 
     public void onPortChanged() {
         int port = Integer.parseInt(portText.getText());
-        //System.out.println("port typed: " + Integer.toString(port));
+        ////System.out.printlnln("port typed: " + Integer.toString(port));
         if (port < 1024) {
             portErrorLabel.setOpacity(1);
-            //System.out.println("error");
+            ////System.out.printlnln("error");
             return;
         } else
             portErrorLabel.setOpacity(0);
@@ -111,7 +111,7 @@ public class ServerSettingsController extends Controller implements Initializabl
     }
 
     public void onServerChanged(String ip) {
-        //System.out.println(ip);
+        ////System.out.printlnln(ip);
         try {
             serverAddress = InetAddress.getByName(ip);
             gui.setServerAddress(serverAddress);
