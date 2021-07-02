@@ -6,13 +6,22 @@ import java.util.ArrayList;
 
 public class Panel {
     private int width;
+
     public void setHeight(int height) {
         this.height = height;
     }
+
     private int height;
     ArrayList<DrawableObject> objects;
     PrintWriter writer;
 
+    /**
+     * constructor
+     *
+     * @param width  the width of the panel
+     * @param height the height of the panel
+     * @param os     the outputStream instance where to print
+     */
     Panel(int width, int height, OutputStream os) {
         this.width = width;
         this.height = height;
@@ -22,6 +31,13 @@ public class Panel {
         this.writer = new PrintWriter(os);
     }
 
+    /**
+     * constructor
+     *
+     * @param width  the width of the panel
+     * @param height the height of the panel
+     * @param writer the print writer where to print
+     */
     Panel(int width, int height, PrintWriter writer) {
         this.width = width;
         this.height = height;
@@ -31,36 +47,42 @@ public class Panel {
         this.writer = writer;
     }
 
+    /**
+     * constructor which auto-builds a panel
+     *
+     * @param drawableObjects array of drawable objects
+     * @param os              the outputStream
+     * @param putInLine       true if the objects must be visualized horizontally
+     */
     public Panel(ArrayList<DrawableObject> drawableObjects, OutputStream os, boolean putInLine) {
         this(drawableObjects, new PrintWriter(os), putInLine);
     }
 
     public Panel(ArrayList<DrawableObject> drawableObjects, PrintWriter printWriter, boolean putInLine) {
-        if(putInLine){
+        if (putInLine) {
             ArrayList<DrawableObject> newDrawableObjects = new ArrayList<>();
             width = 0;
             height = 0;
-            for(DrawableObject drawableObject: drawableObjects){
+            for (DrawableObject drawableObject : drawableObjects) {
                 DrawableObject newDrawableObject = new DrawableObject(drawableObject.getTextObject(), width, 0);
                 newDrawableObjects.add(newDrawableObject);
                 width = width + newDrawableObject.getWidth() + 3;
-                if(newDrawableObject.getHeight()>height)
-                    height= newDrawableObject.getHeight();
+                if (newDrawableObject.getHeight() > height)
+                    height = newDrawableObject.getHeight();
             }
             drawableObjects = newDrawableObjects;
-        }
-        else {
+        } else {
 //            height = drawableObjects.stream().map(drawableObject ->  drawableObject.getHeight()).reduce(0, (a,b)->a+b);
 //            width = drawableObjects.stream().map(drawableObject -> drawableObject.getWidth()).max(Integer::compareTo).orElse(0);
             ArrayList<DrawableObject> newDrawableObjects = new ArrayList<>();
             width = 0;
             height = 0;
-            for(DrawableObject drawableObject: drawableObjects){
+            for (DrawableObject drawableObject : drawableObjects) {
                 DrawableObject newDrawableObject = new DrawableObject(drawableObject.getTextObject(), 0, height);
                 newDrawableObjects.add(newDrawableObject);
                 height = height + newDrawableObject.getHeight() + 2;
-                if(newDrawableObject.getWidth()>width)
-                    width= newDrawableObject.getWidth();
+                if (newDrawableObject.getWidth() > width)
+                    width = newDrawableObject.getWidth();
             }
             drawableObjects = newDrawableObjects;
         }
@@ -70,7 +92,12 @@ public class Panel {
     }
 
 
-
+    /**
+     * method which adds an item to the panel
+     *
+     * @param o the drawable object
+     * @throws IllegalArgumentException if the objects exceeds the panel boundaries
+     */
     public void addItem(DrawableObject o) throws IllegalArgumentException {
         if (o.getX() + o.getWidth() > width
                 || o.getY() + o.getHeight() > height)
@@ -78,7 +105,9 @@ public class Panel {
         objects.add(o);
     }
 
-
+    /**
+     * method which displays the panel
+     */
     public void show() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < height; i++) {

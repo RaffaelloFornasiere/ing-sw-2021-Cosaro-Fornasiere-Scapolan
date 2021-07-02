@@ -26,7 +26,11 @@ public class LeaderCardView {
     private boolean active;
     private final String idCard;
 
-
+    /**
+     * constructor
+     *
+     * @param leaderCardID the id of the leader card
+     */
     public LeaderCardView(String leaderCardID) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new GsonInheritanceAdapter<Requirement>());
@@ -43,6 +47,12 @@ public class LeaderCardView {
         idCard = card.getCardID();
     }
 
+    /**
+     * method which updates the extra deposits state
+     *
+     * @param leaderPowerIndex the index of the deposit power in this leader card
+     * @param storedResources  the resources stored in the extra deposits
+     */
     public void updateDepositLeaderPower(int leaderPowerIndex, HashMap<Resource, Integer> storedResources) {
         if (card.getLeaderPowers().get(leaderPowerIndex) instanceof DepositLeaderPower) {
             try {
@@ -56,6 +66,14 @@ public class LeaderCardView {
         }
     }
 
+    /**
+     * method which tries to add resources to extra deposits of this card
+     *
+     * @param leaderPowerIndex the index of the power
+     * @param res              resource type
+     * @param n                quantity to add
+     * @return result message
+     */
     public DepotResultMessage updateDepositLeaderPower(int leaderPowerIndex, Resource res, int n) {
 
         if (!((DepositLeaderPower) card.getLeaderPowers().get(leaderPowerIndex)).getCurrentResources().containsKey(res))
@@ -73,6 +91,11 @@ public class LeaderCardView {
         return DepotResultMessage.SUCCESSFUL_LEADER;
     }
 
+    /**
+     * method which counts the total resources in the extra deposits of this card
+     *
+     * @return the hashmap
+     */
     public HashMap<Resource, Integer> getTotalResourcesInDepositLeaderPowers() {
         HashMap<Resource, Integer> totalRes = new HashMap<>();
         Arrays.stream(Resource.values()).forEach(res -> totalRes.put(res, 0));
@@ -82,10 +105,21 @@ public class LeaderCardView {
         return totalRes;
     }
 
+    /**
+     * method which gets the name of one leader power.
+     *
+     * @param leaderPowerIndex the index of the leader power
+     * @return the name of the power( there are four types of leader powers)
+     */
     public String getLeaderPowerName(int leaderPowerIndex) {
         return card.getLeaderPowers().get(leaderPowerIndex).getClass().getName().substring(34);
     }
 
+    /**
+     * method which build a string to display one extra deposit
+     *
+     * @return the string
+     */
     public String depositPowersToString() {
         StringBuilder builder = new StringBuilder();
         IntStream.range(0, card.getLeaderPowers().size()).forEach(index -> {
@@ -118,12 +152,17 @@ public class LeaderCardView {
 
             }
 
-    });
-            return builder.toString();
+        });
+        return builder.toString();
 
-}
+    }
 
-
+    /**
+     * method which translates the type of one card into a color
+     *
+     * @param c
+     * @return
+     */
     public String translateColor(CardColor c) {
         if (c == CardColor.BLUE) return Color.BLUE.getAnsiCode();
         if (c == CardColor.VIOLET) return Color.RED.getAnsiCode();
@@ -131,36 +170,72 @@ public class LeaderCardView {
         else return Color.YELLOW.getAnsiCode();
     }
 
-
+    /**
+     * method which translate a boolean into  a v of x
+     *
+     * @param b the boolean
+     * @return the string
+     */
     private String translateBoolean(Boolean b) {
         if (b) return "✓";
         else return "✗";
     }
 
+    /**
+     * set a leader card to active or not
+     *
+     * @param active boolean
+     */
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    /**
+     * tells if a leader power is selected or not
+     *
+     * @param index the index of the leader power
+     * @return true or false
+     */
     public boolean getSelected(int index) {
         return card.getSelectedLeaderPowers().contains(card.getLeaderPowers().get(index));
     }
 
+    /**
+     * tells whether a card is active or not
+     *
+     * @return true or false
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * getter of the id of the card
+     *
+     * @return the id
+     */
     public String getIdCard() {
         return idCard;
     }
 
+    /**
+     * getter of the array of leader powers which can bve selected/deselected
+     *
+     * @return the array
+     */
     public ArrayList<Integer> getSelectablePowersIndexes() {
         ArrayList<LeaderPower> leaderPowers = card.getLeaderPowers();
         ArrayList<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < leaderPowers.size(); i++) {
-                indexes.add(i);
+            indexes.add(i);
         }
         return indexes;
     }
+
+    /**
+     * getter of the indexes of leader powers in this card which are selectable
+     * ** @return the array
+     */
     public ArrayList<Integer> getSelectableDepositPowersIndexes() {
         ArrayList<LeaderPower> leaderPowers = card.getLeaderPowers();
         ArrayList<Integer> indexes = new ArrayList<>();
@@ -171,13 +246,20 @@ public class LeaderCardView {
         return indexes;
     }
 
-
-
-
+    /**
+     * getter of the leader powers which are active
+     *
+     * @return the array of active powers
+     */
     public ArrayList<LeaderPower> getLeaderPowersActive() {
         return card.getSelectedLeaderPowers();
     }
 
+    /**
+     * method which builds  a string to display the leader card
+     *
+     * @return the string
+     */
     public String toString() {
         String color = Color.WHITE.getAnsiCode();
         StringBuilder build = new StringBuilder();
@@ -191,8 +273,8 @@ public class LeaderCardView {
                 build.append(color).append("║      ").append(translateColor(((LevellessCardRequirement) req).getType())).append(((LevellessCardRequirement) req).getQuantity()).append(" ▊").append(color).append("     ║").append(Color.reset()).append("\n");
             }
         }
-        IntStream.range(0,card.getLeaderPowers().size()).forEach(n->{
-            ArrayList<LeaderPower> LP=card.getLeaderPowers();
+        IntStream.range(0, card.getLeaderPowers().size()).forEach(n -> {
+            ArrayList<LeaderPower> LP = card.getLeaderPowers();
             build.append(color).append("╠══").append(color).append(LP.get(n).getClass().getName(), 34, 38).append("Power ").append(translateBoolean(getSelected(n))).append(color).append("═╣").append(Color.reset()).append("\n");
             if (LP.get(n) instanceof DepositLeaderPower) {
                 ((DepositLeaderPower) LP.get(n)).getCurrentResources().keySet().forEach(resource -> build.append(color).append("║ ").append(CLI.colorResource(resource)).append(((DepositLeaderPower) LP.get(n)).getCurrentResources().get(resource)).append(" ").append(CLI.shapeResource(resource)).append(" out of ").append(((DepositLeaderPower) LP.get(n)).getMaxResources().get(resource)).append(color).append(" ║").append(Color.reset()).append("\n"));
@@ -231,25 +313,30 @@ public class LeaderCardView {
         return build.toString();
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
+//
+//        Panel panel = new Panel(10000, 15, System.out);
+//        IntStream.range(1, 17).forEach(n -> {
+//            LeaderCardView card = new LeaderCardView("LeaderCard" + n);
+//            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n - 1), 0);
+//            panel.addItem(obj1);
+//
+//        });
+//
+//        panel.show();
+//        IntStream.range(1, 17).forEach(n -> {
+//            LeaderCardView card = new LeaderCardView("LeaderCard" + n);
+//            //card.setSelected(true);
+//            System.out.println(card.depositPowersToString());
+//        });
+//    }
 
-        Panel panel = new Panel(10000, 15, System.out);
-        IntStream.range(1, 17).forEach(n -> {
-            LeaderCardView card = new LeaderCardView("LeaderCard" + n);
-            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n - 1), 0);
-            panel.addItem(obj1);
-
-        });
-
-        panel.show();
-        IntStream.range(1, 17).forEach(n -> {
-            LeaderCardView card = new LeaderCardView("LeaderCard" + n);
-            //card.setSelected(true);
-            System.out.println(card.depositPowersToString());
-        });
-    }
-
-
+    /**
+     * method which changes the state of one leader power if the input is true
+     *
+     * @param index    the power index
+     * @param newState the new state selected or not selected
+     */
     public void setPowerSelectionState(int index, Boolean newState) {
         try {
             if (newState)

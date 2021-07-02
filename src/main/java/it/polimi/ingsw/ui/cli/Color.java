@@ -23,13 +23,11 @@ public enum Color {
     WHITE_BACKGROUND("\u001B[47m");
 
 
-
     private final String ansiCode;
 
 
     /**
      * Constructor
-     *
      */
     Color(String ansiCode) {
         this.ansiCode = ansiCode;
@@ -44,7 +42,6 @@ public enum Color {
     public String getAnsiCode() {
         return ansiCode;
     }
-
 
 
     /**

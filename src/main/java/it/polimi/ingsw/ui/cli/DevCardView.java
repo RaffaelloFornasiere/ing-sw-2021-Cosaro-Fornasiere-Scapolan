@@ -13,17 +13,27 @@ import java.util.stream.IntStream;
 public class DevCardView {
     private DevCard card;
 
-
+    /**
+     * constructor
+     *
+     * @param path the path of the json file from which to take the information about the card
+     */
     public DevCardView(String path) {
         Gson gson = new Gson();
         try {
-            String cardJSON = Files.readString(Paths.get("src/main/resources/"+ path+".json"));
-            card= gson.fromJson(cardJSON,DevCard.class);
+            String cardJSON = Files.readString(Paths.get("src/main/resources/" + path + ".json"));
+            card = gson.fromJson(cardJSON, DevCard.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * method which translate a card type into a color
+     *
+     * @param c card type
+     * @return card color
+     */
     private String translateColor(CardColor c) {
         if (c == CardColor.BLUE) return Color.BLUE.getAnsiCode();
         if (c == CardColor.VIOLET) return Color.RED.getAnsiCode();
@@ -31,7 +41,11 @@ public class DevCardView {
         else return Color.YELLOW.getAnsiCode();
     }
 
-
+    /**
+     * method which builds a string to display a card
+     *
+     * @return the string
+     */
     public String toString() {
         String color = translateColor(card.getColor());
         StringBuilder build = new StringBuilder();
@@ -67,6 +81,7 @@ public class DevCardView {
         build.append((color + "     " + color + color + "          " + Color.reset() + "\n").repeat(5));
         return build.toString();
     }
+
     public static String emptySlot(int height) {
         String color = Color.WHITE.getAnsiCode();
         return color + "   " + color + "        " + color + "  " + Color.reset() + "\n" + color + "╔════" + color + "═════" + color + "════╗" + Color.reset() + "\n" +
@@ -75,17 +90,17 @@ public class DevCardView {
                 (color + "     " + color + color + "          " + Color.reset() + "\n").repeat(5);
     }
 
-    public static void main(String[] args) {
-        Panel panel = new Panel(10000, 50, System.out);
-        IntStream.range(1, 49).forEach(n -> {
-            DevCardView card = new DevCardView("DevCard" + n);
-            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n - 1), 0);
-            panel.addItem(obj1);
-
-        });
-        DrawableObject obj1 = new DrawableObject(emptySlot(10), 40 * (48), 0);
-        panel.addItem(obj1);
-
-        panel.show();
-    }
+//    public static void main(String[] args) {
+//        Panel panel = new Panel(10000, 50, System.out);
+//        IntStream.range(1, 49).forEach(n -> {
+//            DevCardView card = new DevCardView("DevCard" + n);
+//            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n - 1), 0);
+//            panel.addItem(obj1);
+//
+//        });
+//        DrawableObject obj1 = new DrawableObject(emptySlot(10), 40 * (48), 0);
+//        panel.addItem(obj1);
+//
+//        panel.show();
+//    }
 }

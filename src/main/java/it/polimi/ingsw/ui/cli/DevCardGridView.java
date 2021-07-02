@@ -3,12 +3,20 @@ package it.polimi.ingsw.ui.cli;
 import java.util.ArrayList;
 
 public class DevCardGridView {
+    /**
+     * getter
+     * @return the matrix with all the top development cards
+     */
     public String[][] getTopDevCardIDs() {
         return topDevCardIDs;
     }
 
     private final String[][] topDevCardIDs;
 
+    /**
+     * constructor
+     * @param topDevCardIDs the matrix with topDevCards' ids
+     */
     public DevCardGridView(String[][] topDevCardIDs) {
         this.topDevCardIDs = new String[topDevCardIDs.length][topDevCardIDs[0].length];
         for (int x = topDevCardIDs.length - 1; x >= 0; x--) {
@@ -16,8 +24,10 @@ public class DevCardGridView {
         }
     }
 
+    /**
+     * method which displays the devCardGrid
+     */
     public void display() {
-        DevCardView[][] cardGrid = new DevCardView[topDevCardIDs.length][topDevCardIDs[0].length];
         int totalHeight = 0;
         ArrayList<DrawableObject> objs = new ArrayList<>();
         Panel panel = new Panel(500, 0, System.out);
@@ -43,17 +53,17 @@ public class DevCardGridView {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println("\033[31;1;4mGRID OF DEVCARDS\033[0m \n");
-        String[][] grid = {
-                {"DevCard1", "DevCard2", "DevCard3", "DevCard10"},
-                {"DevCard4", "DevCard5", "DevCard6", "DevCard11"},
-                {"DevCard7", "DevCard8", null , "DevCard12"},
-                {"DevCard7", "DevCard8", "DevCard9", "DevCard12"},
-                {"DevCard7", "DevCard8", "DevCard9", "DevCard12"}
-
-        };
-        DevCardGridView viewGrid = new DevCardGridView(grid);
-        viewGrid.display();
-    }
+//    public static void main(String[] args) {
+//        System.out.println("\033[31;1;4mGRID OF DEVCARDS\033[0m \n");
+//        String[][] grid = {
+//                {"DevCard1", "DevCard2", "DevCard3", "DevCard10"},
+//                {"DevCard4", "DevCard5", "DevCard6", "DevCard11"},
+//                {"DevCard7", "DevCard8", null , "DevCard12"},
+//                {"DevCard7", "DevCard8", "DevCard9", "DevCard12"},
+//                {"DevCard7", "DevCard8", "DevCard9", "DevCard12"}
+//
+//        };
+//        DevCardGridView viewGrid = new DevCardGridView(grid);
+//        viewGrid.display();
+//    }
 }
