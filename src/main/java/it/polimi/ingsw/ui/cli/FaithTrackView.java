@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class FaithTrackView {
     private final HashMap<String, Integer> playersPositions;
     private final HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
+    ArrayList<DrawableObject> objs2= new ArrayList<>();
 
     /**
      * constructor, put all initial position to 0
@@ -34,26 +35,6 @@ public class FaithTrackView {
         for (String s : playersNames) {
             popeFavorCards.put(s, new HashMap<>());
         }
-    }
-
-    /**
-     * method which displays the faithTrack and favorPopeCards of all players
-     *
-     * @param message       optional message to display
-     * @param currentPlayer the player who is visualizing the faithTrack
-     */
-    public void display(String message, String currentPlayer) {
-
-        String legend = "\033[31;1;4mLEGEND\033[0m \nNormal cell\n" +
-                Color.CYAN.getAnsiCode() + "VaticanSectionCell\n" + Color.reset() +
-                Color.RED.getAnsiCode() + "PopeCell\n" + Color.reset();
-        ArrayList<DrawableObject> objs = new ArrayList<>();
-        objs.add(new DrawableObject(message, 0, 0));
-        objs.add(new DrawableObject(legend, 0, 0));
-        Panel panel0 = new Panel(objs, System.out, false);
-        panel0.show();
-
-        ArrayList<DrawableObject> objs2 = new ArrayList<>();
 
 
         GsonBuilder builder = new GsonBuilder();
@@ -97,14 +78,35 @@ public class FaithTrackView {
                 objs2.add(new DrawableObject(c.toString(), 0, 0));
 
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * method which displays the faithTrack and favorPopeCards of all players
+     *
+     * @param message       optional message to display
+     * @param currentPlayer the player who is visualizing the faithTrack
+     */
+    public void display(String message, String currentPlayer) {
+
+        String legend = "\033[31;1;4mLEGEND\033[0m \nNormal cell\n" +
+                Color.CYAN.getAnsiCode() + "VaticanSectionCell\n" + Color.reset() +
+                Color.RED.getAnsiCode() + "PopeCell\n" + Color.reset();
+        ArrayList<DrawableObject> objs = new ArrayList<>();
+        objs.add(new DrawableObject(message, 0, 0));
+        objs.add(new DrawableObject(legend, 0, 0));
+        Panel panel0 = new Panel(objs, System.out, false);
+        panel0.show();
+
+
             Panel panel = new Panel(objs2, System.out, true);
             panel.show();
 
             //    for(CellView c:array) System.out.println(c.toString());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         System.out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
         StringBuilder othersPopeFavorCards = new StringBuilder();
