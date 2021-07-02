@@ -90,17 +90,5 @@ public class DevCardView {
                 (color + "     " + color + color + "          " + Color.reset() + "\n").repeat(5);
     }
 
-//    public static void main(String[] args) {
-//        Panel panel = new Panel(10000, 50, System.out);
-//        IntStream.range(1, 49).forEach(n -> {
-//            DevCardView card = new DevCardView("DevCard" + n);
-//            DrawableObject obj1 = new DrawableObject(card.toString(), 40 * (n - 1), 0);
-//            panel.addItem(obj1);
-//
-//        });
-//        DrawableObject obj1 = new DrawableObject(emptySlot(10), 40 * (48), 0);
-//        panel.addItem(obj1);
-//
-//        panel.show();
-//    }
+
 }

@@ -23,8 +23,4 @@ public enum DisplayOptions {
         return this.title;
     }
 
-    public String personalizeOption(String playerName) {
-        return this.message + playerName;
-    }
-
 }

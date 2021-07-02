@@ -151,56 +151,8 @@ public class FaithTrackView {
      *
      * @param position the new position
      */
-    //TODO put lorenzo position into visualization
     public void updateLorenzoPosition(int position) {
         playersPositions.put("Lorenzo", position);
     }
-//
-//    public static void main(String[] args) {
-//        ArrayList<String> a = new ArrayList<>();
-//        a.add("SILVIA");
-//        a.add("PAOLO");
-//        a.add("LARA");
-//        a.add("ROBERTO");
-//        HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards = new HashMap<>();
-//        PopeFavorCard cardS0 = new PopeFavorCard(2);
-//        PopeFavorCard cardS1 = new PopeFavorCard(3);
-//        PopeFavorCard cardP0 = new PopeFavorCard(2);
-//        PopeFavorCard cardP1 = new PopeFavorCard(3);
-//        PopeFavorCard cardP2 = new PopeFavorCard(5);
-//        PopeFavorCard cardL0 = new PopeFavorCard(2);
-//        PopeFavorCard cardL1 = new PopeFavorCard(3);
-//        PopeFavorCard cardL2 = new PopeFavorCard(5);
-//        PopeFavorCard cardR0 = new PopeFavorCard(2);
-//        HashMap<Integer, PopeFavorCard> mapS = new HashMap<>();
-//        mapS.put(16, cardS0);
-//        mapS.put(24, cardS1);
-//
-//        HashMap<Integer, PopeFavorCard> mapP = new HashMap<>();
-//        mapP.put(8, cardP0);
-//        mapP.put(16, cardP1);
-//        mapP.put(24, cardP2);
-//
-//        HashMap<Integer, PopeFavorCard> mapL = new HashMap<>();
-//        mapL.put(8, cardL0);
-//        mapL.put(16, cardL1);
-//        mapL.put(24, cardL2);
-//
-//        HashMap<Integer, PopeFavorCard> mapR = new HashMap<>();
-//        mapR.put(24, cardR0);
-//
-//        popeFavorCards.put("SILVIA", mapS);
-//        popeFavorCards.put("PAOLO", mapP);
-//        popeFavorCards.put("LARA", mapL);
-//        popeFavorCards.put("ROBERTO", mapR);
-//
-//
-//        FaithTrackView f = new FaithTrackView(a);
-//        f.updateFavorPopeCard(popeFavorCards);
-//
-//        f.updatePlayerPosition("SILVIA",4);
-//        f.updatePlayerPosition("PAOLO",6);
-//
-//        f.display("Position incremented", "LARA");
-//    }
+
 }
