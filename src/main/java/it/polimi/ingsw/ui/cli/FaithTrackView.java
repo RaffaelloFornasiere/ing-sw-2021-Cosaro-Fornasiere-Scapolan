@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class FaithTrackView {
      * @param message       optional message to display
      * @param currentPlayer the player who is visualizing the faithTrack
      */
-    public void display(String message, String currentPlayer) {
+    public void display(String message, String currentPlayer, PrintWriter out) {
 
         String legend = "\033[31;1;4mLEGEND\033[0m \nNormal cell\n" +
                 Color.CYAN.getAnsiCode() + "VaticanSectionCell\n" + Color.reset() +
@@ -50,7 +51,7 @@ public class FaithTrackView {
         ArrayList<DrawableObject> objs = new ArrayList<>();
         objs.add(new DrawableObject(message, 0, 0));
         objs.add(new DrawableObject(legend, 0, 0));
-        Panel panel0 = new Panel(objs, System.out, false);
+        Panel panel0 = new Panel(objs, out, false);
         panel0.show();
 
         ArrayList<DrawableObject> objs2 = new ArrayList<>();
@@ -97,16 +98,15 @@ public class FaithTrackView {
                 objs2.add(new DrawableObject(c.toString(), 0, 0));
 
             }
-            Panel panel = new Panel(objs2, System.out, true);
+            Panel panel = new Panel(objs2, out, true);
             panel.show();
 
-            //    for(CellView c:array) System.out.println(c.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
+        out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
         StringBuilder othersPopeFavorCards = new StringBuilder();
         popeFavorCards.keySet().stream().filter(f -> !f.equals(currentPlayer)).forEach(p -> {
             othersPopeFavorCards.append(p.toUpperCase()).append("\n");
@@ -119,7 +119,7 @@ public class FaithTrackView {
 
             othersPopeFavorCards.append(Color.reset()).append("\n");
         });
-        System.out.println(othersPopeFavorCards);
+        out.println(othersPopeFavorCards);
 
 
     }
@@ -151,56 +151,8 @@ public class FaithTrackView {
      *
      * @param position the new position
      */
-    //TODO put lorenzo position into visualization
     public void updateLorenzoPosition(int position) {
         playersPositions.put("Lorenzo", position);
     }
-//
-//    public static void main(String[] args) {
-//        ArrayList<String> a = new ArrayList<>();
-//        a.add("SILVIA");
-//        a.add("PAOLO");
-//        a.add("LARA");
-//        a.add("ROBERTO");
-//        HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards = new HashMap<>();
-//        PopeFavorCard cardS0 = new PopeFavorCard(2);
-//        PopeFavorCard cardS1 = new PopeFavorCard(3);
-//        PopeFavorCard cardP0 = new PopeFavorCard(2);
-//        PopeFavorCard cardP1 = new PopeFavorCard(3);
-//        PopeFavorCard cardP2 = new PopeFavorCard(5);
-//        PopeFavorCard cardL0 = new PopeFavorCard(2);
-//        PopeFavorCard cardL1 = new PopeFavorCard(3);
-//        PopeFavorCard cardL2 = new PopeFavorCard(5);
-//        PopeFavorCard cardR0 = new PopeFavorCard(2);
-//        HashMap<Integer, PopeFavorCard> mapS = new HashMap<>();
-//        mapS.put(16, cardS0);
-//        mapS.put(24, cardS1);
-//
-//        HashMap<Integer, PopeFavorCard> mapP = new HashMap<>();
-//        mapP.put(8, cardP0);
-//        mapP.put(16, cardP1);
-//        mapP.put(24, cardP2);
-//
-//        HashMap<Integer, PopeFavorCard> mapL = new HashMap<>();
-//        mapL.put(8, cardL0);
-//        mapL.put(16, cardL1);
-//        mapL.put(24, cardL2);
-//
-//        HashMap<Integer, PopeFavorCard> mapR = new HashMap<>();
-//        mapR.put(24, cardR0);
-//
-//        popeFavorCards.put("SILVIA", mapS);
-//        popeFavorCards.put("PAOLO", mapP);
-//        popeFavorCards.put("LARA", mapL);
-//        popeFavorCards.put("ROBERTO", mapR);
-//
-//
-//        FaithTrackView f = new FaithTrackView(a);
-//        f.updateFavorPopeCard(popeFavorCards);
-//
-//        f.updatePlayerPosition("SILVIA",4);
-//        f.updatePlayerPosition("PAOLO",6);
-//
-//        f.display("Position incremented", "LARA");
-//    }
+
 }

@@ -158,22 +158,4 @@ public class CellView {
     }
 
 
-//    public static void main(String[] args) {
-//
-//        Panel panel = new Panel(10000, 100, System.out);
-//        for (int i = 0; i < 20; i++) {
-//            CellView cell = new CellView(2, 3);
-//            cell.setVaticanSection();
-//            cell.setPopeCell();
-//            cell.setFavorPopeCardPoint(3);
-//            cell.setPopeFavorCardPlaceHolder("G");
-//
-//            cell.setPlaceHolder("+");
-//            DrawableObject d = new DrawableObject(cell.toString(), 20 * i, 1);
-//            panel.addItem(d);
-//
-//        }
-//        panel.show();
-//    }
-
 }

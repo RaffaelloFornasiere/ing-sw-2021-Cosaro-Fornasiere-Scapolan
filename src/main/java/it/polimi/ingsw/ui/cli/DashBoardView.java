@@ -21,10 +21,11 @@ public class DashBoardView {
 
     /**
      * constructor
+     *
      * @param topDevCards the top cards of slots
-     * @param strongBox the strongbox
-     * @param warehouse the warehouse
-     * @param player the player to which this dashboard belongs
+     * @param strongBox   the strongbox
+     * @param warehouse   the warehouse
+     * @param player      the player to which this dashboard belongs
      */
     public DashBoardView(ArrayList<String> topDevCards, HashMap<Resource, Integer> strongBox, ArrayList<DepotState> warehouse, String player) {
         this.topDevCards = new ArrayList<>();
@@ -40,6 +41,7 @@ public class DashBoardView {
 
     /**
      * getter
+     *
      * @return the player id
      */
     public String getPlayer() {
@@ -48,6 +50,7 @@ public class DashBoardView {
 
     /**
      * getter
+     *
      * @return the strongbox
      */
     public HashMap<Resource, Integer> getStrongBox() {
@@ -56,6 +59,7 @@ public class DashBoardView {
 
     /**
      * getter
+     *
      * @return the warehouse
      */
     public ArrayList<DepotState> getWarehouse() {
@@ -64,6 +68,7 @@ public class DashBoardView {
 
     /**
      * getter
+     *
      * @return the array of cards on top of the  slots
      */
     public ArrayList<String> getTopDevCards() {
@@ -72,6 +77,7 @@ public class DashBoardView {
 
     /**
      * method which updates the state of the slots
+     *
      * @param topDevCards the topDevCards
      */
     public void updateTopDevCards(ArrayList<String> topDevCards) {
@@ -80,6 +86,7 @@ public class DashBoardView {
 
     /**
      * method which updates the state of strongbox
+     *
      * @param strongBox the strongbox
      */
     public void updateStrongBox(HashMap<Resource, Integer> strongBox) {
@@ -88,8 +95,9 @@ public class DashBoardView {
 
     /**
      * method which tries adding resources to one depot
-     * @param r resource type
-     * @param n quantity to add
+     *
+     * @param r     resource type
+     * @param n     quantity to add
      * @param depot the target depot
      * @return result message
      */
@@ -102,8 +110,9 @@ public class DashBoardView {
 
     /**
      * method which tries to subtract resources from  depot
+     *
      * @param quantity quantity of resources
-     * @param type resource type
+     * @param type     resource type
      * @return result message
      */
     public String trySubtractResourcesFromStrongbox(int quantity, Resource type) {
@@ -115,6 +124,7 @@ public class DashBoardView {
 
     /**
      * method which updates the current state of the warehouse
+     *
      * @param warehouse the warehouse
      */
     public void updateWarehouse(ArrayList<DepotState> warehouse) {
@@ -126,6 +136,7 @@ public class DashBoardView {
 
     /**
      * Method which switches two given depots
+     *
      * @param depot1 first depot
      * @param depot2 second depot
      * @return result message
@@ -136,6 +147,7 @@ public class DashBoardView {
 
     /**
      * setter
+     *
      * @param personalProductionPower the personal production power
      */
     public void setPersonalProductionPower(ProductionPower personalProductionPower) {
@@ -144,6 +156,7 @@ public class DashBoardView {
 
     /**
      * method which tells the total amount of resources in  the warehouse
+     *
      * @return a string to print
      */
     public String resourceNumberToString() {
@@ -165,6 +178,7 @@ public class DashBoardView {
 
     /**
      * method which build a string to display the warehouse
+     *
      * @return the string
      */
     public String warehouseToString() {
@@ -202,6 +216,7 @@ public class DashBoardView {
 
     /**
      * method which build a string to display the strongbox
+     *
      * @return the string
      */
     public String strongBoxToString() {
@@ -219,6 +234,7 @@ public class DashBoardView {
 
     /**
      * method which builds a string to display the personal production power
+     *
      * @return the string
      */
     public String personalProductionToString() {
@@ -227,6 +243,7 @@ public class DashBoardView {
 
     /**
      * method which displays the personal production power in details
+     *
      * @param out the printWriter
      */
     public void displayPersonalProductionPower(PrintWriter out) {
@@ -240,10 +257,10 @@ public class DashBoardView {
     /**
      * method which displays the devCardSlots
      */
-    public void displayDevCardSlots() {
+    public void displayDevCardSlots(PrintWriter out) {
         String color = Color.WHITE.getAnsiCode();
 
-       System.out.println("\033[31;1;4mDEVCARD SLOTS\033[0m \n");
+        out.println("\033[31;1;4mDEVCARD SLOTS\033[0m \n");
 
 
         AtomicInteger slotIndex = new AtomicInteger(1);
@@ -262,12 +279,13 @@ public class DashBoardView {
 
             slotIndex.getAndIncrement();
         });
-        Panel panel = new Panel(objs,  System.out, true);
+        Panel panel = new Panel(objs, out, true);
         panel.show();
     }
 
     /**
      * method which counts the total amount of resources in the warehouse
+     *
      * @return the hashmap
      */
     public HashMap<Resource, Integer> totalResourcesInWarehouse() {
@@ -279,61 +297,27 @@ public class DashBoardView {
 
     /**
      * methods which displays all the deposits of any kind
+     *
      * @param playerID the player id.
      */
-    public void displayAll(String playerID) {
+    public void displayAll(String playerID, PrintWriter out) {
 
-        System.out.println("\033[31;1;4mTHIS IS " + playerID + "'S DASHBOARD\033[0m \n");
+        out.println("\033[31;1;4mTHIS IS " + playerID + "'S DASHBOARD\033[0m \n");
 
         String warehouseString = warehouseToString();
         String strongBoxString = strongBoxToString();
         String personalProductionPowerString = personalProductionToString();
 
-        ArrayList<DrawableObject> objs= new ArrayList<>();
-      objs.add( new DrawableObject(warehouseString, 0, 0));
+        ArrayList<DrawableObject> objs = new ArrayList<>();
+        objs.add(new DrawableObject(warehouseString, 0, 0));
         objs.add(new DrawableObject(strongBoxString, 0, 0));
-       objs.add(new DrawableObject("\033[31;1;4mPERSONAL PRODUCTION POWER\033[0m \n", 0, 0));
-      objs.add(new DrawableObject(personalProductionPowerString, 0, 0));
-        Panel panel = new Panel(objs,System.out, false);
+        objs.add(new DrawableObject("\033[31;1;4mPERSONAL PRODUCTION POWER\033[0m \n", 0, 0));
+        objs.add(new DrawableObject(personalProductionPowerString, 0, 0));
+        Panel panel = new Panel(objs, out, false);
 
         panel.show();
-        displayDevCardSlots();
+        displayDevCardSlots(out);
     }
-
-
-//    public static void main(String[] args) {
-//        DepotState depot = new DepotState(Resource.COIN, 3, 1);
-//        DepotState depot2 = new DepotState(Resource.COIN, 4, 0);
-//        DepotState depot3 = new DepotState(Resource.SHIELD, 6, 0);
-//        ArrayList<DepotState> totalLevels = new ArrayList<>();
-//        totalLevels.add(depot);
-//        totalLevels.add(depot2);
-//        totalLevels.add(depot3);
-//
-//        HashMap<Resource, Integer> str = new HashMap<>();
-//        str.put(Resource.COIN, 6);
-//        str.put(Resource.ROCK, 7);
-//
-//        ArrayList<String> cards = new ArrayList<>(3);
-//
-//        cards.add("DevCard10");
-//        cards.add("DevCard40");
-//        cards.add(null);
-//
-//        String player = "PAOLO";
-//
-//        ProductionPower p = new ProductionPower(new HashMap<Resource, Integer>(), new HashMap<Resource, Integer>(), 2, 2, 3);
-//        DashBoardView d = new DashBoardView(cards, str, totalLevels, player);
-//        d.setPersonalProductionPower(p);
-//        System.out.println(d.tryAddResource(Resource.COIN, 1, d.getWarehouse().get(1)).getMessage());
-//
-//        DepotState depot1 = d.getWarehouse().get(1);
-//        System.out.println(depot1.getResourceType());
-//        d.getWarehouse().stream().filter(dep -> dep != depot1).map(dep -> dep.getCurrentQuantity() == 0 || (dep.getResourceType() != depot1.getResourceType())).forEach(System.out::println);
-//        d.displayPersonalProductionPower(new PrintWriter(System.out));
-//
-//        d.displayAll(player);
-//    }
 
 
 }

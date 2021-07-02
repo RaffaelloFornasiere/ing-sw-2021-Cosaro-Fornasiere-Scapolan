@@ -42,7 +42,7 @@ and then
 ```bash
 java -jar client.jar
 ```
-to run the client. Again you'll be asked to select CLI or GUI.
+to run the client (Attention: only one client can run per set of resources. As such if you want to run two clients on the same machine, you must duplicate the whole \deliverables\jar\ directory). Again you'll be asked to select CLI or GUI.
 
 If you're going to use the CLI it's recommended to execute this command before executing the jar
 ```bash
