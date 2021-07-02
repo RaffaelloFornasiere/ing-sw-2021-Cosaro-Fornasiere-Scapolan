@@ -20,7 +20,6 @@ public class FaithTrackView {
     private final HashMap<String, Integer> playersPositions;
     private final HashMap<String, HashMap<Integer, PopeFavorCard>> popeFavorCards;
 
-
     /**
      * constructor, put all initial position to 0
      *
@@ -35,8 +34,6 @@ public class FaithTrackView {
         for (String s : playersNames) {
             popeFavorCards.put(s, new HashMap<>());
         }
-
-
     }
 
     /**
@@ -55,7 +52,10 @@ public class FaithTrackView {
         objs.add(new DrawableObject(legend, 0, 0));
         Panel panel0 = new Panel(objs, System.out, false);
         panel0.show();
-        ArrayList<DrawableObject> objs2= new ArrayList<>();
+
+        ArrayList<DrawableObject> objs2 = new ArrayList<>();
+
+
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(AbstractCell.class, new GsonInheritanceAdapter<AbstractCell>());
         builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
@@ -97,16 +97,14 @@ public class FaithTrackView {
                 objs2.add(new DrawableObject(c.toString(), 0, 0));
 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
             Panel panel = new Panel(objs2, System.out, true);
             panel.show();
 
             //    for(CellView c:array) System.out.println(c.toString());
 
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
         StringBuilder othersPopeFavorCards = new StringBuilder();
@@ -155,6 +153,7 @@ public class FaithTrackView {
      */
     //TODO put lorenzo position into visualization
     public void updateLorenzoPosition(int position) {
+        playersPositions.put("Lorenzo", position);
     }
 //
 //    public static void main(String[] args) {
