@@ -21,4 +21,8 @@ The project is accompanied by several UML diagrams:
 - A [sequence diagram](https://github.com/RaffaelloFornasiere/ing-sw-2021-Cosaro-Fornasiere-Scapolan/tree/main/deliverables/UMLdiagram/Sequence%20Diagrams/PlayLeaderCard) showing the action of activating a leader card, together with an explanatory text
 - A series of [complete UML diagrams](https://github.com/RaffaelloFornasiere/ing-sw-2021-Cosaro-Fornasiere-Scapolan/tree/main/deliverables/UMLdiagram/CompleteUML) for the whole application
 
+###Requirements
+The application supports only UNIX based operating systems (like Linux or MACOS) due to the use of special characters to color the text in the CLI.
+It requires Java RE 14.
+
 ###Instruction for testing
