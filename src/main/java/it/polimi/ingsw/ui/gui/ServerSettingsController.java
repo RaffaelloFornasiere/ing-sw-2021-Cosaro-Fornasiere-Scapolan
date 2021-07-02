@@ -104,7 +104,6 @@ public class ServerSettingsController extends Controller implements Initializabl
             invalidAddress.setOpacity(1);
             return;
         }
-        ((Stage)root.getScene().getWindow()).close();
     }
 
     public void onServerChanged(ActionEvent event) {
