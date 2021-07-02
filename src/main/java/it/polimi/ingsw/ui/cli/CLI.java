@@ -432,7 +432,7 @@ public class CLI extends UI {
             builder0.append(" YOU  CAN NOW STORE THE FOLLOWING RESOURCES \n\n");
             builder0.append(displayResourcesInHashMap(resourcesToOrganize));
             out.println(builder0);
-            System.out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE D FOR 'DONE' OTHERWISE TYPE C FOR 'CONTINUE'");
+            out.println("IF YOU DON'T WANT TO STORE ANY RESOURCES OF THESE,PLEASE TYPE D FOR 'DONE' OTHERWISE TYPE C FOR 'CONTINUE'");
         }
         if (totalNumberOfResourcesToOrganize == 0 || in.next().equalsIgnoreCase("D")) {
             //GENERATE NEW NewResourcesOrganizationEvent
@@ -513,7 +513,7 @@ public class CLI extends UI {
             //System.out.println("YOU HAVE TO STORE THESE RESOURCES:  ( " + builder.toString() + Color.reset() + " )?");
             resInHashMap.forEach((res, integer) -> {
                 String s = colorResource(res) + integer + " " + res.toString() + " " + shapeResource(res) + Color.reset();
-                System.out.println("WHERE TO PUT THESE:  ( " + s + " )?");
+                out.println("WHERE TO PUT THESE:  ( " + s + " )?");
                 // prepare the selection form for deposits.
                 ArrayList<Pair<String, String>> depositOptions = new ArrayList<>();
                 IntStream.range(0, currentDepotStates.size()).forEach(n -> {
@@ -748,7 +748,7 @@ public class CLI extends UI {
         players.add(leaderID);
         players.addAll(otherPlayersID);
 
-        System.out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
+        out.println("THIS IS THE CURRENT STATE OF THE LOBBY:");
         StringBuilder builder = new StringBuilder();
         builder.append(Color.RED.getAnsiCode()).append("╔═");
         IntStream.range(0, leaderID.length()).forEach(letter -> builder.append("═"));
@@ -1070,7 +1070,7 @@ public class CLI extends UI {
         int slot;
         String devCard;
 
-        devCardGridView.display();
+        devCardGridView.display(out);
         ArrayList<Pair<String, String>> gridSelection = new ArrayList<>();
         String[][] grid = devCardGridView.getTopDevCardIDs();
         for (String[] strings : grid) {
@@ -1083,7 +1083,7 @@ public class CLI extends UI {
         int input1 = displaySelectionForm(gridSelection, null, 1, "DEVELOPMENT CARDS AVAILABLE : \n").get(0);
         devCard = gridSelection.get(input1).getKey();
 
-        playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
+        playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots(out);
         ArrayList<Pair<String, String>> selectionArray = new ArrayList<>();
         AtomicInteger slotIndex = new AtomicInteger(1);
         playerStates.get(thisPlayer).getDashBoard().getTopDevCards().forEach(n -> {
@@ -1103,7 +1103,7 @@ public class CLI extends UI {
      */
     public ActivateProductionEvent askForProductionPowersToUse() {
         playerStates.get(thisPlayer).getDashBoard().displayPersonalProductionPower(out);
-        playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots();
+        playerStates.get(thisPlayer).getDashBoard().displayDevCardSlots(out);
 
         ArrayList<Pair<String, String>> opt = new ArrayList<>();
         opt.add(new Pair<>("Personal production power", Color.reset()));
@@ -1234,9 +1234,9 @@ public class CLI extends UI {
                     } else {
                         inputPlayer = 0;
                     }
-                    playerStates.get(players.get(inputPlayer)).getDashBoard().displayAll(players.get(inputPlayer));
+                    playerStates.get(players.get(inputPlayer)).getDashBoard().displayAll(players.get(inputPlayer),out);
                 }
-                case DISPLAY_FAITH_TRACK -> this.faithTrack.display("Check the incremented positions and \n acquired PopeFavorCards !", thisPlayer);
+                case DISPLAY_FAITH_TRACK -> this.faithTrack.display("Check the incremented positions and \n acquired PopeFavorCards !", thisPlayer, out);
                 case DISPLAY_LEADER_CARD -> {
                     int inputPlayer;
                     if (players.size() != 1) {
@@ -1256,7 +1256,7 @@ public class CLI extends UI {
                     Panel cardPanel = new Panel(objs, out, true);
                     cardPanel.show();
                 }
-                case DISPLAY_DEV_CARD_GRID -> devCardGridView.display();
+                case DISPLAY_DEV_CARD_GRID -> devCardGridView.display(out);
             }
 
             out.println("WOULD YOU LIKE TO SEE MORE? Y/N");
@@ -1520,7 +1520,7 @@ public class CLI extends UI {
         while (!answer.equalsIgnoreCase("QUIT")) {
             answer = in.nextLine();
         }
-        System.out.println("Game Ended");
+        out.println("Game Ended");
 
     }
 

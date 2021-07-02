@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.faithTrack.PopeFavorCard;
 import it.polimi.ingsw.utilities.GsonInheritanceAdapter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class FaithTrackView {
      * @param message       optional message to display
      * @param currentPlayer the player who is visualizing the faithTrack
      */
-    public void display(String message, String currentPlayer) {
+    public void display(String message, String currentPlayer, PrintWriter out) {
 
         String legend = "\033[31;1;4mLEGEND\033[0m \nNormal cell\n" +
                 Color.CYAN.getAnsiCode() + "VaticanSectionCell\n" + Color.reset() +
@@ -50,7 +51,7 @@ public class FaithTrackView {
         ArrayList<DrawableObject> objs = new ArrayList<>();
         objs.add(new DrawableObject(message, 0, 0));
         objs.add(new DrawableObject(legend, 0, 0));
-        Panel panel0 = new Panel(objs, System.out, false);
+        Panel panel0 = new Panel(objs, out, false);
         panel0.show();
 
         ArrayList<DrawableObject> objs2 = new ArrayList<>();
@@ -97,16 +98,15 @@ public class FaithTrackView {
                 objs2.add(new DrawableObject(c.toString(), 0, 0));
 
             }
-            Panel panel = new Panel(objs2, System.out, true);
+            Panel panel = new Panel(objs2, out, true);
             panel.show();
 
-            //    for(CellView c:array) System.out.println(c.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
+        out.println("OTHER PLAYERS' POPE FAVOR CARDS\n");
         StringBuilder othersPopeFavorCards = new StringBuilder();
         popeFavorCards.keySet().stream().filter(f -> !f.equals(currentPlayer)).forEach(p -> {
             othersPopeFavorCards.append(p.toUpperCase()).append("\n");
@@ -119,7 +119,7 @@ public class FaithTrackView {
 
             othersPopeFavorCards.append(Color.reset()).append("\n");
         });
-        System.out.println(othersPopeFavorCards);
+        out.println(othersPopeFavorCards);
 
 
     }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ui.cli;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class DevCardGridView {
@@ -27,10 +28,10 @@ public class DevCardGridView {
     /**
      * method which displays the devCardGrid
      */
-    public void display() {
+    public void display(PrintWriter out) {
         int totalHeight = 0;
         ArrayList<DrawableObject> objs = new ArrayList<>();
-        Panel panel = new Panel(500, 0, System.out);
+        Panel panel = new Panel(500, 0, out);
         for (int x = topDevCardIDs.length - 1; x >= 0; x--) {
             int height = 0;
             for (int y = 0; y < topDevCardIDs[0].length; y++) {

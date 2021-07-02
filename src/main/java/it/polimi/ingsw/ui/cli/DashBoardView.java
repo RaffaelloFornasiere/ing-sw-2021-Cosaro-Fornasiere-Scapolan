@@ -240,10 +240,10 @@ public class DashBoardView {
     /**
      * method which displays the devCardSlots
      */
-    public void displayDevCardSlots() {
+    public void displayDevCardSlots(PrintWriter out) {
         String color = Color.WHITE.getAnsiCode();
 
-       System.out.println("\033[31;1;4mDEVCARD SLOTS\033[0m \n");
+       out.println("\033[31;1;4mDEVCARD SLOTS\033[0m \n");
 
 
         AtomicInteger slotIndex = new AtomicInteger(1);
@@ -262,7 +262,7 @@ public class DashBoardView {
 
             slotIndex.getAndIncrement();
         });
-        Panel panel = new Panel(objs,  System.out, true);
+        Panel panel = new Panel(objs,  out, true);
         panel.show();
     }
 
@@ -281,9 +281,9 @@ public class DashBoardView {
      * methods which displays all the deposits of any kind
      * @param playerID the player id.
      */
-    public void displayAll(String playerID) {
+    public void displayAll(String playerID, PrintWriter out) {
 
-        System.out.println("\033[31;1;4mTHIS IS " + playerID + "'S DASHBOARD\033[0m \n");
+        out.println("\033[31;1;4mTHIS IS " + playerID + "'S DASHBOARD\033[0m \n");
 
         String warehouseString = warehouseToString();
         String strongBoxString = strongBoxToString();
@@ -294,10 +294,10 @@ public class DashBoardView {
         objs.add(new DrawableObject(strongBoxString, 0, 0));
        objs.add(new DrawableObject("\033[31;1;4mPERSONAL PRODUCTION POWER\033[0m \n", 0, 0));
       objs.add(new DrawableObject(personalProductionPowerString, 0, 0));
-        Panel panel = new Panel(objs,System.out, false);
+        Panel panel = new Panel(objs,out, false);
 
         panel.show();
-        displayDevCardSlots();
+        displayDevCardSlots(out);
     }
 
 
