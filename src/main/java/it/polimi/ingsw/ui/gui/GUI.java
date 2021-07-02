@@ -469,8 +469,9 @@ public class GUI extends UI {
 
     @Override
     public void displayEndOfGame(ArrayList<FinalPlayerState> finalPlayerStates) {
+        System.out.println("gui game end");
 
-        FinalScreenController controller = new FinalScreenController(this, false, singlePlayer.getItem() ? finalPlayerStates : null);
+        FinalScreenController controller = new FinalScreenController(this, singlePlayer.getItem(), singlePlayer.getItem() ? finalPlayerStates : null);
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("FinalScreen.fxml"));
             loader.setController(controller);
