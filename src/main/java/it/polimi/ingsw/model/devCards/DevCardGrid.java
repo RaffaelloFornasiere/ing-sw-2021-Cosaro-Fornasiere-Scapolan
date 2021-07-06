@@ -183,21 +183,4 @@ public class DevCardGrid extends Observable {
         throw new NotPresentException("There's no card at the top of any deck with the given ID");
     }
 
-    /*public static void main(String[] args) {
-        ArrayList<DevCard> devCards = Config.getInstance().getDevCards();
-
-        devCards.removeIf(x->x.getLevel()==2);
-
-        DevCardGrid devCardGrid = new DevCardGrid(devCards);
-
-        for(DevDeck[] devDeckArray: devCardGrid.getDecks()){
-            for(DevDeck devDeck: devDeckArray){
-                try {
-                    System.out.println(new Gson().toJson(devDeck.topCard()));
-                } catch (NotPresentException notPresentException) {
-                    System.out.println("Not present");
-                }
-            }
-        }
-    }*/
 }

@@ -184,6 +184,7 @@ public class GUI extends UI {
      *
      * @param serverPort the port of the server to connect
      */
+
     public void setServerPort(int serverPort) {
         this.serverPort.setItem(serverPort);
     }
@@ -480,6 +481,7 @@ public class GUI extends UI {
             }
         });
     }
+
 
     @Override
     public void updateLeaderPowersSelectedState(String playerID, String

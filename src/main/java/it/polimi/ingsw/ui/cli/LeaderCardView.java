@@ -38,7 +38,7 @@ public class LeaderCardView {
         builder.registerTypeAdapter(Pair.class, new GsonPairAdapter());
         Gson gson = builder.create();
         try {
-            String cardJSON = Files.readString(Paths.get("src/main/resources/" + leaderCardID + ".json"));
+            String cardJSON = Files.readString(Paths.get("./src/main/resources/" + leaderCardID + ".json"));
             card = gson.fromJson(cardJSON, LeaderCard.class);
         } catch (IOException e) {
             e.printStackTrace();
