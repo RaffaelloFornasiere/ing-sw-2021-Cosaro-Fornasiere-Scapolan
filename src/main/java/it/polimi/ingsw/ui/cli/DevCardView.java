@@ -21,7 +21,7 @@ public class DevCardView {
     public DevCardView(String path) {
         Gson gson = new Gson();
         try {
-            String cardJSON = Files.readString(Paths.get("./src/main/resources/" + path + ".json"));
+            String cardJSON = Files.readString(Paths.get("src/main/resources/" + path + ".json"));
             card = gson.fromJson(cardJSON, DevCard.class);
         } catch (IOException e) {
             e.printStackTrace();

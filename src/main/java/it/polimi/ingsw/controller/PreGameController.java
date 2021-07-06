@@ -254,7 +254,7 @@ public class PreGameController {
         //Initialize the leader cards
         ArrayList<String> leaderCardsIDs = new ArrayList<>();
         for(int i=1; i<=Config.getInstance().getLeaderCardNumber(); i++)
-            leaderCardsIDs.add("leaderCard" + i);
+            leaderCardsIDs.add("LeaderCard" + i);
         Collections.shuffle(leaderCardsIDs);
 
         FaithTrackManager faithTrackManager = new FaithTrackManager(matchState);

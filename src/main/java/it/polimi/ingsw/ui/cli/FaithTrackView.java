@@ -62,7 +62,7 @@ public class FaithTrackView {
         builder.registerTypeAdapter(EffectOfCell.class, new GsonInheritanceAdapter<EffectOfCell>());
         Gson gson = builder.create();
         try {
-            String cellsEffectJSON = Files.readString(Paths.get("./src/main/resources/CompleteFaithTrack.json"));
+            String cellsEffectJSON = Files.readString(Paths.get("src/main/resources/CompleteFaithTrack.json"));
             cellsEffectJSON = cellsEffectJSON.substring(1, cellsEffectJSON.length() - 1);
             String[] cells = cellsEffectJSON.split("(,)(?=\\{)");
 
